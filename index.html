@@ -34,13 +34,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #FDF8F2;
-    --cream-deep: #F5EEE2;
-    --gold: #C6A75E;
-    --gold-soft: #D9C28E;
-    --ink: #2A2520;
-    --ink-soft: #5A5249;
-    --hairline: rgba(198, 167, 94, 0.35);
+    --cream: #0B1220;
+    --cream-deep: #0E1728;
+    --gold: #D4B172;
+    --gold-soft: #E6CB98;
+    --ink: #F4EEDF;
+    --ink-soft: rgba(244, 238, 223, 0.72);
+    --hairline: rgba(212, 177, 114, 0.45);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,7 +48,11 @@
   html { -webkit-text-size-adjust: 100%; }
 
   body {
-    background: var(--cream);
+    background-color: var(--cream);
+    background-image: url("fondo-estrellado.png");
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
     color: var(--ink);
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 16px;
@@ -164,7 +168,8 @@
   }
 
   .card {
-    background: var(--cream);
+    background: rgba(11, 18, 32, 0.6);
+    backdrop-filter: blur(3px);
     border: 1px solid var(--hairline);
     padding: 22px 22px 20px;
     position: relative;
@@ -190,12 +195,12 @@
   }
 
   .glyph {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
     color: var(--gold);
     line-height: 1;
     width: 22px;
-    text-align: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
   }
 
   .card-name {
@@ -289,7 +294,7 @@
 
   .cta:hover {
     background: var(--gold);
-    color: var(--ink);
+    color: var(--cream);
   }
 
   /* --- Questions block --- */
@@ -561,7 +566,16 @@
     <article class="card">
       <div class="card-top">
         <div class="card-id">
-          <span class="glyph">✦</span>
+          <span class="glyph">
+            <svg width="22" height="26" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="1" width="20" height="3" fill="currentColor"/>
+              <rect x="1" y="23" width="22" height="3" fill="currentColor"/>
+              <rect x="4" y="6" width="2.4" height="16" fill="currentColor"/>
+              <rect x="8.8" y="6" width="2.4" height="16" fill="currentColor"/>
+              <rect x="13.6" y="6" width="2.4" height="16" fill="currentColor"/>
+              <rect x="18.4" y="6" width="2.4" height="16" fill="currentColor"/>
+            </svg>
+          </span>
           <h3 class="card-name">Lectura de Carta Natal</h3>
         </div>
         <span class="price">USD 12</span>
