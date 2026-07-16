@@ -647,18 +647,25 @@
 
   .big-three {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 12px;
     margin-top: 20px;
   }
 
   .big-three-item {
+    flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 14px;
+    text-align: center;
+    gap: 8px;
     background: rgba(11, 18, 32, 0.6);
     border: 1px solid var(--hairline);
-    padding: 16px 18px;
+    padding: 20px 12px;
+  }
+
+  .big-three-texto strong {
+    font-size: 15px;
   }
 
   .big-three-simbolo {
@@ -730,11 +737,35 @@
     margin-bottom: 20px;
   }
 
+  .seccion-desplegable {
+    margin-top: 24px;
+  }
+
+  .seccion-desplegable summary {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+  }
+
+  .seccion-desplegable .tabla-carta,
+  .seccion-desplegable .resumen-texto {
+    margin-top: 14px;
+  }
+
   /* Small mobile tweaks */
   @media (max-width: 360px) {
     .card-name { font-size: 20px; }
     .brand-main { font-size: 36px; }
     .brand-sub { letter-spacing: 0.35em; }
+  }
+  @media (max-width: 480px) {
+    .big-three {
+      flex-direction: column;
+    }
+
+    .big-three-item {
+      flex-direction: row;
+      text-align: left;
+    }
   }
 </style>
 </head>
@@ -810,17 +841,25 @@
     <div class="eyebrow"><span class="eyebrow-line">Tu Big Three</span></div>
     <div class="big-three" id="big-three-container"></div>
 
-    <div class="eyebrow" style="margin-top:40px;"><span class="eyebrow-line">Tu resumen</span></div>
-    <p class="resumen-texto" id="resumen-texto"></p>
+    <details class="faq-item seccion-desplegable">
+      <summary>Tu resumen</summary>
+      <p class="resumen-texto" id="resumen-texto"></p>
+    </details>
 
-    <div class="eyebrow" style="margin-top:40px;"><span class="eyebrow-line">Planetas</span></div>
-    <table class="tabla-carta" id="tabla-planetas"></table>
+    <details class="faq-item seccion-desplegable">
+      <summary>Planetas</summary>
+      <table class="tabla-carta" id="tabla-planetas"></table>
+    </details>
 
-    <div class="eyebrow" style="margin-top:32px;"><span class="eyebrow-line">Casas</span></div>
-    <table class="tabla-carta" id="tabla-casas"></table>
+    <details class="faq-item seccion-desplegable">
+      <summary>Casas</summary>
+      <table class="tabla-carta" id="tabla-casas"></table>
+    </details>
 
-    <div class="eyebrow" style="margin-top:32px;"><span class="eyebrow-line">Aspectos</span></div>
-    <table class="tabla-carta" id="tabla-aspectos"></table>
+    <details class="faq-item seccion-desplegable">
+      <summary>Aspectos</summary>
+      <table class="tabla-carta" id="tabla-aspectos"></table>
+    </details>
 
     <div class="paywall-teaser">
       <p class="paywall-texto">Todavía queda el 90% de tu carta: amor, vocación, dinero, heridas emocionales, potencial profesional, relaciones, misión de vida — más de 20 páginas.</p>
@@ -828,7 +867,6 @@
     </div>
 
   </section>
-
 
   <section class="cards" id="servicios">
 
