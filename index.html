@@ -541,6 +541,195 @@
     text-transform: uppercase;
   }
 
+  .cta-gratis {
+    text-align: center;
+    margin: 32px 0;
+  }
+
+  .cta-hero {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--cream);
+  }
+
+  .formulario-carta {
+    margin: 40px 0;
+  }
+
+  .formulario-carta form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .campo label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .campo input,
+  .campo select {
+    width: 100%;
+    background: rgba(11, 18, 32, 0.6);
+    border: 1px solid var(--hairline);
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .campo input:focus,
+  .campo select:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  .time-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .time-row select {
+    flex: 1;
+  }
+
+  .hint {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    opacity: 0.8;
+  }
+
+  .loading-carta {
+    text-align: center;
+    margin: 60px 0;
+  }
+
+  .loading-mensaje {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 24px;
+    min-height: 30px;
+  }
+
+  .loading-barra {
+    width: 100%;
+    max-width: 280px;
+    height: 3px;
+    background: var(--hairline);
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .loading-barra-fill {
+    height: 100%;
+    width: 30%;
+    background: var(--gold);
+    animation: avanzar 1.6s ease-in-out infinite;
+  }
+
+  @keyframes avanzar {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+  }
+
+  .resultado-carta {
+    margin: 50px 0;
+  }
+
+  .big-three {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .big-three-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(11, 18, 32, 0.6);
+    border: 1px solid var(--hairline);
+    padding: 16px 18px;
+  }
+
+  .big-three-simbolo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--gold);
+    min-width: 30px;
+  }
+
+  .big-three-texto strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--ink);
+  }
+
+  .big-three-texto span {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .resumen-texto {
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    white-space: pre-line;
+  }
+
+  .tabla-carta {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-size: 12.5px;
+  }
+
+  .tabla-carta th {
+    text-align: left;
+    padding: 8px 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--gold);
+  }
+
+  .tabla-carta td {
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--ink);
+  }
+
+  .retro-tag {
+    color: var(--gold);
+    font-size: 10px;
+  }
+
+  .paywall-teaser {
+    margin-top: 48px;
+    text-align: center;
+    padding: 28px 20px;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .paywall-texto {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
   /* Small mobile tweaks */
   @media (max-width: 360px) {
     .card-name { font-size: 20px; }
@@ -561,7 +750,87 @@
 
   <p class="intro">Un reporte personalizado que integra tu carta natal en una sola historia. Comprende tus talentos, desafíos, patrones de vida y el potencial que hay en ti a través de una interpretación profunda, escrita especialmente para ti.</p>
 
-  <section class="cards">
+  <section class="cta-gratis">
+    <a href="#formulario-gratis" class="cta cta-hero" onclick="mostrarFormulario(event)">
+      ✨ Generar mi carta gratis
+    </a>
+  </section>
+
+  <section id="formulario-gratis" class="formulario-carta" style="display:none;">
+    <div class="eyebrow"><span class="eyebrow-line">Tu carta, en segundos</span></div>
+    <p class="intro">Completa tus datos y descubre el resumen de tu carta natal, gratis.</p>
+
+    <form id="natalFormGratis">
+      <div class="campo">
+        <label for="fg_nombre">Nombre</label>
+        <input type="text" id="fg_nombre" name="nombre" required>
+      </div>
+
+      <div class="campo">
+        <label for="fg_fecha">Fecha de nacimiento</label>
+        <input type="date" id="fg_fecha" name="fecha" required>
+      </div>
+
+      <div class="campo">
+        <label for="fg_hora">Hora de nacimiento</label>
+        <div class="time-row">
+          <select id="fg_hora_h" required>
+            <option value="">Hora</option>
+            <script>for(let h=0; h<24; h++) document.write(`<option value="${String(h).padStart(2,'0')}">${String(h).padStart(2,'0')}</option>`);</script>
+          </select>
+          <select id="fg_hora_m" required>
+            <option value="">Min</option>
+            <script>for(let m=0; m<60; m++) document.write(`<option value="${String(m).padStart(2,'0')}">${String(m).padStart(2,'0')}</option>`);</script>
+          </select>
+        </div>
+        <div class="hint">Si no la sabes con exactitud, pon la más aproximada.</div>
+      </div>
+
+      <div class="campo">
+        <label for="fg_ciudad">Ciudad y país de nacimiento</label>
+        <input type="text" id="fg_ciudad" name="ciudad_pais" placeholder="Ej: Bogotá, Colombia" required>
+      </div>
+
+      <div class="campo">
+        <label for="fg_email">Correo electrónico</label>
+        <input type="email" id="fg_email" name="email" required>
+      </div>
+
+      <button type="submit" id="fg_submit" class="cta">Generar mi carta</button>
+    </form>
+  </section>
+
+  <section id="loading-carta" class="loading-carta" style="display:none;">
+    <div class="loading-mensaje" id="loading-mensaje-texto">Calculando posiciones planetarias...</div>
+    <div class="loading-barra"><div class="loading-barra-fill"></div></div>
+  </section>
+
+  <section id="resultado-carta" class="resultado-carta" style="display:none;">
+
+    <div class="eyebrow"><span class="eyebrow-line">Tu Big Three</span></div>
+    <div class="big-three" id="big-three-container"></div>
+
+    <div class="eyebrow" style="margin-top:40px;"><span class="eyebrow-line">Tu resumen</span></div>
+    <p class="resumen-texto" id="resumen-texto"></p>
+
+    <div class="eyebrow" style="margin-top:40px;"><span class="eyebrow-line">Planetas</span></div>
+    <table class="tabla-carta" id="tabla-planetas"></table>
+
+    <div class="eyebrow" style="margin-top:32px;"><span class="eyebrow-line">Casas</span></div>
+    <table class="tabla-carta" id="tabla-casas"></table>
+
+    <div class="eyebrow" style="margin-top:32px;"><span class="eyebrow-line">Aspectos</span></div>
+    <table class="tabla-carta" id="tabla-aspectos"></table>
+
+    <div class="paywall-teaser">
+      <p class="paywall-texto">Todavía queda el 90% de tu carta: amor, vocación, dinero, heridas emocionales, potencial profesional, relaciones, misión de vida — más de 20 páginas.</p>
+      <a href="#servicios" class="cta cta-hero" onclick="document.getElementById('servicios')?.scrollIntoView({behavior:'smooth'})">Desbloquear mi lectura completa</a>
+    </div>
+
+  </section>
+
+
+  <section class="cards" id="servicios">
 
     <article class="card">
       <div class="card-top">
@@ -670,5 +939,144 @@
   </footer>
 
 </div>
+
+<script>
+  const API_BASE = "http://localhost:8000/api/v1"; // TODO: cambiar a la URL de producción al desplegar
+
+  const MENSAJES_LOADING = [
+    "Calculando posiciones planetarias...",
+    "Analizando aspectos...",
+    "Interpretando patrones...",
+    "Creando tu carta..."
+  ];
+
+  function mostrarFormulario(e) {
+    e.preventDefault();
+    document.getElementById('formulario-gratis').style.display = 'block';
+    document.getElementById('formulario-gratis').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function iniciarMensajesLoading() {
+    const el = document.getElementById('loading-mensaje-texto');
+    let i = 0;
+    return setInterval(() => {
+      i = (i + 1) % MENSAJES_LOADING.length;
+      el.textContent = MENSAJES_LOADING[i];
+    }, 3500);
+  }
+
+  const SIMBOLOS = {
+    Sol: "☉", Luna: "☽", Mercurio: "☿", Venus: "♀", Marte: "♂",
+    Jupiter: "♃", Saturno: "♄", Urano: "♅", Neptuno: "♆", Pluton: "♇",
+    NodoNorte: "☊", Quiron: "⚷"
+  };
+
+  function capitalizar(texto) {
+    return texto.replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function renderizarResultado(datos) {
+    const { calculo, resumen, metadata } = datos;
+
+    // Big Three
+    const sol = calculo.planetas.Sol;
+    const luna = calculo.planetas.Luna;
+    const asc = calculo.puntos_angulares.Ascendente;
+
+    document.getElementById('big-three-container').innerHTML = `
+      <div class="big-three-item">
+        <span class="big-three-simbolo">☉</span>
+        <div class="big-three-texto"><strong>Sol en ${sol.signo}</strong><span>${sol.grado_en_signo.toFixed(1)}° · Casa ${sol.casa}</span></div>
+      </div>
+      <div class="big-three-item">
+        <span class="big-three-simbolo">☽</span>
+        <div class="big-three-texto"><strong>Luna en ${luna.signo}</strong><span>${luna.grado_en_signo.toFixed(1)}° · Casa ${luna.casa}</span></div>
+      </div>
+      <div class="big-three-item">
+        <span class="big-three-simbolo">⬆</span>
+        <div class="big-three-texto"><strong>Ascendente en ${asc.signo}</strong><span>${asc.grado_en_signo.toFixed(1)}°</span></div>
+      </div>
+    `;
+
+    // Resumen
+    document.getElementById('resumen-texto').textContent = resumen;
+
+    // Tabla planetas
+    let filasPlanetas = '<tr><th>Planeta</th><th>Signo</th><th>Grado</th><th>Casa</th></tr>';
+    for (const [nombre, d] of Object.entries(calculo.planetas)) {
+      filasPlanetas += `<tr>
+        <td>${SIMBOLOS[nombre] || ''} ${nombre}</td>
+        <td>${d.signo}</td>
+        <td>${d.grado_en_signo.toFixed(2)}°</td>
+        <td>${d.casa} ${d.retrogrado ? '<span class="retro-tag">℞</span>' : ''}</td>
+      </tr>`;
+    }
+    document.getElementById('tabla-planetas').innerHTML = filasPlanetas;
+
+    // Tabla casas
+    let filasCasas = '<tr><th>Casa</th><th>Signo</th><th>Grado</th></tr>';
+    for (const [numero, d] of Object.entries(calculo.casas)) {
+      filasCasas += `<tr><td>${numero}</td><td>${d.signo}</td><td>${d.grado_en_signo.toFixed(2)}°</td></tr>`;
+    }
+    document.getElementById('tabla-casas').innerHTML = filasCasas;
+
+    // Tabla aspectos
+    let filasAspectos = '<tr><th>A</th><th>Aspecto</th><th>B</th><th>Orbe</th></tr>';
+    for (const asp of calculo.aspectos) {
+      filasAspectos += `<tr><td>${asp.punto_a}</td><td>${asp.aspecto}</td><td>${asp.punto_b}</td><td>${asp.orbe_usado}°</td></tr>`;
+    }
+    document.getElementById('tabla-aspectos').innerHTML = filasAspectos;
+
+    document.getElementById('resultado-carta').style.display = 'block';
+    document.getElementById('resultado-carta').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  document.getElementById('natalFormGratis').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById('fg_nombre').value;
+    const fecha = document.getElementById('fg_fecha').value;
+    const horaH = document.getElementById('fg_hora_h').value;
+    const horaM = document.getElementById('fg_hora_m').value;
+    const ciudadPais = document.getElementById('fg_ciudad').value;
+
+    const [ciudad, pais] = ciudadPais.split(',').map(s => s.trim());
+
+    if (!ciudad || !pais) {
+      alert('Escribe ciudad y país separados por coma. Ej: Bogotá, Colombia');
+      return;
+    }
+
+    const fecha_hora_local = `${fecha}T${horaH}:${horaM}:00`;
+
+    document.getElementById('formulario-gratis').style.display = 'none';
+    document.getElementById('loading-carta').style.display = 'block';
+    document.getElementById('loading-carta').scrollIntoView({ behavior: 'smooth' });
+
+    const intervalId = iniciarMensajesLoading();
+
+    try {
+      const respuesta = await fetch(`${API_BASE}/carta-natal/resumen`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, fecha_hora_local, ciudad, pais })
+      });
+
+      if (!respuesta.ok) throw new Error('Error del servidor');
+
+      const datos = await respuesta.json();
+      clearInterval(intervalId);
+      document.getElementById('loading-carta').style.display = 'none';
+
+      renderizarResultado(datos);
+
+    } catch (error) {
+      clearInterval(intervalId);
+      document.getElementById('loading-carta').style.display = 'none';
+      alert('Hubo un problema generando tu carta. Intenta de nuevo en unos segundos.');
+      console.error(error);
+    }
+  });
+</script>
 </body>
 </html>
