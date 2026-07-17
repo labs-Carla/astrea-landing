@@ -49,7 +49,7 @@
 
   body {
     background-color: var(--cream);
-    background-image: url("fondo-estrellado.png");
+    /* background-image: url("fondo-estrellado.png"); */
     background-size: cover;
     background-position: center top;
     background-attachment: fixed;
@@ -109,7 +109,6 @@
     vertical-align: middle;
   }
 
-  /* Glifo legacy (no se usa pero queda por si vuelves a una versión sin imagen) */
   .brand-glyph {
     color: var(--gold);
     margin: 0 6px;
@@ -541,8 +540,6 @@
     text-transform: uppercase;
   }
 
-<<<<<<< Updated upstream
-=======
   .cta-gratis {
     text-align: center;
     margin: 32px 0;
@@ -666,10 +663,6 @@
     padding: 20px 12px;
   }
 
-  .big-three-texto strong {
-    font-size: 15px;
-  }
-
   .big-three-simbolo {
     font-family: 'Cormorant Garamond', serif;
     font-size: 28px;
@@ -689,19 +682,12 @@
     color: var(--ink-soft);
   }
 
-  .resumen-texto {
-    margin-top: 16px;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--ink-soft);
-    white-space: pre-line;
-  }
-
   .tabla-carta {
     width: 100%;
     border-collapse: collapse;
     margin-top: 16px;
-    font-size: 12.5px;
+    font-size: 12px;
+    table-layout: fixed;
   }
 
   .tabla-carta th {
@@ -709,8 +695,8 @@
     padding: 8px 6px;
     color: var(--gold);
     text-transform: uppercase;
-    font-size: 10px;
-    letter-spacing: 0.08em;
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
     border-bottom: 1px solid var(--gold);
   }
 
@@ -718,7 +704,15 @@
     padding: 8px 6px;
     border-bottom: 1px solid var(--hairline);
     color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
+  .tabla-carta th:nth-child(1), .tabla-carta td:nth-child(1) { width: 32%; }
+  .tabla-carta th:nth-child(2), .tabla-carta td:nth-child(2) { width: 27%; }
+  .tabla-carta th:nth-child(3), .tabla-carta td:nth-child(3) { width: 23%; }
+  .tabla-carta th:nth-child(4), .tabla-carta td:nth-child(4) { width: 18%; text-align: right; }
 
   .retro-tag {
     color: var(--gold);
@@ -748,13 +742,18 @@
     font-size: 20px;
   }
 
-  .seccion-desplegable .tabla-carta,
-  .seccion-desplegable .resumen-texto {
+  .seccion-desplegable .tabla-carta {
     margin-top: 14px;
   }
 
+  .seccion-desplegable .vista-astral-card,
+  .seccion-desplegable .big-three {
+    margin-top: 14px;
+  }
+
+  /* --- Rueda natal --- */
   .rueda-natal-wrap {
-    margin-top: 24px;
+    margin-top: 8px;
     display: flex;
     justify-content: center;
   }
@@ -798,12 +797,94 @@
     dominant-baseline: middle;
   }
 
->>>>>>> Stashed changes
+  .vista-astral-card {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .vista-astral-card .rueda-natal-wrap {
+    margin-top: 0;
+  }
+
+  .vista-astral-card .tabla-carta {
+    margin-top: 0;
+  }
+
+  /* --- Esencia en pocas palabras --- */
+  .esencia-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .esencia-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(11, 18, 32, 0.6);
+    border: 1px solid var(--hairline);
+    padding: 18px 16px;
+  }
+
+  .esencia-icono {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    border: 1.5px solid var(--esencia-color, var(--gold));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--esencia-color, var(--gold));
+    font-size: 15px;
+  }
+
+  .esencia-contenido {
+    flex: 1;
+  }
+
+  .esencia-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--esencia-color, var(--gold));
+    margin-bottom: 4px;
+  }
+
+  .esencia-texto {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin-bottom: 6px;
+  }
+
+  .esencia-etiqueta {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  .esencia-identidad { --esencia-color: var(--gold); }
+  .esencia-emociones { --esencia-color: #B39DDB; }
+  .esencia-camino    { --esencia-color: #E091A8; }
+
   /* Small mobile tweaks */
   @media (max-width: 360px) {
     .card-name { font-size: 20px; }
     .brand-main { font-size: 36px; }
     .brand-sub { letter-spacing: 0.35em; }
+  }
+  @media (max-width: 480px) {
+    .big-three {
+      flex-direction: column;
+    }
+
+    .big-three-item {
+      flex-direction: row;
+      text-align: left;
+    }
   }
 </style>
 </head>
@@ -819,9 +900,6 @@
 
   <p class="intro">Un reporte personalizado que integra tu carta natal en una sola historia. Comprende tus talentos, desafíos, patrones de vida y el potencial que hay en ti a través de una interpretación profunda, escrita especialmente para ti.</p>
 
-<<<<<<< Updated upstream
-  <section class="cards">
-=======
   <section class="cta-gratis">
     <a href="#formulario-gratis" class="cta cta-hero" onclick="mostrarFormulario(event)">
       ✨ Generar mi carta gratis
@@ -879,31 +957,25 @@
 
   <section id="resultado-carta" class="resultado-carta" style="display:none;">
 
-    <div class="eyebrow"><span class="eyebrow-line">Tu Big Three</span></div>
-    <div class="big-three" id="big-three-container"></div>
-
-    <div class="rueda-natal-wrap">
-      <div id="rueda-natal-container"></div>
-    </div>
-
     <details class="faq-item seccion-desplegable">
-      <summary>Tu resumen</summary>
-      <p class="resumen-texto" id="resumen-texto"></p>
+      <summary>Tu vista astral</summary>
+      <div class="card vista-astral-card">
+        <div class="rueda-natal-wrap">
+          <div id="rueda-natal-container"></div>
+        </div>
+        <table class="tabla-carta" id="tabla-planetas"></table>
+      </div>
+    </details>
+
+    <details class="faq-item seccion-desplegable" open>
+      <summary>Tu Big Three</summary>
+      <div class="big-three" id="big-three-container"></div>
     </details>
 
     <details class="faq-item seccion-desplegable">
-      <summary>Planetas</summary>
-      <table class="tabla-carta" id="tabla-planetas"></table>
-    </details>
-
-    <details class="faq-item seccion-desplegable">
-      <summary>Casas</summary>
-      <table class="tabla-carta" id="tabla-casas"></table>
-    </details>
-
-    <details class="faq-item seccion-desplegable">
-      <summary>Aspectos</summary>
-      <table class="tabla-carta" id="tabla-aspectos"></table>
+      <summary>Tu esencia en pocas palabras</summary>
+      <p class="intro" style="margin: 12px 0 16px; text-align:left;">Esto es solo un adelanto de lo que descubrirás.</p>
+      <div class="esencia-cards" id="esencia-cards-container"></div>
     </details>
 
     <div class="paywall-teaser">
@@ -914,7 +986,6 @@
   </section>
 
   <section class="cards" id="servicios">
->>>>>>> Stashed changes
 
     <article class="card">
       <div class="card-top">
@@ -1023,8 +1094,6 @@
   </footer>
 
 </div>
-<<<<<<< Updated upstream
-=======
 
 <script src="rueda-natal.js"></script>
 
@@ -1059,12 +1128,11 @@
     NodoNorte: "☊", Quiron: "⚷"
   };
 
-  function capitalizar(texto) {
-    return texto.replace(/\b\w/g, c => c.toUpperCase());
-  }
-
   function renderizarResultado(datos) {
     const { calculo, resumen, metadata } = datos;
+
+    // Rueda natal (componente separado en rueda-natal.js)
+    document.getElementById('rueda-natal-container').innerHTML = generarRuedaSVG(calculo);
 
     // Big Three
     const sol = calculo.planetas.Sol;
@@ -1086,10 +1154,29 @@
       </div>
     `;
 
-    document.getElementById('rueda-natal-container').innerHTML = generarRuedaSVG(calculo);
+    // Esencia en pocas palabras (3 tarjetas: identidad, emociones, camino)
+    const categorias = [
+      { key: 'identidad', clase: 'esencia-identidad', icono: '✦' },
+      { key: 'emociones', clase: 'esencia-emociones', icono: '✧' },
+      { key: 'camino',    clase: 'esencia-camino',    icono: '✵' },
+    ];
 
-    // Resumen
-    document.getElementById('resumen-texto').textContent = resumen;
+    let htmlEsencia = '';
+    categorias.forEach(cat => {
+      const bloque = resumen[cat.key];
+      if (!bloque) return;
+      htmlEsencia += `
+        <div class="esencia-card ${cat.clase}">
+          <div class="esencia-icono">${cat.icono}</div>
+          <div class="esencia-contenido">
+            <div class="esencia-titulo">${bloque.titulo}</div>
+            <p class="esencia-texto">${bloque.texto}</p>
+            <div class="esencia-etiqueta">${bloque.etiqueta}</div>
+          </div>
+        </div>
+      `;
+    });
+    document.getElementById('esencia-cards-container').innerHTML = htmlEsencia;
 
     // Tabla planetas
     let filasPlanetas = '<tr><th>Planeta</th><th>Signo</th><th>Grado</th><th>Casa</th></tr>';
@@ -1102,21 +1189,6 @@
       </tr>`;
     }
     document.getElementById('tabla-planetas').innerHTML = filasPlanetas;
-
-    // Tabla casas
-    let filasCasas = '<tr><th>Casa</th><th>Signo</th><th>Grado</th></tr>';
-    for (const [numero, d] of Object.entries(calculo.casas)) {
-      filasCasas += `<tr><td>${numero}</td><td>${d.signo}</td><td>${d.grado_en_signo.toFixed(2)}°</td></tr>`;
-    }
-    document.getElementById('tabla-casas').innerHTML = filasCasas;
-
-    // Tabla aspectos
-    let filasAspectos = '<tr><th>A</th><th>Aspecto</th><th>B</th><th>Orbe</th></tr>';
-    for (const asp of calculo.aspectos) {
-      filasAspectos += `<tr><td>${asp.punto_a}</td><td>${asp.aspecto}</td><td>${asp.punto_b}</td><td>${asp.orbe_usado}°</td></tr>`;
-    }
-    document.getElementById('tabla-aspectos').innerHTML = filasAspectos;
-
     document.getElementById('resultado-carta').style.display = 'block';
     document.getElementById('resultado-carta').scrollIntoView({ behavior: 'smooth' });
   }
@@ -1143,7 +1215,6 @@
     document.getElementById('loading-carta').style.display = 'block';
     document.getElementById('loading-carta').scrollIntoView({ behavior: 'smooth' });
 
-
     const intervalId = iniciarMensajesLoading();
 
     try {
@@ -1169,6 +1240,5 @@
     }
   });
 </script>
->>>>>>> Stashed changes
 </body>
 </html>
