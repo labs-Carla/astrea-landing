@@ -767,6 +767,68 @@
       text-align: left;
     }
   }
+
+  .esencia-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .esencia-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(11, 18, 32, 0.6);
+    border: 1px solid var(--hairline);
+    padding: 18px 16px;
+  }
+
+  .esencia-icono {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    border: 1.5px solid var(--esencia-color, var(--gold));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--esencia-color, var(--gold));
+    font-size: 15px;
+  }
+
+  .esencia-contenido {
+    flex: 1;
+  }
+
+  .esencia-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--esencia-color, var(--gold));
+    margin-bottom: 4px;
+  }
+
+  .esencia-texto {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin-bottom: 6px;
+  }
+
+  .esencia-etiqueta {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  .esencia-lock {
+    color: var(--ink-soft);
+    opacity: 0.7;
+    margin-left: 8px;
+  }
+
+  .esencia-identidad { --esencia-color: var(--gold); }
+  .esencia-emociones { --esencia-color: #B39DDB; }
+  .esencia-camino    { --esencia-color: #E091A8; }
 </style>
 </head>
 <body>
@@ -841,10 +903,9 @@
     <div class="eyebrow"><span class="eyebrow-line">Tu Big Three</span></div>
     <div class="big-three" id="big-three-container"></div>
 
-    <details class="faq-item seccion-desplegable">
-      <summary>Tu resumen</summary>
-      <p class="resumen-texto" id="resumen-texto"></p>
-    </details>
+    <div class="eyebrow" style="margin-top:32px;"><span class="eyebrow-line">Tu esencia en pocas palabras</span></div>
+    <p class="intro" style="margin-bottom:16px;">Esto es solo un adelanto de lo que descubrirás.</p>
+    <div class="esencia-cards" id="esencia-cards-container"></div>
 
     <details class="faq-item seccion-desplegable">
       <summary>Planetas</summary>
@@ -1037,7 +1098,29 @@
     `;
 
     // Resumen
-    document.getElementById('resumen-texto').textContent = resumen;
+    // Esencia en pocas palabras (3 tarjetas: identidad, emociones, camino)
+    const categorias = [
+      { key: 'identidad', clase: 'esencia-identidad', icono: '✦' },
+      { key: 'emociones', clase: 'esencia-emociones', icono: '✧' },
+      { key: 'camino',    clase: 'esencia-camino',    icono: '✵' },
+    ];
+
+    let htmlEsencia = '';
+    categorias.forEach(cat => {
+      const bloque = resumen[cat.key];
+      if (!bloque) return;
+      htmlEsencia += `
+        <div class="esencia-card ${cat.clase}">
+          <div class="esencia-icono">${cat.icono}</div>
+          <div class="esencia-contenido">
+            <div class="esencia-titulo">${bloque.titulo}</div>
+            <p class="esencia-texto">${bloque.texto}</p>
+            <div class="esencia-etiqueta">${bloque.etiqueta}</div>
+          </div>
+        </div>
+      `;
+    });
+    document.getElementById('esencia-cards-container').innerHTML = htmlEsencia;
 
     // Tabla planetas
     let filasPlanetas = '<tr><th>Planeta</th><th>Signo</th><th>Grado</th><th>Casa</th></tr>';
