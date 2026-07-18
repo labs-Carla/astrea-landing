@@ -1,41 +1,15 @@
-<!--
-  ═══════════════════════════════════════════════════════════
-  ASTREA CHARTS · LINKS PAGE
-  ═══════════════════════════════════════════════════════════
-
-  PENDIENTES:
-
-  1. Link de Hotmart
-     Reemplazar el placeholder cuando el producto esté creado:
-       #PENDIENTE-NATAL
-
-  2. Vista previa del reporte
-     Agregar miniatura/preview del PDF dentro de <article class="card">.
-     Sugerencia: imagen de la portada o carrusel de 2-3 páginas internas.
-     Ubicación recomendada: entre .card-desc y .cta.
-
-  3. Video de los pasos para comprar
-     Embed dentro de la sección "Cómo funciona" — o como sección propia
-     entre "Cómo funciona" y "FAQ". Sugerencia: video vertical (9:16)
-     mostrando el flujo Hotmart → datos natales → recepción del PDF.
-
-  4. Dominio nuevo
-     Migrar de astra-wealth.site a dominio propio de Astrea Charts.
-  ═══════════════════════════════════════════════════════════
--->
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Astrea Charts · Cartas de profundidad</title>
+<title>Astrea Charts · Tu carta natal revela quién eres en esencia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --cream: #0B1220;
-    --cream-deep: #0E1728;
     --gold: #D4B172;
     --gold-soft: #E6CB98;
     --ink: #F4EEDF;
@@ -44,12 +18,11 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { -webkit-text-size-adjust: 100%; }
 
   body {
     background-color: var(--cream);
-    /* background-image: url("fondo-estrellado.png"); */
+    background-image: url("fondo-estrellado.png");
     background-size: cover;
     background-position: center top;
     background-attachment: fixed;
@@ -66,14 +39,17 @@
     margin: 0 auto;
   }
 
-  /* --- Header --- */
-  header {
-    text-align: center;
-    padding: 8px 0 32px;
-  }
-
+  /* --- Header / Hero --- */
   .brand {
     text-align: center;
+    position: relative;
+  }
+
+  .hero-star-top {
+    color: var(--gold);
+    font-size: 18px;
+    display: block;
+    margin-bottom: 6px;
   }
 
   .brand-main {
@@ -81,8 +57,8 @@
     font-weight: 500;
     font-size: 42px;
     line-height: 0.95;
-    color: var(--ink);
-    letter-spacing: 0.04em;
+    color: var(--gold-soft);
+    letter-spacing: 0.08em;
   }
 
   .brand-sub {
@@ -95,39 +71,162 @@
     margin-top: 6px;
   }
 
-  .seal-wrap {
+  .hero-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 1.2;
+    color: var(--ink);
+    margin: 28px 0 14px;
+  }
+
+  .hero-titulo em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .hero-subtitulo {
+    font-size: 14px;
+    color: var(--ink-soft);
+    max-width: 300px;
+    margin: 0 auto 28px;
+    line-height: 1.55;
+  }
+
+  /* --- CTA principal --- */
+  .cta-gratis-wrap {
+    margin-bottom: 32px;
+  }
+
+  .cta-gratis {
+    display: block;
     text-align: center;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    color: #1a1408;
+    text-decoration: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 22px;
+    padding: 20px 24px;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(212, 177, 114, 0.25);
+    transition: transform 0.2s ease;
+  }
+
+  .cta-gratis:hover {
+    transform: translateY(-2px);
+  }
+
+  .cta-gratis .cta-icono {
+    margin-right: 8px;
+  }
+
+  /* --- Card premium --- */
+  .card-premium {
+    background: rgba(11, 18, 32, 0.6);
+    backdrop-filter: blur(3px);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 24px 22px;
+    margin-bottom: 36px;
+  }
+
+  .card-premium-top {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
     margin-bottom: 18px;
   }
 
-  .seal {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: inline-block;
-    vertical-align: middle;
+  .mandala-decorativa {
+    width: 84px;
+    height: 84px;
+    min-width: 84px;
   }
 
-  .brand-glyph {
+  .card-premium-info {
+    flex: 1;
+  }
+
+  .card-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--gold);
-    margin: 0 6px;
-    font-size: 26px;
+    margin-bottom: 2px;
   }
 
-  .tagline {
+  .card-premium-titulo {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 17px;
-    color: var(--ink-soft);
-    margin-top: 6px;
-    letter-spacing: 0.01em;
+    font-weight: 500;
+    font-size: 26px;
+    color: var(--ink);
+    line-height: 1.1;
   }
 
-  /* --- Section eyebrow --- */
+  .card-premium-precio {
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    border-top: 1px solid var(--hairline);
+    display: inline-block;
+    margin-top: 6px;
+    padding-top: 4px;
+  }
+
+  .card-premium-lista {
+    list-style: none;
+    margin-bottom: 20px;
+  }
+
+  .card-premium-lista li {
+    position: relative;
+    padding-left: 26px;
+    font-size: 13.5px;
+    color: var(--ink);
+    line-height: 1.6;
+    margin-bottom: 9px;
+  }
+
+  .card-premium-lista li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .cta-comprar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    text-decoration: none;
+    text-align: center;
+    padding: 13px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .cta-comprar:hover {
+    background: var(--gold);
+    color: var(--cream);
+  }
+
+  /* --- Section eyebrow (reutilizado en varias secciones) --- */
   .eyebrow {
     text-align: center;
-    margin: 24px 0 8px;
+    margin: 32px 0 18px;
   }
 
   .eyebrow-line {
@@ -144,251 +243,60 @@
 
   .eyebrow-line::before,
   .eyebrow-line::after {
-    content: '';
-    width: 28px;
-    height: 1px;
-    background: var(--hairline);
-  }
-
-  .intro {
-    text-align: center;
-    font-size: 14px;
-    color: var(--ink-soft);
-    max-width: 320px;
-    margin: 0 auto 28px;
-    line-height: 1.55;
-  }
-
-  /* --- Cards --- */
-  .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .card {
-    background: rgba(11, 18, 32, 0.6);
-    backdrop-filter: blur(3px);
-    border: 1px solid var(--hairline);
-    padding: 22px 22px 20px;
-    position: relative;
-    transition: border-color 0.2s ease, transform 0.2s ease;
-  }
-
-  .card:hover {
-    border-color: var(--gold);
-  }
-
-  .card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 10px;
-  }
-
-  .card-id {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-
-  .glyph {
+    content: '✦';
+    font-size: 10px;
     color: var(--gold);
-    line-height: 1;
-    width: 22px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
   }
 
-  .card-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    color: var(--ink);
-    line-height: 1.15;
-  }
-
-  .price {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gold);
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-    padding-top: 4px;
-  }
-
-  .card-question {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 16px;
-    color: var(--ink-soft);
-    margin-bottom: 8px;
-    padding-left: 32px;
-  }
-
-  .card-desc {
-    font-size: 13px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    margin-bottom: 16px;
-    padding-left: 32px;
-  }
-
-  .card-meta {
-    font-size: 12px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    margin-bottom: 16px;
-    padding-left: 32px;
-    letter-spacing: 0.01em;
-  }
-
-  .card-list {
-    list-style: none;
-    padding-left: 32px;
-    margin-bottom: 20px;
-  }
-
-  .card-list li {
-    position: relative;
-    padding-left: 22px;
-    font-size: 13px;
-    color: var(--ink);
-    line-height: 1.55;
-    margin-bottom: 11px;
-  }
-
-  .card-list li::before {
-    content: '\2726';
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: var(--gold);
-    font-size: 12px;
-  }
-
-  .card-list li:last-child {
-    color: var(--ink-soft);
-    font-size: 12px;
-    margin-bottom: 0;
-  }
-
-  .cta {
-    display: block;
-    background: var(--ink);
-    color: var(--cream);
-    text-decoration: none;
-    text-align: center;
-    padding: 13px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    transition: background 0.2s ease;
-  }
-
-  .cta:hover {
-    background: var(--gold);
-    color: var(--cream);
-  }
-
-  /* --- Questions block --- */
-  .questions {
-    margin-top: 32px;
-    text-align: center;
-    padding: 24px 20px;
-    border-top: 1px solid var(--hairline);
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  .questions-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 18px;
-    color: var(--ink);
-    margin-bottom: 14px;
-  }
-
-  .contact-row {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
-
-  .contact-btn {
-    flex: 1;
-    max-width: 160px;
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--ink);
-    text-decoration: none;
-    text-align: center;
-    padding: 11px 12px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: all 0.2s ease;
-  }
-
-  .contact-btn:hover {
-    background: var(--ink);
-    color: var(--cream);
-  }
-
-  /* --- How it works --- */
-  .how {
-    margin-top: 40px;
-  }
-
+  /* --- Cómo funciona --- */
   .how-grid {
-    margin-top: 18px;
+    display: flex;
+    gap: 4px;
+    text-align: center;
   }
 
   .step {
-    display: flex;
-    gap: 16px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--hairline);
+    flex: 1;
+    padding: 0 6px;
   }
-
-  .step:last-child { border-bottom: none; }
 
   .step-num {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-size: 22px;
+    font-size: 16px;
     color: var(--gold);
-    line-height: 1;
-    min-width: 24px;
+    margin: 0 auto 12px;
   }
 
-  .step-text {
-    font-size: 14px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-  }
-
-  .step-text strong {
+  .step-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
     color: var(--ink);
-    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .step-desc {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
   }
 
   /* --- FAQ --- */
-  .faq { margin-top: 40px; }
-
   .faq-item {
     border-bottom: 1px solid var(--hairline);
-    padding: 16px 0;
+    padding: 14px 0;
   }
 
   .faq-item summary {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
+    font-size: 16px;
     color: var(--ink);
     cursor: pointer;
     list-style: none;
@@ -404,7 +312,7 @@
     content: '+';
     font-family: 'Cormorant Garamond', serif;
     color: var(--gold);
-    font-size: 22px;
+    font-size: 20px;
     transition: transform 0.2s ease;
   }
 
@@ -414,29 +322,46 @@
 
   .faq-answer {
     margin-top: 10px;
-    font-size: 14px;
+    font-size: 13.5px;
     color: var(--ink-soft);
     line-height: 1.55;
   }
 
+  /* --- Contacto --- */
+  .contact-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 32px;
+  }
+
+  .contact-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    text-decoration: none;
+    text-align: center;
+    padding: 12px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .contact-btn:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
   /* --- Footer --- */
   footer {
-    margin-top: 56px;
+    margin-top: 44px;
     text-align: center;
-  }
-
-  .footer-tag {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
-    color: var(--ink);
-    line-height: 1.3;
-    margin-bottom: 4px;
-    letter-spacing: 0.01em;
-  }
-
-  .footer-tag em {
-    color: var(--gold);
-    font-style: italic;
   }
 
   .footer-divider {
@@ -444,635 +369,169 @@
     align-items: center;
     justify-content: center;
     gap: 16px;
-    margin: 32px 0 24px;
+    margin: 0 0 20px;
   }
 
   .divider-line {
     flex: 1;
     height: 1px;
     background: var(--hairline);
-    max-width: 80px;
+    max-width: 90px;
   }
 
   .divider-symbol {
     color: var(--gold);
-    font-size: 16px;
-    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
   }
 
   .footer-brand {
-    font-family: 'DM Sans', sans-serif;
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-
-  .footer-meta {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 14px;
-    color: var(--ink-soft);
-    margin-bottom: 18px;
-  }
-
-  .footer-social {
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: var(--ink-soft);
-    margin-bottom: 24px;
-  }
-
-  .footer-social a {
-    color: var(--ink);
-    text-decoration: none;
-    border-bottom: 1px solid var(--hairline);
-    padding-bottom: 1px;
-    transition: border-color 0.2s ease, color 0.2s ease;
-  }
-
-  .footer-social a:hover {
     color: var(--gold);
-    border-color: var(--gold);
-  }
-
-  .footer-social .dot {
-    margin: 0 10px;
-    color: var(--gold);
-    opacity: 0.6;
+    margin-bottom: 10px;
   }
 
   .disclaimer {
     font-size: 10.5px;
     color: var(--ink-soft);
     line-height: 1.55;
-    opacity: 0.75;
-    max-width: 360px;
-    margin: 0 auto 16px;
-    letter-spacing: 0.01em;
+    opacity: 0.8;
+    max-width: 340px;
+    margin: 0 auto 12px;
   }
 
   .footer-copy {
-    font-size: 10.5px;
+    font-size: 10px;
     color: var(--ink-soft);
-    letter-spacing: 0.08em;
-    opacity: 0.6;
-    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.65;
+  }
+
+  .footer-copy a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .footer-copy a:hover {
+    text-decoration: underline;
   }
 
   .footer-copy .sep {
-    margin: 0 8px;
+    margin: 0 6px;
     color: var(--gold);
   }
 
-  .footer-cta {
-    margin-top: 18px;
-    display: inline-block;
-    background: var(--ink);
-    color: var(--cream);
-    text-decoration: none;
-    padding: 13px 28px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  .cta-gratis {
-    text-align: center;
-    margin: 32px 0;
-  }
-
-  .cta-hero {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--cream);
-  }
-
-  .formulario-carta {
-    margin: 40px 0;
-  }
-
-  .formulario-carta form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 20px;
-  }
-
-  .campo label {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 6px;
-    display: block;
-  }
-
-  .campo input,
-  .campo select {
-    width: 100%;
-    background: rgba(11, 18, 32, 0.6);
-    border: 1px solid var(--hairline);
-    padding: 12px 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: var(--ink);
-  }
-
-  .campo input:focus,
-  .campo select:focus {
-    outline: none;
-    border-color: var(--gold);
-  }
-
-  .time-row {
-    display: flex;
-    gap: 8px;
-  }
-
-  .time-row select {
-    flex: 1;
-  }
-
-  .hint {
-    font-size: 11.5px;
-    color: var(--ink-soft);
-    margin-top: 4px;
-    opacity: 0.8;
-  }
-
-  .loading-carta {
-    text-align: center;
-    margin: 60px 0;
-  }
-
-  .loading-mensaje {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 20px;
-    color: var(--ink);
-    margin-bottom: 24px;
-    min-height: 30px;
-  }
-
-  .loading-barra {
-    width: 100%;
-    max-width: 280px;
-    height: 3px;
-    background: var(--hairline);
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .loading-barra-fill {
-    height: 100%;
-    width: 30%;
-    background: var(--gold);
-    animation: avanzar 1.6s ease-in-out infinite;
-  }
-
-  @keyframes avanzar {
-    0%   { transform: translateX(-100%); }
-    100% { transform: translateX(400%); }
-  }
-
-  .resultado-carta {
-    margin: 50px 0;
-  }
-
-  .big-three {
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    margin-top: 20px;
-  }
-
-  .big-three-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 8px;
-    background: rgba(11, 18, 32, 0.6);
-    border: 1px solid var(--hairline);
-    padding: 20px 12px;
-  }
-
-  .big-three-simbolo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px;
-    color: var(--gold);
-    min-width: 30px;
-  }
-
-  .big-three-texto strong {
-    display: block;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    color: var(--ink);
-  }
-
-  .big-three-texto span {
-    font-size: 12px;
-    color: var(--ink-soft);
-  }
-
-  .tabla-carta {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 16px;
-    font-size: 12px;
-    table-layout: fixed;
-  }
-
-  .tabla-carta th {
-    text-align: left;
-    padding: 8px 6px;
-    color: var(--gold);
-    text-transform: uppercase;
-    font-size: 9.5px;
-    letter-spacing: 0.06em;
-    border-bottom: 1px solid var(--gold);
-  }
-
-  .tabla-carta td {
-    padding: 8px 6px;
-    border-bottom: 1px solid var(--hairline);
-    color: var(--ink);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .tabla-carta th:nth-child(1), .tabla-carta td:nth-child(1) { width: 32%; }
-  .tabla-carta th:nth-child(2), .tabla-carta td:nth-child(2) { width: 27%; }
-  .tabla-carta th:nth-child(3), .tabla-carta td:nth-child(3) { width: 23%; }
-  .tabla-carta th:nth-child(4), .tabla-carta td:nth-child(4) { width: 18%; text-align: right; }
-
-  .retro-tag {
-    color: var(--gold);
-    font-size: 10px;
-  }
-
-  .paywall-teaser {
-    margin-top: 48px;
-    text-align: center;
-    padding: 28px 20px;
-    border-top: 1px solid var(--hairline);
-  }
-
-  .paywall-texto {
-    font-size: 14px;
-    color: var(--ink-soft);
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-
-  .seccion-desplegable {
-    margin-top: 24px;
-  }
-
-  .seccion-desplegable summary {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-  }
-
-  .seccion-desplegable .tabla-carta {
-    margin-top: 14px;
-  }
-
-  .seccion-desplegable .vista-astral-card,
-  .seccion-desplegable .big-three {
-    margin-top: 14px;
-  }
-
-  /* --- Rueda natal --- */
-  .rueda-natal-wrap {
-    margin-top: 8px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .rueda-natal-wrap svg {
-    width: 100%;
-    max-width: 420px;
-    height: auto;
-  }
-
-  .rueda-signo-simbolo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    fill: var(--gold);
-    text-anchor: middle;
-    dominant-baseline: middle;
-  }
-
-  .rueda-planeta-simbolo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 15px;
-    fill: var(--ink);
-    text-anchor: middle;
-    dominant-baseline: middle;
-  }
-
-  .rueda-casa-numero {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 9px;
-    fill: var(--ink-soft);
-    text-anchor: middle;
-    dominant-baseline: middle;
-  }
-
-  .rueda-eje-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    fill: var(--gold);
-    text-anchor: middle;
-    dominant-baseline: middle;
-  }
-
-  .vista-astral-card {
-    margin-top: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    align-items: center;
-  }
-
-  .vista-astral-card .rueda-natal-wrap {
-    margin-top: 0;
-  }
-
-  .vista-astral-card .tabla-carta {
-    margin-top: 0;
-  }
-
-  /* --- Esencia en pocas palabras --- */
-  .esencia-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .esencia-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    background: rgba(11, 18, 32, 0.6);
-    border: 1px solid var(--hairline);
-    padding: 18px 16px;
-  }
-
-  .esencia-icono {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    border-radius: 50%;
-    border: 1.5px solid var(--esencia-color, var(--gold));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--esencia-color, var(--gold));
-    font-size: 15px;
-  }
-
-  .esencia-contenido {
-    flex: 1;
-  }
-
-  .esencia-titulo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 17px;
-    color: var(--esencia-color, var(--gold));
-    margin-bottom: 4px;
-  }
-
-  .esencia-texto {
-    font-size: 13px;
-    color: var(--ink);
-    line-height: 1.55;
-    margin-bottom: 6px;
-  }
-
-  .esencia-etiqueta {
-    font-size: 11px;
-    color: var(--ink-soft);
-    font-style: italic;
-  }
-
-  .esencia-identidad { --esencia-color: var(--gold); }
-  .esencia-emociones { --esencia-color: #B39DDB; }
-  .esencia-camino    { --esencia-color: #E091A8; }
-
-  /* Small mobile tweaks */
   @media (max-width: 360px) {
-    .card-name { font-size: 20px; }
     .brand-main { font-size: 36px; }
-    .brand-sub { letter-spacing: 0.35em; }
-  }
-  @media (max-width: 480px) {
-    .big-three {
-      flex-direction: column;
-    }
-
-    .big-three-item {
-      flex-direction: row;
-      text-align: left;
-    }
+    .hero-titulo { font-size: 30px; }
+    .how-grid { flex-direction: column; gap: 20px; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <header>
-    <div class="brand">
-      <div class="brand-main">ASTREA</div>
-      <div class="brand-sub">— Charts —</div>
-    </div>
-  </header>
+  <div class="brand">
+    <span class="hero-star-top">✦</span>
+    <div class="brand-main">ASTREA</div>
+    <div class="brand-sub">— Charts —</div>
+  </div>
 
-  <p class="intro">Un reporte personalizado que integra tu carta natal en una sola historia. Comprende tus talentos, desafíos, patrones de vida y el potencial que hay en ti a través de una interpretación profunda, escrita especialmente para ti.</p>
+  <h1 class="hero-titulo">Tu carta natal revela quién eres en <em>esencia</em>.</h1>
+  <p class="hero-subtitulo">Descubre tu Sol, Luna, Ascendente y más. Al instante y sin costo.</p>
 
-  <section class="cta-gratis">
-    <a href="#formulario-gratis" class="cta cta-hero" onclick="mostrarFormulario(event)">
-      ✨ Generar mi carta gratis
+  <div class="cta-gratis-wrap">
+    <a href="carta.html" class="cta-gratis">
+      <span class="cta-icono">✨</span>Generar mi carta gratis
     </a>
-  </section>
+  </div>
 
-  <section id="formulario-gratis" class="formulario-carta" style="display:none;">
-    <div class="eyebrow"><span class="eyebrow-line">Tu carta, en segundos</span></div>
-    <p class="intro">Completa tus datos y descubre el resumen de tu carta natal, gratis.</p>
-
-    <form id="natalFormGratis">
-      <div class="campo">
-        <label for="fg_nombre">Nombre</label>
-        <input type="text" id="fg_nombre" name="nombre" required>
-      </div>
-
-      <div class="campo">
-        <label for="fg_fecha">Fecha de nacimiento</label>
-        <input type="date" id="fg_fecha" name="fecha" min="1900-01-01" max="2026-07-18" required>
-      </div>
-
-      <div class="campo">
-        <label for="fg_hora">Hora de nacimiento</label>
-        <div class="time-row">
-          <select id="fg_hora_h" required>
-            <option value="">Hora</option>
-            <script>for(let h=0; h<24; h++) document.write(`<option value="${String(h).padStart(2,'0')}">${String(h).padStart(2,'0')}</option>`);</script>
-          </select>
-          <select id="fg_hora_m" required>
-            <option value="">Min</option>
-            <script>for(let m=0; m<60; m++) document.write(`<option value="${String(m).padStart(2,'0')}">${String(m).padStart(2,'0')}</option>`);</script>
-          </select>
-        </div>
-        <div class="hint">Si no la sabes con exactitud, pon la más aproximada.</div>
-      </div>
-
-      <div class="campo">
-        <label for="fg_ciudad">Ciudad y país de nacimiento</label>
-        <input type="text" id="fg_ciudad" name="ciudad_pais" placeholder="Ej: Bogotá, Colombia" required>
-      </div>
-
-      <div class="campo">
-        <label for="fg_email">Correo electrónico</label>
-        <input type="email" id="fg_email" name="email" required>
-      </div>
-
-      <button type="submit" id="fg_submit" class="cta">Generar mi carta</button>
-    </form>
-  </section>
-
-  <section id="loading-carta" class="loading-carta" style="display:none;">
-    <div class="loading-mensaje" id="loading-mensaje-texto">Calculando posiciones planetarias...</div>
-    <div class="loading-barra"><div class="loading-barra-fill"></div></div>
-  </section>
-
-  <section id="resultado-carta" class="resultado-carta" style="display:none;">
-
-    <details class="faq-item seccion-desplegable">
-      <summary>Tu vista astral</summary>
-      <div class="card vista-astral-card">
-        <div class="rueda-natal-wrap">
-          <div id="rueda-natal-container"></div>
-        </div>
-        <table class="tabla-carta" id="tabla-planetas"></table>
-      </div>
-    </details>
-
-    <details class="faq-item seccion-desplegable" open>
-      <summary>Tu Big Three</summary>
-      <div class="big-three" id="big-three-container"></div>
-    </details>
-
-    <details class="faq-item seccion-desplegable">
-      <summary>Tu esencia en pocas palabras</summary>
-      <p class="intro" style="margin: 12px 0 16px; text-align:left;">Esto es solo un adelanto de lo que descubrirás.</p>
-      <div class="esencia-cards" id="esencia-cards-container"></div>
-    </details>
-
-    <div class="paywall-teaser">
-      <p class="paywall-texto">Todavía queda el 90% de tu carta: amor, vocación, dinero, heridas emocionales, potencial profesional, relaciones, misión de vida — más de 20 páginas.</p>
-      <a href="#servicios" class="cta cta-hero" onclick="document.getElementById('servicios')?.scrollIntoView({behavior:'smooth'})">Desbloquear mi lectura completa</a>
-    </div>
-
-  </section>
-
-  <section class="cards" id="servicios">
-
-    <article class="card">
-      <div class="card-top">
-        <div class="card-id">
-          <span class="glyph">
-            <svg width="22" height="26" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="1" width="20" height="3" fill="currentColor"/>
-              <rect x="1" y="23" width="22" height="3" fill="currentColor"/>
-              <rect x="4" y="6" width="2.4" height="16" fill="currentColor"/>
-              <rect x="8.8" y="6" width="2.4" height="16" fill="currentColor"/>
-              <rect x="13.6" y="6" width="2.4" height="16" fill="currentColor"/>
-              <rect x="18.4" y="6" width="2.4" height="16" fill="currentColor"/>
-            </svg>
-          </span>
-          <h3 class="card-name">Lectura de Carta Natal</h3>
-        </div>
-        <span class="price">USD 12</span>
-      </div>
-      <p class="card-question">Una lectura para volver a ti una y otra vez.</p>
-      <ul class="card-list">
-        <li><strong>Capítulo I · Tu esencia</strong> — Tu identidad, propósito y la energía que guía tu camino.</li>
-        <li><strong>Capítulo II · Tu mundo interior</strong> — Tus emociones, necesidades y forma de procesar la vida.</li>
-        <li><strong>Capítulo III · Tu potencial</strong> — Talentos naturales, fortalezas y oportunidades de crecimiento.</li>
-        <li><strong>Capítulo IV · Tus desafíos</strong> — Patrones, bloqueos y aprendizajes que impulsan tu evolución.</li>
-        <li><strong>Capítulo V · Tu carta, planeta por planeta</strong> — Una interpretación detallada del Sol, la Luna, el Ascendente y cada uno de los planetas de tu carta natal.</li>
-        <li><strong>Capítulo VI · Los patrones de tu carta</strong> — Análisis completo de casas astrológicas, aspectos planetarios y configuraciones que revelan cómo interactúan todas las piezas de tu carta.</li>
-        <li><strong>Capítulo VII · Un cierre para volver a ti</strong> — Una reflexión final para integrar la lectura y regresar a ella cada vez que lo necesites.</li>
-        <li>Más de 20 páginas · Revisión humana · Entrega en PDF por correo · 24–48 horas</li>
-      </ul>
-      <a class="cta" href="https://pay.hotmart.com/B106744064D?bid=1784070968525">Quiero mi Lectura de Carta Natal</a>
-    </article>
-
-    </section>
-
-  <section class="questions">
-    <div class="questions-title">¿Tienes preguntas?</div>
-    <div class="contact-row">
-      <a class="contact-btn" href="https://wa.me/573132137456?text=Hola%20%E2%9C%A8%20tengo%20una%20pregunta%20sobre%20mi%20carta%20natal">WhatsApp</a>
-      <a class="contact-btn" href="https://www.tiktok.com/@astrea.charts">TikTok DM</a>
-    </div>
-  </section>
-
-  <section class="how">
-    <div class="eyebrow"><span class="eyebrow-line">Cómo funciona</span></div>
-    <div class="how-grid">
-      <div class="step">
-        <div class="step-num">i.</div>
-        <div class="step-text"><strong>Pagas de forma segura.</strong> A través de Hotmart — el precio se convierte a tu moneda automáticamente.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">ii.</div>
-        <div class="step-text"><strong>Llenas un formulario con tus datos natales.</strong> Te llega justo después de pagar: solo pide fecha, hora y lugar de nacimiento.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">iii.</div>
-        <div class="step-text"><strong>Recibes tu PDF en 24–48 horas.</strong> En tu correo, listo para leer cuantas veces quieras.</div>
+  <div class="card-premium" id="servicios">
+    <div class="card-premium-top">
+      <svg class="mandala-decorativa" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="var(--hairline)" stroke-width="1"/>
+        <circle cx="50" cy="50" r="34" fill="none" stroke="var(--hairline)" stroke-width="1"/>
+        <circle cx="50" cy="50" r="4" fill="var(--gold)"/>
+        <g stroke="var(--gold)" stroke-width="0.6" opacity="0.7">
+          <line x1="50" y1="4" x2="50" y2="96"/>
+          <line x1="4" y1="50" x2="96" y2="50"/>
+          <line x1="16" y1="16" x2="84" y2="84"/>
+          <line x1="84" y1="16" x2="16" y2="84"/>
+        </g>
+        <g stroke="var(--gold)" stroke-width="0.5" opacity="0.5">
+          <line x1="50" y1="16" x2="20" y2="70"/>
+          <line x1="50" y1="16" x2="80" y2="70"/>
+          <line x1="20" y1="70" x2="80" y2="70"/>
+        </g>
+        <g fill="var(--gold)" opacity="0.85">
+          <circle cx="50" cy="16" r="2.2"/>
+          <circle cx="20" cy="70" r="2.2"/>
+          <circle cx="80" cy="70" r="2.2"/>
+          <circle cx="84" cy="50" r="2"/>
+          <circle cx="16" cy="34" r="2"/>
+        </g>
+      </svg>
+      <div class="card-premium-info">
+        <div class="card-eyebrow">Lectura de</div>
+        <div class="card-premium-titulo">Carta Natal</div>
+        <div class="card-premium-precio">USD 12</div>
       </div>
     </div>
-  </section>
 
-  <section class="faq">
-    <div class="eyebrow"><span class="eyebrow-line">Preguntas frecuentes</span></div>
+    <ul class="card-premium-lista">
+      <li>Más de 15 capítulos profesionales</li>
+      <li>Entiende tu esencia, tus patrones y tu propósito</li>
+      <li>Análisis profundo de planetas y aspectos</li>
+      <li>Entrega en 24–48h en PDF</li>
+    </ul>
 
-    <details class="faq-item">
-      <summary>¿Necesito saber de astrología?</summary>
-      <div class="faq-answer">No. Cada reporte está escrito para que cualquier persona lo entienda — sin tecnicismos ni explicaciones complicadas.</div>
-    </details>
+    <a class="cta-comprar" href="https://pay.hotmart.com/B106744064D?bid=1784070968525">Comprar ahora →</a>
+  </div>
 
-    <details class="faq-item">
-      <summary>¿Qué pasa si no sé mi hora exacta de nacimiento?</summary>
-      <div class="faq-answer">Pon la más aproximada que tengas. El reporte sigue siendo útil y preciso en la mayoría de las secciones.</div>
-    </details>
+  <div class="eyebrow"><span class="eyebrow-line">Cómo funciona</span></div>
+  <div class="how-grid">
+    <div class="step">
+      <div class="step-num">i</div>
+      <div class="step-titulo">Ingresa tus datos</div>
+      <div class="step-desc">Fecha, hora y lugar de nacimiento.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">ii</div>
+      <div class="step-titulo">Generamos tu carta</div>
+      <div class="step-desc">Calculamos tu carta natal al instante.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">iii</div>
+      <div class="step-titulo">Descubre tu esencia</div>
+      <div class="step-desc">Explora tu carta gratis o lleva el análisis completo.</div>
+    </div>
+  </div>
 
-    <details class="faq-item">
-      <summary>¿Es lo mismo que un horóscopo?</summary>
-      <div class="faq-answer">No. Un horóscopo es genérico para tu signo. Estos reportes son únicos para ti — basados en tu carta natal exacta.</div>
-    </details>
+  <div class="eyebrow"><span class="eyebrow-line">Preguntas frecuentes</span></div>
 
-    <details class="faq-item">
-      <summary>¿Recibo el mismo reporte que otra persona de mi signo?</summary>
-      <div class="faq-answer">No. Tu carta natal es única — depende de tu fecha, hora y lugar exactos de nacimiento — así que tu reporte también lo es.</div>
-    </details>
-  </section>
+  <details class="faq-item">
+    <summary>¿Necesito saber de astrología para entender mi carta?</summary>
+    <div class="faq-answer">No. Cada reporte está escrito para que cualquier persona lo entienda — sin tecnicismos ni explicaciones complicadas.</div>
+  </details>
+
+  <details class="faq-item">
+    <summary>¿Qué pasa si no sé mi hora exacta de nacimiento?</summary>
+    <div class="faq-answer">Pon la más aproximada que tengas. El reporte sigue siendo útil y preciso en la mayoría de las secciones.</div>
+  </details>
+
+  <details class="faq-item">
+    <summary>¿Cuánto tiempo tarda en llegar mi reporte premium?</summary>
+    <div class="faq-answer">Entre 24 y 48 horas, directo a tu correo en formato PDF.</div>
+  </details>
+
+  <div class="contact-row">
+    <a class="contact-btn" href="https://wa.me/573132137456?text=Hola%20%E2%9C%A8%20tengo%20una%20pregunta%20sobre%20mi%20carta%20natal">💬 WhatsApp</a>
+    <a class="contact-btn" href="https://www.tiktok.com/@astrea.charts">🎵 TikTok DM</a>
+  </div>
 
   <footer>
-    <div class="footer-tag">Tu vida no es casualidad.<br>Es tu <em>carta.</em></div>
-
     <div class="footer-divider">
       <span class="divider-line"></span>
       <span class="divider-symbol">☽</span>
@@ -1080,165 +539,16 @@
     </div>
 
     <div class="footer-brand">Astrea Charts</div>
-    <div class="footer-meta">Reportes astrológicos</div>
 
-    <div class="footer-social">
-      <a href="https://www.tiktok.com/@astrea.charts">TikTok</a>
-      <span class="dot">·</span>
-      <a href="https://wa.me/573132137456">WhatsApp</a>
+    <p class="disclaimer">Astrea no reemplaza asesoría médica, psicológica ni profesional. El contenido es de carácter informativo y espiritual.</p>
+
+    <div class="footer-copy">
+      © 2026 Astrea Charts. Todos los derechos reservados.
+      <span class="sep">·</span>
+      <a href="privacidad.html">Política de privacidad</a>
     </div>
-
-    <p class="disclaimer">Astrea Charts es una herramienta de autoconocimiento basada en astrología. No constituye asesoría financiera, médica ni profesional de ningún tipo.</p>
-    <p class="disclaimer"><a href="privacidad.html" style="color: var(--gold);">Política de Privacidad</a></p>
-    <div class="footer-copy">© 2026 Astrea Charts<span class="sep">·</span>Hecho con cuidado</div>
   </footer>
 
 </div>
-
-<script src="rueda-natal.js"></script>
-
-<script>
- const API_BASE = "https://astrea-api-production.up.railway.app/api/v1";
-
-  const MENSAJES_LOADING = [
-    "Calculando posiciones planetarias...",
-    "Analizando aspectos...",
-    "Interpretando patrones...",
-    "Creando tu carta..."
-  ];
-
-  function mostrarFormulario(e) {
-    e.preventDefault();
-    document.getElementById('formulario-gratis').style.display = 'block';
-    document.getElementById('formulario-gratis').scrollIntoView({ behavior: 'smooth' });
-  }
-
-  function iniciarMensajesLoading() {
-    const el = document.getElementById('loading-mensaje-texto');
-    let i = 0;
-    return setInterval(() => {
-      i = (i + 1) % MENSAJES_LOADING.length;
-      el.textContent = MENSAJES_LOADING[i];
-    }, 3500);
-  }
-
-  const SIMBOLOS = {
-    Sol: "☉", Luna: "☽", Mercurio: "☿", Venus: "♀", Marte: "♂",
-    Jupiter: "♃", Saturno: "♄", Urano: "♅", Neptuno: "♆", Pluton: "♇",
-    NodoNorte: "☊", Quiron: "⚷"
-  };
-
-  function renderizarResultado(datos) {
-    const { calculo, resumen, metadata } = datos;
-
-    // Rueda natal (componente separado en rueda-natal.js)
-    document.getElementById('rueda-natal-container').innerHTML = generarRuedaSVG(calculo);
-
-    // Big Three
-    const sol = calculo.planetas.Sol;
-    const luna = calculo.planetas.Luna;
-    const asc = calculo.puntos_angulares.Ascendente;
-
-    document.getElementById('big-three-container').innerHTML = `
-      <div class="big-three-item">
-        <span class="big-three-simbolo">☉</span>
-        <div class="big-three-texto"><strong>Sol en ${sol.signo}</strong><span>${sol.grado_en_signo.toFixed(1)}° · Casa ${sol.casa}</span></div>
-      </div>
-      <div class="big-three-item">
-        <span class="big-three-simbolo">☽</span>
-        <div class="big-three-texto"><strong>Luna en ${luna.signo}</strong><span>${luna.grado_en_signo.toFixed(1)}° · Casa ${luna.casa}</span></div>
-      </div>
-      <div class="big-three-item">
-        <span class="big-three-simbolo">⬆</span>
-        <div class="big-three-texto"><strong>Ascendente en ${asc.signo}</strong><span>${asc.grado_en_signo.toFixed(1)}°</span></div>
-      </div>
-    `;
-
-    // Esencia en pocas palabras (3 tarjetas: identidad, emociones, camino)
-    const categorias = [
-      { key: 'identidad', clase: 'esencia-identidad', icono: '✦' },
-      { key: 'emociones', clase: 'esencia-emociones', icono: '✧' },
-      { key: 'camino',    clase: 'esencia-camino',    icono: '✵' },
-    ];
-
-    let htmlEsencia = '';
-    categorias.forEach(cat => {
-      const bloque = resumen[cat.key];
-      if (!bloque) return;
-      htmlEsencia += `
-        <div class="esencia-card ${cat.clase}">
-          <div class="esencia-icono">${cat.icono}</div>
-          <div class="esencia-contenido">
-            <div class="esencia-titulo">${bloque.titulo}</div>
-            <p class="esencia-texto">${bloque.texto}</p>
-            <div class="esencia-etiqueta">${bloque.etiqueta}</div>
-          </div>
-        </div>
-      `;
-    });
-    document.getElementById('esencia-cards-container').innerHTML = htmlEsencia;
-
-    // Tabla planetas
-    let filasPlanetas = '<tr><th>Planeta</th><th>Signo</th><th>Grado</th><th>Casa</th></tr>';
-    for (const [nombre, d] of Object.entries(calculo.planetas)) {
-      filasPlanetas += `<tr>
-        <td>${SIMBOLOS[nombre] || ''} ${nombre}</td>
-        <td>${d.signo}</td>
-        <td>${d.grado_en_signo.toFixed(2)}°</td>
-        <td>${d.casa} ${d.retrogrado ? '<span class="retro-tag">℞</span>' : ''}</td>
-      </tr>`;
-    }
-    document.getElementById('tabla-planetas').innerHTML = filasPlanetas;
-    document.getElementById('resultado-carta').style.display = 'block';
-    document.getElementById('resultado-carta').scrollIntoView({ behavior: 'smooth' });
-  }
-
-  document.getElementById('natalFormGratis').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const nombre = document.getElementById('fg_nombre').value;
-    const fecha = document.getElementById('fg_fecha').value;
-    const horaH = document.getElementById('fg_hora_h').value;
-    const horaM = document.getElementById('fg_hora_m').value;
-    const ciudadPais = document.getElementById('fg_ciudad').value;
-
-    const [ciudad, pais] = ciudadPais.split(',').map(s => s.trim());
-
-    if (!ciudad || !pais) {
-      alert('Escribe ciudad y país separados por coma. Ej: Bogotá, Colombia');
-      return;
-    }
-
-    const fecha_hora_local = `${fecha}T${horaH}:${horaM}:00`;
-
-    document.getElementById('formulario-gratis').style.display = 'none';
-    document.getElementById('loading-carta').style.display = 'block';
-    document.getElementById('loading-carta').scrollIntoView({ behavior: 'smooth' });
-
-    const intervalId = iniciarMensajesLoading();
-
-    try {
-      const respuesta = await fetch(`${API_BASE}/carta-natal/resumen`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, fecha_hora_local, ciudad, pais })
-      });
-
-      if (!respuesta.ok) throw new Error('Error del servidor');
-
-      const datos = await respuesta.json();
-      clearInterval(intervalId);
-      document.getElementById('loading-carta').style.display = 'none';
-
-      renderizarResultado(datos);
-
-    } catch (error) {
-      clearInterval(intervalId);
-      document.getElementById('loading-carta').style.display = 'none';
-      alert('Hubo un problema generando tu carta. Intenta de nuevo en unos segundos.');
-      console.error(error);
-    }
-  });
-</script>
 </body>
 </html>
