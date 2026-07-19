@@ -41,13 +41,13 @@
     padding: 24px 20px 60px;
   }
 
-  /* --- Header --- */
   .site-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 8px;
   }
+
   .logo-mini {
     font-family: 'Cormorant Garamond', serif;
     font-size: 20px;
@@ -64,19 +64,6 @@
     margin-top: 2px;
   }
 
-  .header-tagline {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--ink-soft);
-  }
-
-  .header-tagline .estrella {
-    color: var(--gold);
-  }
-
-  /* --- Hero --- */
   .hero {
     text-align: center;
     padding: 28px 0 20px;
@@ -116,7 +103,6 @@
     font-size: 14px;
   }
 
-  /* --- Eyebrow reutilizable --- */
   .eyebrow {
     text-align: center;
     margin: 36px 0 16px;
@@ -139,7 +125,6 @@
     color: var(--gold);
   }
 
-  /* --- Qué es tu carta natal --- */
   .que-es {
     display: flex;
     gap: 18px;
@@ -167,7 +152,6 @@
     margin-bottom: 10px;
   }
 
-  /* --- Formulario --- */
   .form-card {
     background: rgba(11, 18, 32, 0.6);
     backdrop-filter: blur(3px);
@@ -244,6 +228,7 @@
     cursor: pointer;
     margin-top: 4px;
   }
+
   .form-nota {
     text-align: center;
     font-size: 11px;
@@ -252,7 +237,6 @@
     opacity: 0.75;
   }
 
-  /* --- Loading --- */
   .loading-carta {
     text-align: center;
     margin: 50px 0;
@@ -288,7 +272,6 @@
     100% { transform: translateX(400%); }
   }
 
-  /* --- Resultado --- */
   .resultado-carta {
     margin-top: 20px;
   }
@@ -379,15 +362,6 @@
   .tabla-carta th:nth-child(4), .tabla-carta td:nth-child(4) { width: 18%; text-align: right; }
 
   .retro-tag { color: var(--gold); font-size: 10px; }
-
-  .subtitulo-resultado {
-    text-align: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 15px;
-    color: var(--ink-soft);
-    margin: 20px 0 8px;
-  }
 
   .big-three {
     display: flex;
@@ -481,6 +455,156 @@
   .esencia-emociones { --esencia-color: var(--lila); }
   .esencia-camino    { --esencia-color: var(--rosa); }
 
+  .balance-texto {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin: 14px 0 16px;
+  }
+
+  .barra-elemento-fila {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .barra-elemento-nombre {
+    width: 48px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+
+  .barra-elemento-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(212, 177, 114, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .barra-elemento-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+    border-radius: 4px;
+  }
+
+  .barra-elemento-valor {
+    width: 18px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .aspecto-destacado-box {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(212, 177, 114, 0.08);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  .aspecto-destacado-box .titulo-mini {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .btn-compartir {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 13px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    margin-top: 14px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-compartir:hover {
+    background: var(--gold);
+    color: var(--cream);
+  }
+
+  #compartir-card {
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    width: 360px;
+    padding: 32px 28px;
+    background: #0B1220;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  #compartir-card .cc-marca {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  #compartir-card .cc-sub {
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  #compartir-card .cc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  #compartir-card .cc-item:last-child { border-bottom: none; }
+
+  #compartir-card .cc-simbolo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--gold);
+    width: 32px;
+  }
+
+  #compartir-card .cc-texto strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--ink);
+  }
+
+  #compartir-card .cc-texto span {
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+
+  #compartir-card .cc-footer {
+    text-align: center;
+    font-size: 9.5px;
+    color: var(--ink-soft);
+    margin-top: 22px;
+    letter-spacing: 0.04em;
+  }
+
   .aviso-parcial {
     text-align: center;
     font-size: 12px;
@@ -489,7 +613,6 @@
     margin-top: 22px;
   }
 
-  /* --- Sección de valor (sin testimonios inventados) --- */
   .valor-cards {
     display: flex;
     flex-direction: column;
@@ -517,7 +640,6 @@
     margin-top: 6px;
   }
 
-  /* --- Comparación gratis vs completo --- */
   .comparacion {
     display: flex;
     gap: 10px;
@@ -577,7 +699,6 @@
     color: var(--ink-soft);
   }
 
-  /* --- Card premium --- */
   .card-premium {
     background: rgba(11, 18, 32, 0.6);
     backdrop-filter: blur(3px);
@@ -593,47 +714,18 @@
     margin-bottom: 16px;
   }
 
-  .libro-mockup {
-    width: 70px;
-    height: 94px;
-    min-width: 70px;
-    background: linear-gradient(160deg, #12192b, #0a0f1c);
-    border: 1px solid var(--hairline);
-    border-radius: 3px;
+  .card-premium-eyebrow-row {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 6px;
-    text-align: center;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
   }
 
-  .libro-mockup .libro-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 9px;
+  .card-premium-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--gold);
-    letter-spacing: 0.1em;
-  }
-
-  .libro-mockup .libro-sub {
-    font-size: 5px;
-    color: var(--ink-soft);
-    letter-spacing: 0.15em;
-    margin-top: 1px;
-  }
-
-  .libro-mockup .libro-titulo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 8px;
-    color: var(--ink);
-    margin-top: 10px;
-    line-height: 1.2;
-  }
-
-  .libro-mockup .libro-icono {
-    color: var(--gold);
-    font-size: 14px;
-    margin-top: 8px;
   }
 
   .card-premium-titulo {
@@ -642,21 +734,20 @@
     font-size: 22px;
     color: var(--ink);
     line-height: 1.15;
+    margin-bottom: 6px;
   }
 
   .card-premium-precio {
-    font-size: 15px;
+    font-size: 14px;
     color: var(--gold);
     font-weight: 600;
-    float: right;
+    white-space: nowrap;
   }
 
   .card-premium-desc {
     font-size: 12.5px;
     color: var(--ink-soft);
     line-height: 1.5;
-    margin-top: 6px;
-    clear: both;
   }
 
   .card-premium-lista {
@@ -702,7 +793,6 @@
     opacity: 0.75;
   }
 
-  /* --- FAQ --- */
   .faq-item {
     border-bottom: 1px solid var(--hairline);
     padding: 14px 0;
@@ -740,7 +830,15 @@
     line-height: 1.55;
   }
 
-  /* --- Footer --- */
+  .seccion-desplegable {
+    margin-top: 10px;
+  }
+
+  .seccion-desplegable summary {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+  }
+
   footer {
     margin-top: 44px;
     text-align: center;
@@ -866,7 +964,7 @@
 
       <div class="campo">
         <label for="fg_ciudad">Ciudad / País de nacimiento</label>
-        <input type="text" id="fg_ciudad" name="ciudad_pais" placeholder="Ej. Ciudad de México, México " required>
+        <input type="text" id="fg_ciudad" name="ciudad_pais" placeholder="Ej. Ciudad de México, México" required>
       </div>
 
       <button type="submit" id="fg_submit" class="btn-generar">✦ Generar mi carta</button>
@@ -882,22 +980,42 @@
 
   <section id="resultado-carta" class="resultado-carta" style="display:none;">
 
+    <p id="saludo-nombre" style="text-align: center; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold-soft); font-size: 16px; margin-bottom: 8px;"></p>
+
     <div class="eyebrow"><span class="eyebrow-line">Así se ve tu resumen personalizado</span></div>
 
-    <div class="vista-astral-card">
-      <div class="rueda-natal-wrap">
-        <div id="rueda-natal-container"></div>
+    <details class="faq-item seccion-desplegable" open>
+      <summary>Tu vista astral</summary>
+      <div class="vista-astral-card" style="margin-top: 14px;">
+        <div class="rueda-natal-wrap">
+          <div id="rueda-natal-container"></div>
+        </div>
+        <table class="tabla-carta" id="tabla-planetas"></table>
       </div>
-      <table class="tabla-carta" id="tabla-planetas"></table>
-    </div>
+    </details>
 
-    <p class="subtitulo-resultado">Tus 3 pilares (Big Three)</p>
-    <div class="big-three" id="big-three-container"></div>
+    <details class="faq-item seccion-desplegable">
+      <summary>Tus 3 pilares (Big Three)</summary>
+      <div class="big-three" id="big-three-container" style="margin-top: 14px;"></div>
+      <button type="button" id="btn-compartir" class="btn-compartir">
+        <svg viewBox="0 0 24 24" style="width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0;"><circle cx="18" cy="5" r="3" stroke-linecap="round"/><circle cx="6" cy="12" r="3" stroke-linecap="round"/><circle cx="18" cy="19" r="3" stroke-linecap="round"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4" stroke-linecap="round"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6" stroke-linecap="round"/></svg>
+        <span id="btn-compartir-label">Compartir mi Big Three</span>
+      </button>
+    </details>
 
-    <p class="subtitulo-resultado">Tu esencia en pocas palabras</p>
-    <div class="esencia-cards" id="esencia-cards-container"></div>
+    <details class="faq-item seccion-desplegable">
+      <summary>Tu esencia en pocas palabras</summary>
+      <div class="esencia-cards" id="esencia-cards-container" style="margin-top: 14px;"></div>
+    </details>
+
+    <details class="faq-item seccion-desplegable">
+      <summary>Tu balance elemental</summary>
+      <div id="balance-elemental-container"></div>
+    </details>
 
     <p class="aviso-parcial">✦ Este es solo un vistazo. Hay mucho más esperándote en tu lectura completa.</p>
+
+    <a href="#lectura-completa" class="btn-generar" style="display: block; text-align: center; text-decoration: none; margin-top: 18px;">Desbloquear mi lectura completa</a>
 
   </section>
 
@@ -917,45 +1035,50 @@
     </div>
   </div>
 
-  <div class="eyebrow"><span class="eyebrow-line">¿Gratis o completo?</span></div>
+  <div class="eyebrow"><span class="eyebrow-line">Elige tu experiencia</span></div>
   <div class="comparacion">
     <div class="comparacion-col">
-      <div class="comparacion-titulo">Resumen Gratis</div>
-      <p style="font-size: 10.5px; color: var(--ink-soft); text-align: center; line-height: 1.4; margin-bottom: 12px; opacity: 0.85;">Generamos tu carta natal y te compartimos insights de algunas posiciones clave.</p>
+      <div class="comparacion-titulo">✨ Tu Carta Natal Esencial</div>
+      <div style="text-align: center; color: var(--gold); font-weight: 600; font-size: 13px; margin-bottom: 10px;">Gratis</div>
+      <p style="font-size: 10.5px; color: var(--ink-soft); text-align: center; line-height: 1.4; margin-bottom: 12px; opacity: 0.85;">Descubre los fundamentos de tu carta natal en pocos minutos.</p>
       <ul class="comparacion-lista">
-        <li class="si">Tus 3 pilares (Sol, Luna, Ascendente)</li>
-        <li class="si">Esencia en pocas palabras</li>
-        <li class="si">Vista general de tu carta</li>
-        <li class="no">Análisis profundo de planetas</li>
-        <li class="no">Patrones y propósito de vida</li>
-        <li class="no">Guía de talentos y desafíos</li>
-        <li class="no">Informe en PDF descargable</li>
+        <li class="si">Tus tres pilares astrológicos</li>
+        <li class="si">Una primera interpretación de tu esencia</li>
+        <li class="si">Explicaciones simples y fáciles de entender</li>
+        <li class="si">Perfecta para empezar</li>
       </ul>
+      <p style="font-size: 10.5px; font-style: italic; color: var(--ink-soft); text-align: center; margin-top: 12px;">Ideal si solo quieres conocer tu carta.</p>
     </div>
     <div class="comparacion-col completo">
-      <div class="comparacion-titulo" style="font-size: 14px;">Lectura Natal Personalizada Completa</div>
-      <p style="font-size: 10.5px; color: var(--gold-soft); text-align: center; line-height: 1.4; margin-bottom: 12px;">Una astróloga disponible hace la coautoría de tu interpretación.</p>
+      <div class="comparacion-titulo" style="font-size: 16px;">🌙 Lectura Natal Personalizada</div>
+      <div style="text-align: center; color: var(--gold); font-weight: 600; font-size: 13px; margin-bottom: 10px;">USD 12</div>
+      <p style="font-size: 10.5px; color: var(--gold-soft); text-align: center; line-height: 1.4; margin-bottom: 12px;">Un informe de más de 15 capítulos para entender quién eres, cómo funcionas y hacia dónde puedes crecer.</p>
       <ul class="comparacion-lista">
-        <li class="si">Todo lo del resumen gratis</li>
-        <li class="si">Análisis profundo de +15 capítulos</li>
-        <li class="si">Patrones, propósito y talentos</li>
-        <li class="si">Guía personalizada de crecimiento</li>
-        <li class="si">Informe en PDF profesional</li>
-        <li class="si">Explicaciones claras y prácticas</li>
-        <li class="si">Entrega en 24–48h</li>
+        <li class="si">Incluye todo el resumen gratuito</li>
+        <li class="si">Interpretación profunda de tu carta completa</li>
+        <li class="si">Patrones, talentos y desafíos</li>
+        <li class="si">Propósito y potencial personal</li>
+        <li class="si">Recomendaciones claras y aplicables</li>
+        <li class="si">PDF profesional listo para guardar</li>
+        <li class="si">Revisado por una astróloga</li>
+        <li class="si">Entrega en 24–48 horas</li>
       </ul>
+      <p style="font-size: 10.5px; font-style: italic; color: var(--gold-soft); text-align: center; margin-top: 12px;">Ideal si buscas una guía para conocerte con mayor profundidad.</p>
     </div>
   </div>
 
-  <div class="eyebrow" style="margin-top: 44px;"><span class="eyebrow-line">Tu lectura completa</span></div>
+  <div class="eyebrow" id="lectura-completa" style="margin-top: 44px;"><span class="eyebrow-line">Tu lectura completa</span></div>
   <div class="card-premium">
     <div class="card-premium-top">
       <div style="width: 150px; min-width: 150px; aspect-ratio: 3 / 4; border-radius: 8px; overflow: hidden;">
         <img src="assets/portada-carta-natal.png" alt="Portada Lectura de Carta Natal" style="width: 100%; height: 100%; object-fit: cover; display: block;">
       </div>
       <div>
-        <span class="card-premium-precio">USD 12</span>
-        <div class="card-premium-titulo">Lectura de Carta Natal</div>
+        <div class="card-premium-eyebrow-row">
+          <span class="card-premium-eyebrow">Lectura de</span>
+          <span class="card-premium-precio">USD 12</span>
+        </div>
+        <div class="card-premium-titulo">Carta Natal</div>
         <p class="card-premium-desc">Un análisis profundo y personalizado de tu carta natal para comprender tu esencia, tus patrones y tu propósito.</p>
       </div>
     </div>
@@ -995,19 +1118,28 @@
   <footer>
     <div class="footer-divider">
       <span class="divider-line"></span>
-      <span style="color: var(--gold); font-size: 13px; letter-spacing: 4px;">✦ ☾ ✦</span>
+      <span style="color: var(--gold);">☽</span>
       <span class="divider-line"></span>
     </div>
     <div class="footer-brand">Astrea Charts</div>
-    <p class="disclaimer">Astrea Charts es una herramienta de autoconocimiento.<br>No reemplaza asesoría médica, psicológica ni financiera.</p>
+    <p class="disclaimer">Astrea Charts es una herramienta de autoconocimiento y desarrollo personal. No reemplaza asesoría médica, psicológica ni profesional.</p>
     <div class="footer-copy">
+      © 2026 Astrea Charts. Todos los derechos reservados.
+      <span class="sep">·</span>
       <a href="privacidad.html">Política de privacidad</a>
     </div>
-    <div class="footer-copy" style="margin-top: 6px;">© 2026 Astrea Charts</div>
   </footer>
+
+  <div id="compartir-card">
+    <div class="cc-marca">ASTREA</div>
+    <div class="cc-sub">— CHARTS —</div>
+    <div id="compartir-card-contenido"></div>
+    <div class="cc-footer">Genera tu carta gratis en astreacharts.com</div>
+  </div>
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="rueda-natal.js"></script>
 
 <script>
@@ -1036,7 +1168,11 @@
   };
 
   function renderizarResultado(datos) {
-    const { calculo, resumen } = datos;
+    const { calculo, resumen, metadata } = datos;
+
+    if (metadata && metadata.nombre) {
+      document.getElementById('saludo-nombre').textContent = `Hola, ${metadata.nombre.split(' ')[0]} ✦`;
+    }
 
     document.getElementById('rueda-natal-container').innerHTML = generarRuedaSVG(calculo);
 
@@ -1082,6 +1218,56 @@
     });
     document.getElementById('esencia-cards-container').innerHTML = htmlEsencia;
 
+    const em = resumen.elemento_modalidad;
+    if (em) {
+      const colores = { Fuego: '#E091A8', Tierra: '#D4B172', Aire: '#B39DDB', Agua: '#8FBFA0' };
+      const conteo = em.conteo_elementos || {};
+      const maximo = Math.max(1, ...Object.values(conteo));
+
+      let htmlBarras = '';
+      for (const [elemento, valor] of Object.entries(conteo)) {
+        const pct = (valor / maximo) * 100;
+        htmlBarras += `
+          <div class="barra-elemento-fila">
+            <span class="barra-elemento-nombre">${elemento}</span>
+            <div class="barra-elemento-track"><div class="barra-elemento-fill" style="width:${pct}%; background:${colores[elemento] || 'var(--gold)'};"></div></div>
+            <span class="barra-elemento-valor">${valor}</span>
+          </div>
+        `;
+      }
+
+      let htmlAspecto = '';
+      if (resumen.aspecto_destacado) {
+        htmlAspecto = `
+          <div class="aspecto-destacado-box">
+            <div class="titulo-mini">${resumen.aspecto_destacado.titulo}</div>
+            ${resumen.aspecto_destacado.texto}
+          </div>
+        `;
+      }
+
+      document.getElementById('balance-elemental-container').innerHTML = `
+        <p class="balance-texto">${em.texto}</p>
+        ${htmlBarras}
+        ${htmlAspecto}
+      `;
+    }
+
+    document.getElementById('compartir-card-contenido').innerHTML = `
+      <div class="cc-item">
+        <span class="cc-simbolo">☉</span>
+        <div class="cc-texto"><strong>Sol en ${sol.signo}</strong><span>${sol.grado_en_signo.toFixed(1)}° · Casa ${sol.casa}</span></div>
+      </div>
+      <div class="cc-item">
+        <span class="cc-simbolo">☽</span>
+        <div class="cc-texto"><strong>Luna en ${luna.signo}</strong><span>${luna.grado_en_signo.toFixed(1)}° · Casa ${luna.casa}</span></div>
+      </div>
+      <div class="cc-item">
+        <span class="cc-simbolo">⬆</span>
+        <div class="cc-texto"><strong>Ascendente en ${asc.signo}</strong><span>${asc.grado_en_signo.toFixed(1)}°</span></div>
+      </div>
+    `;
+
     let filasPlanetas = '<tr><th>Planeta</th><th>Signo</th><th>Grado</th><th>Casa</th></tr>';
     for (const [nombre, d] of Object.entries(calculo.planetas)) {
       filasPlanetas += `<tr>
@@ -1096,6 +1282,47 @@
     document.getElementById('resultado-carta').style.display = 'block';
     document.getElementById('resultado-carta').scrollIntoView({ behavior: 'smooth' });
   }
+
+  document.getElementById('btn-compartir').addEventListener('click', async () => {
+    const boton = document.getElementById('btn-compartir');
+    const label = document.getElementById('btn-compartir-label');
+    const textoOriginal = label.textContent;
+    boton.disabled = true;
+    label.textContent = 'Generando imagen...';
+
+    try {
+      const tarjeta = document.getElementById('compartir-card');
+      const canvas = await html2canvas(tarjeta, { backgroundColor: '#0B1220', scale: 2 });
+
+      canvas.toBlob(async (blob) => {
+        const archivo = new File([blob], 'mi-big-three-astrea.png', { type: 'image/png' });
+
+        if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+          await navigator.share({
+            files: [archivo],
+            title: 'Mi Big Three · Astrea Charts',
+            text: 'Descubre el tuyo gratis en Astrea Charts ✨',
+          });
+        } else {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'mi-big-three-astrea.png';
+          link.click();
+          URL.revokeObjectURL(url);
+        }
+
+        boton.disabled = false;
+        label.textContent = textoOriginal;
+      }, 'image/png');
+
+    } catch (error) {
+      console.error(error);
+      boton.disabled = false;
+      label.textContent = textoOriginal;
+      alert('No se pudo generar la imagen. Intenta de nuevo.');
+    }
+  });
 
   document.getElementById('natalFormGratis').addEventListener('submit', async (e) => {
     e.preventDefault();
