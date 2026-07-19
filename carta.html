@@ -23,7 +23,7 @@
 
   body {
     background-color: var(--cream);
-   background-image: url("fondo.png"); 
+    background-image: url("fondo-estrellado.png");
     background-size: cover;
     background-position: center top;
     background-attachment: fixed;
@@ -465,6 +465,157 @@
   .esencia-emociones { --esencia-color: #B39DDB; }
   .esencia-camino    { --esencia-color: #E091A8; }
 
+  /* --- Balance elemental --- */
+  .balance-texto {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin: 12px 0 18px;
+  }
+
+  .barra-elemento-fila {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .barra-elemento-nombre {
+    width: 48px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+
+  .barra-elemento-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(212, 177, 114, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .barra-elemento-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+    border-radius: 4px;
+  }
+
+  .barra-elemento-valor {
+    width: 18px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* --- Aspecto destacado --- */
+  .aspecto-destacado-box {
+    margin-top: 18px;
+    padding: 16px;
+    background: rgba(212, 177, 114, 0.08);
+    border: 1px solid var(--hairline);
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  .aspecto-destacado-box .titulo-mini {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  /* --- Compartir --- */
+  .btn-compartir {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 13px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    margin-top: 16px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-compartir:hover {
+    background: var(--gold);
+    color: var(--cream);
+  }
+
+  #compartir-card {
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    width: 360px;
+    padding: 32px 28px;
+    background: #0B1220;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  #compartir-card .cc-marca {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  #compartir-card .cc-sub {
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  #compartir-card .cc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  #compartir-card .cc-item:last-child { border-bottom: none; }
+
+  #compartir-card .cc-simbolo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--gold);
+    width: 32px;
+  }
+
+  #compartir-card .cc-texto strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--ink);
+  }
+
+  #compartir-card .cc-texto span {
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+
+  #compartir-card .cc-footer {
+    text-align: center;
+    font-size: 9.5px;
+    color: var(--ink-soft);
+    margin-top: 22px;
+    letter-spacing: 0.04em;
+  }
+
   @media (max-width: 480px) {
     .big-three {
       flex-direction: column;
@@ -543,12 +694,21 @@
     <details class="faq-item seccion-desplegable" open>
       <summary>Tu Big Three</summary>
       <div class="big-three" id="big-three-container"></div>
+      <button type="button" id="btn-compartir" class="btn-compartir">
+        <svg viewBox="0 0 24 24" style="width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0;"><circle cx="18" cy="5" r="3" stroke-linecap="round"/><circle cx="6" cy="12" r="3" stroke-linecap="round"/><circle cx="18" cy="19" r="3" stroke-linecap="round"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4" stroke-linecap="round"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6" stroke-linecap="round"/></svg>
+        <span id="btn-compartir-label">Compartir mi Big Three</span>
+      </button>
     </details>
 
     <details class="faq-item seccion-desplegable">
       <summary>Tu esencia en pocas palabras</summary>
       <p class="intro" style="margin: 12px 0 16px; text-align:left;">Esto es solo un adelanto de lo que descubrirás.</p>
       <div class="esencia-cards" id="esencia-cards-container"></div>
+    </details>
+
+    <details class="faq-item seccion-desplegable">
+      <summary>Tu balance elemental</summary>
+      <div id="balance-elemental-container"></div>
     </details>
 
     <div class="paywall-teaser">
@@ -558,12 +718,20 @@
 
   </section>
 
+  <div id="compartir-card">
+    <div class="cc-marca">ASTREA</div>
+    <div class="cc-sub">— CHARTS —</div>
+    <div id="compartir-card-contenido"></div>
+    <div class="cc-footer">Genera tu carta gratis en astreacharts.com</div>
+  </div>
+
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="rueda-natal.js"></script>
 
 <script>
-  const API_BASE = "https://astrea-api-production.up.railway.app/api/v1";
+ const API_BASE = "https://astrea-api-production.up.railway.app/api/v1";
 
   const MENSAJES_LOADING = [
     "Calculando posiciones planetarias...",
@@ -637,6 +805,58 @@
     });
     document.getElementById('esencia-cards-container').innerHTML = htmlEsencia;
 
+    // Balance elemental (barras) + aspecto destacado
+    const em = resumen.elemento_modalidad;
+    if (em) {
+      const colores = { Fuego: '#E091A8', Tierra: '#D4B172', Aire: '#B39DDB', Agua: '#8FBFA0' };
+      const conteo = em.conteo_elementos || {};
+      const maximo = Math.max(1, ...Object.values(conteo));
+
+      let htmlBarras = '';
+      for (const [elemento, valor] of Object.entries(conteo)) {
+        const pct = (valor / maximo) * 100;
+        htmlBarras += `
+          <div class="barra-elemento-fila">
+            <span class="barra-elemento-nombre">${elemento}</span>
+            <div class="barra-elemento-track"><div class="barra-elemento-fill" style="width:${pct}%; background:${colores[elemento] || 'var(--gold)'};"></div></div>
+            <span class="barra-elemento-valor">${valor}</span>
+          </div>
+        `;
+      }
+
+      let htmlAspecto = '';
+      if (resumen.aspecto_destacado) {
+        htmlAspecto = `
+          <div class="aspecto-destacado-box">
+            <div class="titulo-mini">${resumen.aspecto_destacado.titulo}</div>
+            ${resumen.aspecto_destacado.texto}
+          </div>
+        `;
+      }
+
+      document.getElementById('balance-elemental-container').innerHTML = `
+        <p class="balance-texto">${em.texto}</p>
+        ${htmlBarras}
+        ${htmlAspecto}
+      `;
+    }
+
+    // Tarjeta oculta para compartir (Big Three)
+    document.getElementById('compartir-card-contenido').innerHTML = `
+      <div class="cc-item">
+        <span class="cc-simbolo">☉</span>
+        <div class="cc-texto"><strong>Sol en ${sol.signo}</strong><span>${sol.grado_en_signo.toFixed(1)}° · Casa ${sol.casa}</span></div>
+      </div>
+      <div class="cc-item">
+        <span class="cc-simbolo">☽</span>
+        <div class="cc-texto"><strong>Luna en ${luna.signo}</strong><span>${luna.grado_en_signo.toFixed(1)}° · Casa ${luna.casa}</span></div>
+      </div>
+      <div class="cc-item">
+        <span class="cc-simbolo">⬆</span>
+        <div class="cc-texto"><strong>Ascendente en ${asc.signo}</strong><span>${asc.grado_en_signo.toFixed(1)}°</span></div>
+      </div>
+    `;
+
     // Tabla planetas
     let filasPlanetas = '<tr><th>Planeta</th><th>Signo</th><th>Grado</th><th>Casa</th></tr>';
     for (const [nombre, d] of Object.entries(calculo.planetas)) {
@@ -652,6 +872,47 @@
     document.getElementById('resultado-carta').style.display = 'block';
     document.getElementById('resultado-carta').scrollIntoView({ behavior: 'smooth' });
   }
+
+  document.getElementById('btn-compartir').addEventListener('click', async () => {
+    const boton = document.getElementById('btn-compartir');
+    const label = document.getElementById('btn-compartir-label');
+    const textoOriginal = label.textContent;
+    boton.disabled = true;
+    label.textContent = 'Generando imagen...';
+
+    try {
+      const tarjeta = document.getElementById('compartir-card');
+      const canvas = await html2canvas(tarjeta, { backgroundColor: '#0B1220', scale: 2 });
+
+      canvas.toBlob(async (blob) => {
+        const archivo = new File([blob], 'mi-big-three-astrea.png', { type: 'image/png' });
+
+        if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+          await navigator.share({
+            files: [archivo],
+            title: 'Mi Big Three · Astrea Charts',
+            text: 'Descubre el tuyo gratis en Astrea Charts ✨',
+          });
+        } else {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'mi-big-three-astrea.png';
+          link.click();
+          URL.revokeObjectURL(url);
+        }
+
+        boton.disabled = false;
+        label.textContent = textoOriginal;
+      }, 'image/png');
+
+    } catch (error) {
+      console.error(error);
+      boton.disabled = false;
+      label.textContent = textoOriginal;
+      alert('No se pudo generar la imagen. Intenta de nuevo.');
+    }
+  });
 
   document.getElementById('natalFormGratis').addEventListener('submit', async (e) => {
     e.preventDefault();
