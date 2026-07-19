@@ -1,59 +1,23 @@
-<!--
-  ═══════════════════════════════════════════════════════════
-  ASTREA CHARTS · LINKS PAGE
-  ═══════════════════════════════════════════════════════════
-
-  PENDIENTES:
-
-  1. Link de Hotmart
-     Reemplazar el placeholder cuando el producto esté creado:
-       #PENDIENTE-NATAL
-
-  2. Vista previa del reporte
-     Agregar miniatura/preview del PDF dentro de <article class="card">.
-     Sugerencia: imagen de la portada o carrusel de 2-3 páginas internas.
-     Ubicación recomendada: entre .card-desc y .cta.
-
-  3. Video de los pasos para comprar
-     Embed dentro de la sección "Cómo funciona" — o como sección propia
-     entre "Cómo funciona" y "FAQ". Sugerencia: video vertical (9:16)
-     mostrando el flujo Hotmart → datos natales → recepción del PDF.
-
-  4. Dominio nuevo
-     Migrar de astra-wealth.site a dominio propio de Astrea Charts.
-  ═══════════════════════════════════════════════════════════
--->
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Astrea Charts · Cartas de profundidad</title>
+<title>Astrea Charts · Tu carta natal revela quién eres en esencia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #0B1220;
-    --cream-deep: #0E1728;
-    --gold: #D4B172;
-    --gold-soft: #E6CB98;
-    --ink: #F4EEDF;
-    --ink-soft: rgba(244, 238, 223, 0.72);
-    --hairline: rgba(212, 177, 114, 0.45);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { -webkit-text-size-adjust: 100%; }
+  * { box-sizing: border-box; }
 
   body {
-    background-color: var(--cream);
+    margin: 0;
+    background-color: #0B1220;
     background-image: url("fondo-estrellado.png");
     background-size: cover;
     background-position: center top;
     background-attachment: fixed;
-    color: var(--ink);
+    color: #F4EEDF;
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.5;
@@ -61,612 +25,132 @@
     padding: 32px 20px 48px;
   }
 
-  .wrap {
-    max-width: 440px;
-    margin: 0 auto;
-  }
-
-  /* --- Header --- */
-  header {
-    text-align: center;
-    padding: 8px 0 32px;
-  }
-
-  .brand {
-    text-align: center;
-  }
-
-  .brand-main {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 500;
-    font-size: 42px;
-    line-height: 0.95;
-    color: var(--ink);
-    letter-spacing: 0.04em;
-  }
-
-  .brand-sub {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-top: 6px;
-  }
-
-  .seal-wrap {
-    text-align: center;
-    margin-bottom: 18px;
-  }
-
-  .seal {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  /* Glifo legacy (no se usa pero queda por si vuelves a una versión sin imagen) */
-  .brand-glyph {
-    color: var(--gold);
-    margin: 0 6px;
-    font-size: 26px;
-  }
-
-  .tagline {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 17px;
-    color: var(--ink-soft);
-    margin-top: 6px;
-    letter-spacing: 0.01em;
-  }
-
-  /* --- Section eyebrow --- */
-  .eyebrow {
-    text-align: center;
-    margin: 24px 0 8px;
-  }
-
-  .eyebrow-line {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
-
-  .eyebrow-line::before,
-  .eyebrow-line::after {
-    content: '';
-    width: 28px;
-    height: 1px;
-    background: var(--hairline);
-  }
-
-  .intro {
-    text-align: center;
-    font-size: 14px;
-    color: var(--ink-soft);
-    max-width: 320px;
-    margin: 0 auto 28px;
-    line-height: 1.55;
-  }
-
-  /* --- Cards --- */
-  .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .card {
-    background: rgba(11, 18, 32, 0.6);
-    backdrop-filter: blur(3px);
-    border: 1px solid var(--hairline);
-    padding: 22px 22px 20px;
-    position: relative;
-    transition: border-color 0.2s ease, transform 0.2s ease;
-  }
-
-  .card:hover {
-    border-color: var(--gold);
-  }
-
-  .card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 10px;
-  }
-
-  .card-id {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-
-  .glyph {
-    color: var(--gold);
-    line-height: 1;
-    width: 22px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-  }
-
-  .card-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    color: var(--ink);
-    line-height: 1.15;
-  }
-
-  .price {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gold);
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-    padding-top: 4px;
-  }
-
-  .card-question {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 16px;
-    color: var(--ink-soft);
-    margin-bottom: 8px;
-    padding-left: 32px;
-  }
-
-  .card-desc {
-    font-size: 13px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    margin-bottom: 16px;
-    padding-left: 32px;
-  }
-
-  .card-meta {
-    font-size: 12px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    margin-bottom: 16px;
-    padding-left: 32px;
-    letter-spacing: 0.01em;
-  }
-
-  .card-list {
-    list-style: none;
-    padding-left: 32px;
-    margin-bottom: 20px;
-  }
-
-  .card-list li {
-    position: relative;
-    padding-left: 22px;
-    font-size: 13px;
-    color: var(--ink);
-    line-height: 1.55;
-    margin-bottom: 11px;
-  }
-
-  .card-list li::before {
-    content: '\2726';
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: var(--gold);
-    font-size: 12px;
-  }
-
-  .card-list li:last-child {
-    color: var(--ink-soft);
-    font-size: 12px;
-    margin-bottom: 0;
-  }
-
-  .cta {
-    display: block;
-    background: var(--ink);
-    color: var(--cream);
-    text-decoration: none;
-    text-align: center;
-    padding: 13px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    transition: background 0.2s ease;
-  }
-
-  .cta:hover {
-    background: var(--gold);
-    color: var(--cream);
-  }
-
-  /* --- Questions block --- */
-  .questions {
-    margin-top: 32px;
-    text-align: center;
-    padding: 24px 20px;
-    border-top: 1px solid var(--hairline);
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  .questions-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 18px;
-    color: var(--ink);
-    margin-bottom: 14px;
-  }
-
-  .contact-row {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
-
-  .contact-btn {
-    flex: 1;
-    max-width: 160px;
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--ink);
-    text-decoration: none;
-    text-align: center;
-    padding: 11px 12px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: all 0.2s ease;
-  }
-
-  .contact-btn:hover {
-    background: var(--ink);
-    color: var(--cream);
-  }
-
-  /* --- How it works --- */
-  .how {
-    margin-top: 40px;
-  }
-
-  .how-grid {
-    margin-top: 18px;
-  }
-
-  .step {
-    display: flex;
-    gap: 16px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  .step:last-child { border-bottom: none; }
-
-  .step-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 22px;
-    color: var(--gold);
-    line-height: 1;
-    min-width: 24px;
-  }
-
-  .step-text {
-    font-size: 14px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-  }
-
-  .step-text strong {
-    color: var(--ink);
-    font-weight: 600;
-  }
-
-  /* --- FAQ --- */
-  .faq { margin-top: 40px; }
-
-  .faq-item {
-    border-bottom: 1px solid var(--hairline);
-    padding: 16px 0;
-  }
-
-  .faq-item summary {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    color: var(--ink);
-    cursor: pointer;
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-
   .faq-item summary::-webkit-details-marker { display: none; }
-
-  .faq-item summary::after {
-    content: '+';
-    font-family: 'Cormorant Garamond', serif;
-    color: var(--gold);
-    font-size: 22px;
-    transition: transform 0.2s ease;
-  }
-
-  .faq-item[open] summary::after {
-    content: '−';
-  }
-
-  .faq-answer {
-    margin-top: 10px;
-    font-size: 14px;
-    color: var(--ink-soft);
-    line-height: 1.55;
-  }
-
-  /* --- Footer --- */
-  footer {
-    margin-top: 56px;
-    text-align: center;
-  }
-
-  .footer-tag {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
-    color: var(--ink);
-    line-height: 1.3;
-    margin-bottom: 4px;
-    letter-spacing: 0.01em;
-  }
-
-  .footer-tag em {
-    color: var(--gold);
-    font-style: italic;
-  }
-
-  .footer-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin: 32px 0 24px;
-  }
-
-  .divider-line {
-    flex: 1;
-    height: 1px;
-    background: var(--hairline);
-    max-width: 80px;
-  }
-
-  .divider-symbol {
-    color: var(--gold);
-    font-size: 16px;
-    font-family: 'Cormorant Garamond', serif;
-  }
-
-  .footer-brand {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-
-  .footer-meta {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 14px;
-    color: var(--ink-soft);
-    margin-bottom: 18px;
-  }
-
-  .footer-social {
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: var(--ink-soft);
-    margin-bottom: 24px;
-  }
-
-  .footer-social a {
-    color: var(--ink);
-    text-decoration: none;
-    border-bottom: 1px solid var(--hairline);
-    padding-bottom: 1px;
-    transition: border-color 0.2s ease, color 0.2s ease;
-  }
-
-  .footer-social a:hover {
-    color: var(--gold);
-    border-color: var(--gold);
-  }
-
-  .footer-social .dot {
-    margin: 0 10px;
-    color: var(--gold);
-    opacity: 0.6;
-  }
-
-  .disclaimer {
-    font-size: 10.5px;
-    color: var(--ink-soft);
-    line-height: 1.55;
-    opacity: 0.75;
-    max-width: 360px;
-    margin: 0 auto 16px;
-    letter-spacing: 0.01em;
-  }
-
-  .footer-copy {
-    font-size: 10.5px;
-    color: var(--ink-soft);
-    letter-spacing: 0.08em;
-    opacity: 0.6;
-    text-transform: uppercase;
-  }
-
-  .footer-copy .sep {
-    margin: 0 8px;
-    color: var(--gold);
-  }
-
-  .footer-cta {
-    margin-top: 18px;
-    display: inline-block;
-    background: var(--ink);
-    color: var(--cream);
-    text-decoration: none;
-    padding: 13px 28px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  /* Small mobile tweaks */
-  @media (max-width: 360px) {
-    .card-name { font-size: 20px; }
-    .brand-main { font-size: 36px; }
-    .brand-sub { letter-spacing: 0.35em; }
-  }
+  .faq-item summary { list-style: none; }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <div class="brand">
-      <div class="brand-main">ASTREA</div>
-      <div class="brand-sub">— Charts —</div>
+<div style="max-width: 440px; margin: 0 auto;">
+
+  <div style="text-align: center; position: relative;">
+    <span style="color: #D4B172; font-size: 18px; display: block; margin-bottom: 6px;">✦</span>
+    <div style="font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 42px; line-height: 0.95; color: #F4EEDF; letter-spacing: 0.08em;">ASTREA</div>
+    <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.4em; text-transform: uppercase; color: #D4B172; margin-top: 6px;">— Charts —</div>
+  </div>
+
+  <h1 style="font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 36px; line-height: 1.2; color: #F4EEDF; margin: 28px 0 14px; text-wrap: pretty;">Tu carta natal revela quién eres en <em style="color: #D4B172; font-style: italic;">esencia</em>.</h1>
+  <p style="font-size: 14px; color: rgba(244,238,223,0.72); max-width: 300px; margin: 0 auto 28px; line-height: 1.55;">Descubre tu Sol, Luna, Ascendente y más. Al instante y sin costo.</p>
+
+  <div style="margin-bottom: 32px;">
+    <a href="home.html" style="display: flex; align-items: center; justify-content: center; gap: 10px; text-align: center; background: linear-gradient(135deg, #E6CB98, #D4B172); color: #1a1408; text-decoration: none; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 17px; letter-spacing: 0.02em; padding: 20px 24px; border-radius: 6px; box-shadow: 0 8px 24px rgba(212,177,114,0.25);">
+      <svg viewBox="0 0 24 24" style="width: 19px; height: 19px; fill: #1a1408; flex-shrink: 0;"><path d="M12 2c.4 3.6 1 5.6 2 6.8 1.2 1.2 3.2 1.8 6.8 2.2-3.6.4-5.6 1-6.8 2.2-1 1.2-1.6 3.2-2 6.8-.4-3.6-1-5.6-2-6.8-1.2-1.2-3.2-1.8-6.8-2.2 3.6-.4 5.6-1 6.8-2.2 1-1.2 1.6-3.2 2-6.8z"></path><path d="M19 2c.15 1.3.4 2 .8 2.4.4.4 1.1.65 2.2.8-1.1.15-1.8.4-2.2.8-.4.4-.65 1.1-.8 2.2-.15-1.1-.4-1.8-.8-2.2-.4-.4-1.1-.65-2.2-.8 1.1-.15 1.8-.4 2.2-.8.4-.4.65-1.1.8-2.2z"></path></svg>
+      Generar mi carta gratis
+    </a>
+  </div>
+
+  <div id="servicios" style="background: rgba(11,18,32,0.75); border: 1px solid rgba(212,177,114,0.45); border-radius: 14px; padding: 18px; margin-bottom: 36px; display: flex; gap: 16px; align-items: stretch;">
+    <div style="width: 150px; min-width: 150px; aspect-ratio: 3 / 4; border-radius: 8px; overflow: hidden;">
+      <img src="assets/portada-carta-natal.png" alt="Portada Lectura de Carta Natal" style="width: 100%; height: 100%; object-fit: cover; display: block;">
     </div>
-  </header>
-
-  <p class="intro">Un reporte personalizado que integra tu carta natal en una sola historia. Comprende tus talentos, desafíos, patrones de vida y el potencial que hay en ti a través de una interpretación profunda, escrita especialmente para ti.</p>
-
-  <section class="cards">
-
-    <article class="card">
-      <div class="card-top">
-        <div class="card-id">
-          <span class="glyph">
-            <svg width="22" height="26" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="1" width="20" height="3" fill="currentColor"/>
-              <rect x="1" y="23" width="22" height="3" fill="currentColor"/>
-              <rect x="4" y="6" width="2.4" height="16" fill="currentColor"/>
-              <rect x="8.8" y="6" width="2.4" height="16" fill="currentColor"/>
-              <rect x="13.6" y="6" width="2.4" height="16" fill="currentColor"/>
-              <rect x="18.4" y="6" width="2.4" height="16" fill="currentColor"/>
-            </svg>
-          </span>
-          <h3 class="card-name">Lectura de Carta Natal</h3>
-        </div>
-        <span class="price">USD 12</span>
+    <div style="flex: 1; display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+        <div style="font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #D4B172;">Lectura de</div>
+        <div style="font-size: 13px; color: #D4B172; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap;">USD 12</div>
       </div>
-      <p class="card-question">Una lectura para volver a ti una y otra vez.</p>
-      <ul class="card-list">
-        <li><strong>Capítulo I · Tu esencia</strong> — Tu identidad, propósito y la energía que guía tu camino.</li>
-        <li><strong>Capítulo II · Tu mundo interior</strong> — Tus emociones, necesidades y forma de procesar la vida.</li>
-        <li><strong>Capítulo III · Tu potencial</strong> — Talentos naturales, fortalezas y oportunidades de crecimiento.</li>
-        <li><strong>Capítulo IV · Tus desafíos</strong> — Patrones, bloqueos y aprendizajes que impulsan tu evolución.</li>
-        <li><strong>Capítulo V · Tu carta, planeta por planeta</strong> — Una interpretación detallada del Sol, la Luna, el Ascendente y cada uno de los planetas de tu carta natal.</li>
-        <li><strong>Capítulo VI · Los patrones de tu carta</strong> — Análisis completo de casas astrológicas, aspectos planetarios y configuraciones que revelan cómo interactúan todas las piezas de tu carta.</li>
-        <li><strong>Capítulo VII · Un cierre para volver a ti</strong> — Una reflexión final para integrar la lectura y regresar a ella cada vez que lo necesites.</li>
-        <li>Más de 20 páginas · Revisión humana · Entrega en PDF por correo · 24–48 horas</li>
+      <div style="font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 26px; color: #F4EEDF; line-height: 1.1; margin-bottom: 12px;">Carta Natal</div>
+
+      <ul style="list-style: none; margin: 0 0 14px; padding: 0;">
+        <li style="display: flex; align-items: flex-start; gap: 10px; font-size: 12.5px; color: #F4EEDF; line-height: 1.5; margin-bottom: 8px;"><svg viewBox="0 0 24 24" style="width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; fill: none; stroke: #D4B172; stroke-width: 2.2;"><path d="M4 12l6 6L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>Más de 15 capítulos profesionales</li>
+        <li style="display: flex; align-items: flex-start; gap: 10px; font-size: 12.5px; color: #F4EEDF; line-height: 1.5; margin-bottom: 8px;"><svg viewBox="0 0 24 24" style="width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; fill: none; stroke: #D4B172; stroke-width: 2.2;"><path d="M4 12l6 6L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>Análisis profundo de tu carta natal</li>
+        <li style="display: flex; align-items: flex-start; gap: 10px; font-size: 12.5px; color: #F4EEDF; line-height: 1.5; margin-bottom: 8px;"><svg viewBox="0 0 24 24" style="width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; fill: none; stroke: #D4B172; stroke-width: 2.2;"><path d="M4 12l6 6L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>Entiende tus patrones y propósito</li>
+        <li style="display: flex; align-items: flex-start; gap: 10px; font-size: 12.5px; color: #F4EEDF; line-height: 1.5; margin-bottom: 0;"><svg viewBox="0 0 24 24" style="width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; fill: none; stroke: #D4B172; stroke-width: 2.2;"><path d="M4 12l6 6L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>Entrega en 24–48h en PDF</li>
       </ul>
-      <a class="cta" href="https://pay.hotmart.com/B106744064D?bid=1784070968525">Quiero mi Lectura de Carta Natal</a>
-    </article>
 
-    </section>
-
-  <section class="questions">
-    <div class="questions-title">¿Tienes preguntas?</div>
-    <div class="contact-row">
-      <a class="contact-btn" href="https://wa.me/573132137456?text=Hola%20%E2%9C%A8%20tengo%20una%20pregunta%20sobre%20mi%20carta%20natal">WhatsApp</a>
-      <a class="contact-btn" href="https://www.tiktok.com/@astrea.charts">TikTok DM</a>
+      <a href="https://pay.hotmart.com/B106744064D?bid=1784070968525" style="display: flex; align-items: center; justify-content: space-between; background: transparent; color: #D4B172; border: 1px solid #D4B172; text-decoration: none; padding: 11px 14px; font-size: 13px; font-weight: 600; border-radius: 20px; margin-top: auto;">
+        <span style="display: flex; align-items: center; gap: 8px;">
+          Quiero mi lectura
+          <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: #D4B172; stroke-width: 1.8;"><path d="M12 5c-1.5-1.2-3.5-1.8-5.5-1.8S3 3.6 3 4.2v13.6c0 .5.4.8.9.6 1.6-.6 3.4-.6 5-.1.8.25 1.5.6 2.1 1.1M12 5c1.5-1.2 3.5-1.8 5.5-1.8S21 3.6 21 4.2v13.6c0 .5-.4.8-.9.6-1.6-.6-3.4-.6-5-.1-.8.25-1.5.6-2.1 1.1M12 5v14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <svg viewBox="0 0 24 24" style="width: 15px; height: 15px; fill: none; stroke: #D4B172; stroke-width: 1.8;"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
-  </section>
+  </div>
 
-  <section class="how">
-    <div class="eyebrow"><span class="eyebrow-line">Cómo funciona</span></div>
-    <div class="how-grid">
-      <div class="step">
-        <div class="step-num">i.</div>
-        <div class="step-text"><strong>Pagas de forma segura.</strong> A través de Hotmart — el precio se convierte a tu moneda automáticamente.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">ii.</div>
-        <div class="step-text"><strong>Llenas un formulario con tus datos natales.</strong> Te llega justo después de pagar: solo pide fecha, hora y lugar de nacimiento.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">iii.</div>
-        <div class="step-text"><strong>Recibes tu PDF en 24–48 horas.</strong> En tu correo, listo para leer cuantas veces quieras.</div>
-      </div>
+  <div style="text-align: center; margin: 32px 0 18px;">
+    <span style="display: inline-flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #D4B172;"><span>✦</span>Cómo funciona<span>✦</span></span>
+  </div>
+  <div style="display: flex; gap: 4px; text-align: center;">
+    <div style="flex: 1; padding: 0 6px;">
+      <div style="width: 34px; height: 34px; border: 1px solid #D4B172; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: #D4B172; margin: 0 auto 12px;">i</div>
+      <div style="font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #F4EEDF; margin-bottom: 4px;">Ingresa tus datos</div>
+      <div style="font-size: 11.5px; color: rgba(244,238,223,0.72); line-height: 1.4;">Fecha, hora y lugar de nacimiento.</div>
     </div>
-  </section>
-
-  <section class="faq">
-    <div class="eyebrow"><span class="eyebrow-line">Preguntas frecuentes</span></div>
-
-    <details class="faq-item">
-      <summary>¿Necesito saber de astrología?</summary>
-      <div class="faq-answer">No. Cada reporte está escrito para que cualquier persona lo entienda — sin tecnicismos ni explicaciones complicadas.</div>
-    </details>
-
-    <details class="faq-item">
-      <summary>¿Qué pasa si no sé mi hora exacta de nacimiento?</summary>
-      <div class="faq-answer">Pon la más aproximada que tengas. El reporte sigue siendo útil y preciso en la mayoría de las secciones.</div>
-    </details>
-
-    <details class="faq-item">
-      <summary>¿Es lo mismo que un horóscopo?</summary>
-      <div class="faq-answer">No. Un horóscopo es genérico para tu signo. Estos reportes son únicos para ti — basados en tu carta natal exacta.</div>
-    </details>
-
-    <details class="faq-item">
-      <summary>¿Recibo el mismo reporte que otra persona de mi signo?</summary>
-      <div class="faq-answer">No. Tu carta natal es única — depende de tu fecha, hora y lugar exactos de nacimiento — así que tu reporte también lo es.</div>
-    </details>
-  </section>
-
-  <footer>
-    <div class="footer-tag">Tu vida no es casualidad.<br>Es tu <em>carta.</em></div>
-
-    <div class="footer-divider">
-      <span class="divider-line"></span>
-      <span class="divider-symbol">☽</span>
-      <span class="divider-line"></span>
+    <div style="flex: 1; padding: 0 6px;">
+      <div style="width: 34px; height: 34px; border: 1px solid #D4B172; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: #D4B172; margin: 0 auto 12px;">ii</div>
+      <div style="font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #F4EEDF; margin-bottom: 4px;">Generamos tu carta</div>
+      <div style="font-size: 11.5px; color: rgba(244,238,223,0.72); line-height: 1.4;">Calculamos tu carta natal al instante.</div>
     </div>
-
-    <div class="footer-brand">Astrea Charts</div>
-    <div class="footer-meta">Reportes astrológicos</div>
-
-    <div class="footer-social">
-      <a href="https://www.tiktok.com/@astrea.charts">TikTok</a>
-      <span class="dot">·</span>
-      <a href="https://wa.me/573132137456">WhatsApp</a>
+    <div style="flex: 1; padding: 0 6px;">
+      <div style="width: 34px; height: 34px; border: 1px solid #D4B172; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: #D4B172; margin: 0 auto 12px;">iii</div>
+      <div style="font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #F4EEDF; margin-bottom: 4px;">Descubre tu esencia</div>
+      <div style="font-size: 11.5px; color: rgba(244,238,223,0.72); line-height: 1.4;">Explora tu carta gratis o lleva el análisis completo.</div>
     </div>
+  </div>
 
-    <p class="disclaimer">Astrea Charts es una herramienta de autoconocimiento basada en astrología. No constituye asesoría financiera, médica ni profesional de ningún tipo.</p>
+  <div style="text-align: center; margin: 32px 0 18px;">
+    <span style="display: inline-flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #D4B172;"><span>✦</span>Preguntas frecuentes<span>✦</span></span>
+  </div>
 
-    <div class="footer-copy">© 2026 Astrea Charts<span class="sep">·</span>Hecho con cuidado</div>
+  <details class="faq-item" style="border-bottom: 1px solid rgba(212,177,114,0.45); padding: 14px 0;">
+    <summary style="font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #F4EEDF; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px;">¿Necesito saber de astrología para entender mi carta?<span style="color: #D4B172; font-size: 20px;">+</span></summary>
+    <div style="margin-top: 10px; font-size: 13.5px; color: rgba(244,238,223,0.72); line-height: 1.55;">No. Cada reporte está escrito para que cualquier persona lo entienda — sin tecnicismos ni explicaciones complicadas.</div>
+  </details>
+
+  <details class="faq-item" style="border-bottom: 1px solid rgba(212,177,114,0.45); padding: 14px 0;">
+    <summary style="font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #F4EEDF; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px;">¿Qué pasa si no sé mi hora exacta de nacimiento?<span style="color: #D4B172; font-size: 20px;">+</span></summary>
+    <div style="margin-top: 10px; font-size: 13.5px; color: rgba(244,238,223,0.72); line-height: 1.55;">Pon la más aproximada que tengas. El reporte sigue siendo útil y preciso en la mayoría de las secciones.</div>
+  </details>
+
+  <details class="faq-item" style="border-bottom: 1px solid rgba(212,177,114,0.45); padding: 14px 0;">
+    <summary style="font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #F4EEDF; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px;">¿Usan inteligencia artificial para hacer mi carta?<span style="color: #D4B172; font-size: 20px;">+</span></summary>
+    <div style="margin-top: 10px; font-size: 13.5px; color: rgba(244,238,223,0.72); line-height: 1.55;">Tu carta se calcula con astronomía real (Swiss Ephemeris), no con IA. Para la interpretación larga y detallada, sí usamos asistentes de IA con integridad — nos ayudan a redactar con mayor precisión matemática y a conectar patrones complejos de tu carta. Pero el texto final no sale automático: nosotras lo revisamos, lo verificamos contra herramientas de referencia y lo complementamos con la lectura de tus tránsitos. Es un trabajo en coautoría, no un texto generado sin supervisión.</div>
+  </details>
+
+  <details class="faq-item" style="border-bottom: 1px solid rgba(212,177,114,0.45); padding: 14px 0;">
+    <summary style="font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #F4EEDF; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px;">¿Cuánto tiempo tarda en llegar mi reporte premium?<span style="color: #D4B172; font-size: 20px;">+</span></summary>
+    <div style="margin-top: 10px; font-size: 13.5px; color: rgba(244,238,223,0.72); line-height: 1.55;">Entre 24 y 48 horas, directo a tu correo en formato PDF.</div>
+  </details>
+
+  <details class="faq-item" style="border-bottom: 1px solid rgba(212,177,114,0.45); padding: 14px 0;">
+    <summary style="font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #F4EEDF; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px;">¿Puedo hacer preguntas sobre mi carta?<span style="color: #D4B172; font-size: 20px;">+</span></summary>
+    <div style="margin-top: 10px; font-size: 13.5px; color: rgba(244,238,223,0.72); line-height: 1.55;">Sí. Una vez compras tu lectura, si te queda alguna duda sobre tu carta, escríbenos por WhatsApp o por TikTok — con gusto te ayudamos a entender cualquier parte de tu reporte.</div>
+  </details>
+
+  <div style="display: flex; gap: 10px; justify-content: center; margin-top: 32px;">
+    <a href="https://wa.me/573132137456?text=Hola%20%E2%9C%A8%20tengo%20una%20pregunta%20sobre%20mi%20carta%20natal" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: #F4EEDF; border: 1px solid #F4EEDF; text-decoration: none; text-align: center; padding: 12px 12px; font-size: 13px; font-weight: 500; border-radius: 4px;">
+      <svg viewBox="0 0 32 32" style="width: 17px; height: 17px; fill: currentColor; flex-shrink: 0;"><path d="M16.04 3C9.37 3 3.98 8.38 3.98 15.05c0 2.22.6 4.3 1.63 6.09L3 29l8.06-2.55a12.02 12.02 0 0 0 4.98 1.08h.01c6.66 0 12.05-5.38 12.05-12.05C28.1 8.4 22.71 3 16.04 3zm0 21.9h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-4.78 1.51 1.55-4.64-.24-.38a9.83 9.83 0 0 1-1.53-5.27c0-5.46 4.44-9.9 9.91-9.9 2.64 0 5.13 1.03 6.99 2.9a9.83 9.83 0 0 1 2.9 6.99c0 5.46-4.45 9.9-9.9 9.9zm5.44-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.24-.46-2.37-1.47-.87-.78-1.47-1.74-1.64-2.03-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5-.17 0-.37-.02-.57-.02-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.22 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.35.19 1.86.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"></path></svg>
+      WhatsApp
+    </a>
+    <a href="https://www.tiktok.com/@astrea.charts" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: #F4EEDF; border: 1px solid #F4EEDF; text-decoration: none; text-align: center; padding: 12px 12px; font-size: 13px; font-weight: 500; border-radius: 4px;">
+      <svg viewBox="0 0 32 32" style="width: 17px; height: 17px; fill: currentColor; flex-shrink: 0;"><path d="M22.5 3h-4.2v18.1c0 1.9-1.5 3.5-3.5 3.5-1.9 0-3.5-1.6-3.5-3.5s1.5-3.5 3.5-3.5c.35 0 .68.05 1 .14v-4.3a7.7 7.7 0 0 0-1-.07c-4.2 0-7.6 3.4-7.6 7.7S10.6 29 14.8 29s7.6-3.4 7.6-7.7v-9.3a10.9 10.9 0 0 0 6.1 1.9V9.7a6.8 6.8 0 0 1-4.6-2.1A6.7 6.7 0 0 1 22.5 3z"></path></svg>
+      TikTok DM
+    </a>
+  </div>
+
+  <footer style="margin-top: 44px; text-align: center;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 0 20px;">
+      <span style="flex: 1; height: 1px; background: rgba(212,177,114,0.45); max-width: 90px;"></span>
+      <span style="color: #D4B172; font-size: 15px;">☽</span>
+      <span style="flex: 1; height: 1px; background: rgba(212,177,114,0.45); max-width: 90px;"></span>
+    </div>
+    <div style="font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #D4B172; margin-bottom: 10px;">Astrea Charts</div>
+    <p style="font-size: 10.5px; color: rgba(244,238,223,0.72); line-height: 1.55; opacity: 0.8; max-width: 340px; margin: 0 auto 12px;">Astrea no reemplaza asesoría médica, psicológica ni profesional. El contenido es de carácter informativo y espiritual.</p>
+    <div style="font-size: 10px; color: rgba(244,238,223,0.72); letter-spacing: 0.03em; opacity: 0.65;">
+      © 2026 Astrea Charts. Todos los derechos reservados.
+      <span style="margin: 0 6px; color: #D4B172;">·</span>
+      <a href="privacidad.html" style="color: #D4B172; text-decoration: none;">Política de privacidad</a>
+    </div>
   </footer>
 
 </div>

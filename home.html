@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrea Charts · Descubre lo que las estrellas dicen de ti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #0B1220;
+    --gold: #D4B172;
+    --gold-soft: #E6CB98;
+    --ink: #F4EEDF;
+    --ink-soft: rgba(244, 238, 223, 0.72);
+    --hairline: rgba(212, 177, 114, 0.45);
+    --lila: #B39DDB;
+    --rosa: #E091A8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--cream);
+    background-image: url("fondo-estrellado.png");
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .logo-mini {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  .logo-mini .sub {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 8px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-top: 2px;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 28px 0 20px;
+  }
+
+  .hero-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 34px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .hero-titulo em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .hero-subtitulo {
+    font-size: 14px;
+    color: var(--ink-soft);
+    max-width: 320px;
+    margin: 14px auto 0;
+    line-height: 1.55;
+  }
+
+  .scroll-indicador {
+    margin-top: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--hairline);
+    border-radius: 50%;
+    color: var(--gold);
+    font-size: 14px;
+  }
+
+  .eyebrow {
+    text-align: center;
+    margin: 36px 0 16px;
+  }
+
+  .eyebrow-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--gold-soft);
+  }
+
+  .eyebrow-line::before,
+  .eyebrow-line::after {
+    content: '✦';
+    font-size: 11px;
+    color: var(--gold);
+  }
+
+  .que-es {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    margin-top: 8px;
+  }
+
+  .que-es-icono {
+    width: 76px;
+    height: 76px;
+    min-width: 76px;
+  }
+
+  .que-es-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .que-es-texto {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .form-card {
+    background: rgba(11, 18, 32, 0.6);
+    backdrop-filter: blur(3px);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 26px 22px;
+    margin-top: 32px;
+  }
+
+  .form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .campo label {
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .campo input,
+  .campo select {
+    width: 100%;
+    background: rgba(11, 18, 32, 0.6);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+
+  .campo input:focus,
+  .campo select:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  .time-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .time-row select {
+    flex: 1;
+  }
+
+  .hint {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    opacity: 0.8;
+  }
+
+  .btn-generar {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    color: #1a1408;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    padding: 15px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  .form-nota {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 12px;
+    opacity: 0.75;
+  }
+
+  .loading-carta {
+    text-align: center;
+    margin: 50px 0;
+  }
+
+  .loading-mensaje {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 19px;
+    color: var(--ink);
+    margin-bottom: 20px;
+    min-height: 28px;
+  }
+
+  .loading-barra {
+    width: 100%;
+    max-width: 260px;
+    height: 3px;
+    background: var(--hairline);
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .loading-barra-fill {
+    height: 100%;
+    width: 30%;
+    background: var(--gold);
+    animation: avanzar 1.6s ease-in-out infinite;
+  }
+
+  @keyframes avanzar {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+  }
+
+  .resultado-carta {
+    margin-top: 20px;
+  }
+
+  .vista-astral-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    overflow: visible;
+  }
+
+  .rueda-natal-wrap {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .rueda-natal-wrap svg {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+  }
+
+  .rueda-signo-simbolo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    fill: var(--gold);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  .rueda-planeta-simbolo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    fill: var(--ink);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  .rueda-casa-numero {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px;
+    fill: var(--ink-soft);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  .rueda-eje-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    fill: var(--gold);
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  .tabla-carta {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+    font-size: 12px;
+    table-layout: fixed;
+  }
+
+  .tabla-carta th {
+    text-align: left;
+    padding: 8px 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--gold);
+  }
+
+  .tabla-carta td {
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--hairline);
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tabla-carta th:nth-child(1), .tabla-carta td:nth-child(1) { width: 32%; }
+  .tabla-carta th:nth-child(2), .tabla-carta td:nth-child(2) { width: 27%; }
+  .tabla-carta th:nth-child(3), .tabla-carta td:nth-child(3) { width: 23%; }
+  .tabla-carta th:nth-child(4), .tabla-carta td:nth-child(4) { width: 18%; text-align: right; }
+
+  .retro-tag { color: var(--gold); font-size: 10px; }
+
+  .big-three {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .big-three-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    background: rgba(11, 18, 32, 0.6);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 16px 8px;
+  }
+
+  .big-three-simbolo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--gold);
+  }
+
+  .big-three-texto strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .big-three-texto span {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+  }
+
+  .esencia-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .esencia-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(11, 18, 32, 0.6);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 16px 14px;
+  }
+
+  .esencia-icono {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--esencia-color, var(--gold));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--esencia-color, var(--gold));
+    font-size: 14px;
+  }
+
+  .esencia-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--esencia-color, var(--gold));
+    margin-bottom: 3px;
+  }
+
+  .esencia-texto {
+    font-size: 12.5px;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 5px;
+  }
+
+  .esencia-etiqueta {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  .esencia-identidad { --esencia-color: var(--gold); }
+  .esencia-emociones { --esencia-color: var(--lila); }
+  .esencia-camino    { --esencia-color: var(--rosa); }
+
+  .balance-texto {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin: 14px 0 16px;
+  }
+
+  .barra-elemento-fila {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .barra-elemento-nombre {
+    width: 48px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+
+  .barra-elemento-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(212, 177, 114, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .barra-elemento-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+    border-radius: 4px;
+  }
+
+  .barra-elemento-valor {
+    width: 18px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .aspecto-destacado-box {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(212, 177, 114, 0.08);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  .aspecto-destacado-box .titulo-mini {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .btn-compartir {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 13px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    margin-top: 14px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-compartir:hover {
+    background: var(--gold);
+    color: var(--cream);
+  }
+
+  #compartir-card {
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    width: 360px;
+    padding: 32px 28px;
+    background: #0B1220;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  #compartir-card .cc-marca {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  #compartir-card .cc-sub {
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  #compartir-card .cc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  #compartir-card .cc-item:last-child { border-bottom: none; }
+
+  #compartir-card .cc-simbolo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--gold);
+    width: 32px;
+  }
+
+  #compartir-card .cc-texto strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: var(--ink);
+  }
+
+  #compartir-card .cc-texto span {
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+
+  #compartir-card .cc-footer {
+    text-align: center;
+    font-size: 9.5px;
+    color: var(--ink-soft);
+    margin-top: 22px;
+    letter-spacing: 0.04em;
+  }
+
+  .aviso-parcial {
+    text-align: center;
+    font-size: 12px;
+    color: var(--gold-soft);
+    font-style: italic;
+    margin-top: 22px;
+  }
+
+  .valor-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .valor-card {
+    background: rgba(11, 18, 32, 0.5);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+
+  .valor-card .comilla {
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    line-height: 0.5;
+  }
+
+  .valor-card p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-top: 6px;
+  }
+
+  .comparacion {
+    display: flex;
+    gap: 10px;
+    position: relative;
+  }
+
+  .comparacion-col {
+    flex: 1;
+    background: rgba(11, 18, 32, 0.5);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 18px 14px;
+  }
+
+  .comparacion-col.completo {
+    border-color: var(--gold);
+  }
+
+  .comparacion-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    text-align: center;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .comparacion-lista {
+    list-style: none;
+  }
+
+  .comparacion-lista li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 11.5px;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 9px;
+  }
+
+  .comparacion-lista li.si::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .comparacion-lista li.no {
+    color: var(--ink-soft);
+    opacity: 0.6;
+  }
+
+  .comparacion-lista li.no::before {
+    content: '✕';
+    position: absolute;
+    left: 0;
+    color: var(--ink-soft);
+  }
+
+  .card-premium {
+    background: rgba(11, 18, 32, 0.6);
+    backdrop-filter: blur(3px);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 24px 22px;
+  }
+
+  .card-premium-top {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .card-premium-eyebrow-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+
+  .card-premium-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .card-premium-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .card-premium-precio {
+    font-size: 14px;
+    color: var(--gold);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .card-premium-desc {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .card-premium-lista {
+    list-style: none;
+    margin: 16px 0;
+  }
+
+  .card-premium-lista li {
+    position: relative;
+    padding-left: 22px;
+    font-size: 12.5px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin-bottom: 7px;
+  }
+
+  .card-premium-lista li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .cta-comprar {
+    display: block;
+    text-align: center;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    color: #1a1408;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 16px;
+    border-radius: 6px;
+  }
+
+  .pago-nota {
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-top: 10px;
+    opacity: 0.75;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--hairline);
+    padding: 14px 0;
+  }
+
+  .faq-item summary {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--ink);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .faq-item summary::-webkit-details-marker { display: none; }
+
+  .faq-item summary::after {
+    content: '+';
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold);
+    font-size: 20px;
+  }
+
+  .faq-item[open] summary::after {
+    content: '−';
+  }
+
+  .faq-answer {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  .seccion-desplegable {
+    margin-top: 10px;
+  }
+
+  .seccion-desplegable summary {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+  }
+
+  footer {
+    margin-top: 44px;
+    text-align: center;
+  }
+
+  .footer-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--hairline);
+    max-width: 90px;
+  }
+
+  .footer-brand {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .disclaimer {
+    font-size: 10px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    opacity: 0.8;
+    max-width: 320px;
+    margin: 0 auto 10px;
+  }
+
+  .footer-copy {
+    font-size: 10px;
+    color: var(--ink-soft);
+    opacity: 0.65;
+  }
+
+  .footer-copy a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  .footer-copy .sep {
+    margin: 0 6px;
+    color: var(--gold);
+  }
+
+  @media (max-width: 380px) {
+    .comparacion { flex-direction: column; }
+    .big-three { flex-direction: column; }
+    .big-three-item { flex-direction: row; text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="site-header" style="justify-content: center;">
+    <div class="logo-mini">ASTREA<span class="sub">— CHARTS —</span></div>
+  </div>
+
+  <section class="hero">
+    <h1 class="hero-titulo">Descubre lo que las <em>estrellas</em> dicen de ti</h1>
+    <p class="hero-subtitulo">Tu carta natal es un mapa único de tu esencia, tus talentos y tu propósito.</p>
+    <a href="#form-gratis" class="scroll-indicador">
+      <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2;"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </section>
+
+  <div class="eyebrow"><span class="eyebrow-line">¿Qué es una carta natal?</span></div>
+  <div class="que-es">
+    <svg class="que-es-icono" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="var(--hairline)" stroke-width="1"/>
+      <circle cx="50" cy="50" r="32" fill="none" stroke="var(--hairline)" stroke-width="1"/>
+      <g stroke="var(--gold)" stroke-width="0.8" opacity="0.55">
+        <line x1="50" y1="10" x2="50" y2="90"/>
+        <line x1="10" y1="50" x2="90" y2="50"/>
+      </g>
+      <polygon fill="var(--gold)" points="50,42 53,47 58,50 53,53 50,58 47,53 42,50 47,47"/>
+    </svg>
+    <div>
+      <div class="que-es-titulo">Una fotografía del cielo</div>
+      <p class="que-es-texto">Es una fotografía del cielo en el momento exacto de tu nacimiento. Revela tu esencia, tus patrones y las oportunidades que tienes para crecer y crear la vida que realmente deseas.</p>
+      <p class="que-es-texto">Para que sea precisa, necesitamos tu fecha, hora y lugar de nacimiento. Cada detalle importa, porque cada minuto y cada lugar cambian el mapa.</p>
+    </div>
+  </div>
+
+  <section id="form-gratis" class="form-card">
+    <div class="eyebrow" style="margin: 0 0 4px;"><span class="eyebrow-line">Genera tu carta gratis</span></div>
+
+    <form id="natalFormGratis">
+      <div class="campo">
+        <label for="fg_nombre">Nombre completo</label>
+        <input type="text" id="fg_nombre" name="nombre" placeholder="Ej. Sofia Herrera" required>
+      </div>
+
+      <div class="campo">
+        <label for="fg_fecha">Fecha de nacimiento</label>
+        <input type="date" id="fg_fecha" name="fecha" min="1900-01-01" max="2026-07-18" required>
+      </div>
+
+      <div class="campo">
+        <label for="fg_hora">Hora de nacimiento</label>
+        <div class="time-row">
+          <select id="fg_hora_h" required>
+            <option value="">Hora</option>
+            <script>for(let h=0; h<24; h++) document.write(`<option value="${String(h).padStart(2,'0')}">${String(h).padStart(2,'0')}</option>`);</script>
+          </select>
+          <select id="fg_hora_m" required>
+            <option value="">Min</option>
+            <script>for(let m=0; m<60; m++) document.write(`<option value="${String(m).padStart(2,'0')}">${String(m).padStart(2,'0')}</option>`);</script>
+          </select>
+        </div>
+        <div class="hint">Si no la sabes con exactitud, pon la más aproximada.</div>
+      </div>
+
+      <div class="campo">
+        <label for="fg_ciudad">Ciudad / País de nacimiento</label>
+        <input type="text" id="fg_ciudad" name="ciudad_pais" placeholder="Ej. Ciudad de México, México" required>
+      </div>
+
+      <button type="submit" id="fg_submit" class="btn-generar">✦ Generar mi carta</button>
+    </form>
+
+    <p class="form-nota">🔒 Tu información está segura. No compartimos tus datos.</p>
+  </section>
+
+  <section id="loading-carta" class="loading-carta" style="display:none;">
+    <div class="loading-mensaje" id="loading-mensaje-texto">Calculando posiciones planetarias...</div>
+    <div class="loading-barra"><div class="loading-barra-fill"></div></div>
+  </section>
+
+  <section id="resultado-carta" class="resultado-carta" style="display:none;">
+
+    <p id="saludo-nombre" style="text-align: center; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold-soft); font-size: 16px; margin-bottom: 8px;"></p>
+
+    <div class="eyebrow"><span class="eyebrow-line">Así se ve tu resumen personalizado</span></div>
+
+    <details class="faq-item seccion-desplegable" open>
+      <summary>Tu vista astral</summary>
+      <div class="vista-astral-card" style="margin-top: 14px;">
+        <div class="rueda-natal-wrap">
+          <div id="rueda-natal-container"></div>
+        </div>
+        <table class="tabla-carta" id="tabla-planetas"></table>
+      </div>
+    </details>
+
+    <details class="faq-item seccion-desplegable">
+      <summary>Tus 3 pilares (Big Three)</summary>
+      <div class="big-three" id="big-three-container" style="margin-top: 14px;"></div>
+      <button type="button" id="btn-compartir" class="btn-compartir">
+        <svg viewBox="0 0 24 24" style="width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0;"><circle cx="18" cy="5" r="3" stroke-linecap="round"/><circle cx="6" cy="12" r="3" stroke-linecap="round"/><circle cx="18" cy="19" r="3" stroke-linecap="round"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4" stroke-linecap="round"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6" stroke-linecap="round"/></svg>
+        <span id="btn-compartir-label">Compartir mi Big Three</span>
+      </button>
+    </details>
+
+    <details class="faq-item seccion-desplegable">
+      <summary>Tu esencia en pocas palabras</summary>
+      <div class="esencia-cards" id="esencia-cards-container" style="margin-top: 14px;"></div>
+    </details>
+
+    <details class="faq-item seccion-desplegable">
+      <summary>Tu balance elemental</summary>
+      <div id="balance-elemental-container"></div>
+    </details>
+
+    <p class="aviso-parcial">✦ Este es solo un vistazo. Hay mucho más esperándote en tu lectura completa.</p>
+
+    <a href="#lectura-completa" class="btn-generar" style="display: block; text-align: center; text-decoration: none; margin-top: 18px;">Desbloquear mi lectura completa</a>
+
+  </section>
+
+  <div class="eyebrow"><span class="eyebrow-line">Por qué las personas vuelven a su carta</span></div>
+  <div class="valor-cards">
+    <div class="valor-card">
+      <div class="comilla">"</div>
+      <p>Leer tu carta natal ayuda a entender patrones que repites sin darte cuenta, y a ganar claridad sobre por qué actúas como actúas.</p>
+    </div>
+    <div class="valor-card">
+      <div class="comilla">"</div>
+      <p>Muchas personas encuentran en su carta una guía práctica para tomar decisiones importantes con más confianza en sí mismas.</p>
+    </div>
+    <div class="valor-card">
+      <div class="comilla">"</div>
+      <p>Una carta bien explicada se siente profunda pero fácil de entender — no necesitas saber de astrología para aprovecharla.</p>
+    </div>
+  </div>
+
+  <div class="eyebrow"><span class="eyebrow-line">Elige tu experiencia</span></div>
+  <div class="comparacion">
+    <div class="comparacion-col">
+      <div class="comparacion-titulo">✨ Tu Carta Natal Esencial</div>
+      <div style="text-align: center; color: var(--gold); font-weight: 600; font-size: 13px; margin-bottom: 10px;">Gratis</div>
+      <p style="font-size: 10.5px; color: var(--ink-soft); text-align: center; line-height: 1.4; margin-bottom: 12px; opacity: 0.85;">Descubre los fundamentos de tu carta natal en pocos minutos.</p>
+      <ul class="comparacion-lista">
+        <li class="si">Tus tres pilares astrológicos</li>
+        <li class="si">Una primera interpretación de tu esencia</li>
+        <li class="si">Explicaciones simples y fáciles de entender</li>
+        <li class="si">Perfecta para empezar</li>
+      </ul>
+      <p style="font-size: 10.5px; font-style: italic; color: var(--ink-soft); text-align: center; margin-top: 12px;">Ideal si solo quieres conocer tu carta.</p>
+    </div>
+    <div class="comparacion-col completo">
+      <div class="comparacion-titulo" style="font-size: 16px;">🌙 Lectura Natal Personalizada</div>
+      <div style="text-align: center; color: var(--gold); font-weight: 600; font-size: 13px; margin-bottom: 10px;">USD 12</div>
+      <p style="font-size: 10.5px; color: var(--gold-soft); text-align: center; line-height: 1.4; margin-bottom: 12px;">Un informe de más de 15 capítulos para entender quién eres, cómo funcionas y hacia dónde puedes crecer.</p>
+      <ul class="comparacion-lista">
+        <li class="si">Incluye todo el resumen gratuito</li>
+        <li class="si">Interpretación profunda de tu carta completa</li>
+        <li class="si">Patrones, talentos y desafíos</li>
+        <li class="si">Propósito y potencial personal</li>
+        <li class="si">Recomendaciones claras y aplicables</li>
+        <li class="si">PDF profesional listo para guardar</li>
+        <li class="si">Revisado por una astróloga</li>
+        <li class="si">Entrega en 24–48 horas</li>
+      </ul>
+      <p style="font-size: 10.5px; font-style: italic; color: var(--gold-soft); text-align: center; margin-top: 12px;">Ideal si buscas una guía para conocerte con mayor profundidad.</p>
+    </div>
+  </div>
+
+  <div class="eyebrow" id="lectura-completa" style="margin-top: 44px;"><span class="eyebrow-line">Tu lectura completa</span></div>
+  <div class="card-premium">
+    <div class="card-premium-top">
+      <div style="width: 150px; min-width: 150px; aspect-ratio: 3 / 4; border-radius: 8px; overflow: hidden;">
+        <img src="assets/portada-carta-natal.png" alt="Portada Lectura de Carta Natal" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+      </div>
+      <div>
+        <div class="card-premium-eyebrow-row">
+          <span class="card-premium-eyebrow">Lectura de</span>
+          <span class="card-premium-precio">USD 12</span>
+        </div>
+        <div class="card-premium-titulo">Carta Natal</div>
+        <p class="card-premium-desc">Un análisis profundo y personalizado de tu carta natal para comprender tu esencia, tus patrones y tu propósito.</p>
+      </div>
+    </div>
+
+    <ul class="card-premium-lista">
+      <li>Más de 15 capítulos de análisis profundo</li>
+      <li>Patrones, propósito, talentos y desafíos</li>
+      <li>Guía personalizada para tu crecimiento</li>
+      <li>Informe en PDF profesional</li>
+      <li>Entrega en 24–48 horas a tu correo</li>
+    </ul>
+
+    <a class="cta-comprar" href="https://pay.hotmart.com/B106744064D?bid=1784070968525" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+      Quiero mi lectura
+      <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: #1a1408; stroke-width: 1.8;"><path d="M12 5c-1.5-1.2-3.5-1.8-5.5-1.8S3 3.6 3 4.2v13.6c0 .5.4.8.9.6 1.6-.6 3.4-.6 5-.1.8.25 1.5.6 2.1 1.1M12 5c1.5-1.2 3.5-1.8 5.5-1.8S21 3.6 21 4.2v13.6c0 .5-.4.8-.9.6-1.6-.6-3.4-.6-5-.1-.8.25-1.5.6-2.1 1.1M12 5v14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <p class="pago-nota">🔒 Pago 100% seguro a través de Hotmart.</p>
+  </div>
+
+  <div class="eyebrow"><span class="eyebrow-line">Preguntas frecuentes</span></div>
+
+  <details class="faq-item">
+    <summary>¿Necesito saber de astrología para entender mi lectura?</summary>
+    <div class="faq-answer">No. Cada reporte está escrito para que cualquier persona lo entienda — sin tecnicismos ni explicaciones complicadas.</div>
+  </details>
+
+  <details class="faq-item">
+    <summary>¿Y si no sé mi hora exacta de nacimiento?</summary>
+    <div class="faq-answer">Pon la más aproximada que tengas. El reporte sigue siendo útil y preciso en la mayoría de las secciones.</div>
+  </details>
+
+  <details class="faq-item">
+    <summary>¿Cuánto tiempo tarda en llegar mi reporte?</summary>
+    <div class="faq-answer">Entre 24 y 48 horas, directo a tu correo en formato PDF.</div>
+  </details>
+
+  <footer>
+    <div class="footer-divider">
+      <span class="divider-line"></span>
+      <span style="color: var(--gold);">☽</span>
+      <span class="divider-line"></span>
+    </div>
+    <div class="footer-brand">Astrea Charts</div>
+    <p class="disclaimer">Astrea Charts es una herramienta de autoconocimiento y desarrollo personal. No reemplaza asesoría médica, psicológica ni profesional.</p>
+    <div class="footer-copy">
+      © 2026 Astrea Charts. Todos los derechos reservados.
+      <span class="sep">·</span>
+      <a href="privacidad.html">Política de privacidad</a>
+    </div>
+  </footer>
+
+  <div id="compartir-card">
+    <div class="cc-marca">ASTREA</div>
+    <div class="cc-sub">— CHARTS —</div>
+    <div id="compartir-card-contenido"></div>
+    <div class="cc-footer">Genera tu carta gratis en astreacharts.com</div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="rueda-natal.js"></script>
+
+<script>
+  const API_BASE = "https://astrea-api-production.up.railway.app/api/v1";
+
+  const MENSAJES_LOADING = [
+    "Calculando posiciones planetarias...",
+    "Analizando aspectos...",
+    "Interpretando patrones...",
+    "Creando tu carta..."
+  ];
+
+  function iniciarMensajesLoading() {
+    const el = document.getElementById('loading-mensaje-texto');
+    let i = 0;
+    return setInterval(() => {
+      i = (i + 1) % MENSAJES_LOADING.length;
+      el.textContent = MENSAJES_LOADING[i];
+    }, 3500);
+  }
+
+  const SIMBOLOS = {
+    Sol: "☉", Luna: "☽", Mercurio: "☿", Venus: "♀", Marte: "♂",
+    Jupiter: "♃", Saturno: "♄", Urano: "♅", Neptuno: "♆", Pluton: "♇",
+    NodoNorte: "☊", Quiron: "⚷"
+  };
+
+  function renderizarResultado(datos) {
+    const { calculo, resumen, metadata } = datos;
+
+    if (metadata && metadata.nombre) {
+      document.getElementById('saludo-nombre').textContent = `Hola, ${metadata.nombre.split(' ')[0]} ✦`;
+    }
+
+    document.getElementById('rueda-natal-container').innerHTML = generarRuedaSVG(calculo);
+
+    const sol = calculo.planetas.Sol;
+    const luna = calculo.planetas.Luna;
+    const asc = calculo.puntos_angulares.Ascendente;
+
+    document.getElementById('big-three-container').innerHTML = `
+      <div class="big-three-item">
+        <span class="big-three-simbolo">☉</span>
+        <div class="big-three-texto"><strong>Sol en ${sol.signo}</strong><span>${sol.grado_en_signo.toFixed(1)}° · Casa ${sol.casa}</span></div>
+      </div>
+      <div class="big-three-item">
+        <span class="big-three-simbolo">☽</span>
+        <div class="big-three-texto"><strong>Luna en ${luna.signo}</strong><span>${luna.grado_en_signo.toFixed(1)}° · Casa ${luna.casa}</span></div>
+      </div>
+      <div class="big-three-item">
+        <span class="big-three-simbolo">⬆</span>
+        <div class="big-three-texto"><strong>Ascendente en ${asc.signo}</strong><span>${asc.grado_en_signo.toFixed(1)}°</span></div>
+      </div>
+    `;
+
+    const categorias = [
+      { key: 'identidad', clase: 'esencia-identidad', icono: '✦' },
+      { key: 'emociones', clase: 'esencia-emociones', icono: '✧' },
+      { key: 'camino',    clase: 'esencia-camino',    icono: '✵' },
+    ];
+
+    let htmlEsencia = '';
+    categorias.forEach(cat => {
+      const bloque = resumen[cat.key];
+      if (!bloque) return;
+      htmlEsencia += `
+        <div class="esencia-card ${cat.clase}">
+          <div class="esencia-icono">${cat.icono}</div>
+          <div>
+            <div class="esencia-titulo">${bloque.titulo}</div>
+            <p class="esencia-texto">${bloque.texto}</p>
+            <div class="esencia-etiqueta">${bloque.etiqueta}</div>
+          </div>
+        </div>
+      `;
+    });
+    document.getElementById('esencia-cards-container').innerHTML = htmlEsencia;
+
+    const em = resumen.elemento_modalidad;
+    if (em) {
+      const colores = { Fuego: '#E091A8', Tierra: '#D4B172', Aire: '#B39DDB', Agua: '#8FBFA0' };
+      const conteo = em.conteo_elementos || {};
+      const maximo = Math.max(1, ...Object.values(conteo));
+
+      let htmlBarras = '';
+      for (const [elemento, valor] of Object.entries(conteo)) {
+        const pct = (valor / maximo) * 100;
+        htmlBarras += `
+          <div class="barra-elemento-fila">
+            <span class="barra-elemento-nombre">${elemento}</span>
+            <div class="barra-elemento-track"><div class="barra-elemento-fill" style="width:${pct}%; background:${colores[elemento] || 'var(--gold)'};"></div></div>
+            <span class="barra-elemento-valor">${valor}</span>
+          </div>
+        `;
+      }
+
+      let htmlAspecto = '';
+      if (resumen.aspecto_destacado) {
+        htmlAspecto = `
+          <div class="aspecto-destacado-box">
+            <div class="titulo-mini">${resumen.aspecto_destacado.titulo}</div>
+            ${resumen.aspecto_destacado.texto}
+          </div>
+        `;
+      }
+
+      document.getElementById('balance-elemental-container').innerHTML = `
+        <p class="balance-texto">${em.texto}</p>
+        ${htmlBarras}
+        ${htmlAspecto}
+      `;
+    }
+
+    document.getElementById('compartir-card-contenido').innerHTML = `
+      <div class="cc-item">
+        <span class="cc-simbolo">☉</span>
+        <div class="cc-texto"><strong>Sol en ${sol.signo}</strong><span>${sol.grado_en_signo.toFixed(1)}° · Casa ${sol.casa}</span></div>
+      </div>
+      <div class="cc-item">
+        <span class="cc-simbolo">☽</span>
+        <div class="cc-texto"><strong>Luna en ${luna.signo}</strong><span>${luna.grado_en_signo.toFixed(1)}° · Casa ${luna.casa}</span></div>
+      </div>
+      <div class="cc-item">
+        <span class="cc-simbolo">⬆</span>
+        <div class="cc-texto"><strong>Ascendente en ${asc.signo}</strong><span>${asc.grado_en_signo.toFixed(1)}°</span></div>
+      </div>
+    `;
+
+    let filasPlanetas = '<tr><th>Planeta</th><th>Signo</th><th>Grado</th><th>Casa</th></tr>';
+    for (const [nombre, d] of Object.entries(calculo.planetas)) {
+      filasPlanetas += `<tr>
+        <td>${SIMBOLOS[nombre] || ''} ${nombre}</td>
+        <td>${d.signo}</td>
+        <td>${d.grado_en_signo.toFixed(2)}°</td>
+        <td>${d.casa} ${d.retrogrado ? '<span class="retro-tag">℞</span>' : ''}</td>
+      </tr>`;
+    }
+    document.getElementById('tabla-planetas').innerHTML = filasPlanetas;
+
+    document.getElementById('resultado-carta').style.display = 'block';
+    document.getElementById('resultado-carta').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  document.getElementById('btn-compartir').addEventListener('click', async () => {
+    const boton = document.getElementById('btn-compartir');
+    const label = document.getElementById('btn-compartir-label');
+    const textoOriginal = label.textContent;
+    boton.disabled = true;
+    label.textContent = 'Generando imagen...';
+
+    try {
+      const tarjeta = document.getElementById('compartir-card');
+      const canvas = await html2canvas(tarjeta, { backgroundColor: '#0B1220', scale: 2 });
+
+      canvas.toBlob(async (blob) => {
+        const archivo = new File([blob], 'mi-big-three-astrea.png', { type: 'image/png' });
+
+        if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+          await navigator.share({
+            files: [archivo],
+            title: 'Mi Big Three · Astrea Charts',
+            text: 'Descubre el tuyo gratis en Astrea Charts ✨',
+          });
+        } else {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'mi-big-three-astrea.png';
+          link.click();
+          URL.revokeObjectURL(url);
+        }
+
+        boton.disabled = false;
+        label.textContent = textoOriginal;
+      }, 'image/png');
+
+    } catch (error) {
+      console.error(error);
+      boton.disabled = false;
+      label.textContent = textoOriginal;
+      alert('No se pudo generar la imagen. Intenta de nuevo.');
+    }
+  });
+
+  document.getElementById('natalFormGratis').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById('fg_nombre').value;
+    const fecha = document.getElementById('fg_fecha').value;
+    const horaH = document.getElementById('fg_hora_h').value;
+    const horaM = document.getElementById('fg_hora_m').value;
+    const ciudadPais = document.getElementById('fg_ciudad').value;
+
+    const [ciudad, pais] = ciudadPais.split(',').map(s => s.trim());
+
+    if (!ciudad || !pais) {
+      alert('Escribe ciudad y país separados por coma. Ej: Bogotá, Colombia');
+      return;
+    }
+
+    const fecha_hora_local = `${fecha}T${horaH}:${horaM}:00`;
+
+    document.getElementById('form-gratis').style.display = 'none';
+    document.getElementById('loading-carta').style.display = 'block';
+    document.getElementById('loading-carta').scrollIntoView({ behavior: 'smooth' });
+
+    const intervalId = iniciarMensajesLoading();
+
+    try {
+      const respuesta = await fetch(`${API_BASE}/carta-natal/resumen`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, fecha_hora_local, ciudad, pais })
+      });
+
+      if (!respuesta.ok) throw new Error('Error del servidor');
+
+      const datos = await respuesta.json();
+      clearInterval(intervalId);
+      document.getElementById('loading-carta').style.display = 'none';
+
+      renderizarResultado(datos);
+
+    } catch (error) {
+      clearInterval(intervalId);
+      document.getElementById('loading-carta').style.display = 'none';
+      alert('Hubo un problema generando tu carta. Intenta de nuevo en unos segundos.');
+      console.error(error);
+    }
+  });
+</script>
+</body>
+</html>
