@@ -893,6 +893,27 @@
     color: var(--gold);
   }
 
+  .comparacion-col.completo {
+    position: relative;
+  }
+
+  .badge-recomendado {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #E6CB98, #D4B172);
+    color: #1a1408;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(212,177,114,0.35);
+  }
+
   @media (max-width: 380px) {
     .comparacion { flex-direction: column; }
     .big-three { flex-direction: column; }
@@ -909,7 +930,7 @@
 
   <section class="hero">
     <h1 class="hero-titulo">Descubre lo que las <em>estrellas</em> dicen de ti</h1>
-    <p class="hero-subtitulo">Tu carta natal es un mapa único de tu esencia, tus talentos y tu propósito.</p>
+    <p class="hero-subtitulo">Descubre tu arquitectura natal en segundos. Obtén tu gráfico astral, tu balance elemental y la lectura de tu esencia de forma 100% gratuita.</p>
     <a href="#form-gratis" class="scroll-indicador">
       <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2;"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
@@ -1013,7 +1034,7 @@
       <div id="balance-elemental-container"></div>
     </details>
 
-    <p class="aviso-parcial">✦ Este es solo un vistazo. Hay mucho más esperándote en tu lectura completa.</p>
+    <p class="aviso-parcial">✦  Ya conoces tu superficie. Desbloquea tus patrones ocultos, tu vocación y la guía completa de tu carta en tu informe de +15 capítulos.</p>
 
     <a href="#lectura-completa" class="btn-generar" style="display: block; text-align: center; text-decoration: none; margin-top: 18px;">Desbloquear mi lectura completa</a>
 
@@ -1050,6 +1071,7 @@
       <p style="font-size: 10.5px; font-style: italic; color: var(--ink-soft); text-align: center; margin-top: 12px;">Ideal si solo quieres conocer tu carta.</p>
     </div>
     <div class="comparacion-col completo">
+      <span class="badge-recomendado">Más recomendado</span>
       <div class="comparacion-titulo" style="font-size: 16px;">Lectura Natal Personalizada</div>
       <div style="text-align: center; color: var(--gold); font-weight: 600; font-size: 13px; margin-bottom: 10px;">USD 12</div>
       <p style="font-size: 10.5px; color: var(--gold-soft); text-align: center; line-height: 1.4; margin-bottom: 12px;">Un informe de más de 15 capítulos para entender quién eres, cómo funcionas y hacia dónde puedes crecer.</p>
@@ -1076,7 +1098,7 @@
       <div>
         <div class="card-premium-eyebrow-row">
           <span class="card-premium-eyebrow">Lectura de</span>
-          <span class="card-premium-precio">USD 12</span>
+          
         </div>
         <div class="card-premium-titulo">Carta Natal</div>
         <p class="card-premium-desc">Un análisis profundo y personalizado de tu carta natal para comprender tu esencia, tus patrones y tu propósito.</p>
@@ -1092,10 +1114,10 @@
     </ul>
 
     <a class="cta-comprar" href="https://pay.hotmart.com/B106744064D?bid=1784070968525" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-      Quiero mi lectura
+      Desbloquear mi lectura $12
       <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: #1a1408; stroke-width: 1.8;"><path d="M12 5c-1.5-1.2-3.5-1.8-5.5-1.8S3 3.6 3 4.2v13.6c0 .5.4.8.9.6 1.6-.6 3.4-.6 5-.1.8.25 1.5.6 2.1 1.1M12 5c1.5-1.2 3.5-1.8 5.5-1.8S21 3.6 21 4.2v13.6c0 .5-.4.8-.9.6-1.6-.6-3.4-.6-5-.1-.8.25-1.5.6-2.1 1.1M12 5v14" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
-    <p class="pago-nota">🔒 Pago 100% seguro a través de Hotmart.</p>
+    <p class="pago-nota">🔒 Pago seguro en tu moneda local con Hotmart</p>
   </div>
 
   <div class="eyebrow"><span class="eyebrow-line">Preguntas frecuentes</span></div>
