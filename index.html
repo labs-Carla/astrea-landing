@@ -27,6 +27,17 @@
 
   .faq-item summary::-webkit-details-marker { display: none; }
   .faq-item summary { list-style: none; }
+
+  @media (max-width: 400px) {
+    #servicios {
+      flex-direction: column !important;
+    }
+    #servicios > div:first-child {
+      width: 100% !important;
+      min-width: 100% !important;
+      margin-bottom: 16px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -34,7 +45,6 @@
 <div style="max-width: 440px; margin: 0 auto;">
 
   <div style="text-align: center; position: relative;">
-    <span style="color: #D4B172; font-size: 18px; display: block; margin-bottom: 6px;">✦</span>
     <div style="font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 42px; line-height: 0.95; color: #F4EEDF; letter-spacing: 0.08em;">ASTREA</div>
     <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.4em; text-transform: uppercase; color: #D4B172; margin-top: 6px;">— Charts —</div>
   </div>
@@ -50,8 +60,8 @@
   </div>
 
   <div id="servicios" style="background: rgba(11,18,32,0.75); border: 1px solid rgba(212,177,114,0.45); border-radius: 14px; padding: 18px; margin-bottom: 36px; display: flex; gap: 16px; align-items: stretch;">
-    <div style="width: 150px; min-width: 150px; aspect-ratio: 3 / 4; border-radius: 8px; overflow: hidden;">
-      <img src="assets/portada-carta-natal.png" alt="Portada Lectura de Carta Natal" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+    <div style="width: 150px; min-width: 150px; border-radius: 8px; overflow: hidden;">
+      <img src="assets/portada-carta-natal.png" alt="Portada Lectura de Carta Natal" style="width: 100%; height: auto; display: block;">
     </div>
     <div style="flex: 1; display: flex; flex-direction: column;">
       <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
