@@ -267,9 +267,13 @@
     </div>
 
     <div>
-      <label for="lugar">Lugar de nacimiento</label>
-      <input type="text" id="lugar" name="lugar" placeholder="Ej: Guadalajara, México" required>
-      <div class="hint">Incluye ciudad y país para que podamos calcular tu carta con precisión.</div>
+      <label for="ciudad">Ciudad de nacimiento</label>
+      <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Guadalajara" required>
+    </div>
+    
+    <div>
+      <label for="pais">País de nacimiento</label>
+      <input type="text" id="pais" name="pais" placeholder="Ej: México" required>
     </div>
 
     <button type="submit" id="submitBtn">Enviar mis datos</button>
@@ -298,14 +302,15 @@
       ? `${form.hora_h.value}:${form.hora_m.value} ${form.hora_ampm.value}`
       : '';
 
-    const data = {
+      const data = {
       nombre_reporte: form.nombre_reporte.value,
       email: form.email.value,
       fecha: form.fecha.value,
       hora: horaTexto,
-      lugar: form.lugar.value,
+      ciudad: form.ciudad.value,
+      pais: form.pais.value,
       fecha_envio: new Date().toISOString()
-    };
+      };
 
     try {
       await fetch(GOOGLE_SCRIPT_URL, {
