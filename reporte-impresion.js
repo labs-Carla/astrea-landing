@@ -49,18 +49,19 @@ function proximamente() {
 }
 
 function renderPortada(metadata) {
-  const [fecha, hora] = metadata.fecha_hora_local.split('T')
-  return `
-    <div class="portada">
-      <div class="logo-mini">ASTREA<span class="sub">— CHARTS —</span></div>
-      <h1 class="portada-titulo">Carta Natal</h1>
-      <div class="portada-divisor"></div>
-      <p class="portada-nombre">${metadata.nombre}</p>
-      <p class="portada-meta">${fecha} · ${hora}</p>
-      <p class="portada-meta">${metadata.ciudad}, ${metadata.pais}</p>
-    </div>
-  `
-}
+    const [fecha, hora] = metadata.fecha_hora_local.split('T')
+    return `
+      <div class="portada">
+        <div class="logo-mini">ASTREA<span class="sub">— CHARTS —</span></div>
+        <h1 class="portada-titulo">Carta Natal</h1>
+        <p class="portada-tagline">Una lectura para volver a ti una y otra vez.</p>
+        <div class="portada-divisor"></div>
+        <p class="portada-nombre">${metadata.nombre}</p>
+        <p class="portada-meta">${fecha} · ${hora}</p>
+        <p class="portada-meta">${metadata.ciudad}, ${metadata.pais}</p>
+      </div>
+    `
+  }
 
 function renderRuedaNatal(calculo) {
   return `<div class="rueda-natal-wrap">${generarRuedaSVG(calculo)}</div>`
