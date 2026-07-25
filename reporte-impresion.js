@@ -289,6 +289,61 @@ function contenidoCap11(aspectos, areasDeVida) {
   `
 }
 
+// ===== Capítulo 12: Tu cielo de hoy =====
+function contenidoCap12(transitos) {
+    if (!transitos?.clima_energetico) return proximamente()
+  
+    const fecha = transitos.fecha_calculo ? new Date(transitos.fecha_calculo) : null
+    const fechaTexto = fecha ? fecha.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
+  
+    return `
+      ${fechaTexto ? `<p class="planeta-datos" style="margin-bottom: 16px;">Calculado el ${fechaTexto}</p>` : ''}
+      <div class="overview">${transitos.clima_energetico}</div>
+  
+      <div class="mirada-card" style="margin-top: 18px;">
+        <div class="mirada-card-titulo">Áreas activadas</div>
+        <ul class="mirada-lista talentos">${transitos.areas_activadas.map(a => `<li>${a}</li>`).join('')}</ul>
+      </div>
+  
+      <div class="planeta-bloque" style="margin-top: 14px;">
+        <h3 class="planeta-nombre" style="margin-bottom: 8px;">Oportunidades</h3>
+        <p class="interpretacion-texto">${transitos.oportunidades}</p>
+      </div>
+  
+      <div class="planeta-bloque">
+        <h3 class="planeta-nombre" style="margin-bottom: 8px;">Retos</h3>
+        <p class="interpretacion-texto">${transitos.retos}</p>
+      </div>
+  
+      <div class="lectura-patron">
+        <div class="lectura-patron-label">Consejo</div>
+        <p class="lectura-patron-texto">${transitos.consejo}</p>
+      </div>
+    `
+  }
+  
+  // ===== Capítulo 13: Los próximos meses =====
+  function contenidoCap13(transitos) {
+    const proximos = transitos?.proximos_meses
+    if (!proximos) return proximamente()
+  
+    function bloqueArea(titulo, texto) {
+      return `
+        <div class="planeta-bloque">
+          <h3 class="planeta-nombre" style="margin-bottom: 8px;">${titulo}</h3>
+          <p class="interpretacion-texto">${texto}</p>
+        </div>
+      `
+    }
+  
+    return `
+      ${bloqueArea('Carrera', proximos.carrera)}
+      ${bloqueArea('Amor', proximos.amor)}
+      ${bloqueArea('Dinero', proximos.dinero)}
+      ${bloqueArea('Crecimiento', proximos.crecimiento)}
+    `
+  }
+
 function contenidoCap14(areasDeVida) {
   const plan = areasDeVida?.plan_de_accion
   if (!plan) return proximamente()
@@ -349,36 +404,36 @@ function renderConclusion(conclusion, frase) {
 }
 
 function renderReporte(datos) {
-  const { metadata, planetas, casas, puntos_angulares, aspectos, dignidades, elementos_y_modalidades, interpretacion, areas_de_vida } = datos
-  const calculoParaRueda = { planetas, casas, puntos_angulares, aspectos }
-
-  const html = `
-    ${renderPortada(metadata)}
-    <div class="wrap">
-      ${renderRuedaNatal(calculoParaRueda)}
-      ${capituloWrapper(1, 'Tu carta en una mirada', contenidoCap1(interpretacion.carta_en_una_mirada))}
-      ${capituloWrapper(2, 'Visión general', contenidoCap2(interpretacion.overview))}
-      ${capituloWrapper(3, 'Tu energía base', contenidoCap3(elementos_y_modalidades, dignidades, interpretacion.lectura_elementos_dignidades))}
-      ${capituloWrapper(4, 'Los pilares de tu vida', contenidoCap4(puntos_angulares, interpretacion))}
-      ${capituloWrapper(5, 'Tus planetas personales', contenidoCap5(planetas))}
-      ${capituloWrapper(6, 'Tus fuerzas invisibles', contenidoCap6(planetas))}
-      ${capituloWrapper(7, 'Vocación y carrera', contenidoCap7(areas_de_vida))}
-      ${capituloWrapper(8, 'Dinero y abundancia', contenidoCap8(areas_de_vida))}
-      ${capituloWrapper(9, 'Amor y relaciones', contenidoCap9(areas_de_vida))}
-      ${capituloWrapper(10, 'Tu herida y tu don', contenidoCap10(planetas, areas_de_vida))}
-      ${capituloWrapper(11, 'Tus aspectos más importantes', contenidoCap11(aspectos, areas_de_vida))}
-      ${capituloWrapper(12, 'Tu cielo de hoy', proximamente())}
-      ${capituloWrapper(13, 'Los próximos meses', proximamente())}
-      ${capituloWrapper(14, 'Tu plan de acción', contenidoCap14(areas_de_vida))}
-      ${capituloWrapper(15, 'Tu brújula personal', contenidoCap15(areas_de_vida))}
-      ${renderConclusion(interpretacion.conclusion, interpretacion.frase_de_cierre)}
-    </div>
-  `
-
-  document.getElementById('contenido-reporte').innerHTML = html
-  document.getElementById('cargando').style.display = 'none'
-  document.getElementById('contenido-reporte').style.display = 'block'
-}
+    const { metadata, planetas, casas, puntos_angulares, aspectos, dignidades, elementos_y_modalidades, interpretacion, areas_de_vida, transitos } = datos
+    const calculoParaRueda = { planetas, casas, puntos_angulares, aspectos }
+  
+    const html = `
+      ${renderPortada(metadata)}
+      <div class="wrap">
+        ${renderRuedaNatal(calculoParaRueda)}
+        ${capituloWrapper(1, 'Tu carta en una mirada', contenidoCap1(interpretacion.carta_en_una_mirada))}
+        ${capituloWrapper(2, 'Visión general', contenidoCap2(interpretacion.overview))}
+        ${capituloWrapper(3, 'Tu energía base', contenidoCap3(elementos_y_modalidades, dignidades, interpretacion.lectura_elementos_dignidades))}
+        ${capituloWrapper(4, 'Los pilares de tu vida', contenidoCap4(puntos_angulares, interpretacion))}
+        ${capituloWrapper(5, 'Tus planetas personales', contenidoCap5(planetas))}
+        ${capituloWrapper(6, 'Tus fuerzas invisibles', contenidoCap6(planetas))}
+        ${capituloWrapper(7, 'Vocación y carrera', contenidoCap7(areas_de_vida))}
+        ${capituloWrapper(8, 'Dinero y abundancia', contenidoCap8(areas_de_vida))}
+        ${capituloWrapper(9, 'Amor y relaciones', contenidoCap9(areas_de_vida))}
+        ${capituloWrapper(10, 'Tu herida y tu don', contenidoCap10(planetas, areas_de_vida))}
+        ${capituloWrapper(11, 'Tus aspectos más importantes', contenidoCap11(aspectos, areas_de_vida))}
+        ${capituloWrapper(12, 'Tu cielo de hoy', contenidoCap12(transitos))}
+        ${capituloWrapper(13, 'Los próximos meses', contenidoCap13(transitos))}
+        ${capituloWrapper(14, 'Tu plan de acción', contenidoCap14(areas_de_vida))}
+        ${capituloWrapper(15, 'Tu brújula personal', contenidoCap15(areas_de_vida))}
+        ${renderConclusion(interpretacion.conclusion, interpretacion.frase_de_cierre)}
+      </div>
+    `
+  
+    document.getElementById('contenido-reporte').innerHTML = html
+    document.getElementById('cargando').style.display = 'none'
+    document.getElementById('contenido-reporte').style.display = 'block'
+  }
 
 async function cargarReporte() {
   const { nombre, fecha_hora_local, ciudad, pais } = obtenerParametrosURL()
