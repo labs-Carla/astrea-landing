@@ -387,21 +387,24 @@ function contenidoCap15(areasDeVida) {
 }
 
 function renderConclusion(conclusion, frase) {
-  if (!conclusion && !frase) return ''
-  return `
-    <div class="capitulo">
-      <div class="capitulo-numero">Cierre</div>
-      <h2 class="capitulo-titulo">Síntesis</h2>
-      ${conclusion ? `<div class="conclusion">${conclusion}</div>` : ''}
-      ${frase ? `<div class="pagina-cierre"><p class="frase-cierre">${frase}</p></div>` : ''}
-      <div class="disclaimer">
-        Esta interpretación fue generada con asistencia de inteligencia artificial como guía simbólica<br>
-        de autoconocimiento. No constituye consejo profesional, médico, legal ni financiero.<br>
-        Para decisiones importantes de vida, consulta siempre con un profesional cualificado.
+    if (!conclusion && !frase) return ''
+    return `
+      <div class="capitulo">
+        <div class="capitulo-numero">Cierre</div>
+        <h2 class="capitulo-titulo">Síntesis</h2>
+        ${conclusion ? `<div class="conclusion">${conclusion}</div>` : ''}
+        ${frase ? `<div class="pagina-cierre"><p class="frase-cierre">${frase}</p></div>` : ''}
+        <div class="disclaimer">
+          Este reporte combina cálculos astrológicos de precisión, inteligencia artificial y revisión humana<br>
+          para ofrecer una interpretación personalizada orientada al autoconocimiento y al desarrollo personal.<br><br>
+          La astrología es una herramienta de reflexión que aporta perspectivas sobre tus talentos, desafíos y<br>
+          ciclos de vida, pero no determina tu destino ni reemplaza tu capacidad de decidir. Las interpretaciones<br>
+          contenidas en este reporte tienen un carácter simbólico y no sustituyen el consejo de profesionales<br>
+          en áreas como la salud, el derecho o las finanzas.
+        </div>
       </div>
-    </div>
-  `
-}
+    `
+  }
 
 function renderReporte(datos) {
     const { metadata, planetas, casas, puntos_angulares, aspectos, dignidades, elementos_y_modalidades, interpretacion, areas_de_vida, transitos } = datos
