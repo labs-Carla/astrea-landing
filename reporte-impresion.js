@@ -152,36 +152,36 @@ function contenidoCap3(elementos, dignidades, lectura) {
 }
 
 function contenidoCap4(puntos, interpretacion) {
-  if (!puntos) return proximamente()
-
-  const asc = puntos.Ascendente
-  const mc = puntos.MedioCielo
-  const ic = derivarSignoDesdeLongitud(mc.longitud_absoluta + 180)
-  const desc = derivarSignoDesdeLongitud(asc.longitud_absoluta + 180)
-
-  const filas = `
-    <tr><td>Ascendente</td><td>${asc.signo}</td><td>${asc.grado_en_signo.toFixed(2)}°</td></tr>
-    <tr><td>Medio Cielo</td><td>${mc.signo}</td><td>${mc.grado_en_signo.toFixed(2)}°</td></tr>
-    <tr><td>Fondo del Cielo</td><td>${ic.signo}</td><td>${ic.grado_en_signo.toFixed(2)}°</td></tr>
-    <tr><td>Descendente</td><td>${desc.signo}</td><td>${desc.grado_en_signo.toFixed(2)}°</td></tr>
-  `
-
-  const tabla = `<table><tr><th>Punto</th><th>Signo</th><th>Grado</th></tr>${filas}</table>`
-
-  const htmlAsc = interpretacion?.ascendente ? `
-    <div class="planeta-bloque" style="margin-top:22px;">
-      <div class="planeta-encabezado"><span class="planeta-simbolo">Asc</span><h3 class="planeta-nombre">Ascendente</h3></div>
-      <p class="interpretacion-texto">${interpretacion.ascendente}</p>
-    </div>` : ''
-
-  const htmlMC = interpretacion?.medio_cielo ? `
-    <div class="planeta-bloque">
-      <div class="planeta-encabezado"><span class="planeta-simbolo">MC</span><h3 class="planeta-nombre">Medio Cielo</h3></div>
-      <p class="interpretacion-texto">${interpretacion.medio_cielo}</p>
-    </div>` : ''
-
-  return tabla + htmlAsc + htmlMC + proximamente()
-}
+    if (!puntos) return proximamente()
+  
+    const asc = puntos.Ascendente
+    const mc = puntos.MedioCielo
+    const ic = derivarSignoDesdeLongitud(mc.longitud_absoluta + 180)
+    const desc = derivarSignoDesdeLongitud(asc.longitud_absoluta + 180)
+  
+    const filas = `
+      <tr><td>Ascendente</td><td>${asc.signo}</td><td>${asc.grado_en_signo.toFixed(2)}°</td></tr>
+      <tr><td>Medio Cielo</td><td>${mc.signo}</td><td>${mc.grado_en_signo.toFixed(2)}°</td></tr>
+      <tr><td>Fondo del Cielo</td><td>${ic.signo}</td><td>${ic.grado_en_signo.toFixed(2)}°</td></tr>
+      <tr><td>Descendente</td><td>${desc.signo}</td><td>${desc.grado_en_signo.toFixed(2)}°</td></tr>
+    `
+  
+    const tabla = `<table><tr><th>Punto</th><th>Signo</th><th>Grado</th></tr>${filas}</table>`
+  
+    const htmlAsc = interpretacion?.ascendente ? `
+      <div class="planeta-bloque" style="margin-top:22px;">
+        <div class="planeta-encabezado"><span class="planeta-simbolo">Asc</span><h3 class="planeta-nombre">Ascendente</h3></div>
+        <p class="interpretacion-texto">${interpretacion.ascendente}</p>
+      </div>` : ''
+  
+    const htmlMC = interpretacion?.medio_cielo ? `
+      <div class="planeta-bloque">
+        <div class="planeta-encabezado"><span class="planeta-simbolo">MC</span><h3 class="planeta-nombre">Medio Cielo</h3></div>
+        <p class="interpretacion-texto">${interpretacion.medio_cielo}</p>
+      </div>` : ''
+  
+    return tabla + htmlAsc + htmlMC
+  }
 
 function contenidoCap5(planetas) {
   const personales = ['Sol', 'Luna', 'Mercurio', 'Venus', 'Marte']
