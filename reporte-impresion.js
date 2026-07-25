@@ -23,11 +23,6 @@ function obtenerParametrosURL() {
   }
 }
 
-/**
- * Deriva signo y grado-en-signo a partir de una longitud absoluta (0-360),
- * usado para calcular IC/Descendente (opuestos a MC/Ascendente) sin
- * necesitar tocar el backend.
- */
 function derivarSignoDesdeLongitud(longitudAbsoluta) {
   const normalizado = ((longitudAbsoluta % 360) + 360) % 360
   const indiceSigno = Math.floor(normalizado / 30)
@@ -71,7 +66,6 @@ function renderRuedaNatal(calculo) {
   return `<div class="rueda-natal-wrap">${generarRuedaSVG(calculo)}</div>`
 }
 
-// ===== Capítulo 1: Carta en una mirada =====
 function contenidoCap1(mirada) {
   if (!mirada) return proximamente()
   return `
@@ -93,13 +87,11 @@ function contenidoCap1(mirada) {
   `
 }
 
-// ===== Capítulo 2: Visión general =====
 function contenidoCap2(overview) {
   if (!overview) return proximamente()
   return `<div class="overview">${overview}</div>`
 }
 
-// ===== Capítulo 3: Energía base (elementos + modalidades + dignidades) =====
 function contenidoCap3(elementos, dignidades, lectura) {
   if (!elementos && !dignidades) return proximamente()
 
@@ -159,7 +151,6 @@ function contenidoCap3(elementos, dignidades, lectura) {
   return htmlElementos + htmlDignidades + htmlLectura
 }
 
-// ===== Capítulo 4: Pilares de tu vida (Asc, MC, IC, Desc) =====
 function contenidoCap4(puntos, interpretacion) {
   if (!puntos) return proximamente()
 
@@ -192,10 +183,9 @@ function contenidoCap4(puntos, interpretacion) {
   return tabla + htmlAsc + htmlMC + proximamente()
 }
 
-// ===== Capítulo 5: Planetas personales (Sol, Luna, Mercurio, Venus, Marte) =====
 function contenidoCap5(planetas) {
   const personales = ['Sol', 'Luna', 'Mercurio', 'Venus', 'Marte']
-  const bloques = personales
+  return personales
     .filter(nombre => planetas[nombre])
     .map(nombre => {
       const d = planetas[nombre]
@@ -213,13 +203,11 @@ function contenidoCap5(planetas) {
         </div>
       `
     }).join('')
-  return bloques
 }
 
-// ===== Capítulo 6: Fuerzas invisibles (Jupiter, Saturno, Urano, Neptuno, Pluton, NodoNorte) =====
 function contenidoCap6(planetas) {
   const invisibles = ['Jupiter', 'Saturno', 'Urano', 'Neptuno', 'Pluton', 'NodoNorte']
-  const bloques = invisibles
+  return invisibles
     .filter(nombre => planetas[nombre])
     .map(nombre => {
       const d = planetas[nombre]
@@ -237,120 +225,111 @@ function contenidoCap6(planetas) {
         </div>
       `
     }).join('')
-  return bloques
 }
 
-// ===== Capítulo 7: Vocación y carrera =====
 function contenidoCap7(areasDeVida) {
-    if (!areasDeVida?.vocacion) return proximamente()
-    return `<div class="overview">${areasDeVida.vocacion}</div>`
-  }
-  
-  // ===== Capítulo 8: Dinero y abundancia =====
-  function contenidoCap8(areasDeVida) {
-    if (!areasDeVida?.dinero) return proximamente()
-    return `<div class="overview">${areasDeVida.dinero}</div>`
-  }
-  
-  // ===== Capítulo 9: Amor y relaciones =====
-  function contenidoCap9(areasDeVida) {
-    if (!areasDeVida?.amor) return proximamente()
-    return `<div class="overview">${areasDeVida.amor}</div>`
-  }
+  if (!areasDeVida?.vocacion) return proximamente()
+  return `<div class="overview">${areasDeVida.vocacion}</div>`
+}
 
-// ===== Capítulo 10: Herida y don (Quirón) =====
+function contenidoCap8(areasDeVida) {
+  if (!areasDeVida?.dinero) return proximamente()
+  return `<div class="overview">${areasDeVida.dinero}</div>`
+}
+
+function contenidoCap9(areasDeVida) {
+  if (!areasDeVida?.amor) return proximamente()
+  return `<div class="overview">${areasDeVida.amor}</div>`
+}
+
 function contenidoCap10(planetas, areasDeVida) {
-    const quiron = planetas.Quiron
-  
-    if (areasDeVida?.herida_y_don) {
-      return `
-        ${quiron ? `<div class="planeta-datos" style="margin-bottom: 14px;">${quiron.signo} ${quiron.grado_en_signo.toFixed(2)}° · Casa ${quiron.casa}</div>` : ''}
-        <div class="overview">${areasDeVida.herida_y_don}</div>
-      `
-    }
-  
-    if (!quiron || !quiron.interpretacion) return proximamente()
+  const quiron = planetas.Quiron
+
+  if (areasDeVida?.herida_y_don) {
     return `
-      <div class="planeta-bloque">
-        <div class="planeta-encabezado">
-          <span class="planeta-simbolo">${SIMBOLOS.Quiron}</span>
-          <h3 class="planeta-nombre">Quirón</h3>
-        </div>
-        <div class="planeta-datos">${quiron.signo} ${quiron.grado_en_signo.toFixed(2)}° · Casa ${quiron.casa}</div>
-        <p class="interpretacion-texto">${quiron.interpretacion}</p>
-      </div>
+      ${quiron ? `<div class="planeta-datos" style="margin-bottom: 14px;">${quiron.signo} ${quiron.grado_en_signo.toFixed(2)}° · Casa ${quiron.casa}</div>` : ''}
+      <div class="overview">${areasDeVida.herida_y_don}</div>
     `
   }
 
-// ===== Capítulo 11: Aspectos más importantes =====
+  if (!quiron || !quiron.interpretacion) return proximamente()
+  return `
+    <div class="planeta-bloque">
+      <div class="planeta-encabezado">
+        <span class="planeta-simbolo">${SIMBOLOS.Quiron}</span>
+        <h3 class="planeta-nombre">Quirón</h3>
+      </div>
+      <div class="planeta-datos">${quiron.signo} ${quiron.grado_en_signo.toFixed(2)}° · Casa ${quiron.casa}</div>
+      <p class="interpretacion-texto">${quiron.interpretacion}</p>
+    </div>
+  `
+}
+
 function contenidoCap11(aspectos, areasDeVida) {
-    if (areasDeVida?.aspectos_interpretados?.length) {
-      const bloques = areasDeVida.aspectos_interpretados.map(a => `
-        <div class="planeta-bloque">
-          <div class="planeta-datos" style="font-size: 12px; margin-bottom: 8px;">
-            ${a.punto_a} ${a.aspecto} ${a.punto_b}
-          </div>
-          <p class="interpretacion-texto">${a.interpretacion}</p>
+  if (areasDeVida?.aspectos_interpretados?.length) {
+    return areasDeVida.aspectos_interpretados.map(a => `
+      <div class="planeta-bloque">
+        <div class="planeta-datos" style="font-size: 12px; margin-bottom: 8px;">
+          ${a.punto_a} ${a.aspecto} ${a.punto_b}
         </div>
-      `).join('')
-      return bloques
-    }
-  
-    if (!aspectos || !aspectos.length) return proximamente()
-    const top10 = [...aspectos].sort((a, b) => a.orbe_usado - b.orbe_usado).slice(0, 10)
-    const filas = top10.map(a => `
-      <tr><td>${a.punto_a}</td><td>${a.aspecto}</td><td>${a.punto_b}</td><td>${a.orbe_usado}°</td></tr>
+        <p class="interpretacion-texto">${a.interpretacion}</p>
+      </div>
     `).join('')
+  }
+
+  if (!aspectos || !aspectos.length) return proximamente()
+  const top10 = [...aspectos].sort((a, b) => a.orbe_usado - b.orbe_usado).slice(0, 10)
+  const filas = top10.map(a => `
+    <tr><td>${a.punto_a}</td><td>${a.aspecto}</td><td>${a.punto_b}</td><td>${a.orbe_usado}°</td></tr>
+  `).join('')
+  return `
+    <p class="como-leer-texto">Los ${top10.length} aspectos más exactos de tu carta (menor orbe = más influyente):</p>
+    <table><tr><th>Punto A</th><th>Aspecto</th><th>Punto B</th><th>Orbe</th></tr>${filas}</table>
+    <p class="proximamente" style="margin-top:14px;">Interpretación individual de cada aspecto próximamente.</p>
+  `
+}
+
+function contenidoCap14(areasDeVida) {
+  const plan = areasDeVida?.plan_de_accion
+  if (!plan) return proximamente()
+
+  function listaConTitulo(titulo, items) {
     return `
-      <p class="como-leer-texto">Los ${top10.length} aspectos más exactos de tu carta (menor orbe = más influyente):</p>
-      <table><tr><th>Punto A</th><th>Aspecto</th><th>Punto B</th><th>Orbe</th></tr>${filas}</table>
-      <p class="proximamente" style="margin-top:14px;">Interpretación individual de cada aspecto próximamente.</p>
+      <div class="mirada-card" style="margin-bottom: 14px;">
+        <div class="mirada-card-titulo">${titulo}</div>
+        <ul class="mirada-lista talentos">${items.map(i => `<li>${i}</li>`).join('')}</ul>
+      </div>
     `
   }
 
-  // ===== Capítulo 14: Plan de acción =====
-function contenidoCap14(areasDeVida) {
-    const plan = areasDeVida?.plan_de_accion
-    if (!plan) return proximamente()
-  
-    function listaConTitulo(titulo, items) {
-      return `
-        <div class="mirada-card" style="margin-bottom: 14px;">
-          <div class="mirada-card-titulo">${titulo}</div>
-          <ul class="mirada-lista talentos">${items.map(i => `<li>${i}</li>`).join('')}</ul>
-        </div>
-      `
-    }
-  
-    return `
-      <div class="mirada-grid" style="flex-direction: column;">
-        ${listaConTitulo('Potencia', plan.potencia)}
-        ${listaConTitulo('Observa', plan.observa)}
-        ${listaConTitulo('Evita', plan.evita)}
-        ${listaConTitulo('Empieza', plan.empieza)}
-      </div>
-    `
-  }
-  
-  // ===== Capítulo 15: Brújula personal =====
-  function contenidoCap15(areasDeVida) {
-    const brujula = areasDeVida?.brujula
-    if (!brujula) return proximamente()
-  
-    return `
-      <div class="mirada-card" style="margin-bottom: 18px;">
-        <div class="mirada-card-titulo">Tus 5 aprendizajes</div>
-        <ul class="mirada-lista talentos">${brujula.aprendizajes.map(a => `<li>${a}</li>`).join('')}</ul>
-      </div>
-      <div class="mirada-mision" style="margin-bottom: 18px;">
-        <span class="mirada-mision-label">Tu mantra</span>
-        ${brujula.mantra}
-      </div>
-      <div class="pagina-cierre">
-        <p class="frase-cierre">${brujula.frase_final}</p>
-      </div>
-    `
-  }
+  return `
+    <div class="mirada-grid" style="flex-direction: column;">
+      ${listaConTitulo('Potencia', plan.potencia)}
+      ${listaConTitulo('Observa', plan.observa)}
+      ${listaConTitulo('Evita', plan.evita)}
+      ${listaConTitulo('Empieza', plan.empieza)}
+    </div>
+  `
+}
+
+function contenidoCap15(areasDeVida) {
+  const brujula = areasDeVida?.brujula
+  if (!brujula) return proximamente()
+
+  return `
+    <div class="mirada-card" style="margin-bottom: 18px;">
+      <div class="mirada-card-titulo">Tus 5 aprendizajes</div>
+      <ul class="mirada-lista talentos">${brujula.aprendizajes.map(a => `<li>${a}</li>`).join('')}</ul>
+    </div>
+    <div class="mirada-mision" style="margin-bottom: 18px;">
+      <span class="mirada-mision-label">Tu mantra</span>
+      ${brujula.mantra}
+    </div>
+    <div class="pagina-cierre">
+      <p class="frase-cierre">${brujula.frase_final}</p>
+    </div>
+  `
+}
 
 function renderConclusion(conclusion, frase) {
   if (!conclusion && !frase) return ''
@@ -370,76 +349,68 @@ function renderConclusion(conclusion, frase) {
 }
 
 function renderReporte(datos) {
-  const { metadata, planetas, casas, puntos_angulares, aspectos, dignidades, elementos_y_modalidades, interpretacion } = datos
+  const { metadata, planetas, casas, puntos_angulares, aspectos, dignidades, elementos_y_modalidades, interpretacion, areas_de_vida } = datos
   const calculoParaRueda = { planetas, casas, puntos_angulares, aspectos }
 
-  function renderReporte(datos) {
-    const { metadata, planetas, casas, puntos_angulares, aspectos, dignidades, elementos_y_modalidades, interpretacion, areas_de_vida } = datos
-    const calculoParaRueda = { planetas, casas, puntos_angulares, aspectos }
-  
-    const html = `
-      ${renderPortada(metadata)}
-      <div class="wrap">
-        ${renderRuedaNatal(calculoParaRueda)}
-        ${capituloWrapper(1, 'Tu carta en una mirada', contenidoCap1(interpretacion.carta_en_una_mirada))}
-        ${capituloWrapper(2, 'Visión general', contenidoCap2(interpretacion.overview))}
-        ${capituloWrapper(3, 'Tu energía base', contenidoCap3(elementos_y_modalidades, dignidades, interpretacion.lectura_elementos_dignidades))}
-        ${capituloWrapper(4, 'Los pilares de tu vida', contenidoCap4(puntos_angulares, interpretacion))}
-        ${capituloWrapper(5, 'Tus planetas personales', contenidoCap5(planetas))}
-        ${capituloWrapper(6, 'Tus fuerzas invisibles', contenidoCap6(planetas))}
-        ${capituloWrapper(7, 'Vocación y carrera', contenidoCap7(areas_de_vida))}
-        ${capituloWrapper(8, 'Dinero y abundancia', contenidoCap8(areas_de_vida))}
-        ${capituloWrapper(9, 'Amor y relaciones', contenidoCap9(areas_de_vida))}
-        ${capituloWrapper(10, 'Tu herida y tu don', contenidoCap10(planetas, areas_de_vida))}
-        ${capituloWrapper(11, 'Tus aspectos más importantes', contenidoCap11(aspectos, areas_de_vida))}
-        ${capituloWrapper(12, 'Tu cielo de hoy', proximamente())}
-        ${capituloWrapper(13, 'Los próximos meses', proximamente())}
-        ${capituloWrapper(14, 'Tu plan de acción', contenidoCap14(areas_de_vida))}
-        ${capituloWrapper(15, 'Tu brújula personal', contenidoCap15(areas_de_vida))}
-        ${renderConclusion(interpretacion.conclusion, interpretacion.frase_de_cierre)}
-      </div>
-    `
-  
-    document.getElementById('contenido-reporte').innerHTML = html
-    document.getElementById('cargando').style.display = 'none'
-    document.getElementById('contenido-reporte').style.display = 'block'
-  }
+  const html = `
+    ${renderPortada(metadata)}
+    <div class="wrap">
+      ${renderRuedaNatal(calculoParaRueda)}
+      ${capituloWrapper(1, 'Tu carta en una mirada', contenidoCap1(interpretacion.carta_en_una_mirada))}
+      ${capituloWrapper(2, 'Visión general', contenidoCap2(interpretacion.overview))}
+      ${capituloWrapper(3, 'Tu energía base', contenidoCap3(elementos_y_modalidades, dignidades, interpretacion.lectura_elementos_dignidades))}
+      ${capituloWrapper(4, 'Los pilares de tu vida', contenidoCap4(puntos_angulares, interpretacion))}
+      ${capituloWrapper(5, 'Tus planetas personales', contenidoCap5(planetas))}
+      ${capituloWrapper(6, 'Tus fuerzas invisibles', contenidoCap6(planetas))}
+      ${capituloWrapper(7, 'Vocación y carrera', contenidoCap7(areas_de_vida))}
+      ${capituloWrapper(8, 'Dinero y abundancia', contenidoCap8(areas_de_vida))}
+      ${capituloWrapper(9, 'Amor y relaciones', contenidoCap9(areas_de_vida))}
+      ${capituloWrapper(10, 'Tu herida y tu don', contenidoCap10(planetas, areas_de_vida))}
+      ${capituloWrapper(11, 'Tus aspectos más importantes', contenidoCap11(aspectos, areas_de_vida))}
+      ${capituloWrapper(12, 'Tu cielo de hoy', proximamente())}
+      ${capituloWrapper(13, 'Los próximos meses', proximamente())}
+      ${capituloWrapper(14, 'Tu plan de acción', contenidoCap14(areas_de_vida))}
+      ${capituloWrapper(15, 'Tu brújula personal', contenidoCap15(areas_de_vida))}
+      ${renderConclusion(interpretacion.conclusion, interpretacion.frase_de_cierre)}
+    </div>
+  `
 
   document.getElementById('contenido-reporte').innerHTML = html
   document.getElementById('cargando').style.display = 'none'
   document.getElementById('contenido-reporte').style.display = 'block'
 }
 
-function renderReporte(datos) {
-    const { metadata, planetas, casas, puntos_angulares, aspectos, dignidades, elementos_y_modalidades, interpretacion, areas_de_vida } = datos
-    const calculoParaRueda = { planetas, casas, puntos_angulares, aspectos }
-  
-    const html = `
-      ${renderPortada(metadata)}
-      <div class="wrap">
-        ${renderRuedaNatal(calculoParaRueda)}
-        ${capituloWrapper(1, 'Tu carta en una mirada', contenidoCap1(interpretacion.carta_en_una_mirada))}
-        ${capituloWrapper(2, 'Visión general', contenidoCap2(interpretacion.overview))}
-        ${capituloWrapper(3, 'Tu energía base', contenidoCap3(elementos_y_modalidades, dignidades, interpretacion.lectura_elementos_dignidades))}
-        ${capituloWrapper(4, 'Los pilares de tu vida', contenidoCap4(puntos_angulares, interpretacion))}
-        ${capituloWrapper(5, 'Tus planetas personales', contenidoCap5(planetas))}
-        ${capituloWrapper(6, 'Tus fuerzas invisibles', contenidoCap6(planetas))}
-        ${capituloWrapper(7, 'Vocación y carrera', contenidoCap7(areas_de_vida))}
-        ${capituloWrapper(8, 'Dinero y abundancia', contenidoCap8(areas_de_vida))}
-        ${capituloWrapper(9, 'Amor y relaciones', contenidoCap9(areas_de_vida))}
-        ${capituloWrapper(10, 'Tu herida y tu don', contenidoCap10(planetas, areas_de_vida))}
-        ${capituloWrapper(11, 'Tus aspectos más importantes', contenidoCap11(aspectos, areas_de_vida))}
-        ${capituloWrapper(12, 'Tu cielo de hoy', proximamente())}
-        ${capituloWrapper(13, 'Los próximos meses', proximamente())}
-        ${capituloWrapper(14, 'Tu plan de acción', contenidoCap14(areas_de_vida))}
-        ${capituloWrapper(15, 'Tu brújula personal', contenidoCap15(areas_de_vida))}
-        ${renderConclusion(interpretacion.conclusion, interpretacion.frase_de_cierre)}
-      </div>
-    `
-  
-    document.getElementById('contenido-reporte').innerHTML = html
-    document.getElementById('cargando').style.display = 'none'
-    document.getElementById('contenido-reporte').style.display = 'block'
+async function cargarReporte() {
+  const { nombre, fecha_hora_local, ciudad, pais } = obtenerParametrosURL()
+
+  if (!fecha_hora_local || !ciudad || !pais) {
+    document.getElementById('cargando').innerHTML =
+      '<div class="error-box">Falta información para mostrar tu lectura. Verifica el enlace recibido.</div>'
+    return
   }
+
+  try {
+    const respuesta = await fetch(`${API_BASE}/carta-natal/data`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, fecha_hora_local, ciudad, pais }),
+    })
+
+    if (!respuesta.ok) {
+      const error = await respuesta.json()
+      document.getElementById('cargando').innerHTML =
+        `<div class="error-box">${error.detail || 'No se pudo cargar tu lectura.'}</div>`
+      return
+    }
+
+    const datos = await respuesta.json()
+    renderReporte(datos)
+
+  } catch (error) {
+    console.error(error)
+    document.getElementById('cargando').innerHTML =
+      '<div class="error-box">Hubo un problema cargando tu lectura. Intenta de nuevo.</div>'
+  }
+}
 
 cargarReporte()
