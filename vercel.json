@@ -4,6 +4,10 @@
     {
       "source": "/r/:token",
       "destination": "https://astrea-informe-react.vercel.app/r/:token"
+    },
+    {
+      "source": "/assets/:path*",
+      "destination": "https://astrea-informe-react.vercel.app/assets/:path*"
     }
   ]
 }
