@@ -410,37 +410,36 @@ function renderReporte(datos) {
   document.getElementById('contenido-reporte').style.display = 'block'
 }
 
-async function cargarReporte() {
-  const { nombre, fecha_hora_local, ciudad, pais } = obtenerParametrosURL()
-
-  if (!fecha_hora_local || !ciudad || !pais) {
-    document.getElementById('cargando').innerHTML =
-      '<div class="error-box">Falta información para mostrar tu lectura. Verifica el enlace recibido.</div>'
-    return
+function renderReporte(datos) {
+    const { metadata, planetas, casas, puntos_angulares, aspectos, dignidades, elementos_y_modalidades, interpretacion, areas_de_vida } = datos
+    const calculoParaRueda = { planetas, casas, puntos_angulares, aspectos }
+  
+    const html = `
+      ${renderPortada(metadata)}
+      <div class="wrap">
+        ${renderRuedaNatal(calculoParaRueda)}
+        ${capituloWrapper(1, 'Tu carta en una mirada', contenidoCap1(interpretacion.carta_en_una_mirada))}
+        ${capituloWrapper(2, 'Visión general', contenidoCap2(interpretacion.overview))}
+        ${capituloWrapper(3, 'Tu energía base', contenidoCap3(elementos_y_modalidades, dignidades, interpretacion.lectura_elementos_dignidades))}
+        ${capituloWrapper(4, 'Los pilares de tu vida', contenidoCap4(puntos_angulares, interpretacion))}
+        ${capituloWrapper(5, 'Tus planetas personales', contenidoCap5(planetas))}
+        ${capituloWrapper(6, 'Tus fuerzas invisibles', contenidoCap6(planetas))}
+        ${capituloWrapper(7, 'Vocación y carrera', contenidoCap7(areas_de_vida))}
+        ${capituloWrapper(8, 'Dinero y abundancia', contenidoCap8(areas_de_vida))}
+        ${capituloWrapper(9, 'Amor y relaciones', contenidoCap9(areas_de_vida))}
+        ${capituloWrapper(10, 'Tu herida y tu don', contenidoCap10(planetas, areas_de_vida))}
+        ${capituloWrapper(11, 'Tus aspectos más importantes', contenidoCap11(aspectos, areas_de_vida))}
+        ${capituloWrapper(12, 'Tu cielo de hoy', proximamente())}
+        ${capituloWrapper(13, 'Los próximos meses', proximamente())}
+        ${capituloWrapper(14, 'Tu plan de acción', contenidoCap14(areas_de_vida))}
+        ${capituloWrapper(15, 'Tu brújula personal', contenidoCap15(areas_de_vida))}
+        ${renderConclusion(interpretacion.conclusion, interpretacion.frase_de_cierre)}
+      </div>
+    `
+  
+    document.getElementById('contenido-reporte').innerHTML = html
+    document.getElementById('cargando').style.display = 'none'
+    document.getElementById('contenido-reporte').style.display = 'block'
   }
-
-  try {
-    const respuesta = await fetch(`${API_BASE}/carta-natal/data`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombre, fecha_hora_local, ciudad, pais }),
-    })
-
-    if (!respuesta.ok) {
-      const error = await respuesta.json()
-      document.getElementById('cargando').innerHTML =
-        `<div class="error-box">${error.detail || 'No se pudo cargar tu lectura.'}</div>`
-      return
-    }
-
-    const datos = await respuesta.json()
-    renderReporte(datos)
-
-  } catch (error) {
-    console.error(error)
-    document.getElementById('cargando').innerHTML =
-      '<div class="error-box">Hubo un problema cargando tu lectura. Intenta de nuevo.</div>'
-  }
-}
 
 cargarReporte()
