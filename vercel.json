@@ -1,3 +1,9 @@
 {
-    "cleanUrls": true
-  }
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/r/:token",
+      "destination": "https://astrea-informe-react.vercel.app/r/:token"
+    }
+  ]
+}
