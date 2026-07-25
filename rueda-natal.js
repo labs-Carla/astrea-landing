@@ -66,8 +66,7 @@ function generarRuedaSVG(calculo) {
   // rNumerosCasas: radio pequeño, cerca del centro, solo para los números 1-12.
   const rExterior = 185, rSignos = 150, rCasas = 150, rPlanetas = 112, rNumerosCasas = 45;
 
-  let svg = `<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">`;
-
+  let svg = `<svg viewBox="-15 -15 430 430" xmlns="http://www.w3.org/2000/svg">`;
   // Disco de fondo: mismo tono oscuro semi-sólido que .card, para que el
   // gráfico contraste contra el fondo estrellado de la página en vez de
   // mezclarse con él.
