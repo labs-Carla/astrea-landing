@@ -6,6 +6,10 @@
       "destination": "https://astrea-informe-react.vercel.app/r/:token"
     },
     {
+      "source": "/admin",
+      "destination": "https://astrea-informe-react.vercel.app/admin"
+    },
+    {
       "source": "/assets/:path*",
       "destination": "https://astrea-informe-react.vercel.app/assets/:path*"
     }
