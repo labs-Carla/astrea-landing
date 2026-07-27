@@ -286,39 +286,49 @@
 </div>
 
 <script>
-  // PENDIENTE: reemplaza esta URL con la de tu Google Apps Script Web App
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyygHmEaNKs3m3dJXJJ_hL1YpcQtenKIlJ9a3kWpE0Jfi7GWGQkOgoTfgEe1m7spdYu3A/exec";
+  const API_BASE = "https://astrea-api-production.up.railway.app/api/v1";
 
   const form = document.getElementById('natalForm');
   const statusEl = document.getElementById('status');
   const btn = document.getElementById('submitBtn');
+
+  function convertirA24Horas(hora12, ampm) {
+    let hora = parseInt(hora12, 10);
+    if (ampm === 'AM') {
+      if (hora === 12) hora = 0;
+    } else {
+      if (hora !== 12) hora += 12;
+    }
+    return String(hora).padStart(2, '0');
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     btn.disabled = true;
     btn.textContent = 'Enviando...';
 
-    const horaTexto = (form.hora_h.value && form.hora_m.value && form.hora_ampm.value)
-      ? `${form.hora_h.value}:${form.hora_m.value} ${form.hora_ampm.value}`
-      : '';
+    const hora24 = convertirA24Horas(form.hora_h.value, form.hora_ampm.value);
+    const fechaHoraLocal = `${form.fecha.value}T${hora24}:${form.hora_m.value}:00`;
 
-      const data = {
-      nombre_reporte: form.nombre_reporte.value,
+    const data = {
+      nombre: form.nombre_reporte.value,
       email: form.email.value,
-      fecha: form.fecha.value,
-      hora: horaTexto,
+      fecha_hora_local: fechaHoraLocal,
       ciudad: form.ciudad.value,
       pais: form.pais.value,
-      fecha_envio: new Date().toISOString()
-      };
+    };
 
     try {
-      await fetch(GOOGLE_SCRIPT_URL, {
+      const respuesta = await fetch(`${API_BASE}/carta-natal/compra`, {
         method: 'POST',
-        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
+
+      if (!respuesta.ok) {
+        const error = await respuesta.json();
+        throw new Error(error.detail || 'Error del servidor');
+      }
 
       statusEl.textContent = '¡Listo! Recibimos tus datos. Tu lectura llegará pronto a tu correo.';
       statusEl.className = 'success';
@@ -330,6 +340,7 @@
       statusEl.style.display = 'block';
       btn.disabled = false;
       btn.textContent = 'Enviar mis datos';
+      console.error(err);
     }
   });
 </script>
