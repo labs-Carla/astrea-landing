@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Astrea Charts — Muestra del reporte</title>
+  <style>
+    :root {
+      --fondo: #0e0e12;
+      --dorado: #c9a15f;
+      --texto: #f3ead9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Georgia', serif;
+    }
+
+    .contenedor-pagina {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      gap: 24px;
+    }
+
+    .encabezado {
+      text-align: center;
+      max-width: 480px;
+    }
+
+    .encabezado h1 {
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      font-size: 1.4rem;
+      margin: 0 0 8px;
+      color: var(--dorado);
+    }
+
+    .encabezado p {
+      font-size: 0.95rem;
+      opacity: 0.75;
+      margin: 0;
+    }
+
+    #libro-muestra {
+      width: 100%;
+      max-width: 480px;
+      height: 520px;
+    }
+
+    .instruccion {
+      font-size: 0.8rem;
+      opacity: 0.5;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor-pagina">
+    <div class="encabezado">
+      <h1>Así se ve tu lectura</h1>
+      <p>Un vistazo al reporte editorial que recibes — la entrega real llega en PDF.</p>
+    </div>
+
+    <div id="libro-muestra"></div>
+
+    <p class="instruccion">Pasa el mouse sobre el libro y haz click para abrirlo</p>
+  </div>
+
+  <script type="module">
+    import { initLibroMuestra } from './componentes/libro-muestra.js';
+
+    initLibroMuestra('libro-muestra', {
+      portadaSrc: 'assets/libro-muestra/portada-mockup.jpg',
+    });
+  </script>
+</body>
+</html>
