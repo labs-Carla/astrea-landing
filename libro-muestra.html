@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Astrea Charts — Muestra del reporte</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fondo: #0e0e12;
+      --dorado: #c9a15f;
+      --texto: #f3ead9;
+      --pagina-cream: #F7F3E9;
+      --pagina-gold: #8B6F47;
+      --pagina-ink: #2B2620;
+      --pagina-ink-soft: rgba(43, 38, 32, 0.72);
+      --pagina-hairline: rgba(139, 111, 71, 0.35);
+      --pagina-destacado: rgba(139, 111, 71, 0.08);
+
+      /* Alias sin prefijo: rueda-natal.js (componente compartido con
+         reporte-impresion.html) referencia estos nombres de variable
+         directamente dentro del SVG que genera (--cream, --gold, --ink,
+         --hairline), así que deben existir aquí con el mismo valor. */
+      --cream: var(--pagina-cream);
+      --gold: var(--pagina-gold);
+      --ink: var(--pagina-ink);
+      --hairline: var(--pagina-hairline);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: 'Georgia', serif;
+    }
+
+    body {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      gap: 24px;
+    }
+
+    .encabezado {
+      text-align: center;
+      max-width: 640px;
+    }
+
+    .encabezado h1 {
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      font-size: 1.8rem;
+      margin: 0 0 8px;
+      color: var(--dorado);
+    }
+
+    .encabezado p {
+      font-size: 1.05rem;
+      opacity: 0.75;
+      margin: 0;
+    }
+
+    .escenario-libro {
+      position: relative;
+      width: min(90vw, 1000px);
+      height: min(82vh, 1000px);
+      perspective: 1400px;
+    }
+
+    #libro-muestra {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Páginas de muestra: reutilizan el lenguaje visual de reporte-impresion.html
+       (mismos colores/tipografías) para dar un anticipo del contenido real del
+       reporte. Ya NO se muestran como superposición HTML — son la "plantilla"
+       fuente que se rasteriza con html2canvas para convertirse en la textura
+       de cada página 3D dentro del libro (ver componentes/libro-muestra.js).
+       Por eso viven fuera de pantalla: siguen en el flujo normal del documento
+       (necesario para que html2canvas las capture bien) pero nunca se ven. */
+    .paginas-plantilla {
+      position: fixed;
+      left: -9999px;
+      top: 0;
+    }
+
+    .pagina {
+      width: 320px;
+      height: 430px;
+      background: var(--pagina-cream);
+      color: var(--pagina-ink);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    .pagina .capitulo-numero {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--pagina-gold);
+      margin-bottom: 6px;
+    }
+
+    .pagina h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 19px;
+      color: var(--pagina-ink);
+      margin-bottom: 14px;
+    }
+    .pagina h2::after {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 2px;
+      background-color: var(--pagina-gold);
+      margin-top: 8px;
+    }
+
+    .pagina .mirada-esencia {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 14.5px;
+      color: var(--pagina-gold);
+      margin-bottom: 16px;
+    }
+
+    .pagina .mirada-card {
+      background: var(--pagina-destacado);
+      border: 1px solid var(--pagina-hairline);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .pagina .mirada-card-titulo {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--pagina-gold);
+      margin-bottom: 8px;
+    }
+    .pagina .mirada-lista {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .pagina .mirada-lista li {
+      font-size: 11.5px;
+      margin-bottom: 6px;
+      padding-left: 16px;
+      position: relative;
+      color: var(--pagina-ink);
+    }
+    .pagina .mirada-lista li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: var(--pagina-gold);
+    }
+
+    /* Rueda natal (reutiliza el componente compartido rueda-natal.js) */
+    .rueda-natal-wrap { display: flex; justify-content: center; width: 100%; padding: 4px 0 6px; }
+    .rueda-natal-wrap svg { width: 100%; max-width: 210px; height: auto; }
+    .rueda-signo-simbolo { font-family: 'Cormorant Garamond', serif; font-size: 13px; fill: var(--pagina-gold); text-anchor: middle; dominant-baseline: middle; }
+    .rueda-planeta-simbolo { font-family: 'Cormorant Garamond', serif; font-size: 15px; fill: var(--pagina-ink); text-anchor: middle; dominant-baseline: middle; }
+    .rueda-casa-numero { font-family: 'DM Sans', sans-serif; font-size: 9px; fill: rgba(244, 238, 223, 0.7); text-anchor: middle; dominant-baseline: middle; }
+    .rueda-eje-label { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; fill: var(--pagina-gold); text-anchor: middle; dominant-baseline: middle; }
+
+    /* Panorama (elementos / modalidades) */
+    .panorama-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .panorama-card { flex: 1 1 100%; background: var(--pagina-destacado); border: 1px solid var(--pagina-hairline); border-radius: 8px; padding: 12px 14px; }
+    .panorama-titulo { font-family: 'Cormorant Garamond', serif; font-size: 13px; color: var(--pagina-gold); margin-bottom: 8px; }
+    .panorama-fila { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; font-size: 10px; }
+    .panorama-etiqueta { width: 42px; color: var(--pagina-ink-soft); }
+    .panorama-barra { flex: 1; height: 6px; background: var(--pagina-hairline); border-radius: 4px; overflow: hidden; }
+    .panorama-relleno { display: block; height: 100%; background: var(--pagina-gold); border-radius: 4px; }
+    .panorama-valor { width: 14px; text-align: right; }
+    .panorama-dominante { margin-top: 8px; font-size: 9px; color: var(--pagina-gold); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Bloque de planeta */
+    .planeta-bloque { margin-top: 4px; padding: 14px 16px; background: var(--pagina-destacado); border: 1px solid var(--pagina-hairline); border-radius: 8px; }
+    .planeta-encabezado { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+    .planeta-simbolo { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--pagina-gold); }
+    .planeta-nombre { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 14px; color: var(--pagina-ink); }
+    .planeta-datos { font-size: 9.5px; color: var(--pagina-ink-soft); margin-bottom: 8px; }
+    .interpretacion-texto { font-size: 11.5px; color: var(--pagina-ink); line-height: 1.5; }
+
+    .pagina-muestra-nota {
+      margin-top: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 11px;
+      color: var(--pagina-ink-soft);
+      text-align: center;
+    }
+
+    /* Navegación entre páginas: aparece/desaparece junto con las páginas,
+       pero mantiene pointer-events propio para no interferir con el
+       hover/click del libro (que sigue viviendo en el canvas de abajo). */
+    .paginas-nav {
+      position: absolute;
+      left: 30%;
+      width: 66%;
+      bottom: 3%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      opacity: 0;
+      transition: opacity 0.4s ease 0.1s;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .paginas-nav.visible {
+      opacity: 1;
+    }
+    .pagina-boton {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--dorado);
+      background: rgba(14, 14, 18, 0.55);
+      color: var(--dorado);
+      font-size: 15px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: background 0.2s ease, opacity 0.2s ease;
+    }
+    .pagina-boton:hover {
+      background: rgba(201, 161, 95, 0.18);
+    }
+    .pagina-boton:disabled {
+      opacity: 0.3;
+      cursor: default;
+      pointer-events: none;
+    }
+    .paginas-puntos {
+      display: flex;
+      gap: 6px;
+    }
+    .paginas-puntos .punto {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      border: 1px solid var(--dorado);
+      background: transparent;
+      transition: background 0.2s ease;
+    }
+    .paginas-puntos .punto.activo {
+      background: var(--dorado);
+    }
+
+    .instruccion {
+      font-size: 0.8rem;
+      opacity: 0.5;
+      text-align: center;
+    }
+
+    /* Portada del libro: plantilla que se rasteriza con html2canvas igual
+       que las .pagina, y se usa como textura de la tapa 3D (ver el script
+       al final del archivo y componentes/libro-muestra.js). */
+    .portada-cover {
+      position: relative;
+      width: 340px;
+      height: 486px;
+      overflow: hidden;
+      background:
+        radial-gradient(120% 90% at 50% 18%, rgba(201, 161, 95, 0.22), transparent 60%),
+        linear-gradient(160deg, #14141a 0%, #0b0b10 55%, #08080b 100%);
+      color: var(--texto);
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+    .portada-cover-resplandor {
+      position: absolute;
+      inset: -20%;
+      background: radial-gradient(circle at 50% 38%, rgba(201, 161, 95, 0.28), transparent 55%);
+    }
+    .portada-cover-estrellas {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 12%, rgba(243, 234, 217, 0.55), transparent 60%),
+        radial-gradient(1px 1px at 82% 8%, rgba(243, 234, 217, 0.4), transparent 60%),
+        radial-gradient(1.4px 1.4px at 68% 22%, rgba(243, 234, 217, 0.5), transparent 60%),
+        radial-gradient(1px 1px at 30% 88%, rgba(243, 234, 217, 0.4), transparent 60%),
+        radial-gradient(1.2px 1.2px at 90% 78%, rgba(243, 234, 217, 0.45), transparent 60%),
+        radial-gradient(1px 1px at 8% 65%, rgba(243, 234, 217, 0.35), transparent 60%),
+        radial-gradient(1px 1px at 55% 92%, rgba(243, 234, 217, 0.35), transparent 60%);
+    }
+    .portada-zodiaco {
+      position: absolute;
+      inset: 0;
+    }
+    .portada-zodiaco span {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      color: rgba(201, 161, 95, 0.4);
+    }
+    .portada-cover-marco {
+      position: absolute;
+      inset: 16px;
+      border: 1px solid rgba(201, 161, 95, 0.55);
+    }
+    .portada-cover-contenido {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 36px;
+    }
+    .portada-cover-ornamento {
+      font-size: 12px;
+      letter-spacing: 6px;
+      color: var(--dorado);
+      margin-bottom: 22px;
+    }
+    .portada-cover-eyebrow {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(201, 161, 95, 0.85);
+      margin-bottom: 10px;
+    }
+    .portada-cover-titulo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 500;
+      font-size: 46px;
+      line-height: 1.08;
+      color: #f9f4e8;
+      margin: 0 0 18px;
+    }
+    .portada-cover-divisor {
+      width: 54px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--dorado), transparent);
+      margin-bottom: 18px;
+    }
+    .portada-cover-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 14px;
+      line-height: 1.5;
+      color: rgba(243, 234, 217, 0.75);
+      margin: 0;
+    }
+    .portada-cover-pie {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 30px;
+      z-index: 2;
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: 0.12em;
+      font-size: 15px;
+      color: rgba(243, 234, 217, 0.85);
+    }
+    .portada-cover-pie-sub {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 7px;
+      letter-spacing: 0.3em;
+      color: var(--dorado);
+      margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="encabezado">
+    <h1>Así se ve tu lectura</h1>
+    <p>Un vistazo al reporte editorial que recibes — la entrega real llega en PDF.</p>
+  </div>
+
+  <div class="escenario-libro">
+    <div id="libro-muestra"></div>
+
+    <div id="paginas-plantilla" class="paginas-plantilla">
+        <div id="portada-cover" class="portada-cover">
+          <div class="portada-cover-resplandor"></div>
+          <div class="portada-cover-estrellas"></div>
+          <div class="portada-zodiaco">
+            <span style="left: 170px; top: 103px;">♈︎</span>
+            <span style="left: 240px; top: 122px;">♉︎</span>
+            <span style="left: 291px; top: 173px;">♊︎</span>
+            <span style="left: 310px; top: 243px;">♋︎</span>
+            <span style="left: 291px; top: 313px;">♌︎</span>
+            <span style="left: 240px; top: 364px;">♍︎</span>
+            <span style="left: 170px; top: 383px;">♎︎</span>
+            <span style="left: 100px; top: 364px;">♏︎</span>
+            <span style="left: 49px; top: 313px;">♐︎</span>
+            <span style="left: 30px; top: 243px;">♑︎</span>
+            <span style="left: 49px; top: 173px;">♒︎</span>
+            <span style="left: 100px; top: 122px;">♓︎</span>
+          </div>
+          <div class="portada-cover-marco"></div>
+          <div class="portada-cover-contenido">
+            <div class="portada-cover-ornamento">✦ ☾ ✦</div>
+            <div class="portada-cover-eyebrow">Lectura de</div>
+            <h1 class="portada-cover-titulo">Carta<br>Natal</h1>
+            <div class="portada-cover-divisor"></div>
+            <p class="portada-cover-tagline">Una lectura para<br>volver a ti una y otra vez.</p>
+          </div>
+          <div class="portada-cover-pie">
+            ASTREA
+            <span class="portada-cover-pie-sub">— CHARTS —</span>
+          </div>
+        </div>
+
+        <div class="pagina" data-pagina="0">
+          <div class="capitulo-numero">Capítulo I</div>
+          <h2>Tu carta en una mirada</h2>
+          <div class="mirada-esencia">
+            Eres una síntesis entre la intensidad emocional de Escorpio y la calidez expresiva de Leo — alguien que ama con profundidad y necesita ser visto/a en la misma medida.
+          </div>
+          <div class="mirada-card">
+            <div class="mirada-card-titulo">Tus mayores talentos</div>
+            <ul class="mirada-lista talentos">
+              <li>Intuición emocional aguda</li>
+              <li>Magnetismo natural</li>
+              <li>Lealtad inquebrantable</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pagina" data-pagina="1">
+          <div class="capitulo-numero">Tu carta natal</div>
+          <h2>El mapa del cielo en tu nacimiento</h2>
+          <div class="rueda-natal-wrap" id="rueda-muestra"></div>
+          <p class="pagina-muestra-nota">Sol, Luna, planetas y casas — calculados con astronomía real.</p>
+        </div>
+
+        <div class="pagina" data-pagina="2">
+          <div class="capitulo-numero">Capítulo III</div>
+          <h2>Tu energía base</h2>
+          <div class="panorama-grid">
+            <div class="panorama-card">
+              <div class="panorama-titulo">Elementos</div>
+              <div class="panorama-fila"><span class="panorama-etiqueta">Fuego</span><span class="panorama-barra"><span class="panorama-relleno" style="width:45px;"></span></span><span class="panorama-valor">3</span></div>
+              <div class="panorama-fila"><span class="panorama-etiqueta">Tierra</span><span class="panorama-barra"><span class="panorama-relleno" style="width:15px;"></span></span><span class="panorama-valor">1</span></div>
+              <div class="panorama-fila"><span class="panorama-etiqueta">Aire</span><span class="panorama-barra"><span class="panorama-relleno" style="width:30px;"></span></span><span class="panorama-valor">2</span></div>
+              <div class="panorama-fila"><span class="panorama-etiqueta">Agua</span><span class="panorama-barra"><span class="panorama-relleno" style="width:60px;"></span></span><span class="panorama-valor">4</span></div>
+              <div class="panorama-dominante">Dominante: Agua</div>
+            </div>
+          </div>
+          <p class="pagina-muestra-nota">Qué elementos y modalidades dominan tu carta — y qué revelan de tu forma de estar en el mundo.</p>
+        </div>
+
+        <div class="pagina" data-pagina="3">
+          <div class="capitulo-numero">Capítulo V</div>
+          <h2>Tus planetas personales</h2>
+          <div class="planeta-bloque">
+            <div class="planeta-encabezado">
+              <span class="planeta-simbolo">♀</span>
+              <h3 class="planeta-nombre">Venus</h3>
+            </div>
+            <div class="planeta-datos">Leo 14.3° · Casa 7</div>
+            <p class="interpretacion-texto">Amas con generosidad y necesitas admiración mutua — en tus vínculos buscas brillar junto a la otra persona, no a su sombra.</p>
+          </div>
+          <p class="pagina-muestra-nota">— así se leen los 10 planetas de tu carta completa —</p>
+        </div>
+      </div>
+
+      <div id="paginas-nav" class="paginas-nav">
+        <button type="button" class="pagina-boton" aria-label="Página anterior">‹</button>
+        <div class="paginas-puntos"></div>
+        <button type="button" class="pagina-boton" aria-label="Página siguiente">›</button>
+      </div>
+    </div>
+
+  <p class="instruccion">Pasa el mouse sobre el libro y haz click para abrirlo — usa las flechas para pasar las páginas.</p>
+
+  <script src="rueda-natal.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script type="module">
+    import { initLibroMuestra } from './componentes/libro-muestra.js';
+
+    // Datos de muestra (no son un cálculo real, solo sirven para dibujar
+    // una rueda representativa) para la página 2 del libro — reutiliza el
+    // mismo componente SVG que usa el reporte real (rueda-natal.js).
+    const CALCULO_MUESTRA = {
+      puntos_angulares: {
+        Ascendente: { longitud_absoluta: 128 },
+        MedioCielo: { longitud_absoluta: 32 },
+      },
+      casas: {
+        1: { longitud_absoluta: 128 }, 2: { longitud_absoluta: 160 }, 3: { longitud_absoluta: 192 },
+        4: { longitud_absoluta: 212 }, 5: { longitud_absoluta: 242 }, 6: { longitud_absoluta: 275 },
+        7: { longitud_absoluta: 308 }, 8: { longitud_absoluta: 340 }, 9: { longitud_absoluta: 12 },
+        10: { longitud_absoluta: 32 }, 11: { longitud_absoluta: 62 }, 12: { longitud_absoluta: 95 },
+      },
+      planetas: {
+        Sol: { longitud_absoluta: 220 },
+        Luna: { longitud_absoluta: 138 },
+        Mercurio: { longitud_absoluta: 205 },
+        Venus: { longitud_absoluta: 134 },
+        Marte: { longitud_absoluta: 15 },
+        Jupiter: { longitud_absoluta: 300 },
+        Saturno: { longitud_absoluta: 80 },
+      },
+      aspectos: [
+        { punto_a: 'Sol', punto_b: 'Luna', aspecto: 'Trigono', orbe_usado: 1.8 },
+        { punto_a: 'Venus', punto_b: 'Marte', aspecto: 'Cuadratura', orbe_usado: 2.4 },
+        { punto_a: 'Mercurio', punto_b: 'Jupiter', aspecto: 'Sextil', orbe_usado: 3.1 },
+      ],
+    };
+
+    const ruedaMuestra = document.getElementById('rueda-muestra');
+    if (ruedaMuestra) ruedaMuestra.innerHTML = generarRuedaSVG(CALCULO_MUESTRA);
+
+    // Rasteriza cada .pagina y la portada (HTML/CSS ya escrito) a <canvas>
+    // con html2canvas — esos canvases se usan como texturas de la tapa y
+    // de cada página 3D. Se captura una sola vez al cargar, en paralelo.
+    const plantilla = document.getElementById('paginas-plantilla');
+    const nodosPagina = Array.from(plantilla.querySelectorAll('.pagina'))
+      .sort((a, b) => Number(a.dataset.pagina) - Number(b.dataset.pagina));
+
+    const [portadaCanvas, ...paginasCanvas] = await Promise.all([
+      html2canvas(document.getElementById('portada-cover'), { scale: 2 }),
+      ...nodosPagina.map(nodo => html2canvas(nodo, {
+        backgroundColor: '#F7F3E9',
+        scale: 2,
+      })),
+    ]);
+
+    initLibroMuestra('libro-muestra', {
+      portadaCanvas,
+      navId: 'paginas-nav',
+      paginasCanvas,
+    });
+  </script>
+</body>
+</html>
