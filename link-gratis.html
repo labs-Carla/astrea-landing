@@ -1399,7 +1399,7 @@
       document.getElementById('saludo-nombre').textContent = `Hola, ${metadata.nombre.split(' ')[0]} ✦`;
     }
 
-    document.getElementById('rueda-natal-container').innerHTML = generarRuedaSVG(calculo);
+    document.getElementById('rueda-natal-container').innerHTML = generarRuedaSVG(calculo, { tema: 'claro' });
 
     const sol = calculo.planetas.Sol;
     const luna = calculo.planetas.Luna;
