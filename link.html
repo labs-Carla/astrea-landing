@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrea Charts · Conócete. Entiéndete. Transforma tu destino.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FBF6EC;
+    --cream-deep: #F3EAD8;
+    --gold: #8C5F24;
+    --gold-soft: #D4A85C;
+    --ink: #241C10;
+    --ink-soft: #5A4E3B;
+    --hairline: rgba(140, 95, 36, 0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    background-color: var(--cream);
+    background-image: url("assets/fondo-claro.png");
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding: 150px 20px 48px;
+  }
+
+  .wrap {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    text-align: center;
+  }
+
+  .logo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 36px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+
+  .logo-sub {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 6px;
+  }
+
+  .tagline {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin: 18px auto 30px;
+    max-width: 280px;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #FDF9F0;
+    border: none;
+    border-radius: 20px;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 6px 18px rgba(140, 95, 36, 0.1);
+  }
+
+  .link-card-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    background: var(--cream-deep);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+  }
+
+  .link-card-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .link-card-title {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .link-card-desc {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  .link-card-arrow {
+    flex-shrink: 0;
+    color: var(--gold);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 34px 0 20px;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--hairline);
+    max-width: 90px;
+  }
+
+  .divider-glyph {
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 4px;
+  }
+
+  .socials {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .social-btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  footer {
+    margin-top: 44px;
+    text-align: center;
+  }
+
+  .footer-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .footer-brand {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .disclaimer {
+    font-size: 10px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    opacity: 0.85;
+    max-width: 320px;
+    margin: 0 auto 10px;
+  }
+
+  .footer-copy {
+    font-size: 10px;
+    color: var(--ink-soft);
+    opacity: 0.7;
+  }
+
+  .footer-copy a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="logo">
+    <div class="logo-name">ASTREA<span class="logo-sub">— CHARTS —</span></div>
+  </div>
+
+  <p class="tagline">Conócete. Entiéndete.<br>Transforma tu destino.</p>
+
+  <div class="cards">
+    <a href="https://pay.hotmart.com/B106744064D?bid=1784070968525" class="link-card">
+      <span class="link-card-icon">
+        <svg viewBox="0 0 24 24" style="width: 27px; height: 27px; fill: currentColor;">
+          <path d="M12 2c.4 3.6 1 5.6 2 6.8 1.2 1.2 3.2 1.8 6.8 2.2-3.6.4-5.6 1-6.8 2.2-1 1.2-1.6 3.2-2 6.8-.4-3.6-1-5.6-2-6.8-1.2-1.2-3.2-1.8-6.8-2.2 3.6-.4 5.6-1 6.8-2.2 1-1.2 1.6-3.2 2-6.8z"></path>
+        </svg>
+      </span>
+      <span class="link-card-body">
+        <span class="link-card-title">Quiero mi carta natal</span>
+        <span class="link-card-desc">Lectura completa y personalizada</span>
+      </span>
+      <span class="link-card-arrow">
+        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M9 6l6 6-6 6"></path></svg>
+      </span>
+    </a>
+
+    <a href="/link-gratis" class="link-card">
+      <span class="link-card-icon">
+        <svg viewBox="0 0 24 24" style="width: 27px; height: 27px; fill: currentColor;">
+          <path d="M20 12.5A8.5 8.5 0 1 1 11.5 4a7 7 0 0 0 8.5 8.5z"></path>
+          <path d="M19 3.2c.15 1 .3 1.5.6 1.8.3.3.8.45 1.8.6-1 .15-1.5.3-1.8.6-.3.3-.45.8-.6 1.8-.15-1-.3-1.5-.6-1.8-.3-.3-.8-.45-1.8-.6 1-.15 1.5-.3 1.8-.6.3-.3.45-.8.6-1.8z"></path>
+        </svg>
+      </span>
+      <span class="link-card-body">
+        <span class="link-card-title">Calcula tu carta gratis</span>
+        <span class="link-card-desc">Tu resumen astral en minutos</span>
+      </span>
+      <span class="link-card-arrow">
+        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M9 6l6 6-6 6"></path></svg>
+      </span>
+    </a>
+
+    <a href="/proximamente" class="link-card">
+      <span class="link-card-icon">
+        <svg viewBox="0 0 24 24" style="width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;">
+          <path d="M3 8L12 3l9 5"></path>
+          <path d="M4 8h16"></path>
+          <path d="M6 8v10M10 8v10M14 8v10M18 8v10"></path>
+          <path d="M3 19h18"></path>
+          <path d="M3 21.5h18"></path>
+        </svg>
+      </span>
+      <span class="link-card-body">
+        <span class="link-card-title">Conoce Astrea</span>
+        <span class="link-card-desc">Descubre el universo Astrea</span>
+      </span>
+      <span class="link-card-arrow">
+        <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;"><path d="M9 6l6 6-6 6"></path></svg>
+      </span>
+    </a>
+  </div>
+
+  <div class="divider">
+    <span class="divider-line"></span>
+    <span class="divider-glyph">✦ ☾ ✦</span>
+    <span class="divider-line"></span>
+  </div>
+
+  <div class="socials">
+    <a href="https://wa.me/573132137456?text=Hola%20%E2%9C%A8%20tengo%20una%20pregunta%20sobre%20mi%20carta%20natal" class="social-btn" aria-label="WhatsApp">
+      <svg viewBox="0 0 32 32" style="width: 19px; height: 19px; fill: currentColor;"><path d="M16.04 3C9.37 3 3.98 8.38 3.98 15.05c0 2.22.6 4.3 1.63 6.09L3 29l8.06-2.55a12.02 12.02 0 0 0 4.98 1.08h.01c6.66 0 12.05-5.38 12.05-12.05C28.1 8.4 22.71 3 16.04 3zm0 21.9h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-4.78 1.51 1.55-4.64-.24-.38a9.83 9.83 0 0 1-1.53-5.27c0-5.46 4.44-9.9 9.91-9.9 2.64 0 5.13 1.03 6.99 2.9a9.83 9.83 0 0 1 2.9 6.99c0 5.46-4.45 9.9-9.9 9.9zm5.44-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.24-.46-2.37-1.47-.87-.78-1.47-1.74-1.64-2.03-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5-.17 0-.37-.02-.57-.02-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.22 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.35.19 1.86.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"></path></svg>
+    </a>
+    <a href="https://www.tiktok.com/@astrea.charts" class="social-btn" aria-label="TikTok">
+      <svg viewBox="0 0 32 32" style="width: 19px; height: 19px; fill: currentColor;"><path d="M22.5 3h-4.2v18.1c0 1.9-1.5 3.5-3.5 3.5-1.9 0-3.5-1.6-3.5-3.5s1.5-3.5 3.5-3.5c.35 0 .68.05 1 .14v-4.3a7.7 7.7 0 0 0-1-.07c-4.2 0-7.6 3.4-7.6 7.7S10.6 29 14.8 29s7.6-3.4 7.6-7.7v-9.3a10.9 10.9 0 0 0 6.1 1.9V9.7a6.8 6.8 0 0 1-4.6-2.1A6.7 6.7 0 0 1 22.5 3z"></path></svg>
+    </a>
+  </div>
+
+  <footer>
+    <div class="footer-divider">
+      <span class="divider-line"></span>
+      <span class="divider-glyph">✦</span>
+      <span class="divider-line"></span>
+    </div>
+    <div class="footer-brand">Astrea Charts</div>
+    <p class="disclaimer">Astrea Charts es una herramienta de autoconocimiento.<br>No reemplaza asesoría médica, psicológica ni financiera.</p>
+    <div class="footer-copy"><a href="privacidad.html">Política de privacidad</a></div>
+    <div class="footer-copy" style="margin-top: 6px;">© 2026 Astrea Charts</div>
+  </footer>
+
+</div>
+</body>
+</html>

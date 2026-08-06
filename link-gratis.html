@@ -9,14 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #0B1220;
-    --gold: #D4B172;
-    --gold-soft: #E6CB98;
-    --ink: #F4EEDF;
-    --ink-soft: rgba(244, 238, 223, 0.72);
-    --hairline: rgba(212, 177, 114, 0.45);
-    --lila: #B39DDB;
-    --rosa: #E091A8;
+    --cream: #FBF6EC;
+    --cream-deep: #F3EAD8;
+    --gold: #8C5F24;
+    --gold-soft: #D4A85C;
+    --ink: #241C10;
+    --ink-soft: #5A4E3B;
+    --hairline: rgba(140, 95, 36, 0.3);
+    --lila: #7A5CA6;
+    --rosa: #A83D5F;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +25,7 @@
 
   body {
     background-color: var(--cream);
-    background-image: url("assets/fondo.png");
+    background-image: url("assets/fondo-claro.png");
     background-size: cover;
     background-position: center top;
     background-attachment: fixed;
@@ -38,7 +39,7 @@
   .wrap {
     max-width: 480px;
     margin: 0 auto;
-    padding: 24px 20px 60px;
+    padding: 140px 20px 60px;
   }
 
   .site-header {
@@ -50,18 +51,21 @@
 
   .logo-mini {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 25px;
-    letter-spacing: 0.1em;
+    font-weight: 500;
+    font-size: 36px;
+    letter-spacing: 0.04em;
     text-align: center;
   }
 
   .logo-mini .sub {
     display: block;
     font-family: 'DM Sans', sans-serif;
-    font-size: 8px;
-    letter-spacing: 0.3em;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
     color: var(--gold);
-    margin-top: 2px;
+    margin-top: 6px;
   }
 
   .hero {
@@ -105,24 +109,18 @@
 
   .eyebrow {
     text-align: center;
-    margin: 36px 0 16px;
+    margin: 44px 0 20px;
   }
 
   .eyebrow-line {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-size: 18px;
-    color: var(--gold-soft);
-  }
-
-  .eyebrow-line::before,
-  .eyebrow-line::after {
-    content: '✦';
-    font-size: 11px;
-    color: var(--gold);
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--ink);
   }
 
   .que-es {
@@ -153,12 +151,14 @@
   }
 
   .form-card {
-    background: rgba(11, 18, 32, 0.6);
-    backdrop-filter: blur(3px);
-    border: 1px solid var(--hairline);
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.4);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 22px;
     padding: 26px 22px;
     margin-top: 32px;
+    box-shadow: 0 8px 24px rgba(140, 95, 36, 0.12);
   }
 
   .form-card form {
@@ -181,13 +181,24 @@
   .campo input,
   .campo select {
     width: 100%;
-    background: rgba(11, 18, 32, 0.6);
+    background: #FFFFFF;
     border: 1px solid var(--hairline);
-    border-radius: 4px;
+    border-radius: 10px;
     padding: 12px 14px;
     font-family: 'DM Sans', sans-serif;
     font-size: 14.5px;
     color: var(--ink);
+  }
+
+  .campo select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238C5F24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 15px;
+    padding-right: 34px;
   }
 
   .campo input:focus,
@@ -216,17 +227,18 @@
     display: block;
     width: 100%;
     text-align: center;
-    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
-    color: #1a1408;
+    background: linear-gradient(135deg, var(--gold-soft), #C99A4B);
+    color: #241C10;
     border: none;
     font-family: 'DM Sans', sans-serif;
     font-weight: 600;
     font-size: 16px;
     letter-spacing: 0.02em;
     padding: 15px 16px;
-    border-radius: 6px;
+    border-radius: 12px;
     cursor: pointer;
     margin-top: 4px;
+    box-shadow: 0 6px 16px rgba(140, 95, 36, 0.25);
   }
 
   .form-nota {
@@ -377,10 +389,11 @@
     align-items: center;
     text-align: center;
     gap: 6px;
-    background: rgba(11, 18, 32, 0.6);
-    border: 1px solid var(--hairline);
-    border-radius: 6px;
+    background: #FDF9F0;
+    border: none;
+    border-radius: 16px;
     padding: 16px 8px;
+    box-shadow: 0 4px 14px rgba(140, 95, 36, 0.08);
   }
 
   .big-three-simbolo {
@@ -412,10 +425,11 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    background: rgba(11, 18, 32, 0.6);
-    border: 1px solid var(--hairline);
-    border-radius: 6px;
+    background: #FDF9F0;
+    border: none;
+    border-radius: 16px;
     padding: 16px 14px;
+    box-shadow: 0 4px 14px rgba(140, 95, 36, 0.08);
   }
 
   .esencia-icono {
@@ -501,9 +515,9 @@
   .aspecto-destacado-box {
     margin-top: 16px;
     padding: 16px;
-    background: rgba(212, 177, 114, 0.08);
+    background: rgba(212, 177, 114, 0.1);
     border: 1px solid var(--hairline);
-    border-radius: 6px;
+    border-radius: 14px;
     font-size: 13px;
     color: var(--ink);
     line-height: 1.55;
@@ -531,7 +545,7 @@
     letter-spacing: 0.05em;
     cursor: pointer;
     margin-top: 14px;
-    border-radius: 6px;
+    border-radius: 12px;
     font-family: 'DM Sans', sans-serif;
   }
 
@@ -547,7 +561,7 @@
     width: 360px;
     padding: 32px 28px;
     background: #0B1220;
-    color: var(--ink);
+    color: #F4EEDF;
     font-family: 'DM Sans', sans-serif;
   }
 
@@ -555,7 +569,7 @@
     text-align: center;
     font-family: 'Cormorant Garamond', serif;
     font-size: 24px;
-    color: var(--ink);
+    color: #F4EEDF;
     letter-spacing: 0.08em;
     margin-bottom: 4px;
   }
@@ -564,7 +578,7 @@
     text-align: center;
     font-size: 9px;
     letter-spacing: 0.3em;
-    color: var(--gold);
+    color: #D4B172;
     margin-bottom: 24px;
   }
 
@@ -573,7 +587,7 @@
     align-items: center;
     gap: 14px;
     padding: 14px 0;
-    border-bottom: 1px solid var(--hairline);
+    border-bottom: 1px solid rgba(212, 177, 114, 0.45);
   }
 
   #compartir-card .cc-item:last-child { border-bottom: none; }
@@ -581,7 +595,7 @@
   #compartir-card .cc-simbolo {
     font-family: 'Cormorant Garamond', serif;
     font-size: 26px;
-    color: var(--gold);
+    color: #D4B172;
     width: 32px;
   }
 
@@ -589,18 +603,18 @@
     display: block;
     font-family: 'Cormorant Garamond', serif;
     font-size: 17px;
-    color: var(--ink);
+    color: #F4EEDF;
   }
 
   #compartir-card .cc-texto span {
     font-size: 11px;
-    color: var(--ink-soft);
+    color: rgba(244, 238, 223, 0.72);
   }
 
   #compartir-card .cc-footer {
     text-align: center;
     font-size: 9.5px;
-    color: var(--ink-soft);
+    color: rgba(244, 238, 223, 0.72);
     margin-top: 22px;
     letter-spacing: 0.04em;
   }
@@ -620,10 +634,11 @@
   }
 
   .valor-card {
-    background: rgba(11, 18, 32, 0.5);
-    border: 1px solid var(--hairline);
-    border-radius: 8px;
+    background: #FDF9F0;
+    border: none;
+    border-radius: 16px;
     padding: 18px 20px;
+    box-shadow: 0 4px 14px rgba(140, 95, 36, 0.08);
   }
 
   .valor-card .comilla {
@@ -648,14 +663,17 @@
 
   .comparacion-col {
     flex: 1;
-    background: rgba(11, 18, 32, 0.5);
-    border: 1px solid var(--hairline);
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
     padding: 18px 14px;
+    box-shadow: 0 4px 14px rgba(140, 95, 36, 0.1);
   }
 
   .comparacion-col.completo {
-    border-color: var(--gold);
+    box-shadow: 0 4px 14px rgba(140, 95, 36, 0.1), 0 0 0 1.5px var(--gold);
   }
 
   .comparacion-titulo {
@@ -700,97 +718,220 @@
   }
 
   .card-premium {
-    background: rgba(11, 18, 32, 0.6);
-    backdrop-filter: blur(3px);
+    background: rgba(255, 255, 255, 0.4);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 24px;
+    padding: 14px 20px 24px;
+    box-shadow: 0 8px 24px rgba(140, 95, 36, 0.12);
+  }
+
+  .premium-media {
+    position: relative;
+    background: #FDF9F0;
+    border-radius: 18px;
+    padding: 10px 10px 0;
+    max-width: 220px;
+    margin: 0 auto;
+  }
+
+  .premium-media img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    display: block;
+    border-radius: 14px;
+  }
+
+  .premium-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid var(--hairline);
-    border-radius: 10px;
-    padding: 24px 22px;
-  }
-
-  .card-premium-top {
+    box-shadow: 0 4px 12px rgba(140, 95, 36, 0.18);
     display: flex;
-    gap: 16px;
-    align-items: flex-start;
-    margin-bottom: 16px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5px;
   }
 
-  .card-premium-eyebrow-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 4px;
-  }
-
-  .card-premium-eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+  .premium-badge-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 16px;
     color: var(--gold);
+    line-height: 1;
   }
 
-  .card-premium-titulo {
+  .premium-badge-text {
+    font-size: 5.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    line-height: 1.2;
+    margin-top: 2px;
+  }
+
+  .premium-tags {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 6px 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .premium-tags .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .premium-tags .sep {
+    color: var(--hairline);
+  }
+
+  .premium-eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-top: 22px;
+  }
+
+  .premium-titulo {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 500;
-    font-size: 22px;
+    font-size: 32px;
+    text-align: center;
     color: var(--ink);
-    line-height: 1.15;
-    margin-bottom: 6px;
+    margin: 4px 0 10px;
   }
 
-  .card-premium-precio {
-    font-size: 14px;
-    color: var(--gold);
-    font-weight: 600;
-    white-space: nowrap;
+  .premium-divider {
+    text-align: center;
+    color: var(--gold-soft);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    margin-bottom: 14px;
   }
 
-  .card-premium-desc {
-    font-size: 12.5px;
+  .premium-desc {
+    font-size: 13px;
     color: var(--ink-soft);
-    line-height: 1.5;
+    line-height: 1.6;
+    text-align: center;
+    max-width: 340px;
+    margin: 0 auto 22px;
   }
 
-  .card-premium-lista {
+  .premium-benefits {
     list-style: none;
-    margin: 16px 0;
   }
 
-  .card-premium-lista li {
-    position: relative;
-    padding-left: 22px;
-    font-size: 12.5px;
-    color: var(--ink);
-    line-height: 1.55;
-    margin-bottom: 7px;
+  .premium-benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--hairline);
   }
 
-  .card-premium-lista li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
+  .premium-benefits li:last-child {
+    border-bottom: none;
+  }
+
+  .benefit-icon {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--hairline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--gold);
-    font-weight: 700;
-    font-size: 12px;
+  }
+
+  .benefit-text strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .benefit-text span {
+    display: block;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
   }
 
   .cta-comprar {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     text-align: center;
-    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
-    color: #1a1408;
+    background: #211A10;
+    color: var(--gold-soft);
     text-decoration: none;
     font-weight: 600;
-    font-size: 15px;
-    padding: 14px 16px;
-    border-radius: 6px;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 16px 20px;
+    border-radius: 999px;
+    margin-top: 22px;
+    box-shadow: 0 8px 20px rgba(33, 26, 16, 0.3);
   }
 
   .pago-nota {
     text-align: center;
-    font-size: 10.5px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     color: var(--ink-soft);
-    margin-top: 10px;
-    opacity: 0.75;
+    margin-top: 12px;
+    opacity: 0.8;
+  }
+
+  .faq-glass {
+    background: rgba(255, 255, 255, 0.4);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    padding: 6px 20px;
+    box-shadow: 0 8px 26px rgba(140, 95, 36, 0.12);
+  }
+
+  .faq-glass .faq-item {
+    border-bottom: 1px solid var(--hairline);
+    padding: 16px 0;
+  }
+
+  .faq-glass .faq-item:last-child {
+    border-bottom: none;
   }
 
   .faq-item {
@@ -902,8 +1043,8 @@
     top: -11px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #E6CB98, #D4B172);
-    color: #1a1408;
+    background: linear-gradient(135deg, var(--gold-soft), #C99A4B);
+    color: #241C10;
     font-size: 8px;
     font-weight: 700;
     letter-spacing: 0.05em;
@@ -1091,61 +1232,110 @@
 
   <div class="eyebrow" id="lectura-completa" style="margin-top: 44px;"><span class="eyebrow-line">Tu lectura completa</span></div>
   <div class="card-premium">
-    <div class="card-premium-top">
-      <div style="width: 150px; min-width: 150px; aspect-ratio: 3 / 4; border-radius: 8px; overflow: hidden;">
-        <img src="assets/portada-carta-natal.png" alt="Portada Lectura de Carta Natal" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      </div>
-      <div>
-        <div class="card-premium-eyebrow-row">
-          <span class="card-premium-eyebrow">Lectura de</span>
-          
-        </div>
-        <div class="card-premium-titulo">Carta Natal</div>
-        <p class="card-premium-desc">Un análisis profundo y personalizado de tu carta natal para comprender tu esencia, tus patrones y tu propósito.</p>
+    <div class="premium-media">
+      <img src="assets/portada-carta-natal-clara.png" alt="Portada Lectura de Carta Natal">
+      <div class="premium-badge">
+        <span class="premium-badge-num">+15</span>
+        <span class="premium-badge-text">Capítulos de<br>análisis profundo</span>
       </div>
     </div>
 
-    <ul class="card-premium-lista">
-      <li>Más de 15 capítulos de análisis profundo</li>
-      <li>Patrones, propósito, talentos y desafíos</li>
-      <li>Guía personalizada para tu crecimiento</li>
-      <li>Informe en PDF profesional</li>
-      <li>Entrega en 24–48 horas a tu correo</li>
+    <div class="premium-tags">
+      <span class="tag">
+        <svg viewBox="0 0 24 24" style="width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg>
+        PDF profesional
+      </span>
+      <span class="sep">|</span>
+      <span class="tag">
+        <svg viewBox="0 0 24 24" style="width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        Entrega 24–48h
+      </span>
+    </div>
+
+    <div class="premium-eyebrow">Lectura de</div>
+    <div class="premium-titulo">Carta Natal</div>
+    <div class="premium-divider">— ✦ —</div>
+    <p class="premium-desc">Un análisis profundo y personalizado de tu carta natal para comprender tu esencia, tus patrones y tu propósito.</p>
+
+    <ul class="premium-benefits">
+      <li>
+        <span class="benefit-icon">
+          <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 5-5 2 2-5z"/></svg>
+        </span>
+        <span class="benefit-text"><strong>Más de 15 capítulos de análisis profundo</strong><span>Exploramos cada área clave de tu mapa.</span></span>
+      </li>
+      <li>
+        <span class="benefit-icon">
+          <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="4"/><ellipse cx="12" cy="12" rx="9" ry="3" transform="rotate(-20 12 12)"/></svg>
+        </span>
+        <span class="benefit-text"><strong>Patrones, propósito, talentos y desafíos</strong><span>Descubre tu diseño único y cómo usarlo.</span></span>
+      </li>
+      <li>
+        <span class="benefit-icon">
+          <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="7.2" r="2.6"/><circle cx="16.1" cy="9.6" r="2.6"/><circle cx="16.1" cy="14.4" r="2.6"/><circle cx="12" cy="16.8" r="2.6"/><circle cx="7.9" cy="14.4" r="2.6"/><circle cx="7.9" cy="9.6" r="2.6"/></svg>
+        </span>
+        <span class="benefit-text"><strong>Guía personalizada para tu crecimiento</strong><span>Claves prácticas alineadas con tu mapa.</span></span>
+      </li>
+      <li>
+        <span class="benefit-icon">
+          <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6M9 8h3"/></svg>
+        </span>
+        <span class="benefit-text"><strong>Informe en PDF profesional</strong><span>Diseño premium, claro y fácil de leer.</span></span>
+      </li>
+      <li>
+        <span class="benefit-icon">
+          <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        </span>
+        <span class="benefit-text"><strong>Entrega en 24–48 horas a tu correo</strong><span>Recíbelo y léelo cuando quieras.</span></span>
+      </li>
     </ul>
 
-    <a class="cta-comprar" href="https://pay.hotmart.com/B106744064D?bid=1784070968525" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+    <a class="cta-comprar" href="https://pay.hotmart.com/B106744064D?bid=1784070968525">
+      <svg viewBox="0 0 24 24" style="width: 15px; height: 15px; fill: currentColor; flex-shrink: 0;"><path d="M12 2c.4 3.6 1 5.6 2 6.8 1.2 1.2 3.2 1.8 6.8 2.2-3.6.4-5.6 1-6.8 2.2-1 1.2-1.6 3.2-2 6.8-.4-3.6-1-5.6-2-6.8-1.2-1.2-3.2-1.8-6.8-2.2 3.6-.4 5.6-1 6.8-2.2 1-1.2 1.6-3.2 2-6.8z"></path></svg>
       Desbloquear mi lectura $12
-      <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: #1a1408; stroke-width: 1.8;"><path d="M12 5c-1.5-1.2-3.5-1.8-5.5-1.8S3 3.6 3 4.2v13.6c0 .5.4.8.9.6 1.6-.6 3.4-.6 5-.1.8.25 1.5.6 2.1 1.1M12 5c1.5-1.2 3.5-1.8 5.5-1.8S21 3.6 21 4.2v13.6c0 .5-.4.8-.9.6-1.6-.6-3.4-.6-5-.1-.8.25-1.5.6-2.1 1.1M12 5v14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     </a>
     <p class="pago-nota">🔒 Pago seguro en tu moneda local con Hotmart</p>
   </div>
 
   <div class="eyebrow"><span class="eyebrow-line">Preguntas frecuentes</span></div>
 
-  <details class="faq-item">
-    <summary>¿Necesito saber de astrología para entender mi lectura?</summary>
-    <div class="faq-answer">No. Cada reporte está escrito para que cualquier persona lo entienda — sin tecnicismos ni explicaciones complicadas.</div>
-  </details>
+  <div class="faq-glass">
+    <details class="faq-item">
+      <summary>¿Necesito saber de astrología para entender mi lectura?</summary>
+      <div class="faq-answer">No. Cada reporte está escrito para que cualquier persona lo entienda — sin tecnicismos ni explicaciones complicadas.</div>
+    </details>
 
-  <details class="faq-item">
-    <summary>¿Y si no sé mi hora exacta de nacimiento?</summary>
-    <div class="faq-answer">Pon la más aproximada que tengas. El reporte sigue siendo útil y preciso en la mayoría de las secciones.</div>
-  </details>
+    <details class="faq-item">
+      <summary>¿Y si no sé mi hora exacta de nacimiento?</summary>
+      <div class="faq-answer">Pon la más aproximada que tengas. El reporte sigue siendo útil y preciso en la mayoría de las secciones.</div>
+    </details>
 
-  <details class="faq-item">
-    <summary>¿Cuánto tiempo tarda en llegar mi reporte?</summary>
-    <div class="faq-answer">Entre 24 y 48 horas, directo a tu correo en formato PDF.</div>
-  </details>
+    <details class="faq-item">
+      <summary>¿Usan inteligencia artificial para hacer mi carta?</summary>
+      <div class="faq-answer">Tu carta se calcula con astronomía real (Swiss Ephemeris), no con IA. Para la interpretación larga y detallada, sí usamos asistentes de IA con integridad — nos ayudan a redactar con mayor precisión matemática y a conectar patrones complejos de tu carta. Pero el texto final no sale automático: nosotras lo revisamos, lo verificamos contra herramientas de referencia y lo complementamos con la lectura de tus tránsitos. Es un trabajo en coautoría, no un texto generado sin supervisión.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary>¿Cuánto tiempo tarda en llegar mi reporte?</summary>
+      <div class="faq-answer">Entre 24 y 48 horas, directo a tu correo en formato PDF.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary>¿Puedo hacer preguntas sobre mi carta?</summary>
+      <div class="faq-answer">Sí. Una vez compras tu lectura, si te queda alguna duda sobre tu carta, escríbenos por WhatsApp o por TikTok — con gusto te ayudamos a entender cualquier parte de tu reporte.</div>
+    </details>
+  </div>
 
   <div style="text-align: center; margin: 32px 0 18px;">
-    <span style="display: inline-flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #D4B172;"><span>✦</span>¿Tienes preguntas? Hablemos<span>✦</span></span>
+    <span style="display: inline-flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);"><span>✦</span>¿Tienes preguntas? Hablemos<span>✦</span></span>
   </div>
   <div style="display: flex; gap: 10px; justify-content: center; margin-top: 32px;">
-    <a href="https://wa.me/573132137456?text=Hola%20%E2%9C%A8%20tengo%20una%20pregunta%20sobre%20mi%20carta%20natal" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: #F4EEDF; border: 1px solid #F4EEDF; text-decoration: none; text-align: center; padding: 12px 12px; font-size: 13px; font-weight: 500; border-radius: 4px;">
+    <a href="https://wa.me/573132137456?text=Hola%20%E2%9C%A8%20tengo%20una%20pregunta%20sobre%20mi%20carta%20natal" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: #FDF9F0; color: var(--ink); border: none; text-decoration: none; text-align: center; padding: 12px 12px; font-size: 13px; font-weight: 500; border-radius: 12px; box-shadow: 0 4px 14px rgba(140, 95, 36, 0.08);">
       <svg viewBox="0 0 32 32" style="width: 17px; height: 17px; fill: currentColor; flex-shrink: 0;"><path d="M16.04 3C9.37 3 3.98 8.38 3.98 15.05c0 2.22.6 4.3 1.63 6.09L3 29l8.06-2.55a12.02 12.02 0 0 0 4.98 1.08h.01c6.66 0 12.05-5.38 12.05-12.05C28.1 8.4 22.71 3 16.04 3zm0 21.9h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-4.78 1.51 1.55-4.64-.24-.38a9.83 9.83 0 0 1-1.53-5.27c0-5.46 4.44-9.9 9.91-9.9 2.64 0 5.13 1.03 6.99 2.9a9.83 9.83 0 0 1 2.9 6.99c0 5.46-4.45 9.9-9.9 9.9zm5.44-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.24-.46-2.37-1.47-.87-.78-1.47-1.74-1.64-2.03-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5-.17 0-.37-.02-.57-.02-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.22 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.35.19 1.86.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"></path></svg>
       WhatsApp
     </a>
-    <a href="https://www.tiktok.com/@astrea.charts" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: #F4EEDF; border: 1px solid #F4EEDF; text-decoration: none; text-align: center; padding: 12px 12px; font-size: 13px; font-weight: 500; border-radius: 4px;">
+    <a href="https://www.tiktok.com/@astrea.charts" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: #FDF9F0; color: var(--ink); border: none; text-decoration: none; text-align: center; padding: 12px 12px; font-size: 13px; font-weight: 500; border-radius: 12px; box-shadow: 0 4px 14px rgba(140, 95, 36, 0.08);">
       <svg viewBox="0 0 32 32" style="width: 17px; height: 17px; fill: currentColor; flex-shrink: 0;"><path d="M22.5 3h-4.2v18.1c0 1.9-1.5 3.5-3.5 3.5-1.9 0-3.5-1.6-3.5-3.5s1.5-3.5 3.5-3.5c.35 0 .68.05 1 .14v-4.3a7.7 7.7 0 0 0-1-.07c-4.2 0-7.6 3.4-7.6 7.7S10.6 29 14.8 29s7.6-3.4 7.6-7.7v-9.3a10.9 10.9 0 0 0 6.1 1.9V9.7a6.8 6.8 0 0 1-4.6-2.1A6.7 6.7 0 0 1 22.5 3z"></path></svg>
       TikTok DM
     </a>

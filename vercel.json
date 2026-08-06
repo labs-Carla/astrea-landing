@@ -1,5 +1,8 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/", "destination": "/link", "permanent": false }
+  ],
   "rewrites": [
     {
       "source": "/r/:token",

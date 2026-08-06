@@ -11,7 +11,8 @@ static file server to preview changes.
 
 ## Deployment
 
-Deployed on Vercel. `vercel.json` defines proxy rewrites to a separate backend/admin app
+Deployed on Vercel. `vercel.json` redirects the root (`/`) to `/link` (307, temporary — this is a
+transitional funnel setup, see below) and defines proxy rewrites to a separate backend/admin app
 (`astrea-informe-react.vercel.app`):
 - `/r/:token` and `/admin` → proxied to the React admin/report app
 - `/assets/:path*` → proxied so that app's CSS/JS assets load correctly
@@ -28,7 +29,7 @@ const API_BASE = "https://astrea-api-production.up.railway.app/api/v1";
 ```
 
 Key endpoints used across the site:
-- `POST /carta-natal/resumen` — free/teaser natal chart summary (used on `home.html`, `carta.html`)
+- `POST /carta-natal/resumen` — free/teaser natal chart summary (used on `link-gratis.html`, `carta.html`)
 - `POST /carta-natal/compra` — submits full purchase/report request data (used on `gracias.html`, replaces a
   previous Google Sheets integration — keep it calling the API directly, don't reintroduce a Sheets webhook)
 - `POST /carta-natal/data` — full report payload consumed by the web report renderers (`reporte.js`,
@@ -36,7 +37,7 @@ Key endpoints used across the site:
 
 Every page that talks to the API duplicates its own `API_BASE` constant and its own fetch/error-handling
 logic — there's no shared JS module or build pipeline, so when changing an endpoint contract, grep for
-`API_BASE` and update every page that embeds it (`home.html`, `carta.html`, `gracias.html`, `reporte.js`,
+`API_BASE` and update every page that embeds it (`link-gratis.html`, `carta.html`, `gracias.html`, `reporte.js`,
 `reporte-impresion.js`).
 
 ## Funnel / page map
@@ -45,12 +46,21 @@ The pages form a marketing → free-teaser → purchase → report funnel. They 
 each with inline `<style>` and inline `<script>` (except the two report pages, which pull in external `.js`
 files):
 
-- `index.html` — short/lean landing page variant (dark theme, minimal).
-- `home.html` — longer landing page variant with its own CSS custom properties (`--gold`, `--cream`, etc.),
-  the free-summary form (`#form-gratis` / `#natalFormGratis` → `/carta-natal/resumen`), and a "share your Big
-  Three" card generated client-side with `html2canvas` and downloaded as a PNG.
+- `link.html` (served at `/link`, the site root redirects here) — Linktree-style entry page (light/gold
+  theme), stage 2 of the "Astrea funnel": logo, tagline, three link cards (premium product on Hotmart,
+  free chart at `/link-gratis`, and a `/proximamente` placeholder for the not-yet-built full site), plus a
+  TikTok/WhatsApp icon row. No FAQ here — it lives on `/link-gratis`.
+- `link-gratis.html` (served at `/link-gratis`, formerly `home.html`) — longer landing page variant with
+  its own CSS custom properties (`--gold`, `--cream`, etc., now a light/gold palette instead of the
+  original dark theme), the free-summary form (`#form-gratis` / `#natalFormGratis` → `/carta-natal/resumen`),
+  the FAQ section (merged from the old `index.html` + `home.html` FAQs), and a "share your Big Three" card
+  generated client-side with `html2canvas` and downloaded as a PNG — that card intentionally keeps its own
+  hardcoded dark navy/gold colors (`#0B1220`/`#F4EEDF`/`#D4B172`), independent of the page's light theme,
+  since the JS captures it with a hardcoded dark `backgroundColor`.
+- `proximamente.html` (served at `/proximamente`) — placeholder for the future redesigned main site (stage
+  3 of the funnel, not built yet); links back to `/link` and `/link-gratis`.
 - `carta.html` — standalone "generate your free chart" page; duplicates the `#natalFormGratis` flow and
-  html2canvas share-card logic from `home.html`.
+  html2canvas share-card logic from `link-gratis.html`. Still on the original dark theme (not reskinned).
 - `gracias.html` — post-purchase data-collection form (name, birth date/time, city, country) that POSTs to
   `/carta-natal/compra`.
 - `reporte.html` + `reporte.js` — web view of the paid report, reads chart params from the URL query string
@@ -69,6 +79,10 @@ files):
 
 ## Conventions worth knowing
 
+- Two visual themes currently coexist in the repo: the original dark navy/gold theme (`carta.html`,
+  `gracias.html`, `reporte.html`, `reporte-impresion.html`) and a newer light cream/gold theme (`link.html`,
+  `link-gratis.html`, `proximamente.html`), part of an in-progress funnel redesign. Don't assume one global
+  palette — check which theme a given page uses before reusing colors/CSS across files.
 - Astrological symbol tables (`SIMBOLOS`, sign lists, Roman numeral house labels) are duplicated across
   `reporte.js`, `reporte-impresion.js`, and `rueda-natal.js` — keep them in sync if adding/renaming a body or
   changing a glyph.
