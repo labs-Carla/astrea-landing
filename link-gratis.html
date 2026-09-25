@@ -9,15 +9,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #FBF6EC;
-    --cream-deep: #F3EAD8;
-    --gold: #8C5F24;
-    --gold-soft: #D4A85C;
-    --ink: #241C10;
-    --ink-soft: #5A4E3B;
-    --hairline: rgba(140, 95, 36, 0.3);
-    --lila: #7A5CA6;
-    --rosa: #A83D5F;
+    --cream: #F4EDE1;
+    --cream-deep: #E8DCC8;
+    --gold: #80602F;
+    --gold-soft: #D4B172;
+    --ink: #1D1A15;
+    --ink-soft: #5E5547;
+    --hairline: rgba(176, 138, 79, 0.35);
+    --lila: #8E8065;
+    --rosa: #9A624E;
+    --night: #0B1220;
+    --night-deep: #070B14;
+    --night-soft: #141D30;
+    --ivory: #FBF7EF;
+    --gold-light: #D4B172;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1060,6 +1065,312 @@
     .big-three { flex-direction: column; }
     .big-three-item { flex-direction: row; text-align: left; }
   }
+
+  /* Astrea · nueva dirección visual grecorromana */
+  html { scroll-padding-top: 24px; }
+  body {
+    background: var(--night-deep) url("universo-assets/img/cielo-noche.webp") center top / cover fixed;
+    color: var(--ink);
+    position: relative;
+    isolation: isolate;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(7, 11, 20, .45), rgba(7, 11, 20, .86) 45%, #070B14 100%);
+  }
+  .wrap {
+    width: min(100% - 40px, 1120px);
+    max-width: none;
+    padding: 28px 0 64px;
+  }
+  .site-header { justify-content: flex-start !important; margin-bottom: 0; }
+  .logo-mini {
+    color: var(--ivory);
+    font-weight: 400;
+    font-size: 25px;
+    letter-spacing: .3em;
+  }
+  .logo-mini .sub {
+    color: var(--gold-light);
+    font-size: 8px;
+    letter-spacing: .42em;
+    margin-top: 7px;
+  }
+  .hero {
+    min-height: 440px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    isolation: isolate;
+    text-align: left;
+    padding: 72px 48% 82px 0;
+    margin: 0 0 36px;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -22px -4% -12px 38%;
+    background: url("universo-assets/img/hero-escultura.webp") right center / auto 112% no-repeat;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+    opacity: .95;
+  }
+  .hero-titulo {
+    max-width: 12ch;
+    font-weight: 400;
+    font-size: clamp(3rem, 5.3vw, 5.2rem);
+    line-height: .99;
+    color: var(--ivory);
+    text-wrap: balance;
+  }
+  .hero-titulo em { color: var(--gold-light); }
+  .hero-subtitulo {
+    max-width: 440px;
+    margin: 22px 0 0;
+    font-size: 1rem;
+    color: rgba(244, 237, 225, .76);
+  }
+  .scroll-indicador {
+    border-color: rgba(212, 177, 114, .5);
+    color: var(--gold-light);
+    margin-top: 28px;
+  }
+  .eyebrow { margin: 58px 0 20px; }
+  .eyebrow-line {
+    font-size: clamp(1.65rem, 3vw, 2.25rem);
+    font-weight: 400;
+    font-style: normal;
+    color: var(--gold-light);
+    text-wrap: balance;
+  }
+  .que-es {
+    align-items: center;
+    gap: 28px;
+    padding: clamp(24px, 5vw, 48px);
+    margin: 0;
+    background: var(--cream);
+    border: 1px solid var(--hairline);
+    border-radius: 28px 28px 4px 4px;
+    box-shadow: 0 20px 55px rgba(0, 0, 0, .22);
+  }
+  .que-es-icono { width: 100px; height: 100px; min-width: 100px; }
+  .que-es-titulo { color: var(--gold); font-size: 1.65rem; }
+  .que-es-texto { font-size: .93rem; }
+  #form-gratis {
+    width: min(100%, 790px);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin: 42px auto 0;
+    padding: clamp(24px, 4vw, 44px);
+    background: var(--cream);
+    border: 1px solid var(--hairline);
+    border-radius: 28px 28px 4px 4px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .28);
+  }
+  #form-gratis::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    right: 0;
+    width: 34%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--cream) 0%, rgba(244, 237, 225, .24) 100%), url("universo-assets/img/arco-luna.webp") center / cover;
+    opacity: .34;
+    pointer-events: none;
+  }
+  #form-gratis .eyebrow { margin: 0 0 8px; text-align: left; }
+  #form-gratis .eyebrow-line { color: var(--ink); }
+  .form-card form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 20px;
+    max-width: 650px;
+  }
+  .campo label { color: var(--gold); }
+  .campo input, .campo select {
+    min-height: 48px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, .7);
+  }
+  .campo input:focus, .campo select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(176, 138, 79, .15);
+  }
+  .form-card form .btn-generar { grid-column: 1 / -1; }
+  .btn-generar {
+    border-radius: 3px;
+    background: var(--night);
+    color: var(--ivory);
+    box-shadow: 0 10px 24px rgba(7, 11, 20, .2);
+    transition: background .25s ease, transform .25s ease;
+  }
+  .btn-generar:hover { background: var(--night-soft); transform: translateY(-1px); }
+  .form-nota { text-align: left; }
+  .loading-carta {
+    padding: 34px;
+    background: var(--cream);
+    border-radius: 24px;
+  }
+  .loading-barra { height: 4px; background: var(--hairline); }
+  .loading-barra-fill { background: var(--gold); }
+  .resultado-carta {
+    margin-top: 46px;
+    padding: clamp(24px, 4vw, 48px);
+    background: var(--cream);
+    border: 1px solid var(--hairline);
+    border-radius: 28px 28px 4px 4px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .3);
+  }
+  #saludo-nombre { color: var(--gold) !important; }
+  #resultado-carta .eyebrow { margin-top: 24px; }
+  #resultado-carta .eyebrow-line { color: var(--ink); }
+  .seccion-desplegable {
+    padding: 16px 18px;
+    background: var(--ivory);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+  }
+  .seccion-desplegable summary { color: var(--ink); }
+  .rueda-planeta-simbolo { fill: var(--ink); }
+  .big-three { gap: 12px; }
+  .big-three-item, .esencia-card {
+    background: var(--ivory);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    box-shadow: none;
+  }
+  .btn-compartir { border-radius: 3px; color: var(--gold); }
+  .btn-compartir:hover { background: var(--gold); color: var(--ivory); }
+  .aviso-parcial { color: var(--gold); }
+  .valor-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .valor-card {
+    background: var(--cream);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    box-shadow: none;
+    padding: 24px;
+  }
+  .valor-card .comilla { color: var(--gold); }
+  .valor-card p { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; line-height: 1.4; }
+  .comparacion { align-items: stretch; gap: 18px; }
+  .comparacion-col {
+    padding: 28px 24px;
+    background: var(--cream);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    box-shadow: none;
+  }
+  .comparacion-col.completo {
+    background: var(--night);
+    color: var(--ivory);
+    border-color: var(--gold);
+    box-shadow: inset 0 0 0 5px var(--night), inset 0 0 0 6px rgba(212, 177, 114, .3);
+  }
+  .comparacion-col.completo .comparacion-titulo,
+  .comparacion-col.completo .comparacion-lista li { color: var(--ivory); }
+  .comparacion-col.completo .comparacion-lista li.si::before { color: var(--gold-light); }
+  .badge-recomendado { border-radius: 3px; background: var(--gold-light); }
+  .card-premium {
+    display: grid;
+    grid-template-columns: minmax(220px, .7fr) 1.3fr;
+    column-gap: clamp(28px, 5vw, 64px);
+    align-items: start;
+    padding: clamp(28px, 5vw, 56px);
+    background: var(--cream);
+    border: 1px solid var(--hairline);
+    border-radius: 28px 28px 4px 4px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .28);
+  }
+  .premium-media {
+    grid-column: 1;
+    grid-row: 1 / span 8;
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    background: var(--night);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    box-shadow: 0 22px 35px rgba(7, 11, 20, .24);
+  }
+  .premium-media img { border-radius: 1px; }
+  .premium-tags, .premium-eyebrow, .premium-titulo, .premium-divider,
+  .premium-desc, .premium-benefits, .cta-comprar, .pago-nota { grid-column: 2; }
+  .premium-tags { justify-content: flex-start; padding: 0 0 12px; }
+  .premium-eyebrow { justify-content: flex-start; margin-top: 12px; color: var(--gold); }
+  .premium-titulo { text-align: left; font-size: 2.8rem; }
+  .premium-divider { text-align: left; color: var(--gold); }
+  .premium-desc { text-align: left; margin-left: 0; }
+  .premium-benefits li { border-color: var(--hairline); }
+  .benefit-icon { border-color: var(--hairline); color: var(--gold); }
+  .cta-comprar {
+    border-radius: 3px;
+    background: var(--gold-light);
+    color: var(--night);
+    box-shadow: 0 10px 24px rgba(7, 11, 20, .18);
+  }
+  .faq-glass {
+    padding: 8px 26px;
+    background: var(--cream);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    box-shadow: none;
+  }
+  .faq-glass .faq-item { border-color: var(--hairline); }
+  .faq-item summary::after { color: var(--gold); }
+  footer { margin-top: 60px; padding-top: 26px; border-top: 1px solid rgba(212, 177, 114, .24); }
+  .footer-brand { color: var(--gold-light); }
+  .disclaimer, .footer-copy { color: rgba(244, 237, 225, .62); }
+  .footer-copy a { color: var(--gold-light); }
+  .footer-divider .divider-line { background: rgba(212, 177, 114, .3); }
+  body > .wrap > div[style*="text-align: center"] span { color: var(--gold-light) !important; }
+  body > .wrap > div[style*="display: flex"] a {
+    background: var(--cream) !important;
+    border: 1px solid var(--hairline) !important;
+    border-radius: 3px !important;
+  }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  @media (max-width: 760px) {
+    .wrap { width: min(100% - 32px, 560px); padding-top: 22px; }
+    .hero { min-height: 440px; padding: 72px 0 60px; }
+    .hero::before {
+      inset: 0 -28% 0 22%;
+      background-position: right center;
+      background-size: auto 100%;
+      opacity: .56;
+    }
+    .hero-titulo { max-width: 10ch; font-size: clamp(3rem, 11vw, 4.3rem); }
+    .hero-subtitulo { max-width: 360px; margin-left: 0; font-size: .92rem; }
+    .eyebrow { margin-top: 42px; }
+    .que-es { gap: 18px; padding: 24px; }
+    .que-es-icono { width: 70px; height: 70px; min-width: 70px; }
+    #form-gratis::before { width: 40%; opacity: .2; }
+    .form-card form { gap: 15px; }
+    .valor-cards { grid-template-columns: 1fr; }
+    .card-premium { display: flex; flex-direction: column; align-items: stretch; }
+    .premium-media { width: min(70%, 280px); margin-bottom: 10px; }
+    .premium-titulo { text-align: center; }
+    .premium-divider { text-align: center; }
+    .premium-desc { text-align: center; margin-inline: auto; }
+    .premium-tags, .premium-eyebrow { justify-content: center; }
+  }
+  @media (max-width: 560px) {
+    .form-card form { grid-template-columns: 1fr; }
+    .form-card form .btn-generar { grid-column: 1; }
+    .comparacion { flex-direction: column; gap: 18px; }
+    .comparacion-col { padding: 26px 22px; }
+    .big-three { flex-direction: column; }
+    .big-three-item { flex-direction: row; text-align: left; }
+    .que-es { align-items: flex-start; }
+  }
 </style>
 </head>
 <body>
@@ -1445,7 +1756,7 @@
 
     const em = resumen.elemento_modalidad;
     if (em) {
-      const colores = { Fuego: '#E091A8', Tierra: '#D4B172', Aire: '#B39DDB', Agua: '#8FBFA0' };
+      const colores = { Fuego: '#C77A52', Tierra: '#B08A4F', Aire: '#A9A18F', Agua: '#738C87' };
       const conteo = em.conteo_elementos || {};
       const maximo = Math.max(1, ...Object.values(conteo));
 
