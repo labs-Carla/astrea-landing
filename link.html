@@ -9,207 +9,192 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --cream: #FBF6EC;
-    --cream-deep: #F3EAD8;
-    --gold: #8C5F24;
-    --gold-soft: #D4A85C;
-    --ink: #241C10;
-    --ink-soft: #5A4E3B;
-    --hairline: rgba(140, 95, 36, 0.3);
+    --night: #090F1B;
+    --night-soft: #111A29;
+    --ivory: #F4EDE1;
+    --paper: #FBF7EF;
+    --ink: #201B14;
+    --ink-soft: #655B4D;
+    --gold: #B08A4F;
+    --gold-light: #D8B879;
+    --line: rgba(176, 138, 79, .38);
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { -webkit-text-size-adjust: 100%; }
-
+  *, *::before, *::after { box-sizing: border-box; }
+  html { min-height: 100%; -webkit-text-size-adjust: 100%; }
   body {
-    background-color: var(--cream);
-    background-image: url("assets/fondo-claro.png");
-    background-size: cover;
-    background-position: center top;
-    background-attachment: fixed;
-    color: var(--ink);
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
+    min-height: 100vh;
+    margin: 0;
+    padding: max(44px, 8vh) 20px 32px;
+    background: var(--night);
+    color: var(--ivory);
+    font: 16px/1.55 'DM Sans', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
-    padding: 150px 20px 48px;
+    position: relative;
+    isolation: isolate;
   }
-
+  body::before, body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+  body::before {
+    background: url("universo-assets/img/cielo-noche.webp") center / cover;
+    opacity: .55;
+  }
+  body::after {
+    background:
+      linear-gradient(180deg, rgba(7, 11, 20, .24), rgba(7, 11, 20, .78) 55%, #070B14 100%),
+      url("universo-assets/img/hero-escultura.webp") right 38% / min(560px, 100vw) auto no-repeat;
+    opacity: .62;
+    mask-image: linear-gradient(#000 0%, #000 56%, transparent 100%);
+  }
   .wrap {
-    max-width: 400px;
+    width: min(100%, 500px);
     margin: 0 auto;
   }
-
-  .logo {
-    text-align: center;
-  }
-
+  .logo { text-align: center; }
   .logo-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 500;
-    font-size: 36px;
-    letter-spacing: 0.04em;
-    color: var(--ink);
+    display: inline-block;
+    font: 500 34px/.95 'Cormorant Garamond', Georgia, serif;
+    letter-spacing: .32em;
+    padding-left: .32em;
+    color: var(--ivory);
   }
-
   .logo-sub {
     display: block;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    font-size: 11px;
-    letter-spacing: 0.4em;
+    margin-top: 10px;
+    font: 500 9px/1.4 'DM Sans', sans-serif;
+    letter-spacing: .42em;
     text-transform: uppercase;
-    color: var(--gold);
-    margin-top: 6px;
+    color: var(--gold-light);
   }
-
   .tagline {
     text-align: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 16px;
-    color: var(--ink-soft);
-    margin: 18px auto 30px;
-    max-width: 280px;
+    font: italic 1.25rem/1.25 'Cormorant Garamond', Georgia, serif;
+    color: rgba(244, 237, 225, .9);
+    margin: 22px auto 12px;
+    max-width: 340px;
   }
-
+  .intro-note {
+    text-align: center;
+    color: rgba(244, 237, 225, .65);
+    font-size: .72rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+  }
   .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: grid;
+    gap: 13px;
   }
-
   .link-card {
     display: flex;
     align-items: center;
-    gap: 16px;
-    background: #FDF9F0;
-    border: none;
-    border-radius: 20px;
-    padding: 16px 20px;
+    gap: 15px;
+    min-height: 88px;
+    position: relative;
+    overflow: hidden;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 15px 18px;
     text-decoration: none;
     color: inherit;
-    box-shadow: 0 6px 18px rgba(140, 95, 36, 0.1);
+    box-shadow: 0 16px 38px rgba(0, 0, 0, .24);
+    transition: transform .25s ease, border-color .25s ease, background-color .25s ease;
   }
-
+  .link-card::after {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px solid rgba(176, 138, 79, .14);
+    pointer-events: none;
+  }
+  .link-card:hover { transform: translateY(-2px); border-color: var(--gold); background: #FFF9EF; }
+  .link-card:focus-visible, .social-btn:focus-visible, .footer-copy a:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 4px; }
+  .link-card--featured { background: linear-gradient(115deg, #172235, #0C1421); color: var(--ivory); border-color: var(--gold); }
+  .link-card--featured:hover { background: linear-gradient(115deg, #1C2A40, #101B2C); }
   .link-card-icon {
     flex-shrink: 0;
-    width: 56px;
-    height: 56px;
-    background: var(--cream-deep);
+    width: 48px;
+    height: 48px;
+    background: rgba(176, 138, 79, .12);
+    border: 1px solid var(--line);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--gold);
   }
-
-  .link-card-body {
-    flex: 1;
-    min-width: 0;
-  }
-
+  .link-card--featured .link-card-icon { color: var(--gold-light); border-color: rgba(216, 184, 121, .45); background: rgba(216, 184, 121, .08); }
+  .link-card-body { flex: 1; min-width: 0; }
   .link-card-title {
     display: block;
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    font-size: 18px;
+    font: 500 1.28rem/1.15 'Cormorant Garamond', Georgia, serif;
     color: var(--ink);
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
-
+  .link-card--featured .link-card-title { color: var(--ivory); }
   .link-card-desc {
     display: block;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-size: .75rem;
     color: var(--ink-soft);
-    line-height: 1.4;
+    line-height: 1.45;
   }
-
-  .link-card-arrow {
-    flex-shrink: 0;
-    color: var(--gold);
-  }
-
+  .link-card--featured .link-card-desc { color: rgba(244, 237, 225, .67); }
+  .link-card-arrow { flex-shrink: 0; color: var(--gold); transition: transform .25s ease; }
+  .link-card:hover .link-card-arrow { transform: translateX(3px); }
   .divider {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    margin: 34px 0 20px;
-  }
-
-  .divider-line {
-    flex: 1;
-    height: 1px;
-    background: var(--hairline);
-    max-width: 90px;
-  }
-
-  .divider-glyph {
-    color: var(--gold);
-    font-size: 13px;
-    letter-spacing: 4px;
-  }
-
-  .socials {
-    display: flex;
-    justify-content: center;
     gap: 14px;
+    margin: 30px 0 18px;
   }
-
+  .divider-line { flex: 1; height: 1px; max-width: 120px; background: linear-gradient(90deg, transparent, var(--line)); }
+  .divider-line:last-child { transform: scaleX(-1); }
+  .divider-glyph { color: var(--gold-light); font-size: 13px; letter-spacing: 4px; }
+  .socials { display: flex; justify-content: center; gap: 12px; }
   .social-btn {
     width: 44px;
     height: 44px;
-    border: 1px solid var(--gold);
+    border: 1px solid rgba(216, 184, 121, .42);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--gold);
+    color: var(--gold-light);
     text-decoration: none;
+    background: rgba(10, 16, 28, .38);
+    transition: background-color .25s ease, transform .25s ease;
   }
-
+  .social-btn:hover { background: rgba(216, 184, 121, .12); transform: translateY(-2px); }
   footer {
-    margin-top: 44px;
+    margin-top: 34px;
     text-align: center;
   }
-
-  .footer-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-
+  .footer-divider { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; }
   .footer-brand {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 500;
-    letter-spacing: 0.2em;
+    letter-spacing: .28em;
     text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 8px;
+    color: var(--gold-light);
+    margin-bottom: 9px;
   }
-
   .disclaimer {
-    font-size: 10px;
-    color: var(--ink-soft);
+    font-size: .68rem;
+    color: rgba(244, 237, 225, .6);
     line-height: 1.5;
-    opacity: 0.85;
     max-width: 320px;
     margin: 0 auto 10px;
   }
-
-  .footer-copy {
-    font-size: 10px;
-    color: var(--ink-soft);
-    opacity: 0.7;
+  .footer-copy { font-size: .68rem; color: rgba(244, 237, 225, .52); }
+  .footer-copy a { color: var(--gold-light); text-decoration: none; }
+  @media (max-width: 380px) {
+    body { padding-inline: 15px; }
+    .link-card { gap: 11px; padding-inline: 13px; }
+    .link-card-icon { width: 43px; height: 43px; }
   }
-
-  .footer-copy a {
-    color: var(--gold);
-    text-decoration: none;
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
   }
 </style>
 </head>
@@ -222,9 +207,10 @@
   </div>
 
   <p class="tagline">Conócete. Entiéndete.<br>Transforma tu destino.</p>
+  <p class="intro-note">Tu mapa, tu historia</p>
 
   <div class="cards">
-    <a href="https://pay.hotmart.com/B106744064D?bid=1784070968525" class="link-card">
+    <a href="https://pay.hotmart.com/B106744064D?bid=1784070968525" class="link-card link-card--featured">
       <span class="link-card-icon">
         <svg viewBox="0 0 24 24" style="width: 27px; height: 27px; fill: currentColor;">
           <path d="M12 2c.4 3.6 1 5.6 2 6.8 1.2 1.2 3.2 1.8 6.8 2.2-3.6.4-5.6 1-6.8 2.2-1 1.2-1.6 3.2-2 6.8-.4-3.6-1-5.6-2-6.8-1.2-1.2-3.2-1.8-6.8-2.2 3.6-.4 5.6-1 6.8-2.2 1-1.2 1.6-3.2 2-6.8z"></path>
@@ -255,7 +241,7 @@
       </span>
     </a>
 
-    <a href="/proximamente" class="link-card">
+    <a href="/universo" class="link-card">
       <span class="link-card-icon">
         <svg viewBox="0 0 24 24" style="width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;">
           <path d="M3 8L12 3l9 5"></path>

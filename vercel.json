@@ -1,7 +1,16 @@
 {
   "cleanUrls": true,
   "redirects": [
-    { "source": "/", "destination": "/link", "permanent": false }
+    {
+      "source": "/",
+      "destination": "/universo",
+      "permanent": false
+    },
+    {
+      "source": "/proximamente",
+      "destination": "/universo",
+      "permanent": false
+    }
   ],
   "rewrites": [
     {

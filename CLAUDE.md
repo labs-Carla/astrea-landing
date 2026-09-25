@@ -11,8 +11,8 @@ static file server to preview changes.
 
 ## Deployment
 
-Deployed on Vercel. `vercel.json` redirects the root (`/`) to `/link` (307, temporary — this is a
-transitional funnel setup, see below) and defines proxy rewrites to a separate backend/admin app
+Deployed on Vercel. `vercel.json` redirects the root (`/`) to `/universo` (307, temporary) and defines
+proxy rewrites to a separate backend/admin app
 (`astrea-informe-react.vercel.app`):
 - `/r/:token` and `/admin` → proxied to the React admin/report app
 - `/assets/:path*` → proxied so that app's CSS/JS assets load correctly
@@ -38,7 +38,7 @@ Key endpoints used across the site:
 Every page that talks to the API duplicates its own `API_BASE` constant and its own fetch/error-handling
 logic — there's no shared JS module or build pipeline, so when changing an endpoint contract, grep for
 `API_BASE` and update every page that embeds it (`link-gratis.html`, `carta.html`, `gracias.html`, `reporte.js`,
-`reporte-impresion.js`).
+`reporte-impresion.js`, `universo-assets/universo.js`).
 
 ## Funnel / page map
 
@@ -46,7 +46,7 @@ The pages form a marketing → free-teaser → purchase → report funnel. They 
 each with inline `<style>` and inline `<script>` (except the two report pages, which pull in external `.js`
 files):
 
-- `link.html` (served at `/link`, the site root redirects here) — Linktree-style entry page (light/gold
+- `link.html` (served at `/link`) — Linktree-style entry page (light/gold
   theme), stage 2 of the "Astrea funnel": logo, tagline, three link cards (premium product on Hotmart,
   free chart at `/link-gratis`, and a `/proximamente` placeholder for the not-yet-built full site), plus a
   TikTok/WhatsApp icon row. No FAQ here — it lives on `/link-gratis`.
@@ -57,8 +57,16 @@ files):
   generated client-side with `html2canvas` and downloaded as a PNG — that card intentionally keeps its own
   hardcoded dark navy/gold colors (`#0B1220`/`#F4EEDF`/`#D4B172`), independent of the page's light theme,
   since the JS captures it with a hardcoded dark `backgroundColor`.
-- `proximamente.html` (served at `/proximamente`) — placeholder for the future redesigned main site (stage
-  3 of the funnel, not built yet); links back to `/link` and `/link-gratis`.
+- `universo.html` (served at `/universo`, linked from the "Conoce Astrea" card on `/link`) — the full
+  brand landing (stage 3 of the funnel): hero, free-chart generator (`#natal-form` → `/carta-natal/resumen`,
+  result in three tabs using `generarRuedaSVG`), product, sample-page carousel, pricing, testimonials,
+  FAQ, closing. Unlike the other pages, its CSS/JS live in separate files under `universo-assets/`
+  (`universo.css` holds the design tokens and components; `universo.js` holds the behavior, including its
+  own `API_BASE`). Landing images and their manifest are in `universo-assets/img/`. New assets go in
+  `universo-assets/`, not `assets/`, because
+  `/assets/*` is proxied to the React app.
+- `proximamente.html` — old placeholder for the main site; `/proximamente` now redirects to `/universo`
+  in `vercel.json`.
 - `carta.html` — standalone "generate your free chart" page; duplicates the `#natalFormGratis` flow and
   html2canvas share-card logic from `link-gratis.html`. Still on the original dark theme (not reskinned).
 - `gracias.html` — post-purchase data-collection form (name, birth date/time, city, country) that POSTs to
