@@ -30,8 +30,10 @@ const API_BASE = "https://astrea-api-production.up.railway.app/api/v1";
 
 Key endpoints used across the site:
 - `POST /carta-natal/resumen` — free/teaser natal chart summary (used on `link-gratis.html`, `carta.html`)
-- `POST /carta-natal/compra` — submits full purchase/report request data (used on `gracias.html`, replaces a
-  previous Google Sheets integration — keep it calling the API directly, don't reintroduce a Sheets webhook)
+- `POST /carta-natal/orden` — creates a purchase order with the birth data BEFORE payment (used on
+  `comprar.html`); returns `orden_id`, sent to Hotmart as `sck=astrea-orden-<id>`. There is no Hotmart
+  webhook: the admin confirms payment manually in `/admin` ("Esperando pago" tab)
+- `POST /carta-natal/compra` — legacy post-payment submission (formerly from `gracias.html`); no page uses it now
 - `POST /carta-natal/data` — full report payload consumed by the web report renderers (`reporte.js`,
   `reporte-impresion.js`)
 
@@ -69,8 +71,12 @@ files):
   in `vercel.json`.
 - `carta.html` — standalone "generate your free chart" page; duplicates the `#natalFormGratis` flow and
   html2canvas share-card logic from `link-gratis.html`. Still on the original dark theme (not reskinned).
-- `gracias.html` — post-purchase data-collection form (name, birth date/time, city, country) that POSTs to
-  `/carta-natal/compra`.
+- `comprar.html` (served at `/comprar`) — step 1 of the purchase: birth-data form (name, email, birth
+  date/time, city, country) that POSTs to `/carta-natal/orden` and then redirects to the Hotmart checkout
+  with `email`/`name` prefilled. Every "buy" CTA (`link.html`, `link-gratis.html`, `universo.html`) points
+  here, never straight to `pay.hotmart.com`.
+- `gracias.html` — Hotmart's post-purchase thank-you page; confirmation only (data was already collected
+  on `comprar.html`), with a WhatsApp fallback.
 - `reporte.html` + `reporte.js` — web view of the paid report, reads chart params from the URL query string
   (`nombre`, `fecha_hora_local`, `ciudad`, `pais`), POSTs to `/carta-natal/data`, and renders the report as a
   sequence of `render*()` section functions (portada, rueda natal, elementos/dignidades, planetas, aspectos,
