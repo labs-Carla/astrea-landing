@@ -127,7 +127,7 @@ ${cuerpo}
     <p><a href="/privacidad">Política de privacidad</a> · © ${new Date().getFullYear()} Astrea Charts</p>
   </div>
 </footer>
-${scripts.map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
+${["/tienda-assets/header.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
 </body>
 </html>
 `;

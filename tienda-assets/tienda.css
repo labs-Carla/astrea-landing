@@ -434,3 +434,85 @@
 @media (min-width: 860px) { .escena--panoramica .escena__constelacion { display: none; } }
 /* La panorámica mide 709 px de alto: el hero no pasa de 720 px para mostrarla a tamaño real, sin ampliarla. */
 @media (min-width: 860px) { .escena--panoramica { min-height: min(80svh, 720px); } }
+
+/* ==========================================================================
+   Navegación de vidrio (todo el sitio). Una cápsula flotante de azul noche
+   translúcido con filo dorado: deja ver la escena detrás sin perder
+   legibilidad. Sobre el hero es más transparente; al hacer scroll
+   (header.js agrega .is-scrolled) gana opacidad para leerse sobre las
+   secciones claras. Sin backdrop-filter, usa un fondo más opaco.
+   ========================================================================== */
+.site-header.site-header--tienda,
+.site-header.site-header--portada {
+  position: fixed; inset: 0 0 auto 0; z-index: 50;
+  padding: calc(var(--s-3) + env(safe-area-inset-top, 0px)) var(--s-3) 0;
+  background: none; border: 0; pointer-events: none;
+  transition: padding .35s var(--ease);
+}
+.site-header.site-header--tienda .site-header__inner {
+  pointer-events: auto;
+  max-width: calc(var(--shell) + var(--s-6));
+  padding: var(--s-2) var(--s-2) var(--s-2) var(--s-5);
+  border-radius: 999px;
+  background: rgba(11, 18, 32, .5);
+  border: 1px solid rgba(212, 177, 114, .24);
+  box-shadow: 0 10px 30px -14px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .06);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  transition: background-color .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.site-header.site-header--portada:not(.is-scrolled) .site-header__inner {
+  background: rgba(11, 18, 32, .28);
+  border-color: rgba(237, 229, 214, .2);
+}
+.site-header.site-header--tienda.is-scrolled .site-header__inner {
+  background: rgba(7, 11, 20, .74);
+  border-color: rgba(212, 177, 114, .32);
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .site-header.site-header--tienda .site-header__inner,
+  .site-header.site-header--portada:not(.is-scrolled) .site-header__inner { background: rgba(7, 11, 20, .9); }
+}
+
+/* Enlaces: texto marfil, punto dorado bajo la página actual. */
+.site-header--tienda .site-nav { gap: var(--s-1); }
+.site-header--tienda .site-nav a {
+  position: relative; padding: var(--s-2) var(--s-3); border-radius: 999px;
+  color: var(--ink-on-dark); text-shadow: none; font-size: 0.84rem; letter-spacing: .01em;
+  transition: background-color .25s var(--ease), color .25s var(--ease);
+}
+.site-header--tienda .site-nav a:hover { background: rgba(237, 229, 214, .08); color: var(--gold-light); }
+.site-header--tienda .site-nav a[aria-current="page"] { color: var(--gold-light); }
+.site-header--tienda .site-nav a[aria-current="page"]::after {
+  content: ""; position: absolute; left: 50%; bottom: 2px; width: 4px; height: 4px;
+  margin-left: -2px; border-radius: 50%; background: var(--gold-light);
+}
+.site-header--tienda .marca__texto { font-size: 1.15rem; }
+.site-header--tienda .marca__estrella { width: 22px; height: 22px; }
+.site-header--tienda .btn--ai { min-height: 40px; }
+
+/* Menú móvil: botón redondo y panel del mismo vidrio. */
+.site-header--tienda .menu-movil > summary {
+  width: 40px; height: 40px; border-radius: 50%;
+  border-color: rgba(237, 229, 214, .22); background: rgba(237, 229, 214, .06);
+}
+.site-header--tienda .menu-movil__panel {
+  top: calc(100% + var(--s-3)); border-radius: var(--r-card);
+  background: rgba(11, 18, 32, .82); border-color: rgba(212, 177, 114, .24);
+  -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%);
+}
+
+/* El contenido arranca debajo de la cápsula flotante. */
+.pagina-cabecera { padding-top: calc(112px + env(safe-area-inset-top, 0px)); }
+
+@media (min-width: 860px) {
+  .site-header.site-header--tienda { padding-top: calc(var(--s-4) + env(safe-area-inset-top, 0px)); }
+  .site-header.site-header--tienda.is-scrolled { padding-top: calc(var(--s-2) + env(safe-area-inset-top, 0px)); }
+}
+@media (max-width: 599px) {
+  .site-header.site-header--tienda .site-header__inner { padding-left: var(--s-4); gap: var(--s-3); }
+  .site-header--tienda .btn--ai { padding-inline: var(--s-3); }
+}
+/* Sobre secciones claras el vidrio translúcido se vuelve gris: al hacer scroll, azul noche casi sólido. */
+.site-header.site-header--tienda.is-scrolled .site-header__inner { background: rgba(11, 18, 32, .9); }
+.site-header--tienda .menu-movil__panel { background: rgba(11, 18, 32, .94); }
