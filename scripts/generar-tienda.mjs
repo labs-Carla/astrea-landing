@@ -28,7 +28,6 @@ const SPRITE = SPRITE_UNIVERSO.replace("</svg>", `  <symbol id="i-menu" viewBox=
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
   <symbol id="i-orbita" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.2"/><ellipse cx="12" cy="12" rx="10.5" ry="3.6" transform="rotate(-24 12 12)"/></symbol>
   <symbol id="i-loto" viewBox="0 0 24 24"><path d="M12 19c-2.4-2-3.6-4.6-3.6-7.6S9.6 5.6 12 4c2.4 1.6 3.6 4.4 3.6 7.4S14.4 17 12 19z"/><path d="M12 19c-3.8.2-6.8-1.6-8.4-5.2 2.2-.8 4.4-.6 6.2.6M12 19c3.8.2 6.8-1.6 8.4-5.2-2.2-.8-4.4-.6-6.2.6"/></symbol>
-  <symbol id="i-estrella" viewBox="0 0 24 24"><path d="M12 1.5l1.6 8.9 8.9 1.6-8.9 1.6L12 22.5l-1.6-8.9L1.5 12l8.9-1.6z"/></symbol>
 </svg>`);
 
 const NAV = [
@@ -44,7 +43,7 @@ const proximos = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) !== "disponible")
 const principales = disponibles.filter((r) => r.principal);
 const tematicos = disponibles.filter((r) => !r.principal);
 
-const MARCA = `<svg class="marca__estrella" aria-hidden="true"><use href="#i-estrella"/></svg><span class="marca__texto">ASTREA<small>CHARTS</small></span>`;
+const MARCA = `<span class="marca__texto">ASTREA<small>CHARTS</small></span>`;
 
 function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null, indexable = true, imagen = "/universo-assets/img/hero-escultura.webp", portada = false, preload = "" }) {
   const actual = (href) => (href === ruta || (href !== "/" && ruta.startsWith(href + "/")) ? ' aria-current="page"' : "");

@@ -243,7 +243,6 @@
 
 /* ---------- Marca ---------- */
 .marca { display: inline-flex; align-items: center; gap: var(--s-2); text-decoration: none; color: var(--ink-on-dark); }
-.marca__estrella { width: 26px; height: 26px; fill: var(--gold-light); stroke: none; flex-shrink: 0; }
 .marca__texto { display: grid; font-family: var(--font-serif); font-weight: 500; font-size: 1.3rem; letter-spacing: 0.26em; line-height: 1; }
 .marca__texto small { font-family: var(--font-sans); font-size: 0.52rem; letter-spacing: 0.5em; margin-top: 4px; color: var(--ink-on-dark-soft); padding-left: 0.2em; }
 
