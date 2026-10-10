@@ -194,7 +194,7 @@ const paginas = {};
 // ---------------------------------------------------------------- portada (inicio)
 // Escena del hero. En móvil, arco-columnas (vertical: terraza, arcos, mar, montañas y cielo).
 // En escritorio se usa una panorámica sin texto si existe (tienda-assets/img/hero-escena-1600.webp
-// y -2400.webp, 16:9); si no, la misma escena vertical encuadrada.
+// y -2000.webp); si no, la misma escena vertical encuadrada.
 const HERO_PANORAMICA = existsSync(join(RAIZ, "tienda-assets/img/hero-escena-1600.webp"));
 const HERO_MOVIL = "/universo-assets/img/arco-columnas.webp";
 
@@ -232,12 +232,12 @@ paginas["index.html"] = layout({
   descripcion: "Reportes astrológicos personalizados: carta natal, amor, vocación, dinero, patrones, revolución solar y compatibilidad. Astronomía real, revisión humana y 5 preguntas en Astrea.ai.",
   imagen: HERO_PANORAMICA ? "/tienda-assets/img/hero-escena-1600.webp" : HERO_MOVIL,
   preload: HERO_PANORAMICA
-    ? `<link rel="preload" as="image" href="/tienda-assets/img/hero-escena-1600.webp" imagesrcset="/tienda-assets/img/hero-escena-1600.webp 1600w, /tienda-assets/img/hero-escena-2400.webp 2400w" imagesizes="100vw" media="(min-width: 860px)">
+    ? `<link rel="preload" as="image" href="/tienda-assets/img/hero-escena-1600.webp" imagesrcset="/tienda-assets/img/hero-escena-1600.webp 1600w, /tienda-assets/img/hero-escena-2000.webp 2000w" imagesizes="100vw" media="(min-width: 860px)">
 <link rel="preload" as="image" href="${HERO_MOVIL}" media="(max-width: 859px)">`
     : `<link rel="preload" as="image" href="${HERO_MOVIL}">`,
   cuerpo: `<section class="escena${HERO_PANORAMICA ? " escena--panoramica" : ""}" aria-labelledby="hero-titulo">
   <picture class="escena__fondo">
-    ${HERO_PANORAMICA ? `<source media="(min-width: 860px)" srcset="/tienda-assets/img/hero-escena-1600.webp 1600w, /tienda-assets/img/hero-escena-2400.webp 2400w" sizes="100vw">` : ""}
+    ${HERO_PANORAMICA ? `<source media="(min-width: 860px)" srcset="/tienda-assets/img/hero-escena-1600.webp 1600w, /tienda-assets/img/hero-escena-2000.webp 2000w" sizes="100vw">` : ""}
     <img src="${HERO_MOVIL}" alt="Terraza de mármol con arcos y columnas frente al mar y las montañas, bajo un cielo nocturno con luna y estrellas" width="1086" height="1448" fetchpriority="high" decoding="async">
   </picture>
   <svg class="escena__constelacion" viewBox="0 0 300 200" aria-hidden="true">

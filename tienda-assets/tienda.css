@@ -430,3 +430,5 @@
   .tarjeta-portada__precio { font-size: 1.15rem; }
   .escena { padding-top: calc(160px + env(safe-area-inset-top, 0px)); }
 }
+/* La panorámica ya trae su propio cielo zodiacal: sin constelación dibujada encima. */
+@media (min-width: 860px) { .escena--panoramica .escena__constelacion { display: none; } }
