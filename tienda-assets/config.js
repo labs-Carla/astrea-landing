@@ -10,9 +10,8 @@
  *   página (se ignora fuera de local).
  * - CHECKOUTS: producto de Hotmart por reporte. Un reporte SIN checkout aquí
  *   no se puede comprar, aunque el catálogo lo describa.
- * - ESTADO_PEDIDO_HABILITADO: el backend todavía no tiene un endpoint público
- *   de estado de pedido (ver docs/TIENDA.md). Mientras sea false, la página de
- *   pedido solo muestra "pago pendiente de confirmación".
+ * - ESTADO_PEDIDO_HABILITADO: /pedido consulta GET /carta-natal/orden/{referencia}/estado
+ *   (astrea-API #92). Con false, solo muestra "creado" o "pendiente de confirmación".
  */
 const PRODUCCION = {
   API_BASE: "https://astrea-api-production.up.railway.app/api/v1",
@@ -39,7 +38,7 @@ export const CHECKOUTS = {
   },
 };
 
-export const ESTADO_PEDIDO_HABILITADO = false;
+export const ESTADO_PEDIDO_HABILITADO = true;
 
 export const URL_ASTREA_AI = "https://app.astrea-charts.site";
 export const WHATSAPP = "https://wa.me/573132137456";
