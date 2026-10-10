@@ -258,3 +258,26 @@ test("cada reporte tiene su portada en los dos tamaños, y la usa su ficha", () 
     assert.ok(ficha.includes(`${r.portada}-480.webp`) && ficha.includes(`og:image" content="https://astrea-charts.site${r.portada}-960.webp`), r.slug);
   }
 });
+
+test("portada: hero, confianza, 7 reportes comprables, pasos, Astrea.ai y preguntas", () => {
+  const html = PAGINAS["index.html"];
+  assert.match(html, /<h1 class="escena__titulo" id="hero-titulo">Astrología para una vida <em>más consciente\.<\/em><\/h1>/);
+  assert.match(html, /href="\/reportes">Explorar reportes/);
+  assert.match(html, /href="\/universo#generador">Genera tu carta gratis/);
+  for (const t of ["Astronomía real", "Revisión humana", "Directo a tu correo", "Autoconocimiento"]) assert.ok(html.includes(`<strong>${t}</strong>`), t);
+  assert.match(html, /24–48 horas después de la confirmación del pago/);
+  for (const r of REPORTES) {
+    assert.ok(html.includes(`href="/comprar/${r.slug}"`), `compra ${r.slug}`);
+    assert.ok(html.includes(`href="/reportes/${r.slug}"`), `ficha ${r.slug}`);
+    assert.ok(html.includes(`${r.portada}-480.webp`), `portada ${r.slug}`);
+    assert.ok(html.includes(r.tarjeta), `texto ${r.slug}`);
+  }
+  for (const precio of ["USD 12", "USD 9", "USD 15"]) assert.ok(html.includes(precio));
+  for (const q of ["¿Cuáles son mis talentos principales según mi carta?", "¿Cómo puedo trabajar mejor mi Saturno en la carta?", "¿Qué viene para mí este año?"]) assert.ok(html.includes(q));
+  assert.equal((html.match(/<details>/g) || []).length, 6, "6 preguntas frecuentes");
+  assert.match(html, /¿Puedo pedir un reembolso\?/);
+  assert.ok(!/Testimonio pendiente|Nombre pendiente|★/.test(html), "sin testimonios inventados");
+  assert.ok(!/Historias reales/.test(html), "la sección de testimonios no se muestra sin testimonios reales");
+  assert.match(html, /tiktok\.com\/@astrea\.charts/);
+  assert.match(html, /fetchpriority="high"/, "el hero carga con prioridad");
+});
