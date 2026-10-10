@@ -10,6 +10,9 @@
  * - "revolucion_solar": ciudad y país donde la persona pasa su cumpleaños, y el año del ciclo.
  * - "segunda_persona": datos de nacimiento de la otra persona (hora opcional) y su consentimiento.
  *
+ * `portada`: base de las imágenes en tienda-assets/img (<slug>-480.webp y <slug>-960.webp,
+ * portadas verticales 2:3 de Astrea, 2026-10-10).
+ *
  * Entrega de todos: PDF por correo en 24–48 h tras confirmar el pago. La carta
  * natal se genera con el flujo de siempre; los otros 6 se preparan a mano.
  */
@@ -25,12 +28,12 @@ export const ENTREGA = "Lo preparamos a partir de tu carta, calculada con astron
 export const REPORTES = [
   {
     slug: "carta-natal",
+    portada: "/tienda-assets/img/carta-natal",
     nombre: "Carta natal completa",
     categoria: "Autoconocimiento",
     principal: true,
     eyebrow: "Producto principal",
     icono: "i-wheel",
-    portada: "/universo-assets/img/libro-tapa.webp",
     resumen: "Tu mapa, tu esencia, tu camino. Descubre qué revela tu carta natal sobre tu personalidad, tus emociones, tus talentos y tu manera de vivir.",
     descripcion: "Tu carta natal es un mapa del cielo calculado para la fecha, hora y lugar exactos de tu nacimiento. Esta lectura la recorre completa, en un lenguaje claro y profundo, para ayudarte a comprender tu historia y tu potencial.",
     explora: [
@@ -46,6 +49,7 @@ export const REPORTES = [
   },
   {
     slug: "amor",
+    portada: "/tienda-assets/img/amor",
     nombre: "Amor y vínculos",
     categoria: "Relaciones",
     eyebrow: "Relaciones",
@@ -65,6 +69,7 @@ export const REPORTES = [
   },
   {
     slug: "vocacion",
+    portada: "/tienda-assets/img/vocacion",
     nombre: "Vocación y propósito",
     categoria: "Carrera y propósito",
     eyebrow: "Carrera y propósito",
@@ -85,6 +90,7 @@ export const REPORTES = [
   },
   {
     slug: "dinero",
+    portada: "/tienda-assets/img/dinero",
     nombre: "Dinero y abundancia",
     categoria: "Recursos y valor propio",
     eyebrow: "Recursos y valor propio",
@@ -105,6 +111,7 @@ export const REPORTES = [
   },
   {
     slug: "patrones",
+    portada: "/tienda-assets/img/patrones",
     nombre: "Patrones y transformación",
     categoria: "Autoconocimiento profundo",
     eyebrow: "Autoconocimiento profundo",
@@ -125,6 +132,7 @@ export const REPORTES = [
   },
   {
     slug: "revolucion-solar",
+    portada: "/tienda-assets/img/revolucion-solar",
     nombre: "Revolución solar",
     categoria: "Ciclos y crecimiento",
     eyebrow: "Ciclos y crecimiento",
@@ -145,6 +153,7 @@ export const REPORTES = [
   },
   {
     slug: "compatibilidad",
+    portada: "/tienda-assets/img/compatibilidad",
     nombre: "Compatibilidad de pareja",
     categoria: "Relaciones",
     eyebrow: "Relaciones",

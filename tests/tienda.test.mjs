@@ -246,3 +246,15 @@ test("no se rompen las rutas existentes", () => {
   const gracias = readFileSync(new URL("../gracias.html", import.meta.url), "utf8");
   assert.match(gracias, /carta-natal\/compra/, "gracias conserva el formulario post-pago");
 });
+
+test("cada reporte tiene su portada en los dos tamaños, y la usa su ficha", () => {
+  for (const r of REPORTES) {
+    assert.match(r.portada, new RegExp(`^/tienda-assets/img/${r.slug}$`));
+    for (const ancho of [480, 960]) {
+      const archivo = new URL(`..${r.portada}-${ancho}.webp`, import.meta.url);
+      assert.ok(readFileSync(archivo).length > 10_000, `${r.slug}-${ancho}.webp`);
+    }
+    const ficha = PAGINAS[`reportes/${r.slug}.html`];
+    assert.ok(ficha.includes(`${r.portada}-480.webp`) && ficha.includes(`og:image" content="https://astrea-charts.site${r.portada}-960.webp`), r.slug);
+  }
+});

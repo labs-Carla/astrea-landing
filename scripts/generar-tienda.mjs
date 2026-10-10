@@ -41,7 +41,7 @@ const proximos = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) !== "disponible")
 const principales = disponibles.filter((r) => r.principal);
 const tematicos = disponibles.filter((r) => !r.principal);
 
-function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null, indexable = true }) {
+function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null, indexable = true, imagen = "/universo-assets/img/hero-escultura.webp" }) {
   const actual = (href) => (href === ruta || (href !== "/" && ruta.startsWith(href + "/")) ? ' aria-current="page"' : "");
   const enlaces = NAV.map(([href, texto]) => `<a href="${href}"${actual(href)}>${texto}</a>`).join("\n      ");
   return `<!DOCTYPE html>
@@ -57,7 +57,7 @@ ${indexable ? `<link rel="canonical" href="${SITIO}${ruta === "/" ? "/" : ruta}"
 <meta property="og:title" content="${esc(titulo)}">
 <meta property="og:description" content="${esc(descripcion)}">
 <meta property="og:url" content="${SITIO}${ruta}">
-<meta property="og:image" content="${SITIO}/universo-assets/img/hero-escultura.webp">
+<meta property="og:image" content="${SITIO}${imagen}">
 <meta property="og:locale" content="es_LA">
 <meta name="theme-color" content="#0B1220">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -126,8 +126,10 @@ function cabecera({ eyebrow, titulo, lede, migas = [] }) {
 </section>`;
 }
 
-function portada(r) {
-  if (r.portada) return `<div class="portada"><img src="${r.portada}" alt="Portada de la lectura ${esc(r.nombre)}" width="400" height="500" loading="lazy" decoding="async"></div>`;
+function portada(r, { prioridad = false } = {}) {
+  if (r.portada) {
+    return `<div class="portada portada--libro"><img src="${r.portada}-480.webp" srcset="${r.portada}-480.webp 480w, ${r.portada}-960.webp 960w" sizes="(min-width: 860px) 360px, 80vw" alt="Portada del reporte ${esc(r.nombre)} de Astrea" width="480" height="720" ${prioridad ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"></div>`;
+  }
   return `<div class="portada portada--atenuada" role="img" aria-label="Emblema de ${esc(r.nombre)}"><div class="portada__emblema">${icono(r.icono)}<span class="portada__titulo">${esc(r.nombre)}</span></div></div>`;
 }
 
@@ -277,12 +279,13 @@ for (const r of REPORTES) {
     ruta: `/reportes/${r.slug}`,
     titulo: `${r.nombre} · Reportes Astrea`,
     descripcion: `${r.resumen}${disp ? "" : " Próximamente."}`,
-    jsonLd,
+    jsonLd: { ...jsonLd, image: `${SITIO}${r.portada}-960.webp` },
+    imagen: `${r.portada}-960.webp`,
     cuerpo: `${cabecera({ eyebrow: r.eyebrow, titulo: r.nombre, lede: r.resumen, migas: [["/", "Inicio"], ["/reportes", "Reportes"], [`/reportes/${r.slug}`, r.nombre]] })}
 <section class="sheet sheet--light sheet--lift seccion">
   <div class="shell detalle">
     <aside class="detalle__lateral">
-      <div class="detalle__portada">${portada(r)}</div>
+      <div class="detalle__portada">${portada(r, { prioridad: true })}</div>
       <div class="detalle__compra" aria-label="Compra">
         ${insignia(r)}
         ${precioHtml(r)}
