@@ -263,6 +263,7 @@ test("portada: hero y navegación de producción, confianza, 7 reportes comprabl
   const html = PAGINAS["index.html"];
   assert.match(html, /<h1 class="h-display" id="hero-titulo">Un mapa del cielo para comprender tu historia\.<\/h1>/);
   assert.match(html, /hero-escultura\.webp/, "hero de producción");
+  assert.ok(!html.includes("hero__sky"), "hero sin el fondo de cielo: solo la ventana con la escultura");
   assert.match(html, /<a class="wordmark" href="\/"/, "header de producción");
   assert.match(html, /<a href="\/" aria-current="page">Inicio<\/a>/);
   assert.match(html, /href="\/reportes">Explorar reportes/);

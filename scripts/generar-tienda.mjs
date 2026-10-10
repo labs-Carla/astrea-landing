@@ -226,7 +226,6 @@ paginas["index.html"] = layout({
   titulo: "Astrea Charts · Astrología para una vida más consciente",
   descripcion: "Reportes astrológicos personalizados: carta natal, amor, vocación, dinero, patrones, revolución solar y compatibilidad. Astronomía real, revisión humana y 5 preguntas en Astrea.ai.",
   cuerpo: `<section class="hero hero--tienda" aria-labelledby="hero-titulo">
-  <div class="hero__sky" aria-hidden="true"></div>
   <div class="hero__grid shell">
     <div class="hero__copy">
       <p class="eyebrow eyebrow--light">Astrea · Reportes astrológicos</p>
