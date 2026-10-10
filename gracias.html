@@ -146,6 +146,20 @@
     line-height: 1.5;
   }
 </style>
+<script>
+  // Tienda (/comprar): quien ya registró su pedido ANTES de pagar vuelve aquí
+  // desde Hotmart. No le pedimos los datos otra vez: lo llevamos al estado de
+  // su pedido. Sin pedido de la tienda en este navegador (o con ?formulario=1)
+  // sigue el formulario post-pago de siempre.
+  (function () {
+    try {
+      if (new URLSearchParams(location.search).has("formulario")) return;
+      var p = JSON.parse(localStorage.getItem("astrea-tienda-pedido"));
+      var vigente = p && typeof p.ordenId === "number" && Date.now() - p.creadoEn <= 14 * 864e5;
+      if (vigente) location.replace("/pedido?retorno=hotmart");
+    } catch (e) { /* sin almacenamiento: formulario de siempre */ }
+  })();
+</script>
 </head>
 <body>
 <div class="wrap">
