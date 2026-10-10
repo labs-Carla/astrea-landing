@@ -4,7 +4,9 @@
 // en :8000 con DATABASE_URL de SQLite local. No sale a Hotmart: la navegación a
 // pay.hotmart.com se intercepta y se aborta; solo se inspecciona su URL.
 //
-// Uso: PW=<ruta a playwright/index.mjs> [CHROME=<ejecutable>] DB=/tmp/astrea_ai_local.db node tests/e2e/tienda.e2e.mjs
+// Uso: PW=<ruta a playwright/index.mjs> [CHROME=<ejecutable>] DB=/tmp/astrea_ai_local.db \
+//        [ADMIN=<X-Admin-Secret del backend LOCAL>] node tests/e2e/tienda.e2e.mjs
+// Con ADMIN, además confirma el pago en el backend local y verifica que /pedido lo muestre.
 import { DatabaseSync } from "node:sqlite";
 
 const { chromium } = await import(process.env.PW || "playwright");
@@ -52,7 +54,8 @@ const dia = 1 + Math.floor(Math.random() * 27);
 const email = `e2e.tienda.${Date.now().toString(36)}@example.com`;
 const fecha = `1987-03-${String(dia).padStart(2, "0")}`;
 const fechaHora = `${fecha} 14:${String(minuto).padStart(2, "0")}:00`;
-const ordenesDeEsteCorreo = () => db.prepare("select id, pago_confirmado, nombre_reporte from cartas_natales where email = ?").all(email);
+const ordenesDeEsteCorreo = () => db.prepare("select id, pago_confirmado, nombre_reporte, referencia_pedido from cartas_natales where email = ?").all(email);
+const API = process.env.API || "http://127.0.0.1:8000/api/v1";
 
 {
   const { p, hotmart, consola } = await nuevaPagina({ width: 390, height: 844 });
@@ -111,6 +114,7 @@ const ordenesDeEsteCorreo = () => db.prepare("select id, pago_confirmado, nombre
   const guardado = await p.evaluate(() => ({ local: localStorage.getItem("astrea-tienda-pedido"), borrador: sessionStorage.getItem("astrea-tienda-borrador") }));
   const pedido = JSON.parse(guardado.local);
   ok(pedido.ordenId === orden?.id && !guardado.local.includes(email), "guarda solo la referencia del pedido");
+  ok(typeof pedido.referencia === "string" && pedido.referencia.length >= 16 && pedido.referencia === orden?.referencia_pedido, "guarda la referencia aleatoria que dio el backend");
   ok(guardado.borrador === null, "el borrador se borra al crear el pedido");
 
   // Reintento desde la misma pestaña (volver atrás desde Hotmart): misma orden
@@ -132,16 +136,39 @@ const ordenesDeEsteCorreo = () => db.prepare("select id, pago_confirmado, nombre
   const estado = await p.locator("[data-estado-pedido]").getAttribute("data-estado");
   const texto = await p.locator("[data-estado-pedido]").innerText();
   ok(estado === "pendiente" && /pendiente de confirmación/i.test(texto), "retorno: 'pago pendiente de confirmación'");
+  const consultas = [];
+  p.on("request", (r) => { if (r.url().includes("/estado")) consultas.push(r.url()); });
+  await p.reload(); await p.waitForSelector("[data-estado-pedido][data-estado]");
+  ok(consultas.some((u) => u.endsWith(`/carta-natal/orden/${pedido.referencia}/estado`)), "consulta el estado por la referencia (no por el id)");
   ok(!/pago confirmado/i.test(texto), "no declara el pago confirmado");
   ok(texto.includes(`astrea-orden-${orden?.id}`) && /5 preguntas/.test(texto), "muestra la referencia y la invitación a Astrea.ai");
   ok((await p.locator('a[href*="/r/"]').count()) === 0, "no muestra ningún enlace de entrega");
 
+  if (process.env.ADMIN) {
+    const r = await fetch(`${API}/admin/confirmar-pago/${orden.id}`, { method: "POST", headers: { "X-Admin-Secret": process.env.ADMIN } });
+    ok(r.ok, "el panel (backend local) confirma el pago");
+    await p.goto(`${TIENDA}/pedido?retorno=hotmart`);
+    await p.waitForSelector("[data-estado-pedido][data-estado='confirmado']", { timeout: 15000 }).catch(() => {});
+    const t = await p.locator("[data-estado-pedido]").innerText();
+    ok(await p.locator("[data-estado-pedido]").getAttribute("data-estado") === "confirmado" && /Pago confirmado/.test(t), "tras la confirmación: /pedido muestra 'Pago confirmado'");
+    ok((await p.locator('a[href^="https://pay.hotmart.com/"]').count()) === 0, "confirmado: ya no ofrece pagar");
+  }
+
+  // Backend caído: /pedido vuelve al estado local, nunca a "confirmado"
+  await p.route("**/carta-natal/orden/*/estado", (r) => r.abort());
+  await p.goto(`${TIENDA}/pedido?retorno=hotmart`);
+  await p.waitForSelector("[data-estado-pedido][data-estado]");
+  ok(await p.locator("[data-estado-pedido]").getAttribute("data-estado") === "pendiente", "sin respuesta del backend: 'pendiente', no 'confirmado'");
+  await p.unroute("**/carta-natal/orden/*/estado");
+
   // Pedido recién creado (sin retorno): "creado" con enlace para pagar
+  await p.route("**/carta-natal/orden/*/estado", (r) => r.abort());   // aísla el estado local "creado"
   await p.goto(`${TIENDA}/pedido`);
   await p.waitForSelector("[data-estado-pedido][data-estado]");
   ok(await p.locator("[data-estado-pedido]").getAttribute("data-estado") === "creado" &&
      (await p.locator('a[href^="https://pay.hotmart.com/"]').getAttribute("href")).includes(`sck=astrea-orden-${orden?.id}`), "pedido creado: ofrece ir al pago con la misma orden");
 
+  await p.unroute("**/carta-natal/orden/*/estado");
   // El formulario post-pago de siempre sigue disponible
   await p.goto(`${TIENDA}/gracias?formulario=1`);
   ok(p.url().endsWith("/gracias?formulario=1") && (await p.locator("#natalForm").count()) === 1, "gracias?formulario=1 conserva el formulario post-pago");

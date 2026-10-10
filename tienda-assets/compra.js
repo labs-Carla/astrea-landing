@@ -3,7 +3,9 @@
  *
  * Contrato real del backend (astrea-API):
  *   POST {API}/carta-natal/orden  body DatosCompra {nombre, email, fecha_hora_local, ciudad, pais}
- *   -> 200 {status: "recibido", orden_id}   | 400/422 {detail}   | 429 rate limit (5/min)
+ *   -> 200 {status: "recibido", orden_id, referencia}   | 400/422 {detail}   | 429 rate limit (5/min)
+ *   GET  {API}/carta-natal/orden/{referencia}/estado -> {estado: pendiente|confirmado|enviado|reembolsado}
+ * `referencia` es aleatoria (no adivinable): es lo único que se usa para consultar el estado.
  * La orden nace con pago_confirmado=false; el admin la confirma a mano en el
  * panel cruzando la venta de Hotmart por `sck=astrea-orden-<id>`. Reenviar los
  * mismos datos natales devuelve la MISMA orden (la carta se identifica por
@@ -93,7 +95,11 @@ export function mensajeDeError(status, detalle) {
 export async function crearOrden({ apiBase, cuerpo, fetchImpl = fetch, memoria }) {
   const huella = huellaDeDatos(cuerpo);
   const previa = memoria?.get(huella);
-  if (previa) return { ordenId: previa, reutilizada: true };
+  if (previa) {
+    // Formato anterior: solo el número de orden.
+    const p = typeof previa === "number" ? { ordenId: previa, referencia: null } : previa;
+    return { ...p, reutilizada: true };
+  }
 
   let respuesta;
   try {
@@ -112,8 +118,10 @@ export async function crearOrden({ apiBase, cuerpo, fetchImpl = fetch, memoria }
   }
   const ordenId = datos?.orden_id;
   if (!Number.isInteger(ordenId) || ordenId <= 0) throw new ErrorDePedido(mensajeDeError(500), { reintentable: true });
-  memoria?.set(huella, ordenId);
-  return { ordenId, reutilizada: false };
+  // Un backend anterior a astrea-API #92 no devuelve referencia: la compra sigue igual, sin consulta de estado.
+  const referencia = typeof datos.referencia === "string" && datos.referencia.length >= 16 ? datos.referencia : null;
+  memoria?.set(huella, { ordenId, referencia });
+  return { ordenId, referencia, reutilizada: false };
 }
 
 export class ErrorDePedido extends Error {
@@ -121,15 +129,18 @@ export class ErrorDePedido extends Error {
 }
 
 /**
- * Estados que la tienda sabe mostrar. Hoy el frontend solo puede AFIRMAR
- * "creado" (el backend respondió con una orden) y "pendiente" (volvió del
- * checkout): que la persona regrese de Hotmart NO prueba el pago. "confirmado"
- * y "rechazado" solo se muestran si los informa el backend (ver config).
+ * Estados que la tienda sabe mostrar. Por sí solo, el frontend solo puede
+ * afirmar "creado" (el backend respondió con una orden) y "pendiente" (volvió
+ * del checkout): que la persona regrese de Hotmart NO prueba el pago.
+ * "confirmado", "enviado" y "reembolsado" solo los informa el backend.
+ * "rechazado" queda listo para cuando Hotmart informe las ventas (webhook).
  */
 export const ESTADOS_PEDIDO = {
   creado: { titulo: "Pedido creado", texto: "Guardamos tus datos. Falta completar el pago en Hotmart." },
   pendiente: { titulo: "Pago pendiente de confirmación", texto: "Si ya pagaste en Hotmart, revisamos la venta y confirmamos tu pedido. No necesitas volver a enviar tus datos." },
   confirmado: { titulo: "Pago confirmado", texto: "Tu lectura está en preparación. Te la enviaremos por correo." },
+  enviado: { titulo: "Tu lectura ya fue enviada", texto: "Te la enviamos al correo de tu pedido. Si no la encuentras, revisa la carpeta de spam o promociones." },
+  reembolsado: { titulo: "Pedido reembolsado", texto: "El pago de este pedido fue reembolsado." },
   rechazado: { titulo: "El pago no se completó", texto: "Hotmart no registró el pago. Puedes intentarlo de nuevo con el mismo pedido." },
   error: { titulo: "No pudimos consultar tu pedido", texto: "Tu pedido sigue guardado. Si tienes dudas, escríbenos por WhatsApp." },
 };
@@ -144,8 +155,8 @@ export function estadoAMostrar({ pedido, volvioDelCheckout, estadoBackend }) {
 // ---------------------------------------------------------------- persistencia local
 
 /** Pedido guardado en el navegador para la página de retorno: solo la referencia, nunca datos natales. */
-export function pedidoParaGuardar(ordenId, reporte, ahora = Date.now()) {
-  return { ordenId, reporte, creadoEn: ahora };
+export function pedidoParaGuardar(ordenId, reporte, ahora = Date.now(), referencia = null) {
+  return { ordenId, reporte, creadoEn: ahora, referencia };
 }
 
 export const VIGENCIA_PEDIDO_MS = 14 * 24 * 60 * 60 * 1000;

@@ -144,12 +144,12 @@ form.addEventListener("submit", async (e) => {
   const cuerpo = cuerpoDeOrden(leer());
   const ordenes = sesion.leer(CLAVE_ORDENES) || {};
   try {
-    const { ordenId } = await crearOrden({
+    const { ordenId, referencia } = await crearOrden({
       apiBase: apiBase(),
       cuerpo,
       memoria: { get: (k) => ordenes[k], set: (k, v) => { ordenes[k] = v; sesion.guardar(CLAVE_ORDENES, ordenes); } },
     });
-    local.guardar(CLAVE_PEDIDO, pedidoParaGuardar(ordenId, reporte.slug));
+    local.guardar(CLAVE_PEDIDO, pedidoParaGuardar(ordenId, reporte.slug, Date.now(), referencia));
     sesion.borrar(CLAVE_BORRADOR);
     estadoEnvio.textContent = `Pedido ${referenciaDeOrden(ordenId)} creado. Te llevamos al pago en Hotmart…`;
     window.location.assign(urlDeCheckout(checkout.url, ordenId, cuerpo));

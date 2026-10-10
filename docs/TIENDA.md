@@ -61,24 +61,26 @@ El frontend **nunca**:
 En el navegador solo guarda la referencia del pedido (14 días) y un borrador
 del formulario en `sessionStorage`, que se borra al crear el pedido.
 
-### Qué falta en el backend (documentado, no implementado)
+### Estado del pedido (astrea-API #92)
 
-**Estado del pedido.** No existe un endpoint público, así que `/pedido` solo
-puede mostrar "creado" o "pago pendiente de confirmación". Contrato propuesto:
+`POST /carta-natal/orden` también devuelve `referencia`: un token aleatorio de
+128 bits, el mismo si se reintenta la orden. La tienda lo guarda con el pedido,
+y `/pedido` consulta:
 
 ```
 GET /api/v1/carta-natal/orden/{referencia}/estado
-→ 200 {"estado": "pendiente" | "confirmado" | "rechazado"}   404 si no existe
+→ 200 {"estado": "pendiente" | "confirmado" | "enviado" | "reembolsado"}   404 si no existe
 ```
 
-- `{referencia}` debe ser un **identificador no adivinable** (por ejemplo, un
-  token aleatorio que devuelva `/carta-natal/orden`), no el `id` numérico. Si
-  no, cualquiera podría consultar órdenes ajenas.
-- Nunca debe devolver datos personales ni el token de entrega.
-- "rechazado" solo existirá cuando llegue la información de Hotmart (webhook).
-
-Cuando exista: poner `ESTADO_PEDIDO_HABILITADO = true` en `config.js` y
-ajustar la URL en `pedido.js`.
+- **Solo devuelve el estado:** ni datos personales ni el token de entrega. El
+  `id` numérico no sirve como referencia.
+- **Si la consulta falla** (sin red, sin referencia o backend anterior),
+  `/pedido` muestra el estado local: "creado" o "pendiente de confirmación".
+  Nunca muestra "confirmado" por su cuenta.
+- **"rechazado":** está listo en el frontend, pero el backend no lo informa
+  hasta que exista el webhook de Hotmart.
+- **Órdenes sin referencia:** las del formulario post-pago de `/gracias` no
+  tienen referencia y no se pueden consultar.
 
 ## Qué se puede comprar
 

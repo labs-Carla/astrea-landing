@@ -64,12 +64,13 @@ function fetchFalso(respuestas) {
 }
 
 test("crea la orden contra /carta-natal/orden y la reutiliza en un reintento", async () => {
-  const f = fetchFalso([{ status: 200, body: { status: "recibido", orden_id: 7 } }]);
+  const f = fetchFalso([{ status: 200, body: { status: "recibido", orden_id: 7, referencia: "r".repeat(22) } }]);
   const mem = new Map();
   const cuerpo = cuerpoDeOrden(validos);
   const a = await crearOrden({ apiBase: "http://api", cuerpo, fetchImpl: f, memoria: mem });
   const b = await crearOrden({ apiBase: "http://api", cuerpo, fetchImpl: f, memoria: mem });
-  assert.deepEqual([a, b], [{ ordenId: 7, reutilizada: false }, { ordenId: 7, reutilizada: true }]);
+  const referencia = "r".repeat(22);
+  assert.deepEqual([a, b], [{ ordenId: 7, referencia, reutilizada: false }, { ordenId: 7, referencia, reutilizada: true }]);
   assert.equal(f.llamadas.length, 1);
   assert.equal(f.llamadas[0].url, "http://api/carta-natal/orden");
   assert.deepEqual(f.llamadas[0].body, cuerpo);
@@ -83,6 +84,14 @@ test("errores del backend: mensajes claros y no se guarda ninguna orden", async 
   await assert.rejects(crearOrden({ apiBase: "x", cuerpo, memoria: mem, fetchImpl: fetchFalso([new TypeError("network")]) }), (e) => e.reintentable);
   await assert.rejects(crearOrden({ apiBase: "x", cuerpo, memoria: mem, fetchImpl: fetchFalso([{ status: 200, body: { status: "recibido" } }]) }), /No pudimos/);
   assert.equal(mem.size, 0);
+});
+
+test("backend anterior sin referencia, y memoria en formato anterior", async () => {
+  const cuerpo = cuerpoDeOrden(validos);
+  const sinRef = await crearOrden({ apiBase: "x", cuerpo, fetchImpl: fetchFalso([{ status: 200, body: { status: "recibido", orden_id: 9 } }]) });
+  assert.deepEqual(sinRef, { ordenId: 9, referencia: null, reutilizada: false });
+  const vieja = await crearOrden({ apiBase: "x", cuerpo, memoria: new Map([[huellaDeDatos(cuerpo), 9]]), fetchImpl: fetchFalso([]) });
+  assert.deepEqual(vieja, { ordenId: 9, referencia: null, reutilizada: true });
 });
 
 test("la huella ignora mayúsculas del correo y del lugar", () => {
@@ -99,14 +108,17 @@ test("volver del checkout NO marca el pedido como pagado", () => {
   assert.equal(estadoAMostrar({ pedido, volvioDelCheckout: false }), "creado");
   assert.equal(estadoAMostrar({ pedido, volvioDelCheckout: true }), "pendiente");
   assert.equal(estadoAMostrar({ pedido, volvioDelCheckout: true, estadoBackend: "confirmado" }), "confirmado");
+  assert.equal(estadoAMostrar({ pedido, volvioDelCheckout: false, estadoBackend: "enviado" }), "enviado");
+  assert.equal(estadoAMostrar({ pedido, volvioDelCheckout: false, estadoBackend: "reembolsado" }), "reembolsado");
+  assert.equal(estadoAMostrar({ pedido, volvioDelCheckout: true, estadoBackend: null }), "pendiente");
   assert.equal(estadoAMostrar({ pedido, volvioDelCheckout: true, estadoBackend: "inventado" }), "pendiente");
   assert.equal(estadoAMostrar({ pedido: null, volvioDelCheckout: true }), null);
-  assert.equal(ESTADO_PEDIDO_HABILITADO, false, "no hay endpoint de estado: no se consulta");
+  assert.equal(ESTADO_PEDIDO_HABILITADO, true);
 });
 
 test("el pedido guardado solo tiene la referencia y vence", () => {
-  const p = pedidoParaGuardar(7, "carta-natal", 1000);
-  assert.deepEqual(Object.keys(p).sort(), ["creadoEn", "ordenId", "reporte"]);
+  const p = pedidoParaGuardar(7, "carta-natal", 1000, "r".repeat(22));
+  assert.deepEqual(Object.keys(p).sort(), ["creadoEn", "ordenId", "referencia", "reporte"]);
   assert.ok(pedidoVigente(p, 1000 + VIGENCIA_PEDIDO_MS));
   assert.equal(pedidoVigente(p, 1001 + VIGENCIA_PEDIDO_MS), null);
   assert.equal(pedidoVigente({ ordenId: "7", creadoEn: 1 }, 2), null);

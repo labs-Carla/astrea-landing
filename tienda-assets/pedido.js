@@ -1,10 +1,10 @@
 /**
  * Astrea · Tienda — página de pedido (/pedido).
  *
- * Muestra el último pedido creado en este navegador. Solo afirma lo que se
- * sabe: "creado" o "pendiente de confirmación" (volver de Hotmart no prueba el
- * pago). "confirmado"/"rechazado" requieren el endpoint de estado del backend,
- * que todavía no existe (ESTADO_PEDIDO_HABILITADO = false; ver docs/TIENDA.md).
+ * Muestra el último pedido creado en este navegador. El estado real lo da el
+ * backend (GET /carta-natal/orden/{referencia}/estado). Sin respuesta del
+ * backend, solo afirma "creado" o "pendiente de confirmación": volver de
+ * Hotmart no prueba el pago.
  * Nunca arma enlaces de entrega: el enlace /r/<token> lo envía el equipo.
  */
 import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, URL_ASTREA_AI, WHATSAPP } from "./config.js";
@@ -30,13 +30,15 @@ const icono = (id) => {
   return svg;
 };
 
-async function estadoDelBackend(ordenId) {
-  if (!ESTADO_PEDIDO_HABILITADO) return null;
+// null = no se pudo saber (sin referencia, sin red, backend anterior): se muestra
+// el estado local. No se muestra "error" por una consulta fallida: el pedido existe.
+async function estadoDelBackend(referencia) {
+  if (!ESTADO_PEDIDO_HABILITADO || !referencia) return null;
   try {
-    const r = await fetch(`${apiBase()}/carta-natal/orden/${ordenId}/estado`);
-    if (!r.ok) return "error";
+    const r = await fetch(`${apiBase()}/carta-natal/orden/${encodeURIComponent(referencia)}/estado`);
+    if (!r.ok) return null;
     return (await r.json()).estado || null;
-  } catch { return "error"; }
+  } catch { return null; }
 }
 
 async function pintar() {
@@ -53,10 +55,10 @@ async function pintar() {
   const estado = estadoAMostrar({
     pedido,
     volvioDelCheckout: params.has("retorno"),
-    estadoBackend: await estadoDelBackend(pedido.ordenId),
+    estadoBackend: await estadoDelBackend(pedido.referencia),
   });
   const info = ESTADOS_PEDIDO[estado];
-  const iconos = { creado: "i-pages", pendiente: "i-clock", confirmado: "i-check", rechazado: "i-alert", error: "i-alert" };
+  const iconos = { creado: "i-pages", pendiente: "i-clock", confirmado: "i-check", enviado: "i-mail", reembolsado: "i-alert", rechazado: "i-alert", error: "i-alert" };
   caja.dataset.estado = estado;
 
   const pasos = el("ol", { class: "pasos-entrega" },
@@ -76,8 +78,8 @@ async function pintar() {
     url.searchParams.set("sck", referenciaDeOrden(pedido.ordenId));
     hijos.push(el("p", {}, el("a", { class: "btn btn--gold", href: url.toString() }, "Ir al pago en Hotmart")));
   }
-  if (estado !== "rechazado" && estado !== "error") hijos.push(el("h3", { class: "bloque__titulo" }, "Qué sigue"), pasos);
-  if (reporte?.beneficioAstreaAi && estado !== "rechazado") {
+  if (["creado", "pendiente", "confirmado"].includes(estado)) hijos.push(el("h3", { class: "bloque__titulo" }, "Qué sigue"), pasos);
+  if (reporte?.beneficioAstreaAi && !["rechazado", "reembolsado", "error"].includes(estado)) {
     hijos.push(el("div", { class: "beneficio-ai" },
       el("strong", {}, "Tus 5 preguntas en Astrea.ai"),
       el("span", {}, "Cuando recibas tu lectura, entra a Astrea.ai con el mismo correo de tu compra: tendrás 5 preguntas para conversar sobre tu carta. Es opcional y no necesitas una suscripción."),
