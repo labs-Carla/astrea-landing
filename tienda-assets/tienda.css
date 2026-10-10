@@ -432,3 +432,5 @@
 }
 /* La panorámica ya trae su propio cielo zodiacal: sin constelación dibujada encima. */
 @media (min-width: 860px) { .escena--panoramica .escena__constelacion { display: none; } }
+/* La panorámica mide 709 px de alto: el hero no pasa de 720 px para mostrarla a tamaño real, sin ampliarla. */
+@media (min-width: 860px) { .escena--panoramica { min-height: min(80svh, 720px); } }

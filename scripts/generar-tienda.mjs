@@ -193,9 +193,10 @@ const paginas = {};
 
 // ---------------------------------------------------------------- portada (inicio)
 // Escena del hero. En móvil, arco-columnas (vertical: terraza, arcos, mar, montañas y cielo).
-// En escritorio se usa una panorámica sin texto si existe (tienda-assets/img/hero-escena-1600.webp
-// y -2000.webp); si no, la misma escena vertical encuadrada.
-const HERO_PANORAMICA = existsSync(join(RAIZ, "tienda-assets/img/hero-escena-1600.webp"));
+// En escritorio se usa una panorámica sin texto si existe (tienda-assets/img/hero-escena.webp).
+// Se sirve siempre a su tamaño original: al ser muy ancha, el hero la recorta por los lados
+// y una versión reducida quedaría estirada en alto.
+const HERO_PANORAMICA = existsSync(join(RAIZ, "tienda-assets/img/hero-escena.webp"));
 const HERO_MOVIL = "/universo-assets/img/arco-columnas.webp";
 
 // Testimonios reales y autorizados: { texto, nombre, detalle? }. Vacío = la sección no se muestra.
@@ -230,14 +231,14 @@ paginas["index.html"] = layout({
   portada: true,
   titulo: "Astrea Charts · Astrología para una vida más consciente",
   descripcion: "Reportes astrológicos personalizados: carta natal, amor, vocación, dinero, patrones, revolución solar y compatibilidad. Astronomía real, revisión humana y 5 preguntas en Astrea.ai.",
-  imagen: HERO_PANORAMICA ? "/tienda-assets/img/hero-escena-1600.webp" : HERO_MOVIL,
+  imagen: HERO_PANORAMICA ? "/tienda-assets/img/hero-escena.webp" : HERO_MOVIL,
   preload: HERO_PANORAMICA
-    ? `<link rel="preload" as="image" href="/tienda-assets/img/hero-escena-1600.webp" imagesrcset="/tienda-assets/img/hero-escena-1600.webp 1600w, /tienda-assets/img/hero-escena-2000.webp 2000w" imagesizes="100vw" media="(min-width: 860px)">
+    ? `<link rel="preload" as="image" href="/tienda-assets/img/hero-escena.webp" media="(min-width: 860px)">
 <link rel="preload" as="image" href="${HERO_MOVIL}" media="(max-width: 859px)">`
     : `<link rel="preload" as="image" href="${HERO_MOVIL}">`,
   cuerpo: `<section class="escena${HERO_PANORAMICA ? " escena--panoramica" : ""}" aria-labelledby="hero-titulo">
   <picture class="escena__fondo">
-    ${HERO_PANORAMICA ? `<source media="(min-width: 860px)" srcset="/tienda-assets/img/hero-escena-1600.webp 1600w, /tienda-assets/img/hero-escena-2000.webp 2000w" sizes="100vw">` : ""}
+    ${HERO_PANORAMICA ? `<source media="(min-width: 860px)" srcset="/tienda-assets/img/hero-escena.webp">` : ""}
     <img src="${HERO_MOVIL}" alt="Terraza de mármol con arcos y columnas frente al mar y las montañas, bajo un cielo nocturno con luna y estrellas" width="1086" height="1448" fetchpriority="high" decoding="async">
   </picture>
   <svg class="escena__constelacion" viewBox="0 0 300 200" aria-hidden="true">

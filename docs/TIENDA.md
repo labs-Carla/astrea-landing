@@ -119,7 +119,7 @@ preguntas frecuentes. Se genera, como el resto, con `scripts/generar-tienda.mjs`
 
 - **Escena del hero.** En móvil usa `universo-assets/img/arco-columnas.webp`
   (vertical). En escritorio usa una panorámica **sin texto** si existen
-  `tienda-assets/img/hero-escena-1600.webp` y `hero-escena-2000.webp`; si no,
+  `tienda-assets/img/hero-escena.webp` (se sirve a tamaño original); si no,
   encuadra la misma escena vertical. Para cambiarla: guarda los dos archivos y
   corre `node scripts/generar-tienda.mjs`.
   - Panorámica recomendada: 16:9, 2400×1350 o más, sin texto.

@@ -280,6 +280,6 @@ test("portada: hero, confianza, 7 reportes comprables, pasos, Astrea.ai y pregun
   assert.ok(!/Historias reales/.test(html), "la sección de testimonios no se muestra sin testimonios reales");
   assert.match(html, /tiktok\.com\/@astrea\.charts/);
   assert.match(html, /fetchpriority="high"/, "el hero carga con prioridad");
-  assert.match(html, /<source media="\(min-width: 860px\)" srcset="\/tienda-assets\/img\/hero-escena-1600\.webp 1600w, \/tienda-assets\/img\/hero-escena-2000\.webp 2000w"/, "panorámica en escritorio");
+  assert.match(html, /<source media="\(min-width: 860px\)" srcset="\/tienda-assets\/img\/hero-escena\.webp">/, "panorámica en escritorio, a tamaño original");
   assert.ok(!/<video|data-video|escena\.js/.test(html), "sin video en el hero");
 });
