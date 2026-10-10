@@ -110,3 +110,15 @@ GET /api/v1/carta-natal/orden/{referencia}/estado
   `https://astrea-charts.site/gracias`.
 - **Precio.** "USD 12" es una referencia para mostrar en la tienda. El monto
   real lo cobra Hotmart en la moneda local.
+
+## Portada (inicio)
+
+`index.html` es la portada: el hero y la navegación de siempre (escultura en
+el arco y «Un mapa del cielo para comprender tu historia.»), seguidos de la
+franja de confianza, los 7 reportes con precio y "Comprar", cómo funciona,
+Astrea.ai, testimonios y preguntas frecuentes. Se genera, como el resto, con
+`scripts/generar-tienda.mjs`.
+
+- **Testimonios.** El arreglo `TESTIMONIOS` está vacío y la sección no se
+  muestra. Agrega solo testimonios reales y autorizados (`{ texto, nombre, detalle? }`).
+- **Términos y condiciones.** No hay página, así que el pie no la enlaza.

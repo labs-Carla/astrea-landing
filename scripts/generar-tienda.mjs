@@ -9,7 +9,7 @@
  * generador solo evita copiar a mano header, footer, SEO y las 7 páginas de
  * detalle. Sin dependencias (Node ≥ 20).
  */
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { REPORTES, ENTREGA, estadoDe } from "../tienda-assets/catalogo.js";
@@ -26,6 +26,8 @@ const SPRITE_UNIVERSO = readFileSync(join(RAIZ, "universo.html"), "utf8").match(
 const SPRITE = SPRITE_UNIVERSO.replace("</svg>", `  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
+  <symbol id="i-orbita" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.2"/><ellipse cx="12" cy="12" rx="10.5" ry="3.6" transform="rotate(-24 12 12)"/></symbol>
+  <symbol id="i-loto" viewBox="0 0 24 24"><path d="M12 19c-2.4-2-3.6-4.6-3.6-7.6S9.6 5.6 12 4c2.4 1.6 3.6 4.4 3.6 7.4S14.4 17 12 19z"/><path d="M12 19c-3.8.2-6.8-1.6-8.4-5.2 2.2-.8 4.4-.6 6.2.6M12 19c3.8.2 6.8-1.6 8.4-5.2-2.2-.8-4.4-.6-6.2.6"/></symbol>
 </svg>`);
 
 const NAV = [
@@ -41,7 +43,9 @@ const proximos = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) !== "disponible")
 const principales = disponibles.filter((r) => r.principal);
 const tematicos = disponibles.filter((r) => !r.principal);
 
-function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null, indexable = true, imagen = "/universo-assets/img/hero-escultura.webp" }) {
+const MARCA = `<span class="marca__texto">ASTREA<small>CHARTS</small></span>`;
+
+function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null, indexable = true, imagen = "/universo-assets/img/hero-escultura.webp", portada = false, preload = "" }) {
   const actual = (href) => (href === ruta || (href !== "/" && ruta.startsWith(href + "/")) ? ' aria-current="page"' : "");
   const enlaces = NAV.map(([href, texto]) => `<a href="${href}"${actual(href)}>${texto}</a>`).join("\n      ");
   return `<!DOCTYPE html>
@@ -65,6 +69,7 @@ ${indexable ? `<link rel="canonical" href="${SITIO}${ruta === "/" ? "/" : ruta}"
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/universo-assets/universo.css">
 <link rel="stylesheet" href="/tienda-assets/tienda.css">
+${preload}
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}</head>
 <body>
 <!-- Generado por scripts/generar-tienda.mjs a partir de tienda-assets/catalogo.js. No editar a mano. -->
@@ -97,13 +102,29 @@ ${SPRITE}
 ${cuerpo}
 </main>
 
-<footer class="site-footer">
-  <div class="shell site-footer__inner">
-    <nav class="site-footer__meta" aria-label="Pie de página">
-      <a href="/reportes">Reportes</a> · <a href="/como-funciona">Cómo funciona</a> · <a href="/sobre-astrea">Sobre Astrea</a> · <a href="/preguntas-frecuentes">Preguntas frecuentes</a> · <a href="${URL_ASTREA_AI}">Astrea.ai</a>
+<footer class="pie">
+  <div class="shell pie__grid">
+    <div class="pie__marca">
+      <a class="marca" href="/" aria-label="Astrea Charts, inicio">${MARCA}</a>
+      <p>Astrología para conocerte, reflexionar y transformarte.</p>
+    </div>
+    <nav class="pie__columna" aria-label="Explora">
+      <h2 class="pie__titulo">Explora</h2>
+      <a href="/reportes">Reportes</a>
+      <a href="/como-funciona">Cómo funciona</a>
+      <a href="/sobre-astrea">Sobre Astrea</a>
+      <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
+      <a href="${URL_ASTREA_AI}">Astrea.ai</a>
     </nav>
-    <p class="site-footer__disclaimer">Astrea Charts es una herramienta de autoconocimiento. No reemplaza asesoría médica, psicológica ni financiera.</p>
-    <p class="site-footer__meta"><a href="/privacidad">Política de privacidad</a> · <a href="${WHATSAPP}">WhatsApp</a> · <a href="https://www.tiktok.com/@astrea.charts">TikTok</a> · © 2026 Astrea Charts</p>
+    <div class="pie__columna">
+      <h2 class="pie__titulo">Contacto</h2>
+      <a href="https://www.tiktok.com/@astrea.charts">TikTok · @astrea.charts</a>
+      <a href="${WHATSAPP}">WhatsApp</a>
+    </div>
+  </div>
+  <div class="shell pie__legal">
+    <p>Astrea Charts es una herramienta de autoconocimiento. No reemplaza asesoría médica, psicológica ni financiera.</p>
+    <p><a href="/privacidad">Política de privacidad</a> · © ${new Date().getFullYear()} Astrea Charts</p>
   </div>
 </footer>
 ${scripts.map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
@@ -170,12 +191,40 @@ const BENEFICIO_AI = `<div class="beneficio-ai">
 
 const paginas = {};
 
+// ---------------------------------------------------------------- portada (inicio)
+
+// Testimonios reales y autorizados: { texto, nombre, detalle? }. Vacío = la sección no se muestra.
+const TESTIMONIOS = [];
+
+const FAQ_PORTADA = [
+  ["¿Qué información necesito para hacer mi reporte?", "Tu fecha, hora y lugar de nacimiento, y el correo donde quieres recibirlo. Para la revolución solar, también la ciudad donde pasarás tu cumpleaños; para la compatibilidad de pareja, los datos de la otra persona (su hora de nacimiento es opcional) y su consentimiento."],
+  ["¿Cuánto tiempo tarda en llegar?", "Entre 24 y 48 horas después de que confirmamos tu pago en Hotmart."],
+  ["¿En qué formato recibiré mi informe?", "En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."],
+  ["¿Qué incluye el acceso a Astrea.ai?", "Cada reporte incluye 5 preguntas en Astrea.ai. Cuando te enviamos tu reporte, entra con el mismo correo de tu compra y úsalas para conversar sobre tu carta. No necesitas una suscripción."],
+  ["¿Los reportes son personalizados?", "Sí. Cada reporte parte de tu carta, calculada con Swiss Ephemeris para tu fecha, hora y lugar exactos de nacimiento. La interpretación se redacta con apoyo de IA y la revisamos antes de enviarla."],
+  ["¿Puedo pedir un reembolso?", "El pago se procesa en Hotmart. Si necesitas un reembolso, escríbenos por WhatsApp con la referencia de tu pedido y lo revisamos contigo."],
+];
+
+const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby="tp-${r.slug}">
+  <a class="tarjeta-portada__imagen" href="/reportes/${r.slug}" tabindex="-1" aria-hidden="true">
+    <img src="${r.portada}-480.webp" srcset="${r.portada}-480.webp 480w, ${r.portada}-960.webp 960w" sizes="(min-width: 1100px) 260px, (min-width: 600px) 45vw, 88vw" alt="" width="480" height="720" loading="lazy" decoding="async">
+  </a>
+  <div class="tarjeta-portada__cuerpo">
+    <p class="tarjeta-portada__categoria">${esc(r.categoria)}</p>
+    <h3 class="tarjeta-portada__titulo" id="tp-${r.slug}"><a href="/reportes/${r.slug}">${esc(r.nombre)}</a></h3>
+    <p class="tarjeta-portada__texto">${esc(r.tarjeta)}</p>
+    <div class="tarjeta-portada__pie">
+      <span class="tarjeta-portada__precio">${esc(CHECKOUTS[r.slug].precioReferencia)}</span>
+      <a class="btn btn--night btn--sm" href="/comprar/${r.slug}" aria-label="Comprar ${esc(r.nombre)}">Comprar ${icono("i-arrow")}</a>
+    </div>
+  </div>
+</article>`;
+
 paginas["index.html"] = layout({
   ruta: "/",
-  titulo: "Astrea · Reportes astrológicos para volver a ti",
-  descripcion: "Lecturas astrológicas personalizadas calculadas con astronomía real y revisadas una por una. Conoce los reportes de Astrea y pide tu carta natal completa.",
+  titulo: "Astrea Charts · Astrología para una vida más consciente",
+  descripcion: "Reportes astrológicos personalizados: carta natal, amor, vocación, dinero, patrones, revolución solar y compatibilidad. Astronomía real, revisión humana y 5 preguntas en Astrea.ai.",
   cuerpo: `<section class="hero hero--tienda" aria-labelledby="hero-titulo">
-  <div class="hero__sky" aria-hidden="true"></div>
   <div class="hero__grid shell">
     <div class="hero__copy">
       <p class="eyebrow eyebrow--light">Astrea · Reportes astrológicos</p>
@@ -192,44 +241,95 @@ paginas["index.html"] = layout({
   </div>
 </section>
 
-<section class="sheet sheet--light sheet--lift seccion--ajustada" aria-labelledby="promesas-titulo">
+<section class="confianza" aria-label="Por qué confiar en Astrea">
+  <ul class="shell confianza__lista">
+    <li>${icono("i-orbita", "icon confianza__icono")}<div><strong>Astronomía real</strong><span>Cálculos con Swiss Ephemeris y datos astronómicos precisos.</span></div></li>
+    <li>${icono("i-sun", "icon confianza__icono")}<div><strong>Revisión humana</strong><span>Interpretaciones asistidas por IA y revisadas por una astróloga.</span></div></li>
+    <li>${icono("i-mail", "icon confianza__icono")}<div><strong>Directo a tu correo</strong><span>Recibe tu informe en 24–48 horas después de la confirmación del pago.</span></div></li>
+    <li>${icono("i-loto", "icon confianza__icono")}<div><strong>Autoconocimiento</strong><span>Herramientas para comprenderte y tomar decisiones más alineadas.</span></div></li>
+  </ul>
+</section>
+
+<section class="capitulo capitulo--claro" id="reportes" aria-labelledby="reportes-titulo">
   <div class="shell">
-    <header class="center-head">
-      <p class="eyebrow">Cómo trabajamos</p>
-      <h2 class="h-section" id="promesas-titulo">Astronomía real, lectura humana</h2>
+    <header class="capitulo__cabecera">
+      <div>
+        <p class="eyebrow">Nuestros reportes</p>
+        <h2 class="capitulo__titulo" id="reportes-titulo">Tu historia tiene muchas capas.</h2>
+      </div>
+      <p class="capitulo__intro">Explora los diferentes aspectos de tu carta natal con reportes diseñados para acompañarte en tu proceso de autoconocimiento.</p>
     </header>
-    <div class="promesas">
-      <div class="promesa">${icono("i-wheel")}<strong>Cálculo exacto</strong><span>Tu carta se calcula con Swiss Ephemeris para tu fecha, hora y lugar de nacimiento, no con tablas genéricas.</span></div>
-      <div class="promesa">${icono("i-eye")}<strong>Revisión humana</strong><span>La interpretación se redacta con apoyo de IA y la revisamos una por una antes de enviarla.</span></div>
-      <div class="promesa">${icono("i-mail")}<strong>Directo a tu correo</strong><span>Recibes tu lectura entre 24 y 48 horas después de confirmar tu pago.</span></div>
+    <div class="catalogo-portada">
+      ${disponibles.map(tarjetaPortada).join("\n      ")}
     </div>
   </div>
 </section>
 
-<section class="sheet sheet--marble seccion" aria-labelledby="destacado-titulo">
+<section class="capitulo capitulo--marmol" id="como-funciona" aria-labelledby="pasos-titulo">
   <div class="shell">
-    <header class="center-head">
-      <p class="eyebrow">Reportes</p>
-      <h2 class="h-section" id="destacado-titulo">Empieza por tu carta natal</h2>
-      <p class="lede">La lectura de base para conocerte, y reportes enfocados en lo que hoy quieres mirar.</p>
+    <header class="capitulo__cabecera capitulo__cabecera--centro">
+      <p class="eyebrow">Cómo funciona</p>
+      <h2 class="capitulo__titulo" id="pasos-titulo">Tres pasos para recibir tu reporte</h2>
     </header>
-    <div class="catalogo">
-      ${["carta-natal", "amor", "revolucion-solar"].map((slug) => tarjeta(REPORTES.find((r) => r.slug === slug))).join("\n      ")}
-    </div>
-    <p style="text-align:center;margin-top:var(--s-7)"><a class="btn btn--ghost" href="/reportes">Ver los ${REPORTES.length} reportes ${icono("i-arrow")}</a></p>
+    <ol class="pasos">
+      <li class="paso"><span class="paso__numero">01</span>${icono("i-pages", "icon paso__icono")}<h3 class="paso__titulo">Comparte tus datos de nacimiento</h3><p>Completa tu fecha, hora y lugar de nacimiento, y los datos de tu pareja si aplica.</p></li>
+      <li class="paso"><span class="paso__numero">02</span>${icono("i-wheel", "icon paso__icono")}<h3 class="paso__titulo">Calculamos tu carta</h3><p>Usamos Swiss Ephemeris y una interpretación asistida por IA, revisada por una astróloga.</p></li>
+      <li class="paso"><span class="paso__numero">03</span>${icono("i-mail", "icon paso__icono")}<h3 class="paso__titulo">Recibes tu informe personalizado</h3><p>Te lo enviamos a tu correo en 24–48 horas, contadas desde la confirmación del pago.</p></li>
+    </ol>
   </div>
 </section>
 
-<section class="values" aria-labelledby="ai-titulo">
-  <div class="shell banda-ai" style="text-align:left">
-    <div>
+<section class="capitulo capitulo--noche astrea-ai" aria-labelledby="ai-titulo">
+  <div class="shell astrea-ai__grid">
+    <div class="astrea-ai__texto">
       <p class="eyebrow eyebrow--light">Astrea.ai</p>
-      <h2 class="h-section h-section--light" id="ai-titulo">Conversa con tu carta</h2>
-      <p class="lede lede--light">Astrea.ai es nuestra app para hacerle preguntas a tu carta natal. Cada reporte incluye 5 preguntas para que sigas explorando tu lectura.</p>
+      <h2 class="capitulo__titulo capitulo__titulo--claro" id="ai-titulo">Conversa con tu carta.</h2>
+      <p class="lede lede--light">Cada reporte incluye 5 preguntas para Astrea.ai, nuestra asistente de astrología, para que puedas explorar tu lectura, hacer preguntas y profundizar en lo que más te interese.</p>
+      <a class="btn btn--gold" href="${URL_ASTREA_AI}">Conocer Astrea.ai ${icono("i-arrow")}</a>
     </div>
-    <p><a class="btn btn--gold" href="${URL_ASTREA_AI}">Conocer Astrea.ai ${icono("i-arrow")}</a></p>
+    <figure class="chat-muestra" aria-label="Ejemplo de la conversación en Astrea.ai">
+      <div class="chat-muestra__marco">
+        <p class="chat-muestra__cabecera"><span>Habla con Astrea</span><span>Ejemplo</span></p>
+        <ul class="chat-muestra__sugerencias" aria-label="Preguntas de ejemplo">
+          <li>¿Cuáles son mis talentos principales según mi carta?</li>
+          <li>¿Cómo puedo trabajar mejor mi Saturno en la carta?</li>
+          <li>¿Qué viene para mí este año?</li>
+        </ul>
+        <ol class="chat-muestra__mensajes">
+          <li class="chat-muestra__tu"><span>Tú</span><p>¿Cuáles son mis talentos principales según mi carta?</p></li>
+          <li class="chat-muestra__astrea" role="presentation"><p>Astrea está leyendo tu carta…</p></li>
+        </ol>
+        <div class="chat-muestra__campo" aria-hidden="true"><span>Escribe tu pregunta…</span><span class="chat-muestra__enviar">Enviar</span></div>
+      </div>
+      <figcaption>Así se ve la conversación en Astrea.ai: Astrea responde a partir de tu carta natal.</figcaption>
+    </figure>
+  </div>
+</section>
+${TESTIMONIOS.length ? `
+<section class="capitulo capitulo--claro" aria-labelledby="testimonios-titulo">
+  <div class="shell">
+    <header class="capitulo__cabecera capitulo__cabecera--centro">
+      <p class="eyebrow">Lo que dicen</p>
+      <h2 class="capitulo__titulo" id="testimonios-titulo">Historias reales</h2>
+    </header>
+    <div class="testimonios">
+      ${TESTIMONIOS.map((t) => `<figure class="testimonio"><blockquote>${esc(t.texto)}</blockquote><figcaption>${esc(t.nombre)}${t.detalle ? ` · ${esc(t.detalle)}` : ""}</figcaption></figure>`).join("\n      ")}
+    </div>
+  </div>
+</section>` : ""}
+<section class="capitulo capitulo--claro" id="preguntas" aria-labelledby="faq-titulo">
+  <div class="shell faq-portada">
+    <header class="capitulo__cabecera capitulo__cabecera--apilada">
+      <p class="eyebrow">Preguntas frecuentes</p>
+      <h2 class="capitulo__titulo" id="faq-titulo">Antes de elegir tu reporte</h2>
+      <p class="capitulo__intro">¿Otra duda? <a class="link-quiet" href="/preguntas-frecuentes">Todas las preguntas</a> o <a class="link-quiet" href="${WHATSAPP}">escríbenos por WhatsApp</a>.</p>
+    </header>
+    <div class="accordion">
+      ${FAQ_PORTADA.map(([q, a]) => `<details><summary>${esc(q)}${icono("i-plus")}</summary><p>${esc(a)}</p></details>`).join("\n      ")}
+    </div>
   </div>
 </section>`,
+  jsonLd: { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ_PORTADA.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
 });
 
 paginas["reportes.html"] = layout({
@@ -499,6 +599,8 @@ const FAQ = [
   ["¿Qué tan precisa es la lectura?", "Las posiciones se calculan con astronomía real (Swiss Ephemeris), no con tablas genéricas. La interpretación se redacta con apoyo de asistentes de IA y después la revisamos una por una antes de enviarla. Es una herramienta de autoconocimiento, no una predicción."],
   ["¿Necesito saber mi hora de nacimiento?", "Es lo ideal, porque de ella dependen el Ascendente y las casas. Si no la sabes con exactitud, usa la más aproximada que tengas: la mayoría de las secciones siguen siendo útiles."],
   ["¿Qué son las 5 preguntas de Astrea.ai?", "Cada reporte incluye 5 preguntas en Astrea.ai. Cuando te enviamos tu reporte, entra a Astrea.ai con el mismo correo de tu compra y podrás usarlas para conversar sobre tu carta. No necesitas crear una cuenta para comprar, y tu reporte es tuyo con o sin suscripción."],
+  ["¿En qué formato recibiré mi informe?", "En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."],
+  ["¿Puedo pedir un reembolso?", "El pago se procesa en Hotmart. Si necesitas un reembolso, escríbenos por WhatsApp con la referencia de tu pedido y lo revisamos contigo."],
   ["¿Puedo pedir una lectura para otra persona?", "Sí. Usa los datos de nacimiento de esa persona y el correo donde quieres recibir la lectura. Las 5 preguntas de Astrea.ai quedan asociadas a ese correo."],
 ];
 

@@ -10,6 +10,7 @@
  * - "revolucion_solar": ciudad y país donde la persona pasa su cumpleaños, y el año del ciclo.
  * - "segunda_persona": datos de nacimiento de la otra persona (hora opcional) y su consentimiento.
  *
+ * `tarjeta`: texto corto de la tarjeta en la portada del sitio.
  * `portada`: base de las imágenes en tienda-assets/img (<slug>-480.webp y <slug>-960.webp,
  * portadas verticales 2:3 de Astrea, 2026-10-10).
  *
@@ -28,6 +29,7 @@ export const ENTREGA = "Lo preparamos a partir de tu carta, calculada con astron
 export const REPORTES = [
   {
     slug: "carta-natal",
+    tarjeta: "Un retrato profundo de tu esencia, tus talentos astrológicos y tu propósito de vida.",
     portada: "/tienda-assets/img/carta-natal",
     nombre: "Carta natal completa",
     categoria: "Autoconocimiento",
@@ -49,6 +51,7 @@ export const REPORTES = [
   },
   {
     slug: "amor",
+    tarjeta: "Comprende tu forma de amar, relacionarte y construir vínculos más conscientes.",
     portada: "/tienda-assets/img/amor",
     nombre: "Amor y vínculos",
     categoria: "Relaciones",
@@ -69,6 +72,7 @@ export const REPORTES = [
   },
   {
     slug: "vocacion",
+    tarjeta: "Descubre tus talentos, tu dirección profesional y cómo alinear tu camino con tu propósito.",
     portada: "/tienda-assets/img/vocacion",
     nombre: "Vocación y propósito",
     categoria: "Carrera y propósito",
@@ -90,6 +94,7 @@ export const REPORTES = [
   },
   {
     slug: "dinero",
+    tarjeta: "Explora tu relación con el dinero, tus recursos y tu potencial de prosperidad.",
     portada: "/tienda-assets/img/dinero",
     nombre: "Dinero y abundancia",
     categoria: "Recursos y valor propio",
@@ -111,6 +116,7 @@ export const REPORTES = [
   },
   {
     slug: "patrones",
+    tarjeta: "Identifica tus patrones, sana tu historia y activa tu potencial de transformación.",
     portada: "/tienda-assets/img/patrones",
     nombre: "Patrones y transformación",
     categoria: "Autoconocimiento profundo",
@@ -132,6 +138,7 @@ export const REPORTES = [
   },
   {
     slug: "revolucion-solar",
+    tarjeta: "Una mirada al año que viene: temas clave, oportunidades y ciclos importantes.",
     portada: "/tienda-assets/img/revolucion-solar",
     nombre: "Revolución solar",
     categoria: "Ciclos y crecimiento",
@@ -153,6 +160,7 @@ export const REPORTES = [
   },
   {
     slug: "compatibilidad",
+    tarjeta: "Analiza la conexión entre dos cartas natales y descubre su potencial.",
     portada: "/tienda-assets/img/compatibilidad",
     nombre: "Compatibilidad de pareja",
     categoria: "Relaciones",
