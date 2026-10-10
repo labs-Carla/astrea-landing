@@ -432,6 +432,3 @@
 }
 /* La panorámica ya trae su propio cielo zodiacal: sin constelación dibujada encima. */
 @media (min-width: 860px) { .escena--panoramica .escena__constelacion { display: none; } }
-/* Video de la escena (solo escritorio, lo agrega escena.js): se funde sobre la panorámica. */
-.escena__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s var(--ease); }
-.escena__video.is-visible { opacity: 1; }

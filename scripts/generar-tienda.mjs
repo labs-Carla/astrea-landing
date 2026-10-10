@@ -197,8 +197,6 @@ const paginas = {};
 // y -2000.webp); si no, la misma escena vertical encuadrada.
 const HERO_PANORAMICA = existsSync(join(RAIZ, "tienda-assets/img/hero-escena-1600.webp"));
 const HERO_MOVIL = "/universo-assets/img/arco-columnas.webp";
-// Video opcional de la escena (solo escritorio, lo agrega tienda-assets/escena.js sobre la panorámica).
-const HERO_VIDEO = HERO_PANORAMICA && existsSync(join(RAIZ, "tienda-assets/img/hero-escena.mp4")) ? "/tienda-assets/img/hero-escena.mp4" : null;
 
 // Testimonios reales y autorizados: { texto, nombre, detalle? }. Vacío = la sección no se muestra.
 const TESTIMONIOS = [];
@@ -237,8 +235,7 @@ paginas["index.html"] = layout({
     ? `<link rel="preload" as="image" href="/tienda-assets/img/hero-escena-1600.webp" imagesrcset="/tienda-assets/img/hero-escena-1600.webp 1600w, /tienda-assets/img/hero-escena-2000.webp 2000w" imagesizes="100vw" media="(min-width: 860px)">
 <link rel="preload" as="image" href="${HERO_MOVIL}" media="(max-width: 859px)">`
     : `<link rel="preload" as="image" href="${HERO_MOVIL}">`,
-  scripts: HERO_VIDEO ? ["/tienda-assets/escena.js"] : [],
-  cuerpo: `<section class="escena${HERO_PANORAMICA ? " escena--panoramica" : ""}"${HERO_VIDEO ? ` data-video="${HERO_VIDEO}"` : ""} aria-labelledby="hero-titulo">
+  cuerpo: `<section class="escena${HERO_PANORAMICA ? " escena--panoramica" : ""}" aria-labelledby="hero-titulo">
   <picture class="escena__fondo">
     ${HERO_PANORAMICA ? `<source media="(min-width: 860px)" srcset="/tienda-assets/img/hero-escena-1600.webp 1600w, /tienda-assets/img/hero-escena-2000.webp 2000w" sizes="100vw">` : ""}
     <img src="${HERO_MOVIL}" alt="Terraza de mármol con arcos y columnas frente al mar y las montañas, bajo un cielo nocturno con luna y estrellas" width="1086" height="1448" fetchpriority="high" decoding="async">
