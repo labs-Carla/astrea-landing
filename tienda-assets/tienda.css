@@ -217,3 +217,15 @@
   .compra { grid-template-columns: 1.3fr 0.7fr; align-items: start; }
   .banda-ai { grid-template-columns: 1.3fr 0.7fr; }
 }
+
+/* ---------- Compra: datos adicionales (revolución solar, otra persona) ---------- */
+#form-compra fieldset.grupo-extra {
+  grid-column: 1 / -1; display: grid; gap: var(--s-2);
+  margin-top: var(--s-4); padding: var(--s-4); border: 1px solid var(--hairline); border-radius: var(--r-card);
+  background: rgba(176, 138, 79, .04);
+}
+.grupo-extra__titulo { font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); padding: 0 var(--s-2); }
+.grupo-extra__texto { font-size: 0.85rem; color: var(--ink-soft); }
+.natal-form--anidado { margin-top: 0; }
+/* La casilla dentro de un grupo .field no hereda el tamaño de los campos de texto. */
+.field .check input[type="checkbox"] { width: 20px; height: 20px; min-height: 0; padding: 0; -webkit-appearance: auto; appearance: auto; background: none; }

@@ -1,143 +1,167 @@
 /**
  * Astrea · Tienda — catálogo de reportes. Fuente única para el generador de
- * páginas (scripts/generar-tienda.mjs) y para los tests.
+ * páginas (scripts/generar-tienda.mjs), el formulario de compra y los tests.
+ * Textos y precios: definidos por Astrea el 2026-10-10.
  *
  * `disponible` NO se declara aquí: un reporte se puede comprar solo si tiene
- * checkout en config.js (CHECKOUTS) y un flujo real de generación y entrega.
- * Hoy eso existe únicamente para la carta natal (ver docs/TIENDA.md).
+ * checkout en config.js (CHECKOUTS).
  *
- * Por qué cada uno de los demás no se vende todavía (auditoría 2026-10-10):
- * - revolucion-solar, compatibilidad: el backend no tiene cómo generarlos.
- * - amor, vocacion, dinero, patrones: existe el motor genérico de productos
- *   (producto_configs), pero no hay orden pública, producto en Hotmart ni
- *   página de entrega para ellos.
+ * `extra` debe coincidir con astrea-API app/domain/productos_tienda.py:
+ * - "revolucion_solar": ciudad y país donde la persona pasa su cumpleaños, y el año del ciclo.
+ * - "segunda_persona": datos de nacimiento de la otra persona (hora opcional) y su consentimiento.
+ *
+ * Entrega de todos: PDF por correo en 24–48 h tras confirmar el pago. La carta
+ * natal se genera con el flujo de siempre; los otros 6 se preparan a mano.
  */
+
+const INCLUYE_COMUN = [
+  "Reporte personalizado en PDF",
+  "5 preguntas en Astrea.ai tras confirmar tu compra",
+  "Entrega por correo en 24–48 h",
+];
+
+export const ENTREGA = "Lo preparamos a partir de tu carta, calculada con astronomía real (Swiss Ephemeris), y lo revisamos antes de enviarlo. Te llega por correo, en PDF, entre 24 y 48 horas después de confirmar tu pago.";
 
 export const REPORTES = [
   {
     slug: "carta-natal",
     nombre: "Carta natal completa",
-    eyebrow: "La lectura de base",
+    categoria: "Autoconocimiento",
+    principal: true,
+    eyebrow: "Producto principal",
     icono: "i-wheel",
     portada: "/universo-assets/img/libro-tapa.webp",
-    resumen: "Un viaje de más de 20 páginas por tu esencia, tu mundo emocional, tus talentos y tus desafíos.",
-    descripcion: "Tu carta natal es un mapa del cielo calculado para la fecha, hora y lugar exactos de tu nacimiento. Esta lectura lo recorre completo, en un lenguaje claro y profundo, para ayudarte a comprender tu historia y tu potencial.",
+    resumen: "Tu mapa, tu esencia, tu camino. Descubre qué revela tu carta natal sobre tu personalidad, tus emociones, tus talentos y tu manera de vivir.",
+    descripcion: "Tu carta natal es un mapa del cielo calculado para la fecha, hora y lugar exactos de tu nacimiento. Esta lectura la recorre completa, en un lenguaje claro y profundo, para ayudarte a comprender tu historia y tu potencial.",
     explora: [
-      "Tu esencia y propósito: Sol, Luna y Ascendente",
-      "Tu mundo emocional y lo que necesitas para sentirte en casa",
-      "Talentos, potencial, desafíos y aprendizajes",
-      "Vocación, dinero, amor y tu herida a sanar (Quirón)",
-      "El cielo de hoy y de los próximos meses sobre tu carta",
+      "Tu Sol, Luna y Ascendente",
+      "Tus fortalezas y recursos personales",
+      "Tu mundo emocional y tus vínculos",
+      "Tu vocación, motivaciones y desafíos",
+      "Los principales patrones de tu carta natal",
     ],
-    incluye: [
-      "Más de 20 páginas",
-      "Rueda natal, planetas, casas y aspectos",
-      "Plan de acción y reflexiones para tu día a día",
-      "Revisión humana antes del envío",
-      "Entrega por correo en 24–48 h",
-    ],
+    idealPara: "Quienes quieren comprender su carta natal más allá de su signo solar.",
+    incluye: ["Más de 20 páginas", "Rueda natal, planetas, casas y aspectos", "Revisión humana antes del envío", ...INCLUYE_COMUN],
     datos: ["Nombre para la lectura", "Fecha de nacimiento", "Hora de nacimiento (la más aproximada que tengas)", "Ciudad y país de nacimiento", "Correo de entrega"],
-    entrega: "Calculamos tu carta con astronomía real (Swiss Ephemeris), la interpretación se redacta con apoyo de IA y la revisamos una por una. Te enviamos tu lectura por correo entre 24 y 48 horas después de confirmar tu pago.",
-    beneficioAstreaAi: true,
-  },
-  {
-    slug: "revolucion-solar",
-    nombre: "Revolución solar",
-    eyebrow: "Tu año, de cumpleaños a cumpleaños",
-    icono: "i-sun",
-    resumen: "El cielo de tu próximo año personal: los temas que se activan y dónde poner tu energía.",
-    descripcion: "Cada año, el Sol vuelve al punto exacto en que estaba cuando naciste. La carta de ese instante describe el tono de tu año personal, de cumpleaños a cumpleaños.",
-    explora: [
-      "Los temas centrales de tu año personal",
-      "Las áreas de vida que piden más atención",
-      "Ritmos, oportunidades y momentos de pausa",
-    ],
-    incluye: ["Carta de tu revolución solar", "Lectura de los temas del año", "Comparación con tu carta natal"],
-    datos: ["Tus datos de nacimiento", "La ciudad donde pasarás tu cumpleaños", "El año que quieres leer"],
-    motivo: "Estamos preparando el cálculo de la revolución solar.",
-  },
-  {
-    slug: "compatibilidad",
-    nombre: "Compatibilidad de pareja",
-    eyebrow: "Dos cartas, un vínculo",
-    icono: "i-heart",
-    resumen: "Cómo se encuentran dos cartas: afinidades, tensiones y lo que cada quien aporta al vínculo.",
-    descripcion: "La sinastría compara dos cartas natales para mirar el vínculo como un tercer espacio: lo que fluye, lo que roza y lo que cada persona despierta en la otra.",
-    explora: [
-      "Afinidades emocionales y formas de querer",
-      "Puntos de fricción y cómo conversarlos",
-      "Lo que el vínculo despierta en cada persona",
-    ],
-    incluye: ["Las dos cartas natales", "Aspectos entre ambas cartas", "Lectura del vínculo"],
-    datos: ["Datos de nacimiento de ambas personas", "Consentimiento de la otra persona para usar sus datos"],
-    motivo: "Estamos preparando la lectura de dos cartas a la vez.",
   },
   {
     slug: "amor",
     nombre: "Amor y vínculos",
-    eyebrow: "Cómo amas y cómo te vinculas",
+    categoria: "Relaciones",
+    eyebrow: "Relaciones",
     icono: "i-heart",
-    resumen: "Tus necesidades afectivas, tu manera de vincularte y los patrones que se repiten en tus relaciones.",
-    descripcion: "Una lectura enfocada en Venus, la Luna, Marte y tu casa VII para comprender qué buscas en un vínculo, qué te da seguridad afectiva y qué patrones relacionales quieres transformar.",
+    resumen: "Comprende cómo amas, qué necesitas emocionalmente y qué dinámicas puedes explorar para construir relaciones más conscientes.",
+    descripcion: "Una lectura enfocada en Venus, la Luna, Marte y tu casa VII para comprender cómo expresas el afecto, qué te da seguridad emocional y qué patrones se repiten en tus vínculos.",
     explora: [
-      "Tus necesidades afectivas y tu lenguaje de cuidado",
-      "Lo que te atrae y lo que te da seguridad",
-      "Patrones relacionales que se repiten",
+      "Tu forma de expresar afecto",
+      "Tus necesidades emocionales",
+      "Qué despierta tu atracción y deseo",
+      "Patrones que pueden repetirse en tus vínculos",
+      "Recursos para comunicarte y relacionarte mejor",
     ],
-    incluye: ["Lectura de Venus, la Luna y Marte", "Tu casa VII de las relaciones", "Preguntas de reflexión"],
-    datos: ["Tus datos de nacimiento"],
-    motivo: "Este reporte está en preparación.",
+    idealPara: "Quienes quieren explorar su manera de amar, vincularse y establecer límites.",
+    incluye: INCLUYE_COMUN,
+    datos: ["Nombre para la lectura", "Fecha, hora y lugar de nacimiento", "Correo de entrega"],
   },
   {
     slug: "vocacion",
     nombre: "Vocación y propósito",
-    eyebrow: "Tus talentos, tu dirección",
+    categoria: "Carrera y propósito",
+    eyebrow: "Carrera y propósito",
     icono: "i-compass",
-    resumen: "Tus talentos, lo que te motiva y las direcciones profesionales que resuenan con tu carta.",
-    descripcion: "Una lectura de tu Medio Cielo, tus casas II, VI y X y sus regentes para explorar tus talentos naturales, tus motivaciones y el tipo de trabajo en el que te sientes en tu lugar.",
+    resumen: "Explora tus talentos, motivaciones y ambiciones para comprender qué caminos profesionales conectan con tu manera de ser.",
+    descripcion: "Una lectura de tu Medio Cielo, tus casas II, VI y X y sus regentes para explorar tus capacidades, lo que te motiva y la dirección profesional que resuena contigo.",
     explora: [
-      "Talentos naturales y formas de aportar",
-      "Lo que te motiva y lo que te desgasta",
-      "Direcciones profesionales para explorar",
+      "Tus fortalezas y capacidades",
+      "Qué puede motivarte profesionalmente",
+      "Tu relación con el reconocimiento y los logros",
+      "Tensiones entre seguridad, ambición y libertad",
+      "Preguntas para orientar tu próximo capítulo profesional",
     ],
-    incluye: ["Lectura del Medio Cielo", "Casas del trabajo y sus regentes", "Preguntas para tu próxima decisión"],
-    datos: ["Tus datos de nacimiento"],
-    motivo: "Este reporte está en preparación.",
+    idealPara: "Personas que están explorando su carrera, un cambio profesional o una nueva dirección.",
+    incluye: INCLUYE_COMUN,
+    datos: ["Nombre para la lectura", "Fecha, hora y lugar de nacimiento", "Correo de entrega"],
     nota: "Es una herramienta de reflexión, no una orientación vocacional profesional.",
   },
   {
     slug: "dinero",
     nombre: "Dinero y abundancia",
-    eyebrow: "Tu relación con los recursos",
+    categoria: "Recursos y valor propio",
+    eyebrow: "Recursos y valor propio",
     icono: "i-gem",
-    resumen: "Tu relación con los recursos, la seguridad material y el valor que te das.",
-    descripcion: "Una lectura de tus casas II y VIII, Venus y Júpiter para mirar cómo te relacionas con el dinero, qué te da seguridad y cómo se conecta tu valor propio con lo que recibes.",
+    resumen: "Explora tu relación con el dinero, la seguridad y el valor propio a través del simbolismo de tu carta natal.",
+    descripcion: "Una lectura de tus casas II y VIII, Venus y Júpiter para mirar cómo te relacionas con los recursos, qué te da seguridad y cómo se conecta tu valor propio con lo que recibes.",
     explora: [
-      "Tu relación con el dinero y la seguridad",
-      "Valor propio y merecimiento",
-      "Recursos compartidos y límites",
+      "Cómo interpretas la seguridad material",
+      "Tu relación simbólica con los recursos",
+      "Tensiones entre estabilidad y expansión",
+      "Creencias personales sobre merecimiento y valor",
+      "Preguntas para reflexionar sobre tus decisiones económicas",
     ],
-    incluye: ["Lectura de las casas II y VIII", "Venus y Júpiter en tu carta", "Preguntas de reflexión"],
-    datos: ["Tus datos de nacimiento"],
-    motivo: "Este reporte está en preparación.",
+    idealPara: "Quienes quieren comprender sus actitudes hacia los recursos y la abundancia desde el autoconocimiento.",
+    incluye: INCLUYE_COMUN,
+    datos: ["Nombre para la lectura", "Fecha, hora y lugar de nacimiento", "Correo de entrega"],
     nota: "No es asesoría financiera ni promete resultados económicos.",
   },
   {
     slug: "patrones",
     nombre: "Patrones y transformación",
-    eyebrow: "Lo que se repite y lo que puede cambiar",
+    categoria: "Autoconocimiento profundo",
+    eyebrow: "Autoconocimiento profundo",
     icono: "i-mountain",
-    resumen: "Tus reacciones recurrentes, tus conflictos internos y las posibilidades de transformación.",
+    resumen: "Mira de frente aquello que tiendes a repetir. Explora tus reacciones, tus mecanismos de defensa y las posibilidades de transformar patrones personales.",
     descripcion: "Una lectura de Saturno, Plutón, Quirón y los aspectos tensos de tu carta para reconocer reacciones que se repiten, comprender de dónde vienen y abrir caminos de transformación.",
     explora: [
-      "Reacciones y conflictos que se repiten",
-      "Heridas, límites y aprendizajes (Saturno, Plutón, Quirón)",
-      "Posibilidades concretas de transformación",
+      "Cómo reaccionas ante el conflicto",
+      "Qué puede activar tus defensas",
+      "Tu relación con el control y los límites",
+      "Patrones de comportamiento que merecen atención",
+      "Recursos para responder con mayor conciencia",
     ],
-    incluye: ["Lectura de Saturno, Plutón y Quirón", "Tus aspectos de tensión", "Prácticas de reflexión"],
-    datos: ["Tus datos de nacimiento"],
-    motivo: "Este reporte está en preparación.",
+    idealPara: "Quienes buscan reconocer sus patrones y explorar nuevas formas de actuar.",
+    incluye: INCLUYE_COMUN,
+    datos: ["Nombre para la lectura", "Fecha, hora y lugar de nacimiento", "Correo de entrega"],
     nota: "No reemplaza un acompañamiento psicológico.",
+  },
+  {
+    slug: "revolucion-solar",
+    nombre: "Revolución solar",
+    categoria: "Ciclos y crecimiento",
+    eyebrow: "Ciclos y crecimiento",
+    icono: "i-sun",
+    extra: "revolucion_solar",
+    resumen: "Explora el simbolismo astrológico de tu nuevo ciclo solar y los temas que puedes utilizar como guía de reflexión durante tu año personal.",
+    descripcion: "Cada año, el Sol vuelve al punto exacto en que estaba cuando naciste. La carta de ese instante, calculada para el lugar donde pasas tu cumpleaños, describe el tono de tu año personal.",
+    explora: [
+      "Los temas destacados de tu revolución solar",
+      "Áreas de vida que invitan a prestar atención",
+      "Oportunidades de crecimiento y aprendizaje",
+      "Tensiones que puedes abordar conscientemente",
+      "Preguntas para establecer intenciones para tu nuevo ciclo",
+    ],
+    idealPara: "Quienes quieren comenzar su nuevo año personal con una lectura astrológica enfocada.",
+    incluye: INCLUYE_COMUN,
+    datos: ["Nombre para la lectura", "Fecha, hora y lugar de nacimiento", "Ciudad y país donde pasarás tu cumpleaños", "El año del ciclo que quieres leer", "Correo de entrega"],
+  },
+  {
+    slug: "compatibilidad",
+    nombre: "Compatibilidad de pareja",
+    categoria: "Relaciones",
+    eyebrow: "Relaciones",
+    icono: "i-heart",
+    extra: "segunda_persona",
+    resumen: "Dos cartas, un mismo universo. Explora las dinámicas entre dos personas, sus afinidades, diferencias y posibilidades de aprendizaje mutuo.",
+    descripcion: "La sinastría compara dos cartas natales para mirar el vínculo como un tercer espacio: lo que fluye, lo que roza y lo que cada persona despierta en la otra.",
+    explora: [
+      "Afinidades y puntos de conexión",
+      "Diferencias en las necesidades emocionales",
+      "Dinámicas de comunicación y atracción",
+      "Fortalezas y posibles tensiones",
+      "Oportunidades para construir vínculos más conscientes",
+    ],
+    idealPara: "Parejas o personas que quieren explorar la dinámica astrológica de un vínculo.",
+    incluye: ["Análisis comparativo en PDF", "5 preguntas en Astrea.ai tras confirmar tu compra", "Entrega por correo en 24–48 h"],
+    datos: ["Tus datos de nacimiento", "Fecha, hora (si la sabes) y lugar de nacimiento de la otra persona", "La confirmación de que la otra persona acepta compartir sus datos", "Correo de entrega"],
   },
 ];
 

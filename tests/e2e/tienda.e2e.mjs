@@ -35,13 +35,13 @@ async function nuevaPagina(viewport) {
   await p.locator(".menu-movil__panel a", { hasText: "Reportes" }).click();
   await p.waitForURL(`${TIENDA}/reportes`);
   ok((await p.locator(".tarjeta-reporte").count()) === 7, "catálogo móvil: 7 reportes");
-  ok((await p.locator(".insignia--disponible").count()) === 1, "solo 1 reporte disponible");
+  ok((await p.locator(".insignia--disponible").count()) === 7, "los 7 reportes están disponibles");
   for (const slug of ["carta-natal", "revolucion-solar", "compatibilidad", "amor", "vocacion", "dinero", "patrones"]) {
     const r = await p.goto(`${TIENDA}/reportes/${slug}`);
-    const compraHabilitada = (await p.locator('a[href^="/comprar/"]').count()) > 0;
-    ok(r.status() === 200 && compraHabilitada === (slug === "carta-natal"), `/reportes/${slug}: compra ${compraHabilitada ? "habilitada" : "desactivada"}`);
+    await p.locator(`a[href="/comprar/${slug}"]`).click();
+    await p.waitForURL(`${TIENDA}/comprar/${slug}`);
+    ok(r.status() === 200 && (await p.locator("#form-compra").count()) === 1, `/reportes/${slug} → su formulario de compra`);
   }
-  ok((await p.goto(`${TIENDA}/comprar/amor`)).status() === 404, "no existe compra para un reporte no disponible");
   for (const ruta of ["/como-funciona", "/sobre-astrea", "/preguntas-frecuentes", "/universo", "/gracias", "/link"]) {
     ok((await p.goto(`${TIENDA}${ruta}`)).status() === 200, `${ruta} sigue respondiendo`);
   }
@@ -174,6 +174,66 @@ const API = process.env.API || "http://127.0.0.1:8000/api/v1";
   ok(p.url().endsWith("/gracias?formulario=1") && (await p.locator("#natalForm").count()) === 1, "gracias?formulario=1 conserva el formulario post-pago");
   await p.close();
 }
+
+// ---------------------------------------------------------------- reportes temáticos (POST /pedidos)
+const pedidosDeEsteCorreo = (correo) => db.prepare("select id, producto, pago_confirmado, datos_extra_json, referencia from pedidos_producto where email = ?").all(correo);
+
+async function comprarTematico(slug, completarExtra) {
+  const { p, hotmart } = await nuevaPagina({ width: 390, height: 844 });
+  const correo = `e2e.${slug}.${Date.now().toString(36)}@example.com`;
+  await p.goto(`${TIENDA}/comprar/${slug}`);
+  await p.fill("#nombre", "Prueba Temática"); await p.fill("#fecha", "1990-11-20");
+  await p.selectOption("#hora", "6"); await p.selectOption("#minuto", "30");
+  await p.fill("#ciudad", "Bogotá"); await p.fill("#pais", "Colombia");
+  if (completarExtra) await completarExtra(p);
+  await p.click("[data-siguiente='2']");
+  ok(await p.locator("[data-paso='2']").isVisible(), `${slug}: paso 1 completo`);
+  await p.fill("#email", correo); await p.click("[data-siguiente='3']");
+  const resumen = await p.locator("[data-resumen]").innerText();
+  await p.check("#acepto");
+  const salida = p.waitForRequest((r) => r.url().startsWith("https://pay.hotmart.com/"), { timeout: 60000 });
+  await p.locator("[data-enviar]").dblclick();
+  await salida; await p.waitForTimeout(500);
+  const pedidos = pedidosDeEsteCorreo(correo);
+  ok(pedidos.length === 1 && pedidos[0].producto === slug && pedidos[0].pago_confirmado === 0, `${slug}: un solo pedido real, sin pago confirmado`);
+  const destino = new URL(hotmart[0] || "https://x");
+  ok(destino.pathname === new URL((await import("../../tienda-assets/config.js")).CHECKOUTS[slug].url).pathname, `${slug}: va a SU producto de Hotmart`);
+  ok(destino.searchParams.get("sck") === `astrea-pedido-${pedidos[0]?.id}`, `${slug}: sck = astrea-pedido-${pedidos[0]?.id}`);
+  ok(db.prepare("select count(*) n from cartas_natales where email = ?").get(correo).n === 0, `${slug}: no se crea una orden de carta natal`);
+  await p.goto(`${TIENDA}/gracias`);
+  await p.waitForURL(`${TIENDA}/pedido?retorno=hotmart`);
+  await p.waitForSelector("[data-estado-pedido][data-estado]");
+  const texto = await p.locator("[data-estado-pedido]").innerText();
+  ok(await p.locator("[data-estado-pedido]").getAttribute("data-estado") === "pendiente" && texto.includes(`astrea-pedido-${pedidos[0]?.id}`), `${slug}: retorno 'pendiente' con su referencia`);
+  if (process.env.ADMIN) {
+    await fetch(`${API}/admin/pedidos/${pedidos[0].id}/confirmar-pago`, { method: "POST", headers: { "X-Admin-Secret": process.env.ADMIN } });
+    await p.reload(); await p.waitForSelector("[data-estado-pedido][data-estado='confirmado']", { timeout: 15000 }).catch(() => {});
+    ok(await p.locator("[data-estado-pedido]").getAttribute("data-estado") === "confirmado", `${slug}: tras confirmar en el panel, /pedido muestra 'Pago confirmado'`);
+  }
+  await p.close();
+  return { pedido: pedidos[0], resumen };
+}
+
+await comprarTematico("amor");
+
+const compat = await comprarTematico("compatibilidad", async (p) => {
+  await p.click("[data-siguiente='2']");
+  ok(await p.locator("#e-p2_nombre").innerText() !== "" && await p.locator("#e-p2_consentimiento").innerText() !== "", "compatibilidad: exige los datos y el consentimiento de la otra persona");
+  await p.fill("#p2_nombre", "Luis"); await p.fill("#p2_fecha", "1988-02-03");
+  await p.fill("#p2_ciudad", "Quito"); await p.fill("#p2_pais", "Ecuador");
+  await p.check("#p2_consentimiento");
+});
+const sp = JSON.parse(compat.pedido?.datos_extra_json || "{}").segunda_persona || {};
+ok(sp.nombre === "Luis" && sp.hora === null && sp.consentimiento === true && typeof sp.latitud === "number", "compatibilidad: guarda a la otra persona (sin hora) geocodificada");
+ok(/Luis · 03\/02\/1988 · hora desconocida · Quito, Ecuador/.test(compat.resumen) && /USD 15/.test(compat.resumen), "compatibilidad: el resumen muestra a la otra persona y USD 15");
+
+const anio = new Date().getFullYear();
+const rev = await comprarTematico("revolucion-solar", async (p) => {
+  ok((await p.locator("#rs_anio option").allTextContents()).includes(`Cumpleaños de ${anio}`), "revolución solar: ofrece el ciclo de este año");
+  await p.fill("#rs_ciudad", "Lima"); await p.fill("#rs_pais", "Perú"); await p.selectOption("#rs_anio", String(anio));
+});
+const rs = JSON.parse(rev.pedido?.datos_extra_json || "{}").revolucion_solar || {};
+ok(rs.ciudad === "Lima" && rs.anio === anio && typeof rs.latitud === "number", "revolución solar: guarda lugar y ciclo geocodificados");
 
 // Navegador sin pedido de la tienda: gracias.html funciona como siempre
 {

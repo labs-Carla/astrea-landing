@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
+import { REPORTES, ENTREGA, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, URL_ASTREA_AI, WHATSAPP } from "../tienda-assets/config.js";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -38,6 +38,8 @@ const NAV = [
 
 const disponibles = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) === "disponible");
 const proximos = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) !== "disponible");
+const principales = disponibles.filter((r) => r.principal);
+const tematicos = disponibles.filter((r) => !r.principal);
 
 function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null, indexable = true }) {
   const actual = (href) => (href === ruta || (href !== "/" && ruta.startsWith(href + "/")) ? ' aria-current="page"' : "");
@@ -207,10 +209,10 @@ paginas["index.html"] = layout({
     <header class="center-head">
       <p class="eyebrow">Reportes</p>
       <h2 class="h-section" id="destacado-titulo">Empieza por tu carta natal</h2>
-      <p class="lede">La lectura de base para conocerte. Los reportes temáticos llegarán pronto.</p>
+      <p class="lede">La lectura de base para conocerte, y reportes enfocados en lo que hoy quieres mirar.</p>
     </header>
     <div class="catalogo">
-      ${[...disponibles, ...proximos.slice(0, 2)].map(tarjeta).join("\n      ")}
+      ${["carta-natal", "amor", "revolucion-solar"].map((slug) => tarjeta(REPORTES.find((r) => r.slug === slug))).join("\n      ")}
     </div>
     <p style="text-align:center;margin-top:var(--s-7)"><a class="btn btn--ghost" href="/reportes">Ver los ${REPORTES.length} reportes ${icono("i-arrow")}</a></p>
   </div>
@@ -221,7 +223,7 @@ paginas["index.html"] = layout({
     <div>
       <p class="eyebrow eyebrow--light">Astrea.ai</p>
       <h2 class="h-section h-section--light" id="ai-titulo">Conversa con tu carta</h2>
-      <p class="lede lede--light">Astrea.ai es nuestra app para hacerle preguntas a tu carta natal. Cada carta natal completa incluye 5 preguntas para que sigas explorando tu lectura.</p>
+      <p class="lede lede--light">Astrea.ai es nuestra app para hacerle preguntas a tu carta natal. Cada reporte incluye 5 preguntas para que sigas explorando tu lectura.</p>
     </div>
     <p><a class="btn btn--gold" href="${URL_ASTREA_AI}">Conocer Astrea.ai ${icono("i-arrow")}</a></p>
   </div>
@@ -231,34 +233,40 @@ paginas["index.html"] = layout({
 paginas["reportes.html"] = layout({
   ruta: "/reportes",
   titulo: "Reportes astrológicos · Astrea",
-  descripcion: "Carta natal completa, revolución solar, compatibilidad y reportes temáticos de amor, vocación, dinero y patrones. Disponibilidad y precios.",
-  cuerpo: `${cabecera({ eyebrow: "Catálogo", titulo: "Reportes de Astrea", lede: "Cada reporte mira tu carta desde una pregunta distinta. Hoy puedes pedir tu carta natal completa; los demás están en preparación.", migas: [["/", "Inicio"], ["/reportes", "Reportes"]] })}
+  descripcion: "Carta natal completa, revolución solar, compatibilidad de pareja y reportes de amor, vocación, dinero y patrones. Precios y qué incluye cada uno.",
+  cuerpo: `${cabecera({ eyebrow: "Catálogo", titulo: "Reportes de Astrea", lede: "Cada reporte mira tu carta desde una pregunta distinta. Todos llegan en PDF a tu correo e incluyen 5 preguntas en Astrea.ai.", migas: [["/", "Inicio"], ["/reportes", "Reportes"]] })}
 <section class="sheet sheet--light sheet--lift seccion">
   <div class="shell">
-    <div class="grupo-catalogo">
-      <h2 class="grupo-catalogo__titulo">Disponible ahora</h2>
-      <p class="grupo-catalogo__texto">Pídelo hoy: lo calculamos, lo revisamos y te lo enviamos por correo.</p>
-      <div class="catalogo">${disponibles.map(tarjeta).join("\n")}</div>
-    </div>
-    <div class="grupo-catalogo">
+    ${principales.length ? `<div class="grupo-catalogo">
+      <h2 class="grupo-catalogo__titulo">La lectura de base</h2>
+      <p class="grupo-catalogo__texto">Tu carta natal completa: el mapa entero, para empezar a conocerte.</p>
+      <div class="catalogo">${principales.map(tarjeta).join("\n")}</div>
+    </div>` : ""}
+    ${tematicos.length ? `<div class="grupo-catalogo">
+      <h2 class="grupo-catalogo__titulo">Reportes temáticos</h2>
+      <p class="grupo-catalogo__texto">Una lectura enfocada en un área de tu vida, un ciclo o un vínculo.</p>
+      <div class="catalogo">${tematicos.map(tarjeta).join("\n")}</div>
+    </div>` : ""}
+    ${proximos.length ? `<div class="grupo-catalogo">
       <h2 class="grupo-catalogo__titulo">En preparación</h2>
-      <p class="grupo-catalogo__texto">Todavía no se pueden comprar. Si te interesa alguno, <a class="link-quiet" href="${WHATSAPP}?text=${encodeURIComponent("Hola, quiero saber cuándo estarán los reportes temáticos de Astrea")}">escríbenos</a> y te avisamos.</p>
+      <p class="grupo-catalogo__texto">Todavía no se pueden comprar. Si te interesa alguno, <a class="link-quiet" href="${WHATSAPP}">escríbenos</a> y te avisamos.</p>
       <div class="catalogo">${proximos.map(tarjeta).join("\n")}</div>
-    </div>
+    </div>` : ""}
   </div>
 </section>`,
 });
+
 
 for (const r of REPORTES) {
   const disp = estadoDe(r, CHECKOUTS) === "disponible";
   const compra = disp
     ? `<a class="btn btn--gold btn--block" href="/comprar/${r.slug}">Pedir mi ${esc(r.nombre.toLowerCase())} ${icono("i-arrow")}</a>
       <p class="detalle__aviso">${icono("i-lock")} Primero registras tus datos; después pagas en Hotmart, en tu moneda local. No guardamos datos de tarjetas.</p>`
-    : `<p class="detalle__aviso">${esc(r.motivo)} Aún no se puede comprar.</p>
+    : `<p class="detalle__aviso">Aún no se puede comprar.</p>
       <a class="btn btn--ghost btn--block" href="${WHATSAPP}?text=${encodeURIComponent(`Hola, quiero saber cuándo estará el reporte de ${r.nombre}`)}">Avísame cuando esté</a>
       <a class="link-quiet" href="/reportes/carta-natal">Mientras tanto, conoce la carta natal completa</a>`;
   const despues = disp
-    ? ["Completas tus datos de nacimiento y tu correo.", "Pagas en Hotmart con tu pedido ya registrado.", "Confirmamos tu pago y preparamos tu lectura.", "La revisamos y te la enviamos por correo en 24–48 h.", "Si quieres, sigues explorando con 5 preguntas en Astrea.ai."]
+    ? [r.extra === "segunda_persona" ? "Completas tus datos, los de la otra persona y tu correo." : r.extra === "revolucion_solar" ? "Completas tus datos de nacimiento, dónde pasarás tu cumpleaños y tu correo." : "Completas tus datos de nacimiento y tu correo.", "Pagas en Hotmart con tu pedido ya registrado.", "Confirmamos tu pago y preparamos tu lectura.", "La revisamos y te la enviamos por correo en 24–48 h.", "Si quieres, sigues explorando con 5 preguntas en Astrea.ai."]
     : ["Cuando esté disponible, lo anunciaremos en esta página.", "Podrás pedirlo con tus datos de nacimiento.", "Lo recibirás por correo, revisado como todas nuestras lecturas."];
   const jsonLd = {
     "@context": "https://schema.org", "@type": "Product", name: `${r.nombre} · Astrea`, description: r.resumen,
@@ -284,16 +292,61 @@ for (const r of REPORTES) {
     <div class="bloques">
       <div class="prosa"><p>${esc(r.descripcion)}</p>${r.nota ? `<p class="nota-reflexion">${esc(r.nota)}</p>` : ""}</div>
       <div class="bloque"><h2 class="bloque__titulo">Qué puedes explorar</h2>${lista(r.explora)}</div>
+      ${r.idealPara ? `<div class="bloque"><h2 class="bloque__titulo">Ideal para</h2><p class="prosa">${esc(r.idealPara)}</p></div>` : ""}
       <div class="bloque"><h2 class="bloque__titulo">Qué incluye</h2>${lista(r.incluye)}</div>
       <div class="bloque"><h2 class="bloque__titulo">Qué datos necesitamos</h2>${lista(r.datos)}</div>
-      ${r.entrega ? `<div class="bloque"><h2 class="bloque__titulo">Cómo se entrega</h2><p class="prosa">${esc(r.entrega)}</p></div>` : ""}
+      <div class="bloque"><h2 class="bloque__titulo">Cómo se entrega</h2><p class="prosa">${esc(r.entrega || ENTREGA)}</p></div>
       <div class="bloque"><h2 class="bloque__titulo">${disp ? "Qué pasa después de comprar" : "Qué sigue"}</h2><ol class="pasos-entrega">${despues.map((p) => `<li>${esc(p)}</li>`).join("")}</ol></div>
-      ${r.beneficioAstreaAi ? BENEFICIO_AI : ""}
+      ${BENEFICIO_AI}
       <p class="nota-reflexion">Las lecturas de Astrea son herramientas de reflexión y autoconocimiento, no predicciones ni asesoría médica, psicológica, financiera o profesional.</p>
     </div>
   </div>
 </section>`,
   });
+}
+
+const campo = (id, etiqueta, attrs = "", ayuda = "") =>
+  `<div class="field"><label for="${id}">${etiqueta}</label><input id="${id}" name="${id}" maxlength="150" ${attrs}>${ayuda ? `<small>${ayuda}</small>` : ""}<span class="error-campo" id="e-${id}" aria-live="polite"></span></div>`;
+
+/** Campos adicionales del paso 1 según el reporte (catalogo.js `extra`, mismo contrato que el backend). */
+function camposExtra(r) {
+  const horas = Array.from({ length: 24 }, (_, h) => `<option value="${h}">${String(h).padStart(2, "0")} h</option>`).join("");
+  const minutos = Array.from({ length: 60 }, (_, m) => `<option value="${m}">${String(m).padStart(2, "0")} min</option>`).join("");
+  if (r.extra === "revolucion_solar") {
+    const anio = new Date().getFullYear();
+    return `<fieldset class="field field--full grupo-extra">
+              <legend class="grupo-extra__titulo">Tu próximo cumpleaños</legend>
+              <p class="grupo-extra__texto">La revolución solar se calcula para el lugar donde pasas tu cumpleaños.</p>
+              <div class="natal-form natal-form--anidado">
+                ${campo("rs_ciudad", "Ciudad donde pasarás tu cumpleaños", 'placeholder="Ej: Lima" required')}
+                ${campo("rs_pais", "País", 'placeholder="Ej: Perú" required')}
+                <div class="field field--full"><label for="rs_anio">Ciclo que quieres leer</label><select id="rs_anio" name="rs_anio" required data-anios-revolucion><option value="">Elige el año</option>${[anio - 1, anio, anio + 1].map((a) => `<option value="${a}">Cumpleaños de ${a}</option>`).join("")}</select><span class="error-campo" id="e-rs_anio" aria-live="polite"></span></div>
+              </div>
+            </fieldset>`;
+  }
+  if (r.extra === "segunda_persona") {
+    return `<fieldset class="field field--full grupo-extra">
+              <legend class="grupo-extra__titulo">La otra persona</legend>
+              <div class="natal-form natal-form--anidado">
+                <div class="field field--full"><label for="p2_nombre">Nombre</label><input id="p2_nombre" name="p2_nombre" maxlength="150" required><span class="error-campo" id="e-p2_nombre" aria-live="polite"></span></div>
+                <div class="field field--full"><label for="p2_fecha">Fecha de nacimiento</label><input id="p2_fecha" name="p2_fecha" type="date" min="1900-01-01" required><span class="error-campo" id="e-p2_fecha" aria-live="polite"></span></div>
+                <fieldset class="field field--hora">
+                  <legend class="leyenda-campo">Hora de nacimiento (opcional)</legend>
+                  <div class="hora-selects">
+                    <select id="p2_hora" name="p2_hora" aria-label="Hora de la otra persona"><option value="">Hora</option>${horas}</select>
+                    <select id="p2_minuto" name="p2_minuto" aria-label="Minutos de la otra persona"><option value="">Minutos</option>${minutos}</select>
+                  </div>
+                  <small>Si no la sabes, déjala vacía: el análisis se adapta.</small>
+                  <span class="error-campo" id="e-p2_hora" aria-live="polite"></span>
+                </fieldset>
+                ${campo("p2_ciudad", "Ciudad de nacimiento", 'placeholder="Ej: Quito" required')}
+                ${campo("p2_pais", "País", 'placeholder="Ej: Ecuador" required')}
+                <label class="check"><input type="checkbox" id="p2_consentimiento" name="p2_consentimiento" required><span>Confirmo que esta persona aceptó compartir sus datos de nacimiento para este análisis.</span></label>
+                <span class="error-campo" id="e-p2_consentimiento" aria-live="polite" style="grid-column:1/-1"></span>
+              </div>
+            </fieldset>`;
+  }
+  return "";
 }
 
 // Compra: solo para reportes con checkout real.
@@ -316,7 +369,7 @@ for (const r of disponibles) {
         <li data-paso-indicador="2">2. Correo</li>
         <li data-paso-indicador="3">3. Revisión</li>
       </ol>
-      <form id="form-compra" novalidate data-reporte="${r.slug}" data-checkout="${esc(CHECKOUTS[r.slug].url)}">
+      <form id="form-compra" novalidate data-reporte="${r.slug}"${r.extra ? ` data-extra="${r.extra}"` : ""}>
         <fieldset data-paso="1">
           <legend><h2>Tus datos de nacimiento</h2></legend>
           <div class="natal-form">
@@ -333,6 +386,7 @@ for (const r of disponibles) {
             </fieldset>
             <div class="field"><label for="ciudad">Ciudad de nacimiento</label><input id="ciudad" name="ciudad" autocomplete="address-level2" maxlength="150" placeholder="Ej: Guadalajara" required><span class="error-campo" id="e-ciudad" aria-live="polite"></span></div>
             <div class="field"><label for="pais">País</label><input id="pais" name="pais" autocomplete="country-name" maxlength="150" placeholder="Ej: México" required><span class="error-campo" id="e-pais" aria-live="polite"></span></div>
+            ${camposExtra(r)}
             <div class="acciones-paso"><button class="btn btn--night" type="button" data-siguiente="2">Continuar ${icono("i-arrow")}</button></div>
           </div>
         </fieldset>
@@ -362,7 +416,7 @@ for (const r of disponibles) {
       <p class="tarjeta-reporte__titulo">${esc(r.nombre)}</p>
       ${precioHtml(r)}
       ${lista(r.incluye.slice(0, 3))}
-      ${r.beneficioAstreaAi ? BENEFICIO_AI : ""}
+      ${BENEFICIO_AI}
     </aside>
   </div>
 </section>`,
@@ -387,7 +441,7 @@ paginas["pedido.html"] = layout({
 });
 
 const PASOS = [
-  ["i-pages", "Elige tu reporte", "Hoy está disponible la carta natal completa. Revisa qué incluye y qué datos necesitas."],
+  ["i-pages", "Elige tu reporte", "La carta natal completa o un reporte temático: amor, vocación, dinero, patrones, revolución solar o compatibilidad. Revisa qué incluye y qué datos necesitas."],
   ["i-wheel", "Registra tus datos", "Fecha, hora y lugar de nacimiento, y el correo donde quieres recibir tu lectura. Los revisas antes de continuar."],
   ["i-lock", "Paga en Hotmart", "Te llevamos al pago seguro de Hotmart con tu pedido ya registrado. Pagas en tu moneda local; nosotros no vemos ni guardamos datos de tarjetas."],
   ["i-check", "Confirmamos tu pago", "Revisamos la venta en Hotmart y confirmamos tu pedido. Volver de la página de pago no basta: el pedido se confirma cuando verificamos la venta."],
@@ -433,13 +487,15 @@ paginas["sobre-astrea.html"] = layout({
 
 const FAQ = [
   ["¿Qué es una carta natal?", "Es un mapa del cielo calculado para la fecha, hora y lugar exactos de tu nacimiento. Muestra dónde estaban el Sol, la Luna y los planetas, y cómo se relacionan entre sí y con las áreas de tu vida."],
-  ["¿Qué reportes puedo comprar hoy?", "La carta natal completa. La revolución solar, la compatibilidad de pareja y los reportes de amor, vocación, dinero y patrones están en preparación y todavía no se pueden comprar."],
+  ["¿Qué reportes puedo comprar?", "La carta natal completa y seis reportes temáticos: amor y vínculos, vocación y propósito, dinero y abundancia, patrones y transformación, revolución solar y compatibilidad de pareja. Todos llegan en PDF a tu correo entre 24 y 48 horas después de confirmar tu pago."],
+  ["¿Qué necesito para la revolución solar?", "Tus datos de nacimiento, la ciudad donde pasarás tu cumpleaños y el año del ciclo que quieres leer: la carta de tu año se calcula para ese lugar."],
+  ["¿Qué necesito para la compatibilidad de pareja?", "Tus datos de nacimiento y los de la otra persona. Si no sabes su hora de nacimiento, puedes dejarla vacía. Te pedimos confirmar que esa persona aceptó compartir sus datos."],
   ["¿Cómo pago?", "Primero registras tus datos de nacimiento y tu correo. Después te llevamos al pago seguro de Hotmart, en tu moneda local. Astrea no ve ni guarda datos de tarjetas."],
   ["Ya pagué, ¿por qué mi pedido aparece como pendiente?", "Confirmamos cada pago verificando la venta en Hotmart. Volver de la página de pago no basta para confirmarlo. Cuando lo confirmamos, preparamos tu lectura; no necesitas volver a enviar tus datos."],
   ["¿Cuánto tiempo tarda en llegar?", "Entre 24 y 48 horas después de confirmar tu pago, directo a tu correo."],
   ["¿Qué tan precisa es la lectura?", "Las posiciones se calculan con astronomía real (Swiss Ephemeris), no con tablas genéricas. La interpretación se redacta con apoyo de asistentes de IA y después la revisamos una por una antes de enviarla. Es una herramienta de autoconocimiento, no una predicción."],
   ["¿Necesito saber mi hora de nacimiento?", "Es lo ideal, porque de ella dependen el Ascendente y las casas. Si no la sabes con exactitud, usa la más aproximada que tengas: la mayoría de las secciones siguen siendo útiles."],
-  ["¿Qué son las 5 preguntas de Astrea.ai?", "Cuando te enviamos tu carta natal completa, puedes entrar a Astrea.ai con el mismo correo de tu compra y tendrás 5 preguntas para conversar sobre tu carta. No necesitas crear una cuenta para comprar, y tu lectura es tuya con o sin suscripción."],
+  ["¿Qué son las 5 preguntas de Astrea.ai?", "Cada reporte incluye 5 preguntas en Astrea.ai. Cuando te enviamos tu reporte, entra a Astrea.ai con el mismo correo de tu compra y podrás usarlas para conversar sobre tu carta. No necesitas crear una cuenta para comprar, y tu reporte es tuyo con o sin suscripción."],
   ["¿Puedo pedir una lectura para otra persona?", "Sí. Usa los datos de nacimiento de esa persona y el correo donde quieres recibir la lectura. Las 5 preguntas de Astrea.ai quedan asociadas a ese correo."],
 ];
 
