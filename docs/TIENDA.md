@@ -113,20 +113,12 @@ GET /api/v1/carta-natal/orden/{referencia}/estado
 
 ## Portada (inicio)
 
-`index.html` es la portada editorial: hero (escena), franja de confianza, los
-7 reportes con precio y "Comprar", cómo funciona, Astrea.ai, testimonios y
-preguntas frecuentes. Se genera, como el resto, con `scripts/generar-tienda.mjs`.
+`index.html` es la portada: el hero y la navegación de siempre (escultura en
+el arco y «Un mapa del cielo para comprender tu historia.»), seguidos de la
+franja de confianza, los 7 reportes con precio y "Comprar", cómo funciona,
+Astrea.ai, testimonios y preguntas frecuentes. Se genera, como el resto, con
+`scripts/generar-tienda.mjs`.
 
-- **Escena del hero.** En móvil usa `universo-assets/img/arco-columnas.webp`
-  (vertical). En escritorio usa una panorámica **sin texto** si existen
-  `tienda-assets/img/hero-escena.webp` (se sirve a tamaño original); si no,
-  encuadra la misma escena vertical. Para cambiarla: guarda los dos archivos y
-  corre `node scripts/generar-tienda.mjs`.
-  - Panorámica recomendada: 16:9, 2400×1350 o más, sin texto.
-  - Composición: terraza o santuario de mármol con columnas y arcos en primer
-    plano, escalinata hacia el mar entre montañas o islas, y cielo de
-    atardecer a noche con estrellas.
-  - Deja el **tercio izquierdo** más oscuro y simple, porque ahí va el texto.
 - **Testimonios.** El arreglo `TESTIMONIOS` está vacío y la sección no se
   muestra. Agrega solo testimonios reales y autorizados (`{ texto, nombre, detalle? }`).
 - **Términos y condiciones.** No hay página, así que el pie no la enlaza.

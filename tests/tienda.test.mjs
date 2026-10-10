@@ -259,9 +259,12 @@ test("cada reporte tiene su portada en los dos tamaños, y la usa su ficha", () 
   }
 });
 
-test("portada: hero, confianza, 7 reportes comprables, pasos, Astrea.ai y preguntas", () => {
+test("portada: hero y navegación de producción, confianza, 7 reportes comprables, pasos, Astrea.ai y preguntas", () => {
   const html = PAGINAS["index.html"];
-  assert.match(html, /<h1 class="escena__titulo" id="hero-titulo">Astrología para una vida <em>más consciente\.<\/em><\/h1>/);
+  assert.match(html, /<h1 class="h-display" id="hero-titulo">Un mapa del cielo para comprender tu historia\.<\/h1>/);
+  assert.match(html, /hero-escultura\.webp/, "hero de producción");
+  assert.match(html, /<a class="wordmark" href="\/"/, "header de producción");
+  assert.match(html, /<a href="\/" aria-current="page">Inicio<\/a>/);
   assert.match(html, /href="\/reportes">Explorar reportes/);
   assert.match(html, /href="\/universo#generador">Genera tu carta gratis/);
   for (const t of ["Astronomía real", "Revisión humana", "Directo a tu correo", "Autoconocimiento"]) assert.ok(html.includes(`<strong>${t}</strong>`), t);
@@ -280,6 +283,5 @@ test("portada: hero, confianza, 7 reportes comprables, pasos, Astrea.ai y pregun
   assert.ok(!/Historias reales/.test(html), "la sección de testimonios no se muestra sin testimonios reales");
   assert.match(html, /tiktok\.com\/@astrea\.charts/);
   assert.match(html, /fetchpriority="high"/, "el hero carga con prioridad");
-  assert.match(html, /<source media="\(min-width: 860px\)" srcset="\/tienda-assets\/img\/hero-escena\.webp">/, "panorámica en escritorio, a tamaño original");
-  assert.ok(!/<video|data-video|escena\.js/.test(html), "sin video en el hero");
+  assert.ok(!/escena|backdrop/.test(html), "sin la escena ni el vidrio del rediseño");
 });

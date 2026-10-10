@@ -32,6 +32,7 @@ const SPRITE = SPRITE_UNIVERSO.replace("</svg>", `  <symbol id="i-menu" viewBox=
 </svg>`);
 
 const NAV = [
+  ["/", "Inicio"],
   ["/reportes", "Reportes"],
   ["/como-funciona", "Cómo funciona"],
   ["/sobre-astrea", "Sobre Astrea"],
@@ -78,18 +79,18 @@ ${SPRITE}
 
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-<header class="site-header site-header--tienda${portada ? " site-header--portada" : ""}">
+<header class="site-header site-header--tienda">
   <div class="site-header__inner">
-    <a class="marca" href="/" aria-label="Astrea Charts, inicio">${MARCA}</a>
+    <a class="wordmark" href="/" aria-label="Astrea, inicio">ASTREA</a>
     <nav class="site-nav" aria-label="Principal">
       ${enlaces}
     </nav>
     <div class="header-acciones">
-      <a class="btn btn--ai btn--sm" href="${URL_ASTREA_AI}">Astrea.ai ${icono("i-arrow")}</a>
+      <a class="nav-secundaria" href="${URL_ASTREA_AI}">Astrea.ai ↗</a>
+      <a class="btn btn--gold btn--sm" href="/reportes">Ver reportes</a>
       <details class="menu-movil">
         <summary aria-label="Abrir menú">${icono("i-menu")}</summary>
         <nav class="menu-movil__panel" aria-label="Menú">
-          <a href="/"${ruta === "/" ? ' aria-current="page"' : ""}>Inicio</a>
           ${enlaces}
           <a href="${URL_ASTREA_AI}">Astrea.ai ↗</a>
         </nav>
@@ -192,12 +193,6 @@ const BENEFICIO_AI = `<div class="beneficio-ai">
 const paginas = {};
 
 // ---------------------------------------------------------------- portada (inicio)
-// Escena del hero. En móvil, arco-columnas (vertical: terraza, arcos, mar, montañas y cielo).
-// En escritorio se usa una panorámica sin texto si existe (tienda-assets/img/hero-escena.webp).
-// Se sirve siempre a su tamaño original: al ser muy ancha, el hero la recorta por los lados
-// y una versión reducida quedaría estirada en alto.
-const HERO_PANORAMICA = existsSync(join(RAIZ, "tienda-assets/img/hero-escena.webp"));
-const HERO_MOVIL = "/universo-assets/img/arco-columnas.webp";
 
 // Testimonios reales y autorizados: { texto, nombre, detalle? }. Vacío = la sección no se muestra.
 const TESTIMONIOS = [];
@@ -228,34 +223,23 @@ const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby=
 
 paginas["index.html"] = layout({
   ruta: "/",
-  portada: true,
   titulo: "Astrea Charts · Astrología para una vida más consciente",
   descripcion: "Reportes astrológicos personalizados: carta natal, amor, vocación, dinero, patrones, revolución solar y compatibilidad. Astronomía real, revisión humana y 5 preguntas en Astrea.ai.",
-  imagen: HERO_PANORAMICA ? "/tienda-assets/img/hero-escena.webp" : HERO_MOVIL,
-  preload: HERO_PANORAMICA
-    ? `<link rel="preload" as="image" href="/tienda-assets/img/hero-escena.webp" media="(min-width: 860px)">
-<link rel="preload" as="image" href="${HERO_MOVIL}" media="(max-width: 859px)">`
-    : `<link rel="preload" as="image" href="${HERO_MOVIL}">`,
-  cuerpo: `<section class="escena${HERO_PANORAMICA ? " escena--panoramica" : ""}" aria-labelledby="hero-titulo">
-  <picture class="escena__fondo">
-    ${HERO_PANORAMICA ? `<source media="(min-width: 860px)" srcset="/tienda-assets/img/hero-escena.webp">` : ""}
-    <img src="${HERO_MOVIL}" alt="Terraza de mármol con arcos y columnas frente al mar y las montañas, bajo un cielo nocturno con luna y estrellas" width="1086" height="1448" fetchpriority="high" decoding="async">
-  </picture>
-  <svg class="escena__constelacion" viewBox="0 0 300 200" aria-hidden="true">
-    <path d="M20 150 L70 110 L120 128 L170 70 L230 88 L280 30"/>
-    <circle cx="20" cy="150" r="2"/><circle cx="70" cy="110" r="2.6"/><circle cx="120" cy="128" r="1.8"/>
-    <circle cx="170" cy="70" r="3"/><circle cx="230" cy="88" r="2"/><circle cx="280" cy="30" r="2.4"/>
-  </svg>
-  <div class="shell escena__contenido">
-    <div class="escena__texto">
-      <p class="eyebrow eyebrow--light">Un viaje al cielo interior</p>
-      <h1 class="escena__titulo" id="hero-titulo">Astrología para una vida <em>más consciente.</em></h1>
-      <p class="escena__lede">Lecturas personalizadas que combinan la precisión de la astronomía real con una interpretación profunda, para que comprendas tu historia y tomes decisiones más alineadas.</p>
-      <div class="escena__acciones">
+  cuerpo: `<section class="hero hero--tienda" aria-labelledby="hero-titulo">
+  <div class="hero__sky" aria-hidden="true"></div>
+  <div class="hero__grid shell">
+    <div class="hero__copy">
+      <p class="eyebrow eyebrow--light">Astrea · Reportes astrológicos</p>
+      <h1 class="h-display" id="hero-titulo">Un mapa del cielo para comprender tu historia.</h1>
+      <p class="lede lede--light">Lecturas personalizadas a partir de tu fecha, hora y lugar de nacimiento. Calculadas con astronomía real, escritas con cuidado y revisadas una por una antes de llegar a ti.</p>
+      <div class="hero__actions">
         <a class="btn btn--gold" href="/reportes">Explorar reportes ${icono("i-arrow")}</a>
-        <a class="btn btn--linea" href="/universo#generador">Genera tu carta gratis</a>
+        <a class="link-quiet link-quiet--light" href="/universo#generador">Genera tu carta gratis</a>
       </div>
     </div>
+    <figure class="hero__figure">
+      <div class="arch arch--framed"><div class="media-slot media-slot--hero"><img src="/universo-assets/img/hero-escultura.webp" alt="Escultura griega de mármol bajo un cielo nocturno" width="800" height="1000" fetchpriority="high"></div></div>
+    </figure>
   </div>
 </section>
 

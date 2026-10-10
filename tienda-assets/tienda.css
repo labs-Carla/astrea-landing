@@ -237,10 +237,8 @@
 .field .check input[type="checkbox"] { width: 20px; height: 20px; min-height: 0; padding: 0; -webkit-appearance: auto; appearance: auto; background: none; }
 
 /* ==========================================================================
-   Portada editorial (inicio) y elementos compartidos: marca, header, pie.
-   Cada sección es un "capítulo": escenas oscuras inmersivas alternadas con
-   hojas claras de lectura. Sin degradados decorativos: solo los velos
-   localizados que hacen legible el texto sobre la escena.
+   Portada (inicio) y elementos compartidos: marca, pie. Cada sección es un
+   "capítulo": hojas claras de lectura alternadas con secciones azul noche.
    ========================================================================== */
 
 /* ---------- Marca ---------- */
@@ -249,47 +247,6 @@
 .marca__texto { display: grid; font-family: var(--font-serif); font-weight: 500; font-size: 1.3rem; letter-spacing: 0.26em; line-height: 1; }
 .marca__texto small { font-family: var(--font-sans); font-size: 0.52rem; letter-spacing: 0.5em; margin-top: 4px; color: var(--ink-on-dark-soft); padding-left: 0.2em; }
 
-/* ---------- Botones nuevos ---------- */
-.btn--ai { background: transparent; color: var(--gold-light); border-color: var(--gold-light); border-radius: 999px; }
-.btn--ai:hover { background: var(--gold-light); color: var(--night); }
-.btn--linea { background: rgba(7, 11, 20, .25); color: var(--ink-on-dark); border-color: rgba(237, 229, 214, .7); }
-.btn--linea:hover { background: rgba(237, 229, 214, .12); border-color: var(--ink-on-dark); }
-
-/* ---------- Header sobre la escena (solo portada) ---------- */
-.site-header--portada { position: absolute; background: transparent; border-bottom-color: transparent; }
-.site-header--portada .site-nav a { color: var(--ink-on-dark); text-shadow: 0 1px 8px rgba(7, 11, 20, .6); }
-
-/* ---------- Hero: la escena ---------- */
-.escena {
-  position: relative; isolation: isolate; overflow: hidden;
-  min-height: min(100svh, 860px);
-  display: flex; align-items: flex-end;
-  background: var(--night-deep); color: var(--ink-on-dark);
-  padding: calc(96px + env(safe-area-inset-top, 0px)) 0 var(--s-8);
-}
-.escena__fondo, .escena__fondo img { position: absolute; inset: 0; width: 100%; height: 100%; }
-.escena__fondo { z-index: -2; }
-.escena__fondo img { object-fit: cover; object-position: 50% 40%; }
-/* Velo localizado: solo bajo el texto (abajo en móvil, a la izquierda en escritorio). */
-.escena::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(7, 11, 20, .55) 0%, rgba(7, 11, 20, 0) 22%),
-    linear-gradient(0deg, rgba(7, 11, 20, .92) 0%, rgba(7, 11, 20, .7) 34%, rgba(7, 11, 20, 0) 62%);
-}
-.escena__constelacion { position: absolute; z-index: -1; width: min(52vw, 300px); top: 92px; right: 6%; opacity: .55; }
-.escena__constelacion { fill: var(--gold-light); stroke: rgba(212, 177, 114, .5); stroke-width: .7; }
-.escena__constelacion path { fill: none; }
-.escena__contenido { width: 100%; }
-.escena__texto { max-width: 36rem; }
-.escena__titulo {
-  font-family: var(--font-serif); font-weight: 400; line-height: 1.02;
-  font-size: clamp(2.6rem, 1.7rem + 4.2vw, 4.9rem); color: var(--ink-on-dark);
-  margin: var(--s-3) 0 var(--s-5); text-wrap: balance;
-}
-.escena__titulo em { font-style: italic; color: var(--gold-light); }
-.escena__lede { font-size: clamp(1rem, .95rem + .3vw, 1.15rem); color: var(--ink-on-dark); opacity: .9; max-width: 33rem; margin-bottom: var(--s-6); text-wrap: pretty; }
-.escena__acciones { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4); }
 
 /* ---------- Franja de confianza ---------- */
 .confianza { background: var(--ivory); border-bottom: 1px solid var(--hairline); }
@@ -400,16 +357,6 @@
 
 /* ---------- ≥ 860px ---------- */
 @media (min-width: 860px) {
-  .escena { min-height: min(80svh, 820px); align-items: center; padding-bottom: var(--s-8); }
-  /* Encuadre provisional de la escena vertical: el arco central, el mar y el cielo. */
-  .escena__fondo img { object-position: 50% 62%; }
-  .escena--panoramica .escena__fondo img { object-position: 50% 50%; }
-  .escena::before {
-    background:
-      linear-gradient(180deg, rgba(7, 11, 20, .6) 0%, rgba(7, 11, 20, 0) 18%),
-      radial-gradient(ellipse 62% 78% at 22% 58%, rgba(7, 11, 20, .78) 0%, rgba(7, 11, 20, .45) 52%, rgba(7, 11, 20, 0) 100%);
-  }
-  .escena__constelacion { top: 110px; right: 8%; width: 300px; }
   .confianza__lista { grid-template-columns: repeat(4, 1fr); }
   .confianza__lista li + li { border-left: 1px solid var(--hairline); padding-left: var(--s-5); }
   .capitulo__cabecera:not(.capitulo__cabecera--centro):not(.capitulo__cabecera--apilada) { grid-template-columns: 1.4fr 1fr; align-items: end; }
@@ -417,8 +364,7 @@
   .faq-portada { grid-template-columns: 0.8fr 1.2fr; }
 }
 
-/* ---------- Móvil: catálogo compacto para comparar y comprar, y texto del hero legible ---------- */
-.escena .eyebrow, .escena__lede { text-shadow: 0 1px 12px rgba(7, 11, 20, .85); }
+/* ---------- Móvil: catálogo compacto para comparar y comprar ---------- */
 @media (max-width: 599px) {
   .catalogo-portada { gap: var(--s-3); }
   .tarjeta-portada { grid-template-columns: 116px 1fr; grid-template-rows: none; }
@@ -428,9 +374,12 @@
   .tarjeta-portada__texto { font-size: 0.82rem; }
   .tarjeta-portada__pie { padding-top: var(--s-2); }
   .tarjeta-portada__precio { font-size: 1.15rem; }
-  .escena { padding-top: calc(160px + env(safe-area-inset-top, 0px)); }
 }
-/* La panorámica ya trae su propio cielo zodiacal: sin constelación dibujada encima. */
-@media (min-width: 860px) { .escena--panoramica .escena__constelacion { display: none; } }
-/* La panorámica mide 709 px de alto: el hero no pasa de 720 px para mostrarla a tamaño real, sin ampliarla. */
-@media (min-width: 860px) { .escena--panoramica { min-height: min(80svh, 720px); } }
+/* La franja de confianza sube sobre el hero como las hojas del sitio (esquinas redondeadas). */
+.hero--tienda + .confianza {
+  position: relative; z-index: 2;
+  margin-top: calc(var(--r-sheet) * -1.6);
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  box-shadow: var(--shadow-lift);
+  padding-top: var(--s-4);
+}
