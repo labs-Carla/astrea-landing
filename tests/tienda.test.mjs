@@ -280,4 +280,7 @@ test("portada: hero, confianza, 7 reportes comprables, pasos, Astrea.ai y pregun
   assert.ok(!/Historias reales/.test(html), "la sección de testimonios no se muestra sin testimonios reales");
   assert.match(html, /tiktok\.com\/@astrea\.charts/);
   assert.match(html, /fetchpriority="high"/, "el hero carga con prioridad");
+  assert.match(html, /data-video="\/tienda-assets\/img\/hero-escena\.mp4"/, "video de la escena");
+  assert.match(html, /<script type="module" src="\/tienda-assets\/escena\.js">/);
+  assert.ok(!/<video/.test(html), "el video lo agrega escena.js solo en escritorio: no va en el HTML");
 });

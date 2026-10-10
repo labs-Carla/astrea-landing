@@ -127,6 +127,11 @@ preguntas frecuentes. Se genera, como el resto, con `scripts/generar-tienda.mjs`
     plano, escalinata hacia el mar entre montañas o islas, y cielo de
     atardecer a noche con estrellas.
   - Deja el **tercio izquierdo** más oscuro y simple, porque ahí va el texto.
+- **Video de la escena.** Si existe `tienda-assets/img/hero-escena.mp4`, en
+  escritorio se reproduce una vez, sin sonido, sobre la panorámica, y se queda
+  en su último cuadro. No se descarga en móvil, con movimiento reducido ni con
+  ahorro de datos (`tienda-assets/escena.js`). El actual es el de Hailuo, 5,9 s
+  y 1,6 MB, que pasa del atardecer a la noche.
 - **Testimonios.** El arreglo `TESTIMONIOS` está vacío y la sección no se
   muestra. Agrega solo testimonios reales y autorizados (`{ texto, nombre, detalle? }`).
 - **Términos y condiciones.** No hay página, así que el pie no la enlaza.
