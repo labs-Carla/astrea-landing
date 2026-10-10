@@ -1,98 +1,163 @@
 /**
  * Astrea · Tienda — lógica pura del flujo de compra (sin DOM, testeable con node --test).
  *
- * Contrato real del backend (astrea-API):
- *   POST {API}/carta-natal/orden  body DatosCompra {nombre, email, fecha_hora_local, ciudad, pais}
- *   -> 200 {status: "recibido", orden_id, referencia}   | 400/422 {detail}   | 429 rate limit (5/min)
- *   GET  {API}/carta-natal/orden/{referencia}/estado -> {estado: pendiente|confirmado|enviado|reembolsado}
- * `referencia` es aleatoria (no adivinable): es lo único que se usa para consultar el estado.
- * La orden nace con pago_confirmado=false; el admin la confirma a mano en el
- * panel cruzando la venta de Hotmart por `sck=astrea-orden-<id>`. Reenviar los
- * mismos datos natales devuelve la MISMA orden (la carta se identifica por
- * fecha/hora y lugar) y nunca des-confirma un pago.
+ * Dos canales reales en el backend (astrea-API):
+ *
+ * - Carta natal → POST {API}/carta-natal/orden  {nombre, email, fecha_hora_local, ciudad, pais}
+ *     -> {status, orden_id, referencia}; Hotmart sck=astrea-orden-<id>
+ *     estado: GET {API}/carta-natal/orden/{referencia}/estado
+ *   Reenviar los mismos datos natales devuelve la MISMA orden y nunca des-confirma un pago.
+ *
+ * - Los otros 6 reportes → POST {API}/pedidos  {..., producto, revolucion_solar?, segunda_persona?}
+ *     -> {status, pedido_id, referencia}; Hotmart sck=astrea-pedido-<id>
+ *     estado: GET {API}/pedidos/{referencia}/estado
+ *   Reenviar el mismo pedido antes de confirmar el pago devuelve el MISMO pedido.
+ *
+ * En ambos: nace sin pago confirmado (el admin lo confirma a mano en el panel),
+ * 400/422 {detail}, 429 (5/min). `referencia` es aleatoria: es lo único que se
+ * usa para consultar el estado. El frontend nunca envía precio ni estado de pago.
  */
 
 export const LIMITES = { nombreMin: 2, textoMax: 150, anioMin: 1900 };
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+export const CANALES = {
+  "carta-natal": { crear: "/carta-natal/orden", campoId: "orden_id", sck: "astrea-orden", estado: (ref) => `/carta-natal/orden/${encodeURIComponent(ref)}/estado` },
+  pedido: { crear: "/pedidos", campoId: "pedido_id", sck: "astrea-pedido", estado: (ref) => `/pedidos/${encodeURIComponent(ref)}/estado` },
+};
 
-/** Valida los datos del formulario. Devuelve {campo: mensaje} (vacío = válido). */
-export function validarDatos(d, ahora = new Date()) {
+/** La carta natal tiene su flujo de siempre; los demás reportes son pedidos. */
+export const canalDe = (slug) => (slug === "carta-natal" ? "carta-natal" : "pedido");
+
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const largo = (v) => (v || "").trim().length;
+const horaValida = (h, m) => {
+  const H = Number(h), M = Number(m);
+  return h !== "" && h != null && m !== "" && m != null && Number.isInteger(H) && H >= 0 && H <= 23 && Number.isInteger(M) && M >= 0 && M <= 59;
+};
+
+function validarFecha(valor, ahora) {
+  const fecha = valor ? new Date(`${valor}T00:00:00`) : null;
+  if (!fecha || Number.isNaN(fecha.getTime())) return "Indica la fecha de nacimiento.";
+  if (fecha.getFullYear() < LIMITES.anioMin) return "La fecha no puede ser anterior a 1900.";
+  if (fecha > ahora) return "La fecha no puede estar en el futuro.";
+  return null;
+}
+
+function validarLugar(errores, d, campoCiudad, campoPais, textoCiudad, textoPais) {
+  for (const [campo, texto] of [[campoCiudad, textoCiudad], [campoPais, textoPais]]) {
+    if (largo(d[campo]) < 2) errores[campo] = texto;
+    else if (largo(d[campo]) > LIMITES.textoMax) errores[campo] = "Es demasiado largo.";
+  }
+}
+
+/** Años de revolución solar que acepta el backend: el actual, el anterior y el siguiente. */
+export function aniosDeRevolucion(ahora = new Date()) {
+  const a = ahora.getFullYear();
+  return [a - 1, a, a + 1];
+}
+
+/**
+ * Valida los datos del formulario. `extra`: null | "revolucion_solar" | "segunda_persona"
+ * (catalogo.js). Devuelve {campo: mensaje} (vacío = válido).
+ */
+export function validarDatos(d, ahora = new Date(), extra = null) {
   const errores = {};
-  const largo = (v) => (v || "").trim().length;
 
   if (largo(d.nombre) < LIMITES.nombreMin) errores.nombre = "Escribe el nombre que quieres en tu lectura.";
   else if (largo(d.nombre) > LIMITES.textoMax) errores.nombre = "El nombre es demasiado largo.";
 
   if (!EMAIL.test((d.email || "").trim())) errores.email = "Revisa tu correo: ahí te enviaremos tu lectura.";
 
-  const fecha = d.fecha ? new Date(`${d.fecha}T00:00:00`) : null;
-  if (!fecha || Number.isNaN(fecha.getTime())) errores.fecha = "Indica tu fecha de nacimiento.";
-  else if (fecha.getFullYear() < LIMITES.anioMin) errores.fecha = "La fecha no puede ser anterior a 1900.";
-  else if (fecha > ahora) errores.fecha = "La fecha no puede estar en el futuro.";
+  const fecha = validarFecha(d.fecha, ahora);
+  if (fecha) errores.fecha = fecha;
+  if (!horaValida(d.hora, d.minuto)) errores.hora = "Indica tu hora de nacimiento (la más aproximada que tengas).";
+  validarLugar(errores, d, "ciudad", "pais", "Indica tu ciudad de nacimiento.", "Indica tu país de nacimiento.");
 
-  const h = Number(d.hora), m = Number(d.minuto);
-  if (d.hora === "" || d.hora == null || !Number.isInteger(h) || h < 0 || h > 23 ||
-      d.minuto === "" || d.minuto == null || !Number.isInteger(m) || m < 0 || m > 59) {
-    errores.hora = "Indica tu hora de nacimiento (la más aproximada que tengas).";
+  if (extra === "revolucion_solar") {
+    validarLugar(errores, d, "rs_ciudad", "rs_pais", "Indica la ciudad donde pasarás tu cumpleaños.", "Indica el país donde pasarás tu cumpleaños.");
+    if (!aniosDeRevolucion(ahora).includes(Number(d.rs_anio))) errores.rs_anio = "Elige el ciclo que quieres leer.";
   }
 
-  for (const campo of ["ciudad", "pais"]) {
-    if (largo(d[campo]) < 2) errores[campo] = campo === "ciudad" ? "Indica tu ciudad de nacimiento." : "Indica tu país de nacimiento.";
-    else if (largo(d[campo]) > LIMITES.textoMax) errores[campo] = "Es demasiado largo.";
+  if (extra === "segunda_persona") {
+    if (largo(d.p2_nombre) < LIMITES.nombreMin) errores.p2_nombre = "Escribe el nombre de la otra persona.";
+    else if (largo(d.p2_nombre) > LIMITES.textoMax) errores.p2_nombre = "El nombre es demasiado largo.";
+    const f2 = validarFecha(d.p2_fecha, ahora);
+    if (f2) errores.p2_fecha = f2;
+    // Hora opcional: vacía = desconocida; si se da, completa.
+    const algunaHora = (d.p2_hora ?? "") !== "" || (d.p2_minuto ?? "") !== "";
+    if (algunaHora && !horaValida(d.p2_hora, d.p2_minuto)) errores.p2_hora = "Completa hora y minutos, o deja ambos vacíos si no la sabes.";
+    validarLugar(errores, d, "p2_ciudad", "p2_pais", "Indica la ciudad de nacimiento de la otra persona.", "Indica su país de nacimiento.");
+    if (!d.p2_consentimiento) errores.p2_consentimiento = "Necesitamos que confirmes que la otra persona aceptó compartir sus datos.";
   }
   return errores;
 }
 
 const dos = (n) => String(n).padStart(2, "0");
 
-/** Cuerpo exacto de POST /carta-natal/orden (hora local de nacimiento, sin zona). */
-export function cuerpoDeOrden(d) {
-  return {
+/** Cuerpo exacto para el backend según el reporte (hora local de nacimiento, sin zona). */
+export function cuerpoDeOrden(d, slug = "carta-natal", extra = null) {
+  const base = {
     nombre: d.nombre.trim(),
     email: d.email.trim(),
     fecha_hora_local: `${d.fecha}T${dos(Number(d.hora))}:${dos(Number(d.minuto))}:00`,
     ciudad: d.ciudad.trim(),
     pais: d.pais.trim(),
   };
+  if (canalDe(slug) === "carta-natal") return base;
+  const cuerpo = { ...base, producto: slug };
+  if (extra === "revolucion_solar") {
+    cuerpo.revolucion_solar = { ciudad: d.rs_ciudad.trim(), pais: d.rs_pais.trim(), anio: Number(d.rs_anio) };
+  }
+  if (extra === "segunda_persona") {
+    const conHora = (d.p2_hora ?? "") !== "";
+    cuerpo.segunda_persona = {
+      nombre: d.p2_nombre.trim(), fecha: d.p2_fecha,
+      hora: conHora ? `${dos(Number(d.p2_hora))}:${dos(Number(d.p2_minuto))}` : null,
+      ciudad: d.p2_ciudad.trim(), pais: d.p2_pais.trim(), consentimiento: Boolean(d.p2_consentimiento),
+    };
+  }
+  return cuerpo;
 }
 
-/** Referencia que el panel usa para cruzar la venta de Hotmart con la orden. */
-export const referenciaDeOrden = (ordenId) => `astrea-orden-${ordenId}`;
+/** Referencia que el panel usa para cruzar la venta de Hotmart con el pedido. */
+export const referenciaDeOrden = (ordenId, slug = "carta-natal") => `${CANALES[canalDe(slug)].sck}-${ordenId}`;
 
-/** URL del checkout real: email y nombre precargados, y la orden en `sck`. */
-export function urlDeCheckout(checkoutBase, ordenId, { nombre, email }) {
+/** URL del checkout real: email y nombre precargados, y el pedido en `sck`. */
+export function urlDeCheckout(checkoutBase, ordenId, { nombre, email }, slug = "carta-natal") {
   if (!Number.isInteger(ordenId) || ordenId <= 0) throw new Error("orden inválida");
   const url = new URL(checkoutBase);
   url.searchParams.set("email", email);
   url.searchParams.set("name", nombre);
-  url.searchParams.set("sck", referenciaDeOrden(ordenId));
+  url.searchParams.set("sck", referenciaDeOrden(ordenId, slug));
   return url.toString();
 }
 
-/** Clave estable de los datos: el mismo envío (doble clic, reintento) reutiliza la orden ya creada. */
+/** Clave estable de los datos: el mismo envío (doble clic, reintento) reutiliza el pedido ya creado. */
 export function huellaDeDatos(cuerpo) {
-  return [cuerpo.email.toLowerCase(), cuerpo.fecha_hora_local, cuerpo.ciudad.toLowerCase(), cuerpo.pais.toLowerCase()].join("|");
+  const { email, ciudad, pais, ...resto } = cuerpo;
+  return JSON.stringify([email.toLowerCase(), ciudad.toLowerCase(), pais.toLowerCase(), { ...resto, nombre: undefined }]);
 }
 
 /** Traduce la respuesta de error del backend a un mensaje para la persona. */
 export function mensajeDeError(status, detalle) {
   if (status === 429) return "Hiciste varios intentos seguidos. Espera un minuto y vuelve a intentarlo.";
   if (status === 400 && typeof detalle === "string") {
-    return /ciudad|ubicaci|encontr/i.test(detalle)
-      ? "No encontramos esa ciudad. Revisa cómo está escrita o prueba con una ciudad cercana."
-      : detalle;
+    const lugar = detalle.match(/No se encontr\S* la ubicaci\S* '([^']+)'/i);
+    if (lugar) return `No encontramos «${lugar[1]}». Revisa cómo está escrita o prueba con una ciudad cercana.`;
+    if (/geocodificaci/i.test(detalle)) return "No pudimos verificar la ciudad en este momento. Inténtalo de nuevo en unos minutos.";
+    return detalle;
   }
   if (status === 422) return "Algún dato no es válido. Revisa el formulario.";
   return "No pudimos registrar tu pedido. Inténtalo de nuevo en unos minutos o escríbenos por WhatsApp.";
 }
 
 /**
- * Crea la orden real una sola vez por envío: si ya hay una orden para la misma
- * huella (guardada en `memoria`), la reutiliza sin volver a llamar al backend.
+ * Crea el pedido real una sola vez por envío: si ya hay uno para la misma
+ * huella (guardado en `memoria`), lo reutiliza sin volver a llamar al backend.
  * `fetchImpl` y `memoria` ({get,set}) se inyectan para poder testear.
  */
-export async function crearOrden({ apiBase, cuerpo, fetchImpl = fetch, memoria }) {
+export async function crearOrden({ apiBase, cuerpo, slug = "carta-natal", fetchImpl = fetch, memoria }) {
+  const canal = CANALES[canalDe(slug)];
   const huella = huellaDeDatos(cuerpo);
   const previa = memoria?.get(huella);
   if (previa) {
@@ -103,7 +168,7 @@ export async function crearOrden({ apiBase, cuerpo, fetchImpl = fetch, memoria }
 
   let respuesta;
   try {
-    respuesta = await fetchImpl(`${apiBase}/carta-natal/orden`, {
+    respuesta = await fetchImpl(`${apiBase}${canal.crear}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cuerpo),
@@ -116,7 +181,7 @@ export async function crearOrden({ apiBase, cuerpo, fetchImpl = fetch, memoria }
   if (!respuesta.ok) {
     throw new ErrorDePedido(mensajeDeError(respuesta.status, datos?.detail), { reintentable: respuesta.status >= 500 || respuesta.status === 429 });
   }
-  const ordenId = datos?.orden_id;
+  const ordenId = datos?.[canal.campoId];
   if (!Number.isInteger(ordenId) || ordenId <= 0) throw new ErrorDePedido(mensajeDeError(500), { reintentable: true });
   // Un backend anterior a astrea-API #92 no devuelve referencia: la compra sigue igual, sin consulta de estado.
   const referencia = typeof datos.referencia === "string" && datos.referencia.length >= 16 ? datos.referencia : null;
@@ -130,7 +195,7 @@ export class ErrorDePedido extends Error {
 
 /**
  * Estados que la tienda sabe mostrar. Por sí solo, el frontend solo puede
- * afirmar "creado" (el backend respondió con una orden) y "pendiente" (volvió
+ * afirmar "creado" (el backend respondió con un pedido) y "pendiente" (volvió
  * del checkout): que la persona regrese de Hotmart NO prueba el pago.
  * "confirmado", "enviado" y "reembolsado" solo los informa el backend.
  * "rechazado" queda listo para cuando Hotmart informe las ventas (webhook).
@@ -150,6 +215,11 @@ export function estadoAMostrar({ pedido, volvioDelCheckout, estadoBackend }) {
   if (!pedido) return null;
   if (estadoBackend && ESTADOS_PEDIDO[estadoBackend]) return estadoBackend;
   return volvioDelCheckout ? "pendiente" : "creado";
+}
+
+/** Ruta del estado público del pedido según su reporte (null sin referencia). */
+export function rutaDeEstado(pedido) {
+  return pedido?.referencia ? CANALES[canalDe(pedido.reporte)].estado(pedido.referencia) : null;
 }
 
 // ---------------------------------------------------------------- persistencia local

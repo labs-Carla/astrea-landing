@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import {
   validarDatos, cuerpoDeOrden, urlDeCheckout, crearOrden, huellaDeDatos, mensajeDeError,
   estadoAMostrar, pedidoVigente, pedidoParaGuardar, almacenSeguro, VIGENCIA_PEDIDO_MS,
+  canalDe, referenciaDeOrden, rutaDeEstado, aniosDeRevolucion,
 } from "../tienda-assets/compra.js";
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
@@ -79,7 +80,8 @@ test("crea la orden contra /carta-natal/orden y la reutiliza en un reintento", a
 test("errores del backend: mensajes claros y no se guarda ninguna orden", async () => {
   const mem = new Map();
   const cuerpo = cuerpoDeOrden(validos);
-  await assert.rejects(crearOrden({ apiBase: "x", cuerpo, memoria: mem, fetchImpl: fetchFalso([{ status: 400, body: { detail: "No se encontró la ciudad 'Bogta'" } }]) }), /No encontramos esa ciudad/);
+  await assert.rejects(crearOrden({ apiBase: "x", cuerpo, memoria: mem, fetchImpl: fetchFalso([{ status: 400, body: { detail: "No se encontró la ubicación 'Bogta, Colombia'. Verifica que la ciudad y el país estén escritos correctamente." } }]) }), /No encontramos «Bogta, Colombia»/);
+  await assert.rejects(crearOrden({ apiBase: "x", cuerpo, memoria: mem, fetchImpl: fetchFalso([{ status: 400, body: { detail: "No se pudo contactar el servicio de geocodificación para 'x': timeout" } }]) }), /en unos minutos/);
   await assert.rejects(crearOrden({ apiBase: "x", cuerpo, memoria: mem, fetchImpl: fetchFalso([{ status: 429, body: {} }]) }), (e) => e.reintentable && /un minuto/.test(e.message));
   await assert.rejects(crearOrden({ apiBase: "x", cuerpo, memoria: mem, fetchImpl: fetchFalso([new TypeError("network")]) }), (e) => e.reintentable);
   await assert.rejects(crearOrden({ apiBase: "x", cuerpo, memoria: mem, fetchImpl: fetchFalso([{ status: 200, body: { status: "recibido" } }]) }), /No pudimos/);
@@ -137,33 +139,79 @@ test("API: Railway en producción, backend local en local", () => {
 });
 
 // ---------------------------------------------------------------- catálogo y páginas
-test("catálogo: 7 reportes y solo se vende lo que tiene checkout real", () => {
-  assert.deepEqual(REPORTES.map((r) => r.slug), ["carta-natal", "revolucion-solar", "compatibilidad", "amor", "vocacion", "dinero", "patrones"]);
-  assert.deepEqual(REPORTES.filter((r) => estadoDe(r, CHECKOUTS) === "disponible").map((r) => r.slug), ["carta-natal"]);
+test("catálogo: 7 reportes, todos con checkout real y sus precios", () => {
+  assert.deepEqual(REPORTES.map((r) => r.slug), ["carta-natal", "amor", "vocacion", "dinero", "patrones", "revolucion-solar", "compatibilidad"]);
+  assert.ok(REPORTES.every((r) => estadoDe(r, CHECKOUTS) === "disponible"));
+  const precios = Object.fromEntries(Object.entries(CHECKOUTS).map(([k, v]) => [k, v.precioReferencia]));
+  assert.deepEqual(precios, { "carta-natal": "USD 12", amor: "USD 9", vocacion: "USD 9", dinero: "USD 9", patrones: "USD 9", "revolucion-solar": "USD 12", compatibilidad: "USD 15" });
+  const ids = Object.values(CHECKOUTS).map((c) => new URL(c.url).pathname);
+  assert.equal(new Set(ids).size, 7, "cada reporte tiene su propio producto de Hotmart");
   for (const r of REPORTES) {
-    for (const k of ["nombre", "resumen", "descripcion", "explora", "incluye", "datos"]) assert.ok(r[k]?.length, `${r.slug}.${k}`);
-    if (estadoDe(r, CHECKOUTS) !== "disponible") assert.ok(r.motivo, `${r.slug} explica por qué no está a la venta`);
+    for (const k of ["nombre", "resumen", "descripcion", "explora", "incluye", "datos", "idealPara", "categoria"]) assert.ok(r[k]?.length, `${r.slug}.${k}`);
+    assert.ok(r.incluye.some((i) => /5 preguntas/.test(i)), `${r.slug} incluye las 5 preguntas`);
   }
-  const temas = ["amor", "vocacion", "dinero", "patrones"].map((s) => REPORTES.find((r) => r.slug === s));
-  assert.equal(new Set(temas.map((r) => r.descripcion)).size, 4, "los temáticos no son copias");
-  assert.equal(new Set(temas.map((r) => r.explora.join())).size, 4);
+  const temas = REPORTES.filter((r) => !r.principal);
+  assert.equal(new Set(temas.map((r) => r.descripcion)).size, temas.length, "los temáticos no son copias");
+  assert.deepEqual(REPORTES.filter((r) => r.extra).map((r) => [r.slug, r.extra]), [["revolucion-solar", "revolucion_solar"], ["compatibilidad", "segunda_persona"]]);
+});
+
+test("dos canales: carta natal por /carta-natal/orden, el resto por /pedidos", () => {
+  assert.equal(canalDe("carta-natal"), "carta-natal");
+  assert.equal(canalDe("amor"), "pedido");
+  assert.equal(referenciaDeOrden(5), "astrea-orden-5");
+  assert.equal(referenciaDeOrden(5, "dinero"), "astrea-pedido-5");
+  assert.equal(rutaDeEstado({ reporte: "carta-natal", referencia: "r".repeat(22) }), `/carta-natal/orden/${"r".repeat(22)}/estado`);
+  assert.equal(rutaDeEstado({ reporte: "patrones", referencia: "r".repeat(22) }), `/pedidos/${"r".repeat(22)}/estado`);
+  assert.equal(rutaDeEstado({ reporte: "amor", referencia: null }), null);
+  const u = new URL(urlDeCheckout(CHECKOUTS.amor.url, 3, { nombre: "Ana", email: "a@b.co" }, "amor"));
+  assert.equal(u.pathname, "/P107968115R");
+  assert.equal(u.searchParams.get("sck"), "astrea-pedido-3");
+});
+
+test("cuerpo de un pedido temático y validación de sus datos extra", async () => {
+  const ahora = new Date("2026-10-10T12:00:00");
+  assert.deepEqual(cuerpoDeOrden(validos, "amor"), { ...cuerpoDeOrden(validos), producto: "amor" });
+
+  assert.deepEqual(aniosDeRevolucion(ahora), [2025, 2026, 2027]);
+  const rs = { ...validos, rs_ciudad: " Lima ", rs_pais: "Perú", rs_anio: "2026" };
+  assert.deepEqual(validarDatos(rs, ahora, "revolucion_solar"), {});
+  assert.deepEqual(cuerpoDeOrden(rs, "revolucion-solar", "revolucion_solar").revolucion_solar, { ciudad: "Lima", pais: "Perú", anio: 2026 });
+  assert.deepEqual(Object.keys(validarDatos({ ...validos, rs_anio: "2020" }, ahora, "revolucion_solar")).sort(), ["rs_anio", "rs_ciudad", "rs_pais"]);
+
+  const p2 = { ...validos, p2_nombre: "Luis", p2_fecha: "1988-02-03", p2_hora: "", p2_minuto: "", p2_ciudad: "Quito", p2_pais: "Ecuador", p2_consentimiento: true };
+  assert.deepEqual(validarDatos(p2, ahora, "segunda_persona"), {});
+  assert.deepEqual(cuerpoDeOrden(p2, "compatibilidad", "segunda_persona").segunda_persona,
+    { nombre: "Luis", fecha: "1988-02-03", hora: null, ciudad: "Quito", pais: "Ecuador", consentimiento: true });
+  assert.equal(cuerpoDeOrden({ ...p2, p2_hora: "7", p2_minuto: "5" }, "compatibilidad", "segunda_persona").segunda_persona.hora, "07:05");
+  assert.ok(validarDatos({ ...p2, p2_hora: "7", p2_minuto: "" }, ahora, "segunda_persona").p2_hora, "hora a medias");
+  assert.ok(validarDatos({ ...p2, p2_consentimiento: false }, ahora, "segunda_persona").p2_consentimiento);
+  assert.ok(validarDatos({ ...p2, p2_fecha: "2027-01-01" }, ahora, "segunda_persona").p2_fecha);
+  assert.deepEqual(validarDatos(validos, ahora, null), {}, "sin extra no se exigen campos adicionales");
+
+  const f = fetchFalso([{ status: 200, body: { status: "recibido", pedido_id: 4, referencia: "q".repeat(22) } }]);
+  const r = await crearOrden({ apiBase: "http://api", cuerpo: cuerpoDeOrden(validos, "amor"), slug: "amor", fetchImpl: f });
+  assert.deepEqual(r, { ordenId: 4, referencia: "q".repeat(22), reutilizada: false });
+  assert.equal(f.llamadas[0].url, "http://api/pedidos");
+  assert.equal(f.llamadas[0].body.producto, "amor");
+  assert.notEqual(huellaDeDatos(cuerpoDeOrden(validos, "amor")), huellaDeDatos(cuerpoDeOrden(validos, "dinero")), "otro reporte, otro pedido");
 });
 
 test("existen todas las rutas del ecommerce", () => {
-  for (const ruta of ["index.html", "reportes.html", "como-funciona.html", "sobre-astrea.html", "preguntas-frecuentes.html", "pedido.html", "comprar/carta-natal.html", ...REPORTES.map((r) => `reportes/${r.slug}.html`)]) {
+  for (const ruta of ["index.html", "reportes.html", "como-funciona.html", "sobre-astrea.html", "preguntas-frecuentes.html", "pedido.html",
+    ...REPORTES.map((r) => `reportes/${r.slug}.html`), ...REPORTES.map((r) => `comprar/${r.slug}.html`)]) {
     assert.ok(PAGINAS[ruta], ruta);
   }
-  assert.ok(!PAGINAS["comprar/amor.html"], "sin página de compra para reportes no disponibles");
 });
 
-test("las páginas de reportes no disponibles no tienen ningún enlace de pago", () => {
-  for (const r of REPORTES.filter((r) => estadoDe(r, CHECKOUTS) !== "disponible")) {
-    const html = PAGINAS[`reportes/${r.slug}.html`];
-    assert.ok(!html.includes("pay.hotmart.com"), r.slug);
-    assert.ok(!html.includes("/comprar/"), r.slug);
-    assert.match(html, /Próximamente/);
+test("cada página de reporte lleva a su compra y cada compra trae sus campos", () => {
+  for (const r of REPORTES) {
+    assert.match(PAGINAS[`reportes/${r.slug}.html`], new RegExp(`href="/comprar/${r.slug}"`), r.slug);
+    assert.match(PAGINAS[`reportes/${r.slug}.html`], new RegExp(CHECKOUTS[r.slug].precioReferencia), r.slug);
+    const compra = PAGINAS[`comprar/${r.slug}.html`];
+    assert.match(compra, new RegExp(`data-reporte="${r.slug}"`));
+    assert.equal(compra.includes('id="rs_ciudad"'), r.extra === "revolucion_solar", `${r.slug}: campos de revolución solar`);
+    assert.equal(compra.includes('id="p2_consentimiento"'), r.extra === "segunda_persona", `${r.slug}: campos de la otra persona`);
   }
-  assert.match(PAGINAS["reportes/carta-natal.html"], /href="\/comprar\/carta-natal"/);
 });
 
 test("SEO básico y navegación en cada página", () => {
@@ -197,4 +245,16 @@ test("no se rompen las rutas existentes", () => {
   for (const f of ["universo.html", "gracias.html", "link.html", "link-gratis.html", "privacidad.html"]) readFileSync(new URL(`../${f}`, import.meta.url));
   const gracias = readFileSync(new URL("../gracias.html", import.meta.url), "utf8");
   assert.match(gracias, /carta-natal\/compra/, "gracias conserva el formulario post-pago");
+});
+
+test("cada reporte tiene su portada en los dos tamaños, y la usa su ficha", () => {
+  for (const r of REPORTES) {
+    assert.match(r.portada, new RegExp(`^/tienda-assets/img/${r.slug}$`));
+    for (const ancho of [480, 960]) {
+      const archivo = new URL(`..${r.portada}-${ancho}.webp`, import.meta.url);
+      assert.ok(readFileSync(archivo).length > 10_000, `${r.slug}-${ancho}.webp`);
+    }
+    const ficha = PAGINAS[`reportes/${r.slug}.html`];
+    assert.ok(ficha.includes(`${r.portada}-480.webp`) && ficha.includes(`og:image" content="https://astrea-charts.site${r.portada}-960.webp`), r.slug);
+  }
 });

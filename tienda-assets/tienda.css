@@ -83,6 +83,11 @@
   border-bottom: 0; border-radius: var(--arch); pointer-events: none;
 }
 .portada > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.portada--libro {
+  aspect-ratio: 2 / 3; border-radius: var(--r-card); background: var(--marble);
+  box-shadow: var(--shadow-page);
+}
+.portada--libro::after { display: none; }
 .portada__emblema { display: grid; justify-items: center; gap: var(--s-3); color: var(--gold-light); text-align: center; padding: var(--s-5); }
 .portada__emblema .icon { width: 56px; height: 56px; stroke-width: .9; }
 .portada__titulo { font-family: var(--font-serif); font-size: 1.25rem; line-height: 1.2; color: var(--ink-on-dark); max-width: 12ch; }
@@ -109,7 +114,8 @@
 .grupo-catalogo__texto { color: var(--ink-soft); margin-bottom: var(--s-6); max-width: 40rem; }
 
 /* ---------- Detalle de reporte ---------- */
-.detalle { display: grid; gap: var(--s-7); }
+.detalle { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-7); }
+.detalle > *, .compra > * { min-width: 0; }
 .detalle__portada { width: min(78%, 340px); margin-inline: auto; }
 .detalle__compra {
   background: var(--ivory); border: 1px solid var(--hairline-strong); border-radius: var(--r-card);
@@ -211,9 +217,21 @@
   .menu-movil { display: none; }
   .header-acciones .nav-secundaria { display: inline; }
   .catalogo { grid-template-columns: repeat(3, 1fr); }
-  .detalle { grid-template-columns: 0.8fr 1.2fr; align-items: start; }
+  .detalle { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: start; }
   .detalle__lateral { position: sticky; top: 96px; display: grid; gap: var(--s-5); }
   .detalle__portada { width: 100%; }
   .compra { grid-template-columns: 1.3fr 0.7fr; align-items: start; }
   .banda-ai { grid-template-columns: 1.3fr 0.7fr; }
 }
+
+/* ---------- Compra: datos adicionales (revolución solar, otra persona) ---------- */
+#form-compra fieldset.grupo-extra {
+  grid-column: 1 / -1; display: grid; gap: var(--s-2);
+  margin-top: var(--s-4); padding: var(--s-4); border: 1px solid var(--hairline); border-radius: var(--r-card);
+  background: rgba(176, 138, 79, .04);
+}
+.grupo-extra__titulo { font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink); padding: 0 var(--s-2); }
+.grupo-extra__texto { font-size: 0.85rem; color: var(--ink-soft); }
+.natal-form--anidado { margin-top: 0; }
+/* La casilla dentro de un grupo .field no hereda el tamaño de los campos de texto. */
+.field .check input[type="checkbox"] { width: 20px; height: 20px; min-height: 0; padding: 0; -webkit-appearance: auto; appearance: auto; background: none; }

@@ -2,14 +2,15 @@
  * Astrea · Tienda — página de pedido (/pedido).
  *
  * Muestra el último pedido creado en este navegador. El estado real lo da el
- * backend (GET /carta-natal/orden/{referencia}/estado). Sin respuesta del
+ * backend (carta natal: GET /carta-natal/orden/{referencia}/estado; otros
+ * reportes: GET /pedidos/{referencia}/estado). Sin respuesta del
  * backend, solo afirma "creado" o "pendiente de confirmación": volver de
  * Hotmart no prueba el pago.
  * Nunca arma enlaces de entrega: el enlace /r/<token> lo envía el equipo.
  */
 import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, URL_ASTREA_AI, WHATSAPP } from "./config.js";
 import { reportePorSlug } from "./catalogo.js";
-import { ESTADOS_PEDIDO, estadoAMostrar, pedidoVigente, referenciaDeOrden, almacenSeguro } from "./compra.js";
+import { ESTADOS_PEDIDO, estadoAMostrar, pedidoVigente, referenciaDeOrden, rutaDeEstado, almacenSeguro } from "./compra.js";
 
 const CLAVE_PEDIDO = "astrea-tienda-pedido";
 const caja = document.querySelector("[data-estado-pedido]");
@@ -32,10 +33,11 @@ const icono = (id) => {
 
 // null = no se pudo saber (sin referencia, sin red, backend anterior): se muestra
 // el estado local. No se muestra "error" por una consulta fallida: el pedido existe.
-async function estadoDelBackend(referencia) {
-  if (!ESTADO_PEDIDO_HABILITADO || !referencia) return null;
+async function estadoDelBackend(pedido) {
+  const ruta = rutaDeEstado(pedido);
+  if (!ESTADO_PEDIDO_HABILITADO || !ruta) return null;
   try {
-    const r = await fetch(`${apiBase()}/carta-natal/orden/${encodeURIComponent(referencia)}/estado`);
+    const r = await fetch(`${apiBase()}${ruta}`);
     if (!r.ok) return null;
     return (await r.json()).estado || null;
   } catch { return null; }
@@ -55,7 +57,7 @@ async function pintar() {
   const estado = estadoAMostrar({
     pedido,
     volvioDelCheckout: params.has("retorno"),
-    estadoBackend: await estadoDelBackend(pedido.referencia),
+    estadoBackend: await estadoDelBackend(pedido),
   });
   const info = ESTADOS_PEDIDO[estado];
   const iconos = { creado: "i-pages", pendiente: "i-clock", confirmado: "i-check", enviado: "i-mail", reembolsado: "i-alert", rechazado: "i-alert", error: "i-alert" };
@@ -71,22 +73,22 @@ async function pintar() {
     el("div", { class: "estado-pedido__sello" }, icono(iconos[estado])),
     el("h2", { class: "h-section h-section--sm" }, info.titulo),
     el("p", {}, info.texto),
-    el("p", {}, `${reporte ? reporte.nombre : "Pedido"} · referencia `, el("span", { class: "estado-pedido__ref" }, referenciaDeOrden(pedido.ordenId))),
+    el("p", {}, `${reporte ? reporte.nombre : "Pedido"} · referencia `, el("span", { class: "estado-pedido__ref" }, referenciaDeOrden(pedido.ordenId, pedido.reporte))),
   ];
   if ((estado === "creado" || estado === "rechazado") && reporte && CHECKOUTS[reporte.slug]) {
     const url = new URL(CHECKOUTS[reporte.slug].url);
-    url.searchParams.set("sck", referenciaDeOrden(pedido.ordenId));
+    url.searchParams.set("sck", referenciaDeOrden(pedido.ordenId, pedido.reporte));
     hijos.push(el("p", {}, el("a", { class: "btn btn--gold", href: url.toString() }, "Ir al pago en Hotmart")));
   }
   if (["creado", "pendiente", "confirmado"].includes(estado)) hijos.push(el("h3", { class: "bloque__titulo" }, "Qué sigue"), pasos);
-  if (reporte?.beneficioAstreaAi && !["rechazado", "reembolsado", "error"].includes(estado)) {
+  if (reporte && !["rechazado", "reembolsado", "error"].includes(estado)) {
     hijos.push(el("div", { class: "beneficio-ai" },
       el("strong", {}, "Tus 5 preguntas en Astrea.ai"),
-      el("span", {}, "Cuando recibas tu lectura, entra a Astrea.ai con el mismo correo de tu compra: tendrás 5 preguntas para conversar sobre tu carta. Es opcional y no necesitas una suscripción."),
+      el("span", {}, "Cuando recibas tu reporte, entra a Astrea.ai con el mismo correo de tu compra: tendrás 5 preguntas para conversar sobre tu carta. Es opcional y no necesitas una suscripción."),
       el("a", { class: "link-quiet", href: URL_ASTREA_AI }, "Conocer Astrea.ai"),
     ));
   }
-  hijos.push(el("p", { class: "detalle__aviso" }, "¿Dudas con tu pedido? ", el("a", { class: "link-quiet", href: `${WHATSAPP}?text=${encodeURIComponent(`Hola, tengo una pregunta sobre mi pedido ${referenciaDeOrden(pedido.ordenId)}`)}` }, "Escríbenos por WhatsApp"), " con tu referencia."));
+  hijos.push(el("p", { class: "detalle__aviso" }, "¿Dudas con tu pedido? ", el("a", { class: "link-quiet", href: `${WHATSAPP}?text=${encodeURIComponent(`Hola, tengo una pregunta sobre mi pedido ${referenciaDeOrden(pedido.ordenId, pedido.reporte)}`)}` }, "Escríbenos por WhatsApp"), " con tu referencia."));
   caja.replaceChildren(...hijos);
 }
 

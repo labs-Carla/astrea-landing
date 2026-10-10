@@ -9,7 +9,8 @@
  *   local en :8000. Para probar contra otro backend: ?api=<url> en cualquier
  *   página (se ignora fuera de local).
  * - CHECKOUTS: producto de Hotmart por reporte. Un reporte SIN checkout aquí
- *   no se puede comprar, aunque el catálogo lo describa.
+ *   no se puede comprar, aunque el catálogo lo describa. La carta natal va por
+ *   /carta-natal/orden; los demás, por /pedidos (se preparan a mano tras cada compra).
  * - ESTADO_PEDIDO_HABILITADO: /pedido consulta GET /carta-natal/orden/{referencia}/estado
  *   (astrea-API #92). Con false, solo muestra "creado" o "pendiente de confirmación".
  */
@@ -27,15 +28,17 @@ export function apiBase(loc = globalThis.location) {
   return PRODUCCION.API_BASE;
 }
 
+// Productos reales de Hotmart (2026-10-10). `precioReferencia` es lo que
+// muestra la tienda; el monto que se cobra lo define Hotmart (en la moneda
+// local de quien compra) y el frontend nunca lo envía ni lo decide.
 export const CHECKOUTS = {
-  // Producto real de Hotmart (mismo enlace que /universo, /link y /link-gratis).
-  "carta-natal": {
-    url: "https://pay.hotmart.com/B106744064D?bid=1784070968525",
-    // Precio de referencia que muestra la tienda. El monto que se cobra lo
-    // define Hotmart (en la moneda local de quien compra); el frontend nunca
-    // lo envía ni lo decide.
-    precioReferencia: "USD 12",
-  },
+  "carta-natal": { url: "https://pay.hotmart.com/B106744064D?bid=1784070968525", precioReferencia: "USD 12" },
+  amor: { url: "https://pay.hotmart.com/P107968115R", precioReferencia: "USD 9" },
+  vocacion: { url: "https://pay.hotmart.com/N107968156X", precioReferencia: "USD 9" },
+  dinero: { url: "https://pay.hotmart.com/W107968171W", precioReferencia: "USD 9" },
+  patrones: { url: "https://pay.hotmart.com/U107968183Y", precioReferencia: "USD 9" },
+  "revolucion-solar": { url: "https://pay.hotmart.com/X107968195X", precioReferencia: "USD 12" },
+  compatibilidad: { url: "https://pay.hotmart.com/L107968202K", precioReferencia: "USD 15" },
 };
 
 export const ESTADO_PEDIDO_HABILITADO = true;

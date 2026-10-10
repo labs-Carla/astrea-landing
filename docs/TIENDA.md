@@ -12,7 +12,7 @@ estático, igual que el resto del sitio, y reutiliza el sistema de diseño de
 | `/` | `index.html` | Nueva portada. Antes redirigía a `/universo`, que sigue igual. |
 | `/reportes` | `reportes.html` | Catálogo: disponibles y en preparación |
 | `/reportes/<slug>` | `reportes/<slug>.html` | 7 páginas de detalle |
-| `/comprar/carta-natal` | `comprar/carta-natal.html` | Solo existe para reportes con checkout real. `noindex` |
+| `/comprar/<slug>` | `comprar/<slug>.html` | Una por reporte con checkout real (hoy los 7). `noindex` |
 | `/pedido` | `pedido.html` | Estado del último pedido de este navegador. `noindex` |
 | `/como-funciona`, `/sobre-astrea`, `/preguntas-frecuentes` | | Informativas |
 | `/gracias` | `gracias.html` | **Sin cambios para quien paga directo en Hotmart.** Si el navegador tiene un pedido de la tienda, lleva a `/pedido?retorno=hotmart`. `?formulario=1` fuerza el formulario |
@@ -82,23 +82,22 @@ GET /api/v1/carta-natal/orden/{referencia}/estado
 - **Órdenes sin referencia:** las del formulario post-pago de `/gracias` no
   tienen referencia y no se pueden consultar.
 
-## Qué se puede comprar
+## Qué se puede comprar (desde 2026-10-10)
 
-| Reporte | Estado | Por qué |
-|---|---|---|
-| Carta natal completa | **Disponible** | Producto Hotmart `B106744064D`, flujo de orden, panel y entrega reales |
-| Revolución solar | Próximamente | El backend no puede generarla |
-| Compatibilidad | Próximamente | El backend no lee dos cartas a la vez |
-| Amor, Vocación, Dinero, Patrones | Próximamente | Existe el motor genérico `producto_configs`, pero falta lo de la lista siguiente |
+| Reporte | Precio mostrado | Hotmart | Canal | `sck` |
+|---|---|---|---|---|
+| Carta natal completa | USD 12 | `B106744064D` | `POST /carta-natal/orden` | `astrea-orden-<id>` |
+| Amor y vínculos | USD 9 | `P107968115R` | `POST /pedidos` | `astrea-pedido-<id>` |
+| Vocación y propósito | USD 9 | `N107968156X` | `POST /pedidos` | `astrea-pedido-<id>` |
+| Dinero y abundancia | USD 9 | `W107968171W` | `POST /pedidos` | `astrea-pedido-<id>` |
+| Patrones y transformación | USD 9 | `U107968183Y` | `POST /pedidos` | `astrea-pedido-<id>` |
+| Revolución solar | USD 12 | `X107968195X` | `POST /pedidos` + lugar del cumpleaños y año | `astrea-pedido-<id>` |
+| Compatibilidad de pareja | USD 15 | `L107968202K` | `POST /pedidos` + datos y consentimiento de la otra persona | `astrea-pedido-<id>` |
 
-Lo que falta para vender un reporte temático:
-- un producto en Hotmart;
-- una orden pública por producto;
-- la página de entrega del `ProductoGenerado`, porque `/productos/token/{token}` existe en la API pero no tiene página;
-- confirmar que su `producto_config` esté activo en producción.
-
-Para habilitar uno: cumplir todo lo anterior, agregar su checkout a
-`CHECKOUTS` y regenerar las páginas.
+- **Precio.** Es una referencia para la tienda; el monto real lo cobra Hotmart.
+- **Los 6 temáticos se preparan a mano** después de cada compra (decisión comercial: entrega en PDF por correo en 24–48 h). En el panel están en la pestaña **Otros reportes**, con las acciones confirmar pago, marcar enviado y reembolso.
+- **Las 5 preguntas en Astrea.ai.** Todos los reportes las incluyen; se habilitan cuando el pedido se marca como enviado.
+- **Backend:** astrea-API #93 (`pedidos_producto`). **Panel:** astrea-informe-react #5.
 
 ## Pendiente antes de publicar
 
