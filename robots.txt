@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin
+Disallow: /r/
+Disallow: /comprar/
+Disallow: /pedido
+Sitemap: https://astrea-charts.site/sitemap.xml
