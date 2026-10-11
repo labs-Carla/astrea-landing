@@ -10,7 +10,6 @@ import {
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
 import { PAGINAS } from "../scripts/generar-tienda.mjs";
-import { PLANES_AI, condicionesDe as condicionesDePlan, precioDe as precioDePlan, mostrarPlanes } from "../tienda-assets/planes.js";
 
 const validos = { nombre: "Ana López", email: "ana@example.com", fecha: "1990-05-17", hora: "8", minuto: "5", ciudad: "Bogotá", pais: "Colombia" };
 
@@ -260,7 +259,7 @@ test("cada reporte tiene su portada en los dos tamaños, y la usa su ficha", () 
   }
 });
 
-test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos, Astrea.ai, planes y preguntas", () => {
+test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos, Astrea.ai y preguntas", () => {
   const html = PAGINAS["index.html"];
   assert.match(html, /<h1 class="h-display" id="hero-titulo">Tu carta natal, un lugar al que volver\.<\/h1>/);
   assert.ok(html.includes("Astrea es tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo."), "propuesta de valor en el hero");
@@ -280,8 +279,8 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos, Astrea.
   }
   for (const precio of ["USD 12", "USD 9", "USD 15"]) assert.ok(html.includes(precio));
   for (const q of ["¿Por qué repito el mismo patrón en mis relaciones?", "¿Qué tránsitos estoy viviendo ahora y cómo me afectan?", "¿Cuál es mi propósito y vocación según mi carta?"]) assert.ok(html.includes(q));
-  assert.equal((html.match(/<details>/g) || []).length, 8, "8 preguntas frecuentes");
-  assert.match(html, /¿Necesito un plan para comprar mi lectura\?/, "la lectura PDF sigue siendo independiente");
+  assert.equal((html.match(/<details>/g) || []).length, 7, "7 preguntas frecuentes");
+  assert.match(html, /¿Qué incluye el acceso a Astrea\.ai de mi lectura\?/);
   assert.match(html, /id="recorrido"[\s\S]*href="\/universo#generador">Generar mi carta gratis[\s\S]*href="\/reportes">Ver reportes[\s\S]*href="#astrea-ai">Conocer Astrea\.ai/);
   assert.match(html, /¿Puedo pedir un reembolso\?/);
   assert.ok(!/Testimonio pendiente|Nombre pendiente|★/.test(html), "sin testimonios inventados");
@@ -291,42 +290,29 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos, Astrea.
   assert.ok(!/escena|backdrop/.test(html), "sin la escena ni el vidrio del rediseño");
 });
 
-test("portada: planes de Astrea.ai con la propuesta primero y los límites como condición", () => {
+test("modelo comercial: las lecturas son la oferta principal e incluyen Astrea.ai; sin promoción de Plus/Pro", () => {
   const html = PAGINAS["index.html"];
-  const planes = html.slice(html.indexOf('id="planes"'), html.indexOf("</section>", html.indexOf('id="planes"')));
-  for (const p of PLANES_AI) {
-    assert.ok(planes.includes(`data-plan="${p.codigo}"`) && planes.includes(p.descripcion) && planes.includes(p.precioReferencia), p.codigo);
+  assert.ok(!html.includes('id="planes"'), "la portada ya no tiene la sección de planes");
+  assert.ok(!/USD 9,99\/mes|USD 19,99\/mes|Astrea Plus|Astrea Pro|Elegir Plus|Elegir Pro/.test(html), "sin precios ni llamados a Plus/Pro en la portada");
+  assert.ok(!html.includes("tienda-assets/planes.js"));
+  // Cada lectura de la portada dice que incluye Astrea.ai.
+  assert.equal((html.match(/Incluye Astrea\.ai · 5 preguntas/g) || []).length, REPORTES.filter((r) => CHECKOUTS[r.slug]).length);
+  // La sección de Astrea.ai lo presenta como complemento de la lectura.
+  const ai = html.slice(html.indexOf('id="astrea-ai"'), html.indexOf("</section>", html.indexOf('id="astrea-ai"')));
+  assert.match(ai, /Incluido con tu lectura/);
+  assert.match(ai, /href="\/reportes">Ver las lecturas/);
+  // Cada ficha y cada compra comunican el acceso incluido, cuando realmente se concede (al recibir la lectura).
+  for (const r of REPORTES.filter((x) => CHECKOUTS[x.slug])) {
+    for (const ruta of [`reportes/${r.slug}.html`, `comprar/${r.slug}.html`]) {
+      assert.ok(PAGINAS[ruta].includes("Incluye acceso a Astrea.ai con 5 preguntas"), ruta);
+    }
+    assert.ok(PAGINAS[`reportes/${r.slug}.html`].includes("Acceso a Astrea.ai con 5 preguntas, al recibir tu lectura"), r.slug);
   }
-  for (const precio of ["Gratis", "USD 9,99/mes", "USD 19,99/mes"]) assert.ok(planes.includes(precio), precio);
-  assert.equal((planes.match(/data-plan-condiciones/g) || []).length, 3, "cada plan muestra sus condiciones");
-  assert.equal((planes.match(/href="https:\/\/app\.astrea-charts\.site\/planes"/g) || []).length, 5, "Plus y Pro van a los planes de la app (y las condiciones)");
-  assert.ok(!/pay\.hotmart\.com/.test(planes), "el pago de los planes se hace desde la app, con el correo de la cuenta");
-  assert.ok(!/ilimitad|soporte prioritario|informes? personalizad|garant/i.test(planes), "sin prestaciones que no existen");
-  assert.match(html, /<script type="module" src="\/tienda-assets\/planes\.js"><\/script>/);
-  // La compra de reportes no cambia: mismos checkouts de Hotmart.
-  for (const r of REPORTES) assert.ok(html.includes(`href="/comprar/${r.slug}"`), r.slug);
+  // Nada de promesas que no existen, en todo el sitio generado.
+  for (const [ruta, pagina] of Object.entries(PAGINAS)) {
+    assert.ok(!/ilimitad|sin límite|soporte prioritario|tras confirmar tu compra/i.test(pagina), ruta);
+  }
+  // Las compras no cambian: mismos checkouts de Hotmart en cada página de compra.
+  for (const [slug, c] of Object.entries(CHECKOUTS)) assert.ok(PAGINAS[`comprar/${slug}.html`] !== undefined && c.url.startsWith("https://pay.hotmart.com/"), slug);
 });
 
-test("planes: condiciones y precio con los límites reales del servidor", async () => {
-  assert.equal(condicionesDePlan({ limite_total: 5 }), "Incluye 5 preguntas, una sola vez.");
-  assert.equal(condicionesDePlan({ limite_total: null, limite_diario: 20, limite_mensual: 150 }), "Hasta 20 en 24 horas y 150 en 30 días. Pago mensual en Hotmart; lo cancelas cuando quieras.");
-  assert.equal(precioDePlan({ precio_usd: 19.99 }), "USD 19,99/mes");
-  assert.equal(precioDePlan({ precio_usd: 0 }), "Gratis");
-
-  const nodo = (attrs = {}) => ({ textContent: "", dataset: attrs });
-  const tarjetas = ["free", "plus"].map((codigo) => {
-    const precio = nodo(), condiciones = nodo();
-    return { dataset: { plan: codigo }, precio, condiciones, querySelector: (sel) => (sel === "[data-plan-precio]" ? precio : condiciones) };
-  });
-  const raiz = { querySelectorAll: () => tarjetas };
-  const respuesta = { planes: [{ codigo: "free", precio_usd: 0, limite_total: 5 }, { codigo: "plus", precio_usd: 9.99, limite_total: null, limite_diario: 20, limite_mensual: 150 }] };
-  let url = "";
-  const ok = await mostrarPlanes({ raiz, base: "http://api", fetchImpl: async (u) => { url = u; return { ok: true, json: async () => respuesta }; } });
-  assert.equal(ok, true);
-  assert.equal(url, "http://api/ai/planes");
-  assert.equal(tarjetas[1].precio.textContent, "USD 9,99/mes");
-  assert.match(tarjetas[1].condiciones.textContent, /^Hasta 20 en 24 horas y 150 en 30 días\./);
-  assert.equal(tarjetas[0].condiciones.textContent, "Incluye 5 preguntas, una sola vez.");
-  // Si la API no responde, queda el HTML generado (precio de referencia y enlace a las condiciones).
-  assert.equal(await mostrarPlanes({ raiz, base: "http://api", fetchImpl: async () => { throw new Error("red"); } }), false);
-});
