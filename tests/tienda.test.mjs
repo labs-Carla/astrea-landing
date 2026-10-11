@@ -316,3 +316,9 @@ test("modelo comercial: las lecturas son la oferta principal e incluyen Astrea.a
   for (const [slug, c] of Object.entries(CHECKOUTS)) assert.ok(PAGINAS[`comprar/${slug}.html`] !== undefined && c.url.startsWith("https://pay.hotmart.com/"), slug);
 });
 
+
+test("link: 'Conoce Astrea' lleva a la portada de la tienda (no a /universo)", () => {
+  const html = readFileSync(new URL("../link.html", import.meta.url), "utf8");
+  const tarjeta = html.slice(html.lastIndexOf("<a ", html.indexOf("Conoce Astrea")), html.indexOf("Conoce Astrea"));
+  assert.match(tarjeta, /<a href="\/" class="link-card">/);
+});
