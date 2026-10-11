@@ -14,6 +14,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { REPORTES, ENTREGA, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, URL_ASTREA_AI, WHATSAPP } from "../tienda-assets/config.js";
+import { PLANES_AI } from "../tienda-assets/planes.js";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITIO = "https://astrea-charts.site";
@@ -200,10 +201,35 @@ const FAQ_PORTADA = [
   ["¿Qué información necesito para hacer mi reporte?", "Tu fecha, hora y lugar de nacimiento, y el correo donde quieres recibirlo. Para la revolución solar, también la ciudad donde pasarás tu cumpleaños; para la compatibilidad de pareja, los datos de la otra persona (su hora de nacimiento es opcional) y su consentimiento."],
   ["¿Cuánto tiempo tarda en llegar?", "Entre 24 y 48 horas después de que confirmamos tu pago en Hotmart."],
   ["¿En qué formato recibiré mi informe?", "En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."],
-  ["¿Qué incluye el acceso a Astrea.ai?", "Cada reporte incluye 5 preguntas en Astrea.ai. Cuando te enviamos tu reporte, entra con el mismo correo de tu compra y úsalas para conversar sobre tu carta. No necesitas una suscripción."],
+  ["¿Qué es Astrea.ai?", "Tu espacio personal para conversar con tu carta natal. Astrea responde a partir de tu carta y, cuando preguntas por el presente, de los tránsitos que estás viviendo. Tus conversaciones quedan guardadas para retomarlas cuando vuelvas."],
+  ["¿Necesito un plan para comprar mi lectura?", "No. Tu lectura en PDF es un producto aparte: la compras una vez, es tuya con o sin plan e incluye 5 preguntas en Astrea.ai. Entra con el mismo correo de tu compra cuando te la enviemos."],
+  ["¿Qué diferencia hay entre Free, Plus y Pro?", "Free es una primera experiencia para descubrir tu carta y conocer Astrea. Plus es tu espacio para volver a tu carta de forma recurrente, con respuestas más elaboradas. Pro incluye todo lo de Plus, con más espacio para conversar. Plus y Pro se pagan mes a mes en Hotmart y los límites de uso de cada plan aparecen en sus condiciones."],
   ["¿Los reportes son personalizados?", "Sí. Cada reporte parte de tu carta, calculada con Swiss Ephemeris para tu fecha, hora y lugar exactos de nacimiento. La interpretación se redacta con apoyo de IA y la revisamos antes de enviarla."],
   ["¿Puedo pedir un reembolso?", "El pago se procesa en Hotmart. Si necesitas un reembolso, escríbenos por WhatsApp con la referencia de tu pedido y lo revisamos contigo."],
 ];
+
+const PRECIO_PLAN = Object.fromEntries(PLANES_AI.map((p) => [p.codigo, p.precioReferencia]));
+
+const RECORRIDO = [
+  ["i-wheel", "Descubre tu carta", "Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.", "/universo#generador", "Generar mi carta gratis"],
+  ["i-pages", "Profundiza con una lectura", "La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya, con o sin plan.", "/reportes", "Ver reportes"],
+  ["i-spark", "Vuelve cuando lo necesites", "En Astrea.ai conversas con tu carta cada vez que la vida te trae nuevas preguntas: tus vínculos, tus emociones, tu vocación o el momento que estás viviendo.", "#astrea-ai", "Conocer Astrea.ai"],
+];
+
+const accionPlan = (p) => (p.codigo === "free"
+  ? `<a class="btn btn--ghost btn--block" href="${URL_ASTREA_AI}">Empezar gratis</a>`
+  : `<a class="btn ${p.codigo === "plus" ? "btn--night" : "btn--ghost"} btn--block" href="${URL_ASTREA_AI}/planes">Elegir ${esc(p.nombre.replace("Astrea ", ""))}</a>`);
+
+const tarjetaPlan = (p) => `<article class="plan-ai${p.codigo === "plus" ? " plan-ai--destacado" : ""}" data-plan="${p.codigo}" aria-labelledby="plan-${p.codigo}">
+  <p class="plan-ai__lema">${esc(p.lema)}</p>
+  <h3 class="plan-ai__nombre" id="plan-${p.codigo}">${esc(p.nombre)}</h3>
+  <p class="plan-ai__texto">${esc(p.descripcion)}</p>
+  <div class="plan-ai__pie">
+    <p class="plan-ai__precio" data-plan-precio>${esc(p.precioReferencia)}</p>
+    ${accionPlan(p)}
+    <p class="plan-ai__condiciones"><span>Condiciones</span> <span data-plan-condiciones>Límites de uso en la <a href="${URL_ASTREA_AI}/planes">página de planes</a>.</span></p>
+  </div>
+</article>`;
 
 const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby="tp-${r.slug}">
   <a class="tarjeta-portada__imagen" href="/reportes/${r.slug}" tabindex="-1" aria-hidden="true">
@@ -222,14 +248,15 @@ const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby=
 
 paginas["index.html"] = layout({
   ruta: "/",
-  titulo: "Astrea Charts · Astrología para una vida más consciente",
-  descripcion: "Reportes astrológicos personalizados: carta natal, amor, vocación, dinero, patrones, revolución solar y compatibilidad. Astronomía real, revisión humana y 5 preguntas en Astrea.ai.",
+  titulo: "Astrea · Tu carta natal, un lugar al que volver",
+  descripcion: "Tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo. Carta natal gratis, lecturas personalizadas en PDF y Astrea.ai.",
+  scripts: ["/tienda-assets/planes.js"],
   cuerpo: `<section class="hero hero--tienda" aria-labelledby="hero-titulo">
   <div class="hero__grid shell">
     <div class="hero__copy">
-      <p class="eyebrow eyebrow--light">Astrea · Reportes astrológicos</p>
-      <h1 class="h-display" id="hero-titulo">Un mapa del cielo para comprender tu historia.</h1>
-      <p class="lede lede--light">Lecturas personalizadas a partir de tu fecha, hora y lugar de nacimiento. Calculadas con astronomía real, escritas con cuidado y revisadas una por una antes de llegar a ti.</p>
+      <p class="eyebrow eyebrow--light">Astrea · Astrología para conocerte</p>
+      <h1 class="h-display" id="hero-titulo">Tu carta natal, un lugar al que volver.</h1>
+      <p class="lede lede--light">Astrea es tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo. Calculada con astronomía real y leída con cuidado, para cada etapa de tu vida.</p>
       <div class="hero__actions">
         <a class="btn btn--gold" href="/reportes">Explorar reportes ${icono("i-arrow")}</a>
         <a class="link-quiet link-quiet--light" href="/universo#generador">Genera tu carta gratis</a>
@@ -250,6 +277,21 @@ paginas["index.html"] = layout({
   </ul>
 </section>
 
+<section class="capitulo capitulo--marmol" id="recorrido" aria-labelledby="recorrido-titulo">
+  <div class="shell">
+    <header class="capitulo__cabecera">
+      <div>
+        <p class="eyebrow">Tu recorrido con Astrea</p>
+        <h2 class="capitulo__titulo" id="recorrido-titulo">Una experiencia que crece contigo.</h2>
+      </div>
+      <p class="capitulo__intro">Tu carta natal es el punto de partida. A partir de ella, cada lectura y cada conversación se escribe para ti, y puedes volver en distintos momentos para explorar nuevos temas de tu vida.</p>
+    </header>
+    <ol class="pasos">
+      ${RECORRIDO.map(([ic, t, d, href, accion], i) => `<li class="paso"><span class="paso__numero">${["I", "II", "III"][i]}</span>${icono(ic, "icon paso__icono")}<h3 class="paso__titulo">${esc(t)}</h3><p>${esc(d)}</p><a class="link-quiet paso__enlace" href="${href}">${esc(accion)}</a></li>`).join("\n      ")}
+    </ol>
+  </div>
+</section>
+
 <section class="capitulo capitulo--claro" id="reportes" aria-labelledby="reportes-titulo">
   <div class="shell">
     <header class="capitulo__cabecera">
@@ -257,7 +299,7 @@ paginas["index.html"] = layout({
         <p class="eyebrow">Nuestros reportes</p>
         <h2 class="capitulo__titulo" id="reportes-titulo">Tu historia tiene muchas capas.</h2>
       </div>
-      <p class="capitulo__intro">Explora los diferentes aspectos de tu carta natal con reportes diseñados para acompañarte en tu proceso de autoconocimiento.</p>
+      <p class="capitulo__intro">Lecturas en PDF, escritas a partir de tu carta natal y revisadas antes de llegar a ti. Cada una es independiente de los planes de Astrea.ai e incluye 5 preguntas para seguir explorando.</p>
     </header>
     <div class="catalogo-portada">
       ${disponibles.map(tarjetaPortada).join("\n      ")}
@@ -279,30 +321,47 @@ paginas["index.html"] = layout({
   </div>
 </section>
 
-<section class="capitulo capitulo--noche astrea-ai" aria-labelledby="ai-titulo">
+<section class="capitulo capitulo--noche astrea-ai" id="astrea-ai" aria-labelledby="ai-titulo">
   <div class="shell astrea-ai__grid">
     <div class="astrea-ai__texto">
       <p class="eyebrow eyebrow--light">Astrea.ai</p>
-      <h2 class="capitulo__titulo capitulo__titulo--claro" id="ai-titulo">Conversa con tu carta.</h2>
-      <p class="lede lede--light">Cada reporte incluye 5 preguntas para Astrea.ai, nuestra asistente de astrología, para que puedas explorar tu lectura, hacer preguntas y profundizar en lo que más te interese.</p>
-      <a class="btn btn--gold" href="${URL_ASTREA_AI}">Conocer Astrea.ai ${icono("i-arrow")}</a>
+      <h2 class="capitulo__titulo capitulo__titulo--claro" id="ai-titulo">Conversa con tu carta, a lo largo del tiempo.</h2>
+      <p class="lede lede--light">Astrea responde a partir de tu carta natal y, cuando tu pregunta mira al presente, de los tránsitos que estás viviendo. Tus conversaciones quedan guardadas, para retomar el hilo cuando vuelvas con algo nuevo.</p>
+      <p class="astrea-ai__nota">Puedes empezar gratis. Cada reporte incluye además 5 preguntas.</p>
+      <div class="hero__actions">
+        <a class="btn btn--gold" href="${URL_ASTREA_AI}">Entrar a Astrea.ai ${icono("i-arrow")}</a>
+        <a class="link-quiet link-quiet--light" href="#planes">Ver los planes</a>
+      </div>
     </div>
     <figure class="chat-muestra" aria-label="Ejemplo de la conversación en Astrea.ai">
       <div class="chat-muestra__marco">
         <p class="chat-muestra__cabecera"><span>Habla con Astrea</span><span>Ejemplo</span></p>
         <ul class="chat-muestra__sugerencias" aria-label="Preguntas de ejemplo">
-          <li>¿Cuáles son mis talentos principales según mi carta?</li>
-          <li>¿Cómo puedo trabajar mejor mi Saturno en la carta?</li>
-          <li>¿Qué viene para mí este año?</li>
+          <li>¿Por qué repito el mismo patrón en mis relaciones?</li>
+          <li>¿Qué tránsitos estoy viviendo ahora y cómo me afectan?</li>
+          <li>¿Cuál es mi propósito y vocación según mi carta?</li>
         </ul>
         <ol class="chat-muestra__mensajes">
-          <li class="chat-muestra__tu"><span>Tú</span><p>¿Cuáles son mis talentos principales según mi carta?</p></li>
+          <li class="chat-muestra__tu"><span>Tú</span><p>¿Por qué repito el mismo patrón en mis relaciones?</p></li>
           <li class="chat-muestra__astrea" role="presentation"><p>Astrea está leyendo tu carta…</p></li>
         </ol>
         <div class="chat-muestra__campo" aria-hidden="true"><span>Escribe tu pregunta…</span><span class="chat-muestra__enviar">Enviar</span></div>
       </div>
       <figcaption>Así se ve la conversación en Astrea.ai: Astrea responde a partir de tu carta natal.</figcaption>
     </figure>
+  </div>
+</section>
+<section class="capitulo capitulo--marmol" id="planes" aria-labelledby="planes-titulo">
+  <div class="shell">
+    <header class="capitulo__cabecera capitulo__cabecera--centro">
+      <p class="eyebrow">Planes de Astrea.ai</p>
+      <h2 class="capitulo__titulo" id="planes-titulo">Elige cómo acompañarte.</h2>
+      <p class="capitulo__intro">Empieza gratis y, si quieres volver a tu carta de forma recurrente, elige un plan. Tu lectura en PDF es aparte: la compras una vez y es tuya, con o sin plan.</p>
+    </header>
+    <div class="planes-ai">
+      ${PLANES_AI.map(tarjetaPlan).join("\n      ")}
+    </div>
+    <p class="planes-ai__nota">Los planes se pagan mes a mes en Hotmart, desde Astrea.ai y con el mismo correo con el que entras.</p>
   </div>
 </section>
 ${TESTIMONIOS.length ? `
@@ -321,7 +380,7 @@ ${TESTIMONIOS.length ? `
   <div class="shell faq-portada">
     <header class="capitulo__cabecera capitulo__cabecera--apilada">
       <p class="eyebrow">Preguntas frecuentes</p>
-      <h2 class="capitulo__titulo" id="faq-titulo">Antes de elegir tu reporte</h2>
+      <h2 class="capitulo__titulo" id="faq-titulo">Antes de empezar</h2>
       <p class="capitulo__intro">¿Otra duda? <a class="link-quiet" href="/preguntas-frecuentes">Todas las preguntas</a> o <a class="link-quiet" href="${WHATSAPP}">escríbenos por WhatsApp</a>.</p>
     </header>
     <div class="accordion">
@@ -581,7 +640,7 @@ paginas["sobre-astrea.html"] = layout({
     <h2>Lo que una lectura es, y lo que no</h2>
     <p>Nuestras lecturas son herramientas de reflexión y autoconocimiento. No son predicciones ni reemplazan asesoría médica, psicológica, financiera o profesional.</p>
     <h2>Astrea.ai</h2>
-    <p>Astrea.ai es nuestra app para conversar con tu carta natal. Es independiente de los reportes: puedes comprar una lectura sin crear una cuenta, y tu lectura es tuya con o sin suscripción.</p>
+    <p>Astrea.ai es tu espacio personal para conversar con tu carta natal y volver a ella a lo largo del tiempo. Puedes empezar gratis o elegir un plan (Plus o Pro) para hacerlo de forma recurrente. Es independiente de los reportes: puedes comprar una lectura sin crear una cuenta, y tu lectura es tuya con o sin suscripción.</p>
     <h2>Contacto</h2>
     <p>Escríbenos por <a class="link-quiet" href="${WHATSAPP}">WhatsApp</a> o síguenos en <a class="link-quiet" href="https://www.tiktok.com/@astrea.charts">TikTok</a>.</p>
   </div>
@@ -599,6 +658,8 @@ const FAQ = [
   ["¿Qué tan precisa es la lectura?", "Las posiciones se calculan con astronomía real (Swiss Ephemeris), no con tablas genéricas. La interpretación se redacta con apoyo de asistentes de IA y después la revisamos una por una antes de enviarla. Es una herramienta de autoconocimiento, no una predicción."],
   ["¿Necesito saber mi hora de nacimiento?", "Es lo ideal, porque de ella dependen el Ascendente y las casas. Si no la sabes con exactitud, usa la más aproximada que tengas: la mayoría de las secciones siguen siendo útiles."],
   ["¿Qué son las 5 preguntas de Astrea.ai?", "Cada reporte incluye 5 preguntas en Astrea.ai. Cuando te enviamos tu reporte, entra a Astrea.ai con el mismo correo de tu compra y podrás usarlas para conversar sobre tu carta. No necesitas crear una cuenta para comprar, y tu reporte es tuyo con o sin suscripción."],
+  ["¿Qué es Astrea.ai y qué planes tiene?", `Astrea.ai es tu espacio personal para conversar con tu carta natal a lo largo del tiempo. Free es una primera experiencia para descubrir tu carta y conocer Astrea. Plus (${PRECIO_PLAN.plus}) es tu espacio para volver a tu carta de forma recurrente, con respuestas más elaboradas. Pro (${PRECIO_PLAN.pro}) incluye todo lo de Plus, con más espacio para conversar. Los límites de uso de cada plan aparecen en sus condiciones, en la página de planes de Astrea.ai.`],
+  ["¿Necesito un plan para comprar mi lectura?", "No. Tu lectura es un producto aparte: la compras una vez y es tuya con o sin plan. Los planes de Astrea.ai son opcionales y se pagan mes a mes en Hotmart."],
   ["¿En qué formato recibiré mi informe?", "En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."],
   ["¿Puedo pedir un reembolso?", "El pago se procesa en Hotmart. Si necesitas un reembolso, escríbenos por WhatsApp con la referencia de tu pedido y lo revisamos contigo."],
   ["¿Puedo pedir una lectura para otra persona?", "Sí. Usa los datos de nacimiento de esa persona y el correo donde quieres recibir la lectura. Las 5 preguntas de Astrea.ai quedan asociadas a ese correo."],

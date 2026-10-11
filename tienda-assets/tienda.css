@@ -326,6 +326,27 @@
 .chat-muestra__enviar { background: #2B2620; color: #F7F3E9; border-radius: 6px; padding: 6px 14px; font-family: var(--font-serif); }
 .chat-muestra figcaption { font-size: 0.78rem; color: var(--ink-on-dark-soft); }
 
+.astrea-ai__nota { font-size: 0.85rem; color: var(--gold-light); }
+.paso__enlace { justify-self: start; margin-top: var(--s-2); font-size: 0.9rem; }
+
+/* ---------- Planes de Astrea.ai: la propuesta primero; los límites, como condición ---------- */
+.planes-ai { display: grid; gap: var(--s-5); max-width: 68rem; margin-inline: auto; }
+.plan-ai {
+  display: grid; grid-template-rows: auto auto 1fr auto; gap: var(--s-2);
+  padding: var(--s-6) var(--s-5) var(--s-5);
+  background: rgba(255, 253, 248, .72); border: 1px solid var(--hairline); border-radius: var(--r-card);
+}
+.plan-ai--destacado { background: #FFFDF8; border-color: var(--gold); box-shadow: var(--shadow-soft); }
+.plan-ai__lema { font-size: 0.68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-deep); }
+.plan-ai__nombre { font-family: var(--font-serif); font-weight: 500; font-size: 2rem; line-height: 1.1; color: var(--ink); }
+.plan-ai__texto { color: var(--ink-soft); font-size: 0.95rem; }
+.plan-ai__pie { display: grid; gap: var(--s-3); margin-top: var(--s-4); }
+.plan-ai__precio { font-family: var(--font-serif); font-size: 1.6rem; color: var(--ink); }
+.plan-ai__condiciones { padding-top: var(--s-3); border-top: 1px solid var(--hairline); font-size: 0.76rem; line-height: 1.5; color: var(--ink-soft); }
+.plan-ai__condiciones > span:first-child { font-size: 0.64rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-deep); margin-right: 4px; }
+.plan-ai__condiciones a { color: var(--gold-deep); }
+.planes-ai__nota { margin-top: var(--s-5); text-align: center; font-size: 0.8rem; color: var(--ink-soft); }
+
 /* ---------- Testimonios (solo con testimonios reales) ---------- */
 .testimonios { display: grid; gap: var(--s-5); grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
 .testimonio { margin: 0; padding: var(--s-5); background: #FFFDF8; border: 1px solid var(--hairline); border-radius: var(--r-card); }
@@ -360,6 +381,7 @@
   .confianza__lista li + li { border-left: 1px solid var(--hairline); padding-left: var(--s-5); }
   .capitulo__cabecera:not(.capitulo__cabecera--centro):not(.capitulo__cabecera--apilada) { grid-template-columns: 1.4fr 1fr; align-items: end; }
   .astrea-ai__grid { grid-template-columns: 1fr 1fr; }
+  .planes-ai { grid-template-columns: repeat(3, 1fr); }
   .faq-portada { grid-template-columns: 0.8fr 1.2fr; }
 }
 
