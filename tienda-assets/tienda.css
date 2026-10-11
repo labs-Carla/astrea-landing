@@ -291,7 +291,8 @@
 .tarjeta-portada__texto { font-size: 0.9rem; color: var(--ink-soft); }
 .tarjeta-portada__pie { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding-top: var(--s-3); margin-top: var(--s-2); border-top: 1px solid var(--hairline); }
 .tarjeta-portada__precio { font-family: var(--font-serif); font-size: 1.35rem; color: var(--gold-deep); }
-.tarjeta-portada__incluye { display: block; font-family: var(--font-sans); font-size: .72rem; letter-spacing: .02em; color: var(--ink-soft); margin-top: 2px; }
+.tarjeta-portada__incluye { display: flex; align-items: center; gap: 6px; margin-top: var(--s-3); font-family: var(--font-sans); font-size: .78rem; letter-spacing: .02em; color: var(--gold-deep); }
+.tarjeta-portada__incluye .icon { width: 14px; height: 14px; flex-shrink: 0; }
 
 /* ---------- Pasos ---------- */
 .pasos { display: grid; gap: var(--s-6); counter-reset: none; }

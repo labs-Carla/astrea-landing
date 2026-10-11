@@ -222,9 +222,10 @@ const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby=
     <h3 class="tarjeta-portada__titulo" id="tp-${r.slug}"><a href="/reportes/${r.slug}">${esc(r.nombre)}</a></h3>
     <p class="tarjeta-portada__texto">${esc(r.tarjeta)}</p>
     <div class="tarjeta-portada__pie">
-      <span class="tarjeta-portada__precio">${esc(CHECKOUTS[r.slug].precioReferencia)}<small class="tarjeta-portada__incluye">Incluye Astrea.ai · 5 preguntas</small></span>
+      <span class="tarjeta-portada__precio">${esc(CHECKOUTS[r.slug].precioReferencia)}</span>
       <a class="btn btn--night btn--sm" href="/comprar/${r.slug}" aria-label="Comprar ${esc(r.nombre)}">Comprar ${icono("i-arrow")}</a>
     </div>
+    <p class="tarjeta-portada__incluye">${icono("i-spark")}Incluye Astrea.ai · 5 preguntas</p>
   </div>
 </article>`;
 
