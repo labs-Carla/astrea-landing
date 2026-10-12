@@ -13,7 +13,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { REPORTES, ENTREGA, estadoDe } from "../tienda-assets/catalogo.js";
-import { CHECKOUTS, URL_ASTREA_AI, WHATSAPP } from "../tienda-assets/config.js";
+import { CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITIO = "https://astrea-charts.site";
@@ -85,13 +85,11 @@ ${SPRITE}
       ${enlaces}
     </nav>
     <div class="header-acciones">
-      <a class="nav-secundaria" href="${URL_ASTREA_AI}">Astrea.ai ↗</a>
       <a class="btn btn--gold btn--sm" href="/reportes">Ver reportes</a>
       <details class="menu-movil">
         <summary aria-label="Abrir menú">${icono("i-menu")}</summary>
         <nav class="menu-movil__panel" aria-label="Menú">
           ${enlaces}
-          <a href="${URL_ASTREA_AI}">Astrea.ai ↗</a>
         </nav>
       </details>
     </div>
@@ -114,7 +112,6 @@ ${cuerpo}
       <a href="/como-funciona">Cómo funciona</a>
       <a href="/sobre-astrea">Sobre Astrea</a>
       <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
-      <a href="${URL_ASTREA_AI}">Astrea.ai</a>
     </nav>
     <div class="pie__columna">
       <h2 class="pie__titulo">Contacto</h2>
@@ -182,11 +179,6 @@ function tarjeta(r) {
 
 const lista = (items, clase = "checklist") => `<ul class="${clase}">${items.map((i) => `<li>${icono("i-check")}${esc(i)}</li>`).join("")}</ul>`;
 
-const BENEFICIO_AI = `<div class="beneficio-ai">
-  <strong>Incluye acceso a Astrea.ai con 5 preguntas</strong>
-  <span>Cuando te enviemos tu lectura, entra a <a href="${URL_ASTREA_AI}">Astrea.ai</a> con el mismo correo de tu compra y tendrás 5 preguntas para seguir explorando tu carta en conversación con Astrea. No necesitas ningún plan ni crear una cuenta para comprar.</span>
-</div>`;
-
 // ---------------------------------------------------------------- páginas
 
 const paginas = {};
@@ -200,8 +192,6 @@ const FAQ_PORTADA = [
   ["¿Qué información necesito para hacer mi reporte?", "Tu fecha, hora y lugar de nacimiento, y el correo donde quieres recibirlo. Para la revolución solar, también la ciudad donde pasarás tu cumpleaños; para la compatibilidad de pareja, los datos de la otra persona (su hora de nacimiento es opcional) y su consentimiento."],
   ["¿Cuánto tiempo tarda en llegar?", "Entre 24 y 48 horas después de que confirmamos tu pago en Hotmart."],
   ["¿En qué formato recibiré mi informe?", "En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."],
-  ["¿Qué es Astrea.ai?", "Tu espacio personal para conversar con tu carta natal. Astrea responde a partir de tu carta y, cuando preguntas por el presente, de los tránsitos que estás viviendo. Tus conversaciones quedan guardadas para retomarlas cuando vuelvas."],
-  ["¿Qué incluye el acceso a Astrea.ai de mi lectura?", "Cada lectura incluye 5 preguntas en Astrea.ai para seguir explorando tu carta. Cuando te enviemos tu lectura, entra con el mismo correo de tu compra. Si compras varias lecturas, cada una suma 5 preguntas, y no vencen. No necesitas ningún plan."],
   ["¿Los reportes son personalizados?", "Sí. Cada reporte parte de tu carta, calculada con Swiss Ephemeris para tu fecha, hora y lugar exactos de nacimiento. La interpretación se redacta con apoyo de IA y la revisamos antes de enviarla."],
   ["¿Puedo pedir un reembolso?", "El pago se procesa en Hotmart. Si necesitas un reembolso, escríbenos por WhatsApp con la referencia de tu pedido y lo revisamos contigo."],
 ];
@@ -209,8 +199,7 @@ const FAQ_PORTADA = [
 
 const RECORRIDO = [
   ["i-wheel", "Descubre tu carta", "Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.", "/universo#generador", "Generar mi carta gratis"],
-  ["i-pages", "Profundiza con una lectura", "La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez, es tuya e incluye acceso a Astrea.ai.", "/reportes", "Ver reportes"],
-  ["i-spark", "Sigue explorando en Astrea.ai", "Con tu lectura recibes 5 preguntas para conversar con Astrea sobre tu carta: tus vínculos, tus emociones, tu vocación o el momento que estás viviendo.", "#astrea-ai", "Conocer Astrea.ai"],
+  ["i-pages", "Profundiza con una lectura", "La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.", "/reportes", "Ver reportes"],
 ];
 
 const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby="tp-${r.slug}">
@@ -225,14 +214,13 @@ const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby=
       <span class="tarjeta-portada__precio">${esc(CHECKOUTS[r.slug].precioReferencia)}</span>
       <a class="btn btn--night btn--sm" href="/comprar/${r.slug}" aria-label="Comprar ${esc(r.nombre)}">Comprar ${icono("i-arrow")}</a>
     </div>
-    <p class="tarjeta-portada__incluye">${icono("i-spark")}Incluye Astrea.ai · 5 preguntas</p>
   </div>
 </article>`;
 
 paginas["index.html"] = layout({
   ruta: "/",
   titulo: "Astrea · Tu carta natal, un lugar al que volver",
-  descripcion: "Tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo. Carta natal gratis, lecturas personalizadas en PDF y Astrea.ai.",
+  descripcion: "Tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo. Carta natal gratis, y lecturas personalizadas en PDF.",
   cuerpo: `<section class="hero hero--tienda" aria-labelledby="hero-titulo">
   <div class="hero__grid shell">
     <div class="hero__copy">
@@ -266,10 +254,10 @@ paginas["index.html"] = layout({
         <p class="eyebrow">Tu recorrido con Astrea</p>
         <h2 class="capitulo__titulo" id="recorrido-titulo">Una experiencia que crece contigo.</h2>
       </div>
-      <p class="capitulo__intro">Tu carta natal es el punto de partida. A partir de ella, cada lectura y cada conversación se escribe para ti, y puedes volver en distintos momentos para explorar nuevos temas de tu vida.</p>
+      <p class="capitulo__intro">Tu carta natal es el punto de partida. A partir de ella, cada lectura se escribe para ti, y puedes volver en distintos momentos para explorar nuevos temas de tu vida.</p>
     </header>
-    <ol class="pasos">
-      ${RECORRIDO.map(([ic, t, d, href, accion], i) => `<li class="paso"><span class="paso__numero">${["I", "II", "III"][i]}</span>${icono(ic, "icon paso__icono")}<h3 class="paso__titulo">${esc(t)}</h3><p>${esc(d)}</p><a class="link-quiet paso__enlace" href="${href}">${esc(accion)}</a></li>`).join("\n      ")}
+    <ol class="pasos pasos--dos">
+      ${RECORRIDO.map(([ic, t, d, href, accion], i) => `<li class="paso"><span class="paso__numero">${["I", "II"][i]}</span>${icono(ic, "icon paso__icono")}<h3 class="paso__titulo">${esc(t)}</h3><p>${esc(d)}</p><a class="link-quiet paso__enlace" href="${href}">${esc(accion)}</a></li>`).join("\n      ")}
     </ol>
   </div>
 </section>
@@ -281,7 +269,7 @@ paginas["index.html"] = layout({
         <p class="eyebrow">Nuestros reportes</p>
         <h2 class="capitulo__titulo" id="reportes-titulo">Tu historia tiene muchas capas.</h2>
       </div>
-      <p class="capitulo__intro">Lecturas en PDF, escritas a partir de tu carta natal y revisadas antes de llegar a ti. Cada una incluye acceso a Astrea.ai con 5 preguntas para seguir explorando tu carta.</p>
+      <p class="capitulo__intro">Lecturas en PDF, escritas a partir de tu carta natal y revisadas antes de llegar a ti.</p>
     </header>
     <div class="catalogo-portada">
       ${disponibles.map(tarjetaPortada).join("\n      ")}
@@ -303,36 +291,6 @@ paginas["index.html"] = layout({
   </div>
 </section>
 
-<section class="capitulo capitulo--noche astrea-ai" id="astrea-ai" aria-labelledby="ai-titulo">
-  <div class="shell astrea-ai__grid">
-    <div class="astrea-ai__texto">
-      <p class="eyebrow eyebrow--light">Astrea.ai · Incluido con tu lectura</p>
-      <h2 class="capitulo__titulo capitulo__titulo--claro" id="ai-titulo">Después de tu lectura, conversa con tu carta.</h2>
-      <p class="lede lede--light">Astrea responde a partir de tu carta natal y, cuando tu pregunta mira al presente, de los tránsitos que estás viviendo. Tus conversaciones quedan guardadas, para retomar el hilo cuando vuelvas con algo nuevo.</p>
-      <p class="astrea-ai__nota">Cada lectura incluye 5 preguntas en Astrea.ai. También puedes crear tu carta y probarla gratis.</p>
-      <div class="hero__actions">
-        <a class="btn btn--gold" href="/reportes">Ver las lecturas ${icono("i-arrow")}</a>
-        <a class="link-quiet link-quiet--light" href="${URL_ASTREA_AI}">Entrar a Astrea.ai</a>
-      </div>
-    </div>
-    <figure class="chat-muestra" aria-label="Ejemplo de la conversación en Astrea.ai">
-      <div class="chat-muestra__marco">
-        <p class="chat-muestra__cabecera"><span>Habla con Astrea</span><span>Ejemplo</span></p>
-        <ul class="chat-muestra__sugerencias" aria-label="Preguntas de ejemplo">
-          <li>¿Por qué repito el mismo patrón en mis relaciones?</li>
-          <li>¿Qué tránsitos estoy viviendo ahora y cómo me afectan?</li>
-          <li>¿Cuál es mi propósito y vocación según mi carta?</li>
-        </ul>
-        <ol class="chat-muestra__mensajes">
-          <li class="chat-muestra__tu"><span>Tú</span><p>¿Por qué repito el mismo patrón en mis relaciones?</p></li>
-          <li class="chat-muestra__astrea" role="presentation"><p>Astrea está leyendo tu carta…</p></li>
-        </ol>
-        <div class="chat-muestra__campo" aria-hidden="true"><span>Escribe tu pregunta…</span><span class="chat-muestra__enviar">Enviar</span></div>
-      </div>
-      <figcaption>Así se ve la conversación en Astrea.ai: Astrea responde a partir de tu carta natal.</figcaption>
-    </figure>
-  </div>
-</section>
 ${TESTIMONIOS.length ? `
 <section class="capitulo capitulo--claro" aria-labelledby="testimonios-titulo">
   <div class="shell">
@@ -364,7 +322,7 @@ paginas["reportes.html"] = layout({
   ruta: "/reportes",
   titulo: "Reportes astrológicos · Astrea",
   descripcion: "Carta natal completa, revolución solar, compatibilidad de pareja y reportes de amor, vocación, dinero y patrones. Precios y qué incluye cada uno.",
-  cuerpo: `${cabecera({ eyebrow: "Catálogo", titulo: "Reportes de Astrea", lede: "Cada reporte mira tu carta desde una pregunta distinta. Todos llegan en PDF a tu correo e incluyen 5 preguntas en Astrea.ai.", migas: [["/", "Inicio"], ["/reportes", "Reportes"]] })}
+  cuerpo: `${cabecera({ eyebrow: "Catálogo", titulo: "Reportes de Astrea", lede: "Cada reporte mira tu carta desde una pregunta distinta. Todos llegan en PDF a tu correo.", migas: [["/", "Inicio"], ["/reportes", "Reportes"]] })}
 <section class="sheet sheet--light sheet--lift seccion">
   <div class="shell">
     ${principales.length ? `<div class="grupo-catalogo">
@@ -396,7 +354,7 @@ for (const r of REPORTES) {
       <a class="btn btn--ghost btn--block" href="${WHATSAPP}?text=${encodeURIComponent(`Hola, quiero saber cuándo estará el reporte de ${r.nombre}`)}">Avísame cuando esté</a>
       <a class="link-quiet" href="/reportes/carta-natal">Mientras tanto, conoce la carta natal completa</a>`;
   const despues = disp
-    ? [r.extra === "segunda_persona" ? "Completas tus datos, los de la otra persona y tu correo." : r.extra === "revolucion_solar" ? "Completas tus datos de nacimiento, dónde pasarás tu cumpleaños y tu correo." : "Completas tus datos de nacimiento y tu correo.", "Pagas en Hotmart con tu pedido ya registrado.", "Confirmamos tu pago y preparamos tu lectura.", "La revisamos y te la enviamos por correo en 24–48 h.", "Si quieres, sigues explorando con 5 preguntas en Astrea.ai."]
+    ? [r.extra === "segunda_persona" ? "Completas tus datos, los de la otra persona y tu correo." : r.extra === "revolucion_solar" ? "Completas tus datos de nacimiento, dónde pasarás tu cumpleaños y tu correo." : "Completas tus datos de nacimiento y tu correo.", "Pagas en Hotmart con tu pedido ya registrado.", "Confirmamos tu pago y preparamos tu lectura.", "La revisamos y te la enviamos por correo en 24–48 h."]
     : ["Cuando esté disponible, lo anunciaremos en esta página.", "Podrás pedirlo con tus datos de nacimiento.", "Lo recibirás por correo, revisado como todas nuestras lecturas."];
   const jsonLd = {
     "@context": "https://schema.org", "@type": "Product", name: `${r.nombre} · Astrea`, description: r.resumen,
@@ -428,7 +386,6 @@ for (const r of REPORTES) {
       <div class="bloque"><h2 class="bloque__titulo">Qué datos necesitamos</h2>${lista(r.datos)}</div>
       <div class="bloque"><h2 class="bloque__titulo">Cómo se entrega</h2><p class="prosa">${esc(r.entrega || ENTREGA)}</p></div>
       <div class="bloque"><h2 class="bloque__titulo">${disp ? "Qué pasa después de comprar" : "Qué sigue"}</h2><ol class="pasos-entrega">${despues.map((p) => `<li>${esc(p)}</li>`).join("")}</ol></div>
-      ${BENEFICIO_AI}
       <p class="nota-reflexion">Las lecturas de Astrea son herramientas de reflexión y autoconocimiento, no predicciones ni asesoría médica, psicológica, financiera o profesional.</p>
     </div>
   </div>
@@ -524,7 +481,7 @@ for (const r of disponibles) {
         <fieldset data-paso="2" hidden>
           <legend><h2>Tu correo de entrega</h2></legend>
           <div class="natal-form">
-            <div class="field field--full"><label for="email">Correo electrónico</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" required><small>Ahí te enviaremos tu lectura. Usa el mismo correo si después quieres tus 5 preguntas en Astrea.ai.</small><span class="error-campo" id="e-email" aria-live="polite"></span></div>
+            <div class="field field--full"><label for="email">Correo electrónico</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" required><small>Ahí te enviaremos tu lectura.</small><span class="error-campo" id="e-email" aria-live="polite"></span></div>
             <div class="acciones-paso"><button class="btn btn--ghost" type="button" data-anterior="1">Volver</button><button class="btn btn--night" type="button" data-siguiente="3">Revisar pedido ${icono("i-arrow")}</button></div>
           </div>
         </fieldset>
@@ -547,7 +504,6 @@ for (const r of disponibles) {
       <p class="tarjeta-reporte__titulo">${esc(r.nombre)}</p>
       ${precioHtml(r)}
       ${lista(r.incluye.slice(0, 3))}
-      ${BENEFICIO_AI}
     </aside>
   </div>
 </section>`,
@@ -578,7 +534,6 @@ const PASOS = [
   ["i-check", "Confirmamos tu pago", "Revisamos la venta en Hotmart y confirmamos tu pedido. Volver de la página de pago no basta: el pedido se confirma cuando verificamos la venta."],
   ["i-eye", "Preparamos y revisamos", "Calculamos tu carta con Swiss Ephemeris, redactamos la interpretación con apoyo de IA y la revisamos una por una."],
   ["i-mail", "Te la enviamos", "Recibes tu lectura por correo entre 24 y 48 horas después de confirmar el pago."],
-  ["i-spark", "Sigue explorando", "Con el mismo correo, entra a Astrea.ai y usa tus 5 preguntas para conversar sobre tu carta. Es opcional."],
 ];
 
 paginas["como-funciona.html"] = layout({
@@ -608,8 +563,6 @@ paginas["sobre-astrea.html"] = layout({
     <p>Calculamos las posiciones de los planetas, las casas y los aspectos con Swiss Ephemeris, a partir de tu fecha, hora y lugar de nacimiento. La interpretación se redacta con apoyo de asistentes de IA y después la revisamos una por una antes de enviarla.</p>
     <h2>Lo que una lectura es, y lo que no</h2>
     <p>Nuestras lecturas son herramientas de reflexión y autoconocimiento. No son predicciones ni reemplazan asesoría médica, psicológica, financiera o profesional.</p>
-    <h2>Astrea.ai</h2>
-    <p>Astrea.ai es tu espacio personal para conversar con tu carta natal. Cada lectura incluye acceso a Astrea.ai con 5 preguntas, para seguir explorando tu carta después de recibirla; también puedes crear tu carta y probarla gratis. Puedes comprar una lectura sin crear una cuenta: entra después con el mismo correo de tu compra.</p>
     <h2>Contacto</h2>
     <p>Escríbenos por <a class="link-quiet" href="${WHATSAPP}">WhatsApp</a> o síguenos en <a class="link-quiet" href="https://www.tiktok.com/@astrea.charts">TikTok</a>.</p>
   </div>
@@ -626,18 +579,16 @@ const FAQ = [
   ["¿Cuánto tiempo tarda en llegar?", "Entre 24 y 48 horas después de confirmar tu pago, directo a tu correo."],
   ["¿Qué tan precisa es la lectura?", "Las posiciones se calculan con astronomía real (Swiss Ephemeris), no con tablas genéricas. La interpretación se redacta con apoyo de asistentes de IA y después la revisamos una por una antes de enviarla. Es una herramienta de autoconocimiento, no una predicción."],
   ["¿Necesito saber mi hora de nacimiento?", "Es lo ideal, porque de ella dependen el Ascendente y las casas. Si no la sabes con exactitud, usa la más aproximada que tengas: la mayoría de las secciones siguen siendo útiles."],
-  ["¿Qué incluye el acceso a Astrea.ai de mi lectura?", "Cada lectura incluye 5 preguntas en Astrea.ai para conversar con Astrea sobre tu carta. Cuando te enviamos tu lectura, entra a Astrea.ai con el mismo correo de tu compra y podrás usarlas. Si compras varias lecturas, cada una suma 5 preguntas, y no vencen. No necesitas crear una cuenta para comprar."],
-  ["¿Qué es Astrea.ai?", "Tu espacio personal para conversar con tu carta natal: Astrea responde a partir de tu carta y, cuando preguntas por el presente, de los tránsitos que estás viviendo. Viene incluido con cada lectura y también puedes probarlo gratis con tu carta. Para quien quiere conversar con frecuencia hay planes mensuales opcionales; sus condiciones están en Astrea.ai."],
-  ["¿Necesito un plan para comprar mi lectura?", "No. Tu lectura se compra una sola vez, es tuya e incluye acceso a Astrea.ai con 5 preguntas. No necesitas ningún plan."],
+  ["¿Necesito crear una cuenta para comprar mi lectura?", "No. Tu lectura se compra una sola vez y es tuya: solo necesitas tus datos de nacimiento y el correo donde quieres recibirla."],
   ["¿En qué formato recibiré mi informe?", "En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."],
   ["¿Puedo pedir un reembolso?", "El pago se procesa en Hotmart. Si necesitas un reembolso, escríbenos por WhatsApp con la referencia de tu pedido y lo revisamos contigo."],
-  ["¿Puedo pedir una lectura para otra persona?", "Sí. Usa los datos de nacimiento de esa persona y el correo donde quieres recibir la lectura. Las 5 preguntas de Astrea.ai quedan asociadas a ese correo."],
+  ["¿Puedo pedir una lectura para otra persona?", "Sí. Usa los datos de nacimiento de esa persona y el correo donde quieres recibir la lectura."],
 ];
 
 paginas["preguntas-frecuentes.html"] = layout({
   ruta: "/preguntas-frecuentes",
   titulo: "Preguntas frecuentes · Astrea",
-  descripcion: "Pagos, entregas, datos de nacimiento, precisión de las lecturas y Astrea.ai: respuestas a las preguntas más frecuentes.",
+  descripcion: "Pagos, entregas, datos de nacimiento, y precisión de las lecturas: respuestas a las preguntas más frecuentes.",
   jsonLd: { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
   cuerpo: `${cabecera({ eyebrow: "¿Tienes dudas?", titulo: "Preguntas frecuentes", migas: [["/", "Inicio"], ["/preguntas-frecuentes", "Preguntas frecuentes"]] })}
 <section class="sheet sheet--light sheet--lift seccion">

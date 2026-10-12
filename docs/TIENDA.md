@@ -23,8 +23,8 @@ No cambia: `/universo`, `/link`, `/link-gratis`, `/carta`, `/r/:token`,
 ## Archivos
 
 - `tienda-assets/catalogo.js`: los 7 reportes. Fuente única de contenido.
-- `tienda-assets/config.js`: URL de la API, checkouts de Hotmart y URL de
-  Astrea.ai. Cumple el papel de variables de entorno, porque el sitio no tiene
+- `tienda-assets/config.js`: URL de la API, checkouts de Hotmart y
+  WhatsApp. Cumple el papel de variables de entorno, porque el sitio no tiene
   build. **No guarda secretos.**
 - `tienda-assets/compra.js`: lógica pura (validación, orden, checkout y
   estados), testeada con `node --test`.
@@ -96,7 +96,7 @@ GET /api/v1/carta-natal/orden/{referencia}/estado
 
 - **Precio.** Es una referencia para la tienda; el monto real lo cobra Hotmart.
 - **Los 6 temáticos se preparan a mano** después de cada compra (decisión comercial: entrega en PDF por correo en 24–48 h). En el panel están en la pestaña **Otros reportes**, con las acciones confirmar pago, marcar enviado y reembolso.
-- **Las 5 preguntas en Astrea.ai.** Todos los reportes las incluyen; se habilitan cuando el pedido se marca como enviado.
+- **Astrea.ai está en pausa** (2026-10-11): la tienda no la menciona ni enlaza la app; la app solo admite superadmins.
 - **Backend:** astrea-API #93 (`pedidos_producto`). **Panel:** astrea-informe-react #5.
 
 ## Pendiente antes de publicar
@@ -116,7 +116,7 @@ GET /api/v1/carta-natal/orden/{referencia}/estado
 `index.html` es la portada: el hero y la navegación de siempre (escultura en
 el arco y «Un mapa del cielo para comprender tu historia.»), seguidos de la
 franja de confianza, los 7 reportes con precio y "Comprar", cómo funciona,
-Astrea.ai, testimonios y preguntas frecuentes. Se genera, como el resto, con
+testimonios y preguntas frecuentes. Se genera, como el resto, con
 `scripts/generar-tienda.mjs`.
 
 - **Testimonios.** El arreglo `TESTIMONIOS` está vacío y la sección no se

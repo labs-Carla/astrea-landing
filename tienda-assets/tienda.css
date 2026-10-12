@@ -374,6 +374,7 @@
 @media (min-width: 600px) {
   .confianza__lista { grid-template-columns: repeat(2, 1fr); }
   .pasos { grid-template-columns: repeat(3, 1fr); }
+  .pasos--dos { grid-template-columns: repeat(2, 1fr); }
   .pie__grid { grid-template-columns: 1.4fr 1fr 1fr; }
 }
 

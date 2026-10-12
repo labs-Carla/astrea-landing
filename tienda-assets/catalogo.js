@@ -20,7 +20,6 @@
 
 const INCLUYE_COMUN = [
   "Reporte personalizado en PDF",
-  "Acceso a Astrea.ai con 5 preguntas, al recibir tu lectura",
   "Entrega por correo en 24–48 h",
 ];
 
@@ -177,7 +176,7 @@ export const REPORTES = [
       "Oportunidades para construir vínculos más conscientes",
     ],
     idealPara: "Parejas o personas que quieren explorar la dinámica astrológica de un vínculo.",
-    incluye: ["Análisis comparativo en PDF", "Acceso a Astrea.ai con 5 preguntas, al recibir tu lectura", "Entrega por correo en 24–48 h"],
+    incluye: ["Análisis comparativo en PDF", "Entrega por correo en 24–48 h"],
     datos: ["Tus datos de nacimiento", "Fecha, hora (si la sabes) y lugar de nacimiento de la otra persona", "La confirmación de que la otra persona acepta compartir sus datos", "Correo de entrega"],
   },
 ];

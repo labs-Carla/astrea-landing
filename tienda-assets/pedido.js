@@ -8,7 +8,7 @@
  * Hotmart no prueba el pago.
  * Nunca arma enlaces de entrega: el enlace /r/<token> lo envía el equipo.
  */
-import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, URL_ASTREA_AI, WHATSAPP } from "./config.js";
+import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, WHATSAPP } from "./config.js";
 import { reportePorSlug } from "./catalogo.js";
 import { ESTADOS_PEDIDO, estadoAMostrar, pedidoVigente, referenciaDeOrden, rutaDeEstado, almacenSeguro } from "./compra.js";
 
@@ -81,13 +81,6 @@ async function pintar() {
     hijos.push(el("p", {}, el("a", { class: "btn btn--gold", href: url.toString() }, "Ir al pago en Hotmart")));
   }
   if (["creado", "pendiente", "confirmado"].includes(estado)) hijos.push(el("h3", { class: "bloque__titulo" }, "Qué sigue"), pasos);
-  if (reporte && !["rechazado", "reembolsado", "error"].includes(estado)) {
-    hijos.push(el("div", { class: "beneficio-ai" },
-      el("strong", {}, "Tus 5 preguntas en Astrea.ai"),
-      el("span", {}, "Cuando recibas tu reporte, entra a Astrea.ai con el mismo correo de tu compra: tendrás 5 preguntas para conversar sobre tu carta. Es opcional y no necesitas una suscripción."),
-      el("a", { class: "link-quiet", href: URL_ASTREA_AI }, "Conocer Astrea.ai"),
-    ));
-  }
   hijos.push(el("p", { class: "detalle__aviso" }, "¿Dudas con tu pedido? ", el("a", { class: "link-quiet", href: `${WHATSAPP}?text=${encodeURIComponent(`Hola, tengo una pregunta sobre mi pedido ${referenciaDeOrden(pedido.ordenId, pedido.reporte)}`)}` }, "Escríbenos por WhatsApp"), " con tu referencia."));
   caja.replaceChildren(...hijos);
 }
