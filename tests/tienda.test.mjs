@@ -148,7 +148,6 @@ test("catálogo: 7 reportes, todos con checkout real y sus precios", () => {
   assert.equal(new Set(ids).size, 7, "cada reporte tiene su propio producto de Hotmart");
   for (const r of REPORTES) {
     for (const k of ["nombre", "resumen", "descripcion", "explora", "incluye", "datos", "idealPara", "categoria"]) assert.ok(r[k]?.length, `${r.slug}.${k}`);
-    assert.ok(r.incluye.some((i) => /5 preguntas/.test(i)), `${r.slug} incluye las 5 preguntas`);
   }
   const temas = REPORTES.filter((r) => !r.principal);
   assert.equal(new Set(temas.map((r) => r.descripcion)).size, temas.length, "los temáticos no son copias");
@@ -221,7 +220,7 @@ test("SEO básico y navegación en cada página", () => {
     assert.match(html, /<title>[^<]{10,}<\/title>/, ruta);
     assert.match(html, /<meta name="description" content="[^"]{20,}">/, ruta);
     assert.equal((html.match(/<h1[ >]/g) || []).length, 1, `${ruta}: un solo h1`);
-    for (const enlace of ['href="/reportes"', 'href="/como-funciona"', 'href="/sobre-astrea"', 'href="/preguntas-frecuentes"', 'href="https://app.astrea-charts.site"']) {
+    for (const enlace of ['href="/reportes"', 'href="/como-funciona"', 'href="/sobre-astrea"', 'href="/preguntas-frecuentes"']) {
       assert.ok(html.includes(enlace), `${ruta} enlaza ${enlace}`);
     }
   }
@@ -259,7 +258,7 @@ test("cada reporte tiene su portada en los dos tamaños, y la usa su ficha", () 
   }
 });
 
-test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos, Astrea.ai y preguntas", () => {
+test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y preguntas", () => {
   const html = PAGINAS["index.html"];
   assert.match(html, /<h1 class="h-display" id="hero-titulo">Tu carta natal, un lugar al que volver\.<\/h1>/);
   assert.ok(html.includes("Astrea es tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo."), "propuesta de valor en el hero");
@@ -278,10 +277,8 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos, Astrea.
     assert.ok(html.includes(r.tarjeta), `texto ${r.slug}`);
   }
   for (const precio of ["USD 12", "USD 9", "USD 15"]) assert.ok(html.includes(precio));
-  for (const q of ["¿Por qué repito el mismo patrón en mis relaciones?", "¿Qué tránsitos estoy viviendo ahora y cómo me afectan?", "¿Cuál es mi propósito y vocación según mi carta?"]) assert.ok(html.includes(q));
-  assert.equal((html.match(/<details>/g) || []).length, 7, "7 preguntas frecuentes");
-  assert.match(html, /¿Qué incluye el acceso a Astrea\.ai de mi lectura\?/);
-  assert.match(html, /id="recorrido"[\s\S]*href="\/universo#generador">Generar mi carta gratis[\s\S]*href="\/reportes">Ver reportes[\s\S]*href="#astrea-ai">Conocer Astrea\.ai/);
+  assert.equal((html.match(/<details>/g) || []).length, 5, "5 preguntas frecuentes");
+  assert.match(html, /id="recorrido"[\s\S]*href="\/universo#generador">Generar mi carta gratis[\s\S]*href="\/reportes">Ver reportes/);
   assert.match(html, /¿Puedo pedir un reembolso\?/);
   assert.ok(!/Testimonio pendiente|Nombre pendiente|★/.test(html), "sin testimonios inventados");
   assert.ok(!/Historias reales/.test(html), "la sección de testimonios no se muestra sin testimonios reales");
@@ -290,24 +287,16 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos, Astrea.
   assert.ok(!/escena|backdrop/.test(html), "sin la escena ni el vidrio del rediseño");
 });
 
-test("modelo comercial: las lecturas son la oferta principal e incluyen Astrea.ai; sin promoción de Plus/Pro", () => {
+test("Astrea.ai en pausa: la tienda vende lecturas y no menciona Astrea.ai ni su app", () => {
   const html = PAGINAS["index.html"];
   assert.ok(!html.includes('id="planes"'), "la portada ya no tiene la sección de planes");
   assert.ok(!/USD 9,99\/mes|USD 19,99\/mes|Astrea Plus|Astrea Pro|Elegir Plus|Elegir Pro/.test(html), "sin precios ni llamados a Plus/Pro en la portada");
   assert.ok(!html.includes("tienda-assets/planes.js"));
-  // Cada lectura de la portada dice que incluye Astrea.ai.
-  assert.equal((html.match(/Incluye Astrea\.ai · 5 preguntas/g) || []).length, REPORTES.filter((r) => CHECKOUTS[r.slug]).length);
-  // La sección de Astrea.ai lo presenta como complemento de la lectura.
-  const ai = html.slice(html.indexOf('id="astrea-ai"'), html.indexOf("</section>", html.indexOf('id="astrea-ai"')));
-  assert.match(ai, /Incluido con tu lectura/);
-  assert.match(ai, /href="\/reportes">Ver las lecturas/);
-  // Cada ficha y cada compra comunican el acceso incluido, cuando realmente se concede (al recibir la lectura).
-  for (const r of REPORTES.filter((x) => CHECKOUTS[x.slug])) {
-    for (const ruta of [`reportes/${r.slug}.html`, `comprar/${r.slug}.html`]) {
-      assert.ok(PAGINAS[ruta].includes("Incluye acceso a Astrea.ai con 5 preguntas"), ruta);
-    }
-    assert.ok(PAGINAS[`reportes/${r.slug}.html`].includes("Acceso a Astrea.ai con 5 preguntas, al recibir tu lectura"), r.slug);
+  assert.ok(!html.includes('id="astrea-ai"'), "sin la sección de Astrea.ai");
+  for (const [ruta, pagina] of Object.entries(PAGINAS)) {
+    assert.ok(!/Astrea\.ai|Astrea AI|app\.astrea-charts\.site|5 preguntas/i.test(pagina), ruta);
   }
+  for (const r of REPORTES) assert.ok(!r.incluye.some((i) => /Astrea\.ai|preguntas/.test(i)), r.slug);
   // Nada de promesas que no existen, en todo el sitio generado.
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
     assert.ok(!/ilimitad|sin límite|soporte prioritario|tras confirmar tu compra/i.test(pagina), ruta);

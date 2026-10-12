@@ -43,5 +43,4 @@ export const CHECKOUTS = {
 
 export const ESTADO_PEDIDO_HABILITADO = true;
 
-export const URL_ASTREA_AI = "https://app.astrea-charts.site";
 export const WHATSAPP = "https://wa.me/573132137456";

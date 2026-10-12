@@ -141,7 +141,7 @@ const API = process.env.API || "http://127.0.0.1:8000/api/v1";
   await p.reload(); await p.waitForSelector("[data-estado-pedido][data-estado]");
   ok(consultas.some((u) => u.endsWith(`/carta-natal/orden/${pedido.referencia}/estado`)), "consulta el estado por la referencia (no por el id)");
   ok(!/pago confirmado/i.test(texto), "no declara el pago confirmado");
-  ok(texto.includes(`astrea-orden-${orden?.id}`) && /5 preguntas/.test(texto), "muestra la referencia y la invitación a Astrea.ai");
+  ok(texto.includes(`astrea-orden-${orden?.id}`) && !/Astrea\.ai|5 preguntas/.test(texto), "muestra la referencia, sin mencionar Astrea.ai");
   ok((await p.locator('a[href*="/r/"]').count()) === 0, "no muestra ningún enlace de entrega");
 
   if (process.env.ADMIN) {
