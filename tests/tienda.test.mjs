@@ -311,3 +311,12 @@ test("link: 'Conoce Astrea' lleva a la portada de la tienda (no a /universo)", (
   const tarjeta = html.slice(html.lastIndexOf("<a ", html.indexOf("Conoce Astrea")), html.indexOf("Conoce Astrea"));
   assert.match(tarjeta, /<a href="\/" class="link-card">/);
 });
+
+test("términos: página con la garantía de 7 días, enlazada en el pie y al aceptar el pedido", () => {
+  const t = PAGINAS["terminos.html"];
+  assert.ok(t.includes('id="reembolsos"') && t.includes("7 días corridos"), "garantía visible");
+  assert.ok(PAGINAS["index.html"].includes('href="/terminos"'), "pie enlaza términos");
+  assert.ok(PAGINAS["comprar/carta-natal.html"].match(/id="acepto"[^]*?href="\/terminos"/), "el paso de revisión enlaza términos");
+  assert.ok(PAGINAS["sitemap.xml"].includes("/terminos"));
+  assert.ok(!PAGINAS["preguntas-frecuentes.html"].includes("lo revisamos contigo"), "la FAQ ya no deja el reembolso en el aire");
+});
