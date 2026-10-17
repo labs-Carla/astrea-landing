@@ -13,20 +13,30 @@
  *     estado: GET {API}/pedidos/{referencia}/estado
  *   Reenviar el mismo pedido antes de confirmar el pago devuelve el MISMO pedido.
  *
- * En ambos: nace sin pago confirmado (el admin lo confirma a mano en el panel),
+ * - Pack (carta natal + 2 temáticos) → POST {API}/pedidos/pack  {nombre, email, fecha_hora_local, ciudad, pais, tematicos}
+ *     -> {status, orden_id, referencia}: es una orden de carta natal (sck=astrea-orden-<id>, mismo estado)
+ *     con los 2 temáticos colgados; se confirman con ella.
+ *
+ * En todos: nace sin pago confirmado (el admin lo confirma a mano en el panel),
  * 400/422 {detail}, 429 (5/min). `referencia` es aleatoria: es lo único que se
  * usa para consultar el estado. El frontend nunca envía precio ni estado de pago.
  */
+
+import { PACK_TEMATICOS } from "./catalogo.js";
 
 export const LIMITES = { nombreMin: 2, textoMax: 150, anioMin: 1900 };
 
 export const CANALES = {
   "carta-natal": { crear: "/carta-natal/orden", campoId: "orden_id", sck: "astrea-orden", estado: (ref) => `/carta-natal/orden/${encodeURIComponent(ref)}/estado` },
   pedido: { crear: "/pedidos", campoId: "pedido_id", sck: "astrea-pedido", estado: (ref) => `/pedidos/${encodeURIComponent(ref)}/estado` },
+  pack: { crear: "/pedidos/pack", campoId: "orden_id", sck: "astrea-orden", estado: (ref) => `/carta-natal/orden/${encodeURIComponent(ref)}/estado` },
 };
 
 /** La carta natal tiene su flujo de siempre; los demás reportes son pedidos. */
-export const canalDe = (slug) => (slug === "carta-natal" ? "carta-natal" : "pedido");
+export const canalDe = (slug) => (slug === "carta-natal" || slug === "pack" ? slug : "pedido");
+
+/** Temáticos marcados en el formulario del pack (casillas pack_<slug>). */
+export const tematicosElegidos = (d) => PACK_TEMATICOS.filter((t) => d[`pack_${t}`]);
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const largo = (v) => (v || "").trim().length;
@@ -78,6 +88,8 @@ export function validarDatos(d, ahora = new Date(), extra = null) {
     if (!aniosDeRevolucion(ahora).includes(Number(d.rs_anio))) errores.rs_anio = "Elige el ciclo que quieres leer.";
   }
 
+  if (extra === "pack" && tematicosElegidos(d).length !== 2) errores.pack = "Elige 2 lecturas temáticas.";
+
   if (extra === "segunda_persona") {
     if (largo(d.p2_nombre) < LIMITES.nombreMin) errores.p2_nombre = "Escribe el nombre de la otra persona.";
     else if (largo(d.p2_nombre) > LIMITES.textoMax) errores.p2_nombre = "El nombre es demasiado largo.";
@@ -104,6 +116,7 @@ export function cuerpoDeOrden(d, slug = "carta-natal", extra = null) {
     pais: d.pais.trim(),
   };
   if (canalDe(slug) === "carta-natal") return base;
+  if (canalDe(slug) === "pack") return { ...base, tematicos: tematicosElegidos(d) };
   const cuerpo = { ...base, producto: slug };
   if (extra === "revolucion_solar") {
     cuerpo.revolucion_solar = { ciudad: d.rs_ciudad.trim(), pais: d.rs_pais.trim(), anio: Number(d.rs_anio) };

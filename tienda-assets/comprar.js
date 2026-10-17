@@ -13,7 +13,7 @@
  */
 import { apiBase, CHECKOUTS } from "./config.js";
 import { conOrigen, origenActual } from "./origen.js";
-import { reportePorSlug } from "./catalogo.js";
+import { PACK_TEMATICOS, reportePorSlug } from "./catalogo.js";
 import {
   validarDatos, cuerpoDeOrden, crearOrden, urlDeCheckout, referenciaDeOrden,
   pedidoParaGuardar, almacenSeguro, aniosDeRevolucion,
@@ -33,6 +33,7 @@ const local = almacenSeguro(window.localStorage);
 const CAMPOS_EXTRA = {
   revolucion_solar: ["rs_ciudad", "rs_pais", "rs_anio"],
   segunda_persona: ["p2_nombre", "p2_fecha", "p2_hora", "p2_minuto", "p2_ciudad", "p2_pais", "p2_consentimiento"],
+  pack: PACK_TEMATICOS.map((t) => `pack_${t}`),
 };
 const CAMPOS = ["nombre", "fecha", "hora", "minuto", "ciudad", "pais", "email", ...(CAMPOS_EXTRA[extra] || [])];
 // Campos con mensaje de error y el paso donde se corrigen (hora/p2_hora agrupan hora + minutos).
@@ -40,8 +41,9 @@ const PASO_DE_CAMPO = {
   nombre: 1, fecha: 1, hora: 1, ciudad: 1, pais: 1, email: 2,
   rs_ciudad: 1, rs_pais: 1, rs_anio: 1,
   p2_nombre: 1, p2_fecha: 1, p2_hora: 1, p2_ciudad: 1, p2_pais: 1, p2_consentimiento: 1,
+  pack: 1,
 };
-const INPUTS_DE = { hora: ["hora", "minuto"], p2_hora: ["p2_hora", "p2_minuto"] };
+const INPUTS_DE = { hora: ["hora", "minuto"], p2_hora: ["p2_hora", "p2_minuto"], pack: PACK_TEMATICOS.map((t) => `pack_${t}`) };
 
 const valor = (c) => (form.elements[c].type === "checkbox" ? form.elements[c].checked : form.elements[c].value);
 const leer = () => Object.fromEntries(CAMPOS.map((c) => [c, valor(c)]));
@@ -140,6 +142,7 @@ function pintarResumen() {
     const sp = c.segunda_persona;
     filas.push(["Otra persona", `${sp.nombre} · ${fechaLegible(sp.fecha)} · ${sp.hora ? `${sp.hora} h` : "hora desconocida"} · ${sp.ciudad}, ${sp.pais}`]);
   }
+  if (c.tematicos) filas.push(["Lecturas temáticas", c.tematicos.map((t) => reportePorSlug(t).nombre).join(" y ")]);
   filas.push(["Correo de entrega", c.email], ["Total", checkout.precioReferencia]);
 
   const dl = form.querySelector("[data-resumen]");

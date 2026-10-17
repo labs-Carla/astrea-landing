@@ -140,19 +140,19 @@ test("API: Railway en producción, backend local en local", () => {
 });
 
 // ---------------------------------------------------------------- catálogo y páginas
-test("catálogo: 7 reportes, todos con checkout real y sus precios", () => {
-  assert.deepEqual(REPORTES.map((r) => r.slug), ["carta-natal", "amor", "vocacion", "dinero", "patrones", "revolucion-solar", "compatibilidad"]);
+test("catálogo: 7 reportes y el pack, todos con checkout real y sus precios", () => {
+  assert.deepEqual(REPORTES.map((r) => r.slug), ["carta-natal", "pack", "amor", "vocacion", "dinero", "patrones", "revolucion-solar", "compatibilidad"]);
   assert.ok(REPORTES.every((r) => estadoDe(r, CHECKOUTS) === "disponible"));
   const precios = Object.fromEntries(Object.entries(CHECKOUTS).map(([k, v]) => [k, v.precioReferencia]));
-  assert.deepEqual(precios, { "carta-natal": "USD 12", amor: "USD 9", vocacion: "USD 9", dinero: "USD 9", patrones: "USD 9", "revolucion-solar": "USD 12", compatibilidad: "USD 15" });
+  assert.deepEqual(precios, { "carta-natal": "USD 12", pack: "USD 24", amor: "USD 9", vocacion: "USD 9", dinero: "USD 9", patrones: "USD 9", "revolucion-solar": "USD 12", compatibilidad: "USD 15" });
   const ids = Object.values(CHECKOUTS).map((c) => new URL(c.url).pathname);
-  assert.equal(new Set(ids).size, 7, "cada reporte tiene su propio producto de Hotmart");
+  assert.equal(new Set(ids).size, 8, "cada reporte tiene su propio producto de Hotmart");
   for (const r of REPORTES) {
     for (const k of ["nombre", "resumen", "descripcion", "explora", "incluye", "datos", "idealPara", "categoria"]) assert.ok(r[k]?.length, `${r.slug}.${k}`);
   }
   const temas = REPORTES.filter((r) => !r.principal);
   assert.equal(new Set(temas.map((r) => r.descripcion)).size, temas.length, "los temáticos no son copias");
-  assert.deepEqual(REPORTES.filter((r) => r.extra).map((r) => [r.slug, r.extra]), [["revolucion-solar", "revolucion_solar"], ["compatibilidad", "segunda_persona"]]);
+  assert.deepEqual(REPORTES.filter((r) => r.extra).map((r) => [r.slug, r.extra]), [["pack", "pack"], ["revolucion-solar", "revolucion_solar"], ["compatibilidad", "segunda_persona"]]);
 });
 
 test("dos canales: carta natal por /carta-natal/orden, el resto por /pedidos", () => {
@@ -377,4 +377,30 @@ test("carta natal: todos los enlaces de pago usan el checkout con el order bump"
     const html = readFileSync(new URL(`../${archivo}`, import.meta.url), "utf8");
     assert.ok(!html.includes("B106744064D?bid="), `${archivo}: checkout sin order bump`);
   }
+});
+
+// ---------------------------------------------------------------- pack (carta natal + 2 temáticos)
+test("pack: es una orden de carta natal con los 2 temáticos elegidos", () => {
+  assert.equal(canalDe("pack"), "pack");
+  assert.equal(referenciaDeOrden(42, "pack"), "astrea-orden-42", "se cruza con la venta como la carta natal");
+  assert.equal(rutaDeEstado({ reporte: "pack", referencia: "r".repeat(22) }), `/carta-natal/orden/${"r".repeat(22)}/estado`);
+  const d = { ...validos, pack_amor: true, pack_dinero: true, pack_vocacion: false, pack_patrones: false };
+  assert.deepEqual(validarDatos(d, new Date("2026-10-18"), "pack"), {});
+  assert.deepEqual(cuerpoDeOrden(d, "pack", "pack"), {
+    nombre: "Ana López", email: "ana@example.com", fecha_hora_local: "1990-05-17T08:05:00", ciudad: "Bogotá", pais: "Colombia", tematicos: ["amor", "dinero"],
+  });
+  for (const marcados of [[], ["amor"], ["amor", "dinero", "patrones"]]) {
+    const e = validarDatos({ ...validos, ...Object.fromEntries(marcados.map((t) => [`pack_${t}`, true])) }, new Date("2026-10-18"), "pack");
+    assert.equal(e.pack, "Elige 2 lecturas temáticas.", marcados.join(","));
+  }
+  const u = new URL(urlDeCheckout(CHECKOUTS.pack.url, 42, { nombre: "Ana", email: "ana@example.com" }, "pack"));
+  assert.equal(u.pathname, "/X108078579R");
+  assert.equal(u.searchParams.get("sck"), "astrea-orden-42");
+});
+
+test("pack: el formulario ofrece los 4 temáticos para elegir 2", () => {
+  const html = PAGINAS["comprar/pack.html"];
+  assert.ok(html.includes('data-extra="pack"'));
+  for (const t of ["amor", "vocacion", "dinero", "patrones"]) assert.ok(html.includes(`id="pack_${t}"`), t);
+  assert.ok(html.includes('id="e-pack"'));
 });
