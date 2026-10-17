@@ -12,6 +12,7 @@
  * - Nunca se registran datos personales en la consola.
  */
 import { apiBase, CHECKOUTS } from "./config.js";
+import { conOrigen, origenActual } from "./origen.js";
 import { reportePorSlug } from "./catalogo.js";
 import {
   validarDatos, cuerpoDeOrden, crearOrden, urlDeCheckout, referenciaDeOrden,
@@ -192,7 +193,7 @@ form.addEventListener("submit", async (e) => {
     local.guardar(CLAVE_PEDIDO, pedidoParaGuardar(ordenId, reporte.slug, Date.now(), referencia));
     sesion.borrar(CLAVE_BORRADOR);
     estadoEnvio.textContent = `Pedido ${referenciaDeOrden(ordenId, reporte.slug)} creado. Te llevamos al pago en Hotmart…`;
-    window.location.assign(urlDeCheckout(checkout.url, ordenId, cuerpo, reporte.slug));
+    window.location.assign(conOrigen(urlDeCheckout(checkout.url, ordenId, cuerpo, reporte.slug), origenActual()));
   } catch (err) {
     cajaError.textContent = err.message;
     cajaError.hidden = false;

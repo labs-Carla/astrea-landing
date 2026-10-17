@@ -10,6 +10,7 @@ import {
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
 import { PAGINAS } from "../scripts/generar-tienda.mjs";
+import { limpiarOrigen, origenDeVisita, origenVigente, origenDePagina, conOrigen, registrarVisita, CLAVE_ORIGEN } from "../tienda-assets/origen.js";
 
 const validos = { nombre: "Ana López", email: "ana@example.com", fecha: "1990-05-17", hora: "8", minuto: "5", ciudad: "Bogotá", pais: "Colombia" };
 
@@ -310,4 +311,54 @@ test("link: 'Conoce Astrea' lleva a la portada de la tienda (no a /universo)", (
   const html = readFileSync(new URL("../link.html", import.meta.url), "utf8");
   const tarjeta = html.slice(html.lastIndexOf("<a ", html.indexOf("Conoce Astrea")), html.indexOf("Conoce Astrea"));
   assert.match(tarjeta, /<a href="\/" class="link-card">/);
+});
+
+// ---------------------------------------------------------------- origen de la venta (src de Hotmart)
+
+test("origen: ?src= gana, y se normaliza", () => {
+  assert.equal(origenDeVisita("?src=TikTok Bio", "", "astrea-charts.site"), "tiktok-bio");
+  assert.equal(origenDeVisita("?src=afiliado-Lucía&utm_source=ig", "", "astrea-charts.site"), "afiliado-lucia");
+  assert.equal(limpiarOrigen("<script>"), "script");
+  assert.equal(limpiarOrigen("  "), null);
+  assert.equal(limpiarOrigen("a".repeat(60)).length, 40);
+});
+
+test("origen: utm_source + utm_campaign y referentes conocidos", () => {
+  assert.equal(origenDeVisita("?utm_source=instagram&utm_campaign=black friday", "", "x"), "instagram-black-friday");
+  assert.equal(origenDeVisita("", "https://www.tiktok.com/@astrea", "astrea-charts.site"), "tiktok");
+  assert.equal(origenDeVisita("", "https://l.instagram.com/?u=x", "astrea-charts.site"), "instagram");
+  assert.equal(origenDeVisita("", "https://www.google.com.mx/", "astrea-charts.site"), "google");
+  assert.equal(origenDeVisita("", "https://blog.ejemplo.com/", "astrea-charts.site"), "otro-sitio");
+  assert.equal(origenDeVisita("", "https://astrea-charts.site/reportes", "astrea-charts.site"), null, "navegar dentro del sitio no cambia el origen");
+  assert.equal(origenDeVisita("", "", "astrea-charts.site"), null);
+});
+
+test("origen: se guarda 30 días; sin origen, la página", () => {
+  const datos = {};
+  const storage = { getItem: (k) => datos[k] ?? null, setItem: (k, v) => { datos[k] = v; }, removeItem: (k) => { delete datos[k]; } };
+  const loc = (search, pathname = "/") => ({ search, pathname, hostname: "astrea-charts.site" });
+  assert.equal(registrarVisita({ location: loc("?src=tiktok-bio", "/link"), referrer: "", storage, ahora: 1000 }), "tiktok-bio");
+  assert.equal(registrarVisita({ location: loc("", "/comprar/carta-natal"), referrer: "", storage, ahora: 2000 }), "tiktok-bio");
+  assert.equal(origenVigente(JSON.parse(datos[CLAVE_ORIGEN]), 1000 + 31 * 864e5), null);
+  assert.equal(registrarVisita({ location: loc("", "/link"), referrer: "", storage, ahora: 1000 + 31 * 864e5 }), "link");
+  assert.equal(origenDePagina("/comprar/amor"), "tienda");
+  assert.equal(origenDePagina("/universo"), "universo");
+  const roto = { getItem() { throw new Error("bloqueado"); }, setItem() { throw new Error("bloqueado"); }, removeItem() {} };
+  assert.equal(registrarVisita({ location: loc("?src=ig-bio"), referrer: "", storage: roto }), "ig-bio", "sin almacenamiento igual funciona");
+});
+
+test("origen: el checkout lleva src sin pisar sck ni un src previo", () => {
+  const u = new URL(conOrigen(urlDeCheckout(CHECKOUTS["carta-natal"].url, 42, { nombre: "Ana", email: "ana@example.com" }), "tiktok-bio"));
+  assert.equal(u.searchParams.get("src"), "tiktok-bio");
+  assert.equal(u.searchParams.get("sck"), "astrea-orden-42");
+  assert.equal(u.searchParams.get("bid"), "1784070968525");
+  assert.equal(new URL(conOrigen("https://pay.hotmart.com/X?src=afiliado", "tienda")).searchParams.get("src"), "afiliado");
+  assert.equal(conOrigen("https://otro.com/pago", "tienda"), "https://otro.com/pago");
+  assert.equal(conOrigen("https://pay.hotmart.com/X", null), "https://pay.hotmart.com/X");
+});
+
+test("todas las páginas con pago en Hotmart cargan el origen", () => {
+  for (const archivo of ["link.html", "link-gratis.html", "universo.html", "comprar/carta-natal.html", "pedido.html", "index.html"]) {
+    assert.ok(readFileSync(new URL(`../${archivo}`, import.meta.url), "utf8").includes('src="/tienda-assets/origen.js"'), archivo);
+  }
 });
