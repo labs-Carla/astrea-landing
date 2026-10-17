@@ -32,7 +32,8 @@ export function apiBase(loc = globalThis.location) {
 // muestra la tienda; el monto que se cobra lo define Hotmart (en la moneda
 // local de quien compra) y el frontend nunca lo envía ni lo decide.
 export const CHECKOUTS = {
-  "carta-natal": { url: "https://pay.hotmart.com/B106744064D?bid=1784070968525", precioReferencia: "USD 12" },
+  // checkoutMode=10: el checkout con el order bump de «Amor y vínculos» (2026-10-18); el de ?bid= no lo muestra.
+  "carta-natal": { url: "https://pay.hotmart.com/B106744064D?checkoutMode=10", precioReferencia: "USD 12" },
   amor: { url: "https://pay.hotmart.com/P107968115R", precioReferencia: "USD 9" },
   vocacion: { url: "https://pay.hotmart.com/N107968156X", precioReferencia: "USD 9" },
   dinero: { url: "https://pay.hotmart.com/W107968171W", precioReferencia: "USD 9" },
