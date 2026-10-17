@@ -43,7 +43,7 @@ test("el checkout lleva la orden en sck, con email y nombre precargados", () => 
   assert.equal(u.searchParams.get("sck"), "astrea-orden-42");
   assert.equal(u.searchParams.get("email"), "ana@example.com");
   assert.equal(u.searchParams.get("name"), "Ana López");
-  assert.equal(u.searchParams.get("bid"), "1784070968525");
+  assert.equal(u.searchParams.get("checkoutMode"), "10", "el checkout con el order bump");
   assert.throws(() => urlDeCheckout(CHECKOUTS["carta-natal"].url, undefined, {}));
 });
 
@@ -360,7 +360,7 @@ test("origen: el checkout lleva src sin pisar sck ni un src previo", () => {
   const u = new URL(conOrigen(urlDeCheckout(CHECKOUTS["carta-natal"].url, 42, { nombre: "Ana", email: "ana@example.com" }), "tiktok-bio"));
   assert.equal(u.searchParams.get("src"), "tiktok-bio");
   assert.equal(u.searchParams.get("sck"), "astrea-orden-42");
-  assert.equal(u.searchParams.get("bid"), "1784070968525");
+  assert.equal(u.searchParams.get("checkoutMode"), "10", "el checkout con el order bump");
   assert.equal(new URL(conOrigen("https://pay.hotmart.com/X?src=afiliado", "tienda")).searchParams.get("src"), "afiliado");
   assert.equal(conOrigen("https://otro.com/pago", "tienda"), "https://otro.com/pago");
   assert.equal(conOrigen("https://pay.hotmart.com/X", null), "https://pay.hotmart.com/X");
@@ -369,5 +369,12 @@ test("origen: el checkout lleva src sin pisar sck ni un src previo", () => {
 test("todas las páginas con pago en Hotmart cargan el origen", () => {
   for (const archivo of ["link.html", "link-gratis.html", "universo.html", "comprar/carta-natal.html", "pedido.html", "index.html"]) {
     assert.ok(readFileSync(new URL(`../${archivo}`, import.meta.url), "utf8").includes('src="/tienda-assets/origen.js"'), archivo);
+  }
+});
+
+test("carta natal: todos los enlaces de pago usan el checkout con el order bump", () => {
+  for (const archivo of ["link.html", "link-gratis.html", "universo.html", "comprar/carta-natal.html", "tienda-assets/config.js"]) {
+    const html = readFileSync(new URL(`../${archivo}`, import.meta.url), "utf8");
+    assert.ok(!html.includes("B106744064D?bid="), `${archivo}: checkout sin order bump`);
   }
 });
