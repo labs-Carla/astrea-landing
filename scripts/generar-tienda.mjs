@@ -30,6 +30,8 @@ const SPRITE = SPRITE_UNIVERSO.replace("</svg>", `  <symbol id="i-menu" viewBox=
   <symbol id="i-loto" viewBox="0 0 24 24"><path d="M12 19c-2.4-2-3.6-4.6-3.6-7.6S9.6 5.6 12 4c2.4 1.6 3.6 4.4 3.6 7.4S14.4 17 12 19z"/><path d="M12 19c-3.8.2-6.8-1.6-8.4-5.2 2.2-.8 4.4-.6 6.2.6M12 19c3.8.2 6.8-1.6 8.4-5.2-2.2-.8-4.4-.6-6.2.6"/></symbol>
 </svg>`);
 
+const TERMINOS_VIGENTES_DESDE = "18 de octubre de 2026";
+
 const NAV = [
   ["/", "Inicio"],
   ["/reportes", "Reportes"],
@@ -121,7 +123,7 @@ ${cuerpo}
   </div>
   <div class="shell pie__legal">
     <p>Astrea Charts es una herramienta de autoconocimiento. No reemplaza asesoría médica, psicológica ni financiera.</p>
-    <p><a href="/privacidad">Política de privacidad</a> · © ${new Date().getFullYear()} Astrea Charts</p>
+    <p><a href="/terminos">Términos y reembolsos</a> · <a href="/privacidad">Política de privacidad</a> · © ${new Date().getFullYear()} Astrea Charts</p>
   </div>
 </footer>
 ${["/tienda-assets/origen.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
@@ -193,7 +195,7 @@ const FAQ_PORTADA = [
   ["¿Cuánto tiempo tarda en llegar?", "Entre 24 y 48 horas después de que confirmamos tu pago en Hotmart."],
   ["¿En qué formato recibiré mi informe?", "En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."],
   ["¿Los reportes son personalizados?", "Sí. Cada reporte parte de tu carta, calculada con Swiss Ephemeris para tu fecha, hora y lugar exactos de nacimiento. La interpretación se redacta con apoyo de IA y la revisamos antes de enviarla."],
-  ["¿Puedo pedir un reembolso?", "El pago se procesa en Hotmart. Si necesitas un reembolso, escríbenos por WhatsApp con la referencia de tu pedido y lo revisamos contigo."],
+  ["¿Puedo pedir un reembolso?", "Sí. Tienes 7 días desde la compra para pedir el reembolso total, aunque ya hayas recibido tu lectura. Lo pides desde el correo de compra de Hotmart o por WhatsApp con la referencia de tu pedido. Los detalles están en Términos y reembolsos."],
 ];
 
 
@@ -489,7 +491,7 @@ for (const r of disponibles) {
           <legend><h2>Revisa tu pedido</h2></legend>
           <dl class="resumen" data-resumen></dl>
           <div class="natal-form">
-            <label class="check"><input type="checkbox" id="acepto" name="acepto" required><span>Entiendo que la lectura es una herramienta de autoconocimiento y acepto la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
+            <label class="check"><input type="checkbox" id="acepto" name="acepto" required><span>Entiendo que la lectura es una herramienta de autoconocimiento y acepto los <a href="/terminos" target="_blank" rel="noopener">términos y la garantía de 7 días</a> y la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
             <span class="error-campo" id="e-acepto" aria-live="polite" style="grid-column:1/-1"></span>
             <div class="aviso aviso--error" data-error-pedido role="alert" hidden style="grid-column:1/-1"></div>
             <div class="acciones-paso"><button class="btn btn--ghost" type="button" data-anterior="2">Corregir datos</button><button class="btn btn--gold" type="submit" data-enviar>Crear pedido e ir al pago ${icono("i-lock")}</button></div>
@@ -569,6 +571,54 @@ paginas["sobre-astrea.html"] = layout({
 </section>`,
 });
 
+paginas["terminos.html"] = layout({
+  ruta: "/terminos",
+  titulo: "Términos y reembolsos · Astrea",
+  descripcion: "Qué compras, cómo se entrega, la garantía de 7 días y cómo pedir un reembolso de tu lectura Astrea.",
+  cuerpo: `${cabecera({ eyebrow: "Astrea Charts", titulo: "Términos y reembolsos", lede: "Lo que necesitas saber antes de comprar, en palabras simples.", migas: [["/", "Inicio"], ["/terminos", "Términos y reembolsos"]] })}
+<section class="sheet sheet--light sheet--lift seccion">
+  <div class="shell prosa">
+    <p><em>Última actualización: ${TERMINOS_VIGENTES_DESDE}.</em></p>
+    <h2>Quién vende</h2>
+    <p>Astrea Charts es un proyecto de Guías Astrológicas (Colombia). Los pagos los procesa <a class="link-quiet" href="https://hotmart.com" rel="noopener">Hotmart</a>, que actúa como plataforma de pago. Para cualquier duda, escríbenos por <a class="link-quiet" href="${WHATSAPP}">WhatsApp</a>.</p>
+    <h2>Qué compras</h2>
+    <p>Una lectura astrológica personalizada en PDF, preparada a partir de los datos de nacimiento que nos das. Calculamos las posiciones con Swiss Ephemeris, la interpretación se redacta con apoyo de asistentes de IA y la revisamos antes de enviarla.</p>
+    <p>Las lecturas son herramientas de reflexión y autoconocimiento. No son predicciones ni reemplazan asesoría médica, psicológica, legal, financiera o profesional.</p>
+    <h2>Precio y pago</h2>
+    <ul>
+      <li>El precio que ves en la tienda es una referencia en dólares. Hotmart cobra el monto final en tu moneda local y puede sumar impuestos de tu país.</li>
+      <li>Astrea no ve ni guarda los datos de tu tarjeta.</li>
+      <li>Confirmamos cada pago verificando la venta en Hotmart.</li>
+    </ul>
+    <h2>Entrega</h2>
+    <ul>
+      <li>Enviamos la lectura en PDF al correo que nos diste, entre 24 y 48 horas después de confirmar tu pago.</li>
+      <li>Si no la ves, revisa la carpeta de spam o promociones y escríbenos con la referencia de tu pedido.</li>
+    </ul>
+    <h2>Tus datos de nacimiento</h2>
+    <ul>
+      <li>La lectura depende de la fecha, la hora y el lugar que nos das. Revísalos antes de pagar.</li>
+      <li>Si notas un error antes de la entrega, avísanos y lo corregimos sin costo.</li>
+      <li>Si la lectura tiene un error de cálculo nuestro, la rehacemos sin costo, aunque hayan pasado los 7 días de garantía.</li>
+      <li>Si compras para otra persona, o la compatibilidad de pareja, confirmas que esa persona aceptó compartir sus datos.</li>
+    </ul>
+    <h2 id="reembolsos">Garantía de 7 días y reembolsos</h2>
+    <ul>
+      <li>Tienes 7 días corridos desde la compra para pedir el reembolso total, aunque ya hayas recibido tu lectura. No necesitas explicar el motivo.</li>
+      <li>Puedes pedirlo desde el correo de compra de Hotmart (opción «Solicitar reembolso») o escribiéndonos por <a class="link-quiet" href="${WHATSAPP}">WhatsApp</a> con la referencia de tu pedido.</li>
+      <li>Hotmart devuelve el dinero por el mismo medio de pago. El tiempo que tarda en verse depende de tu banco o tarjeta.</li>
+      <li>Pasados los 7 días no hay reembolsos, salvo un error de cálculo nuestro que no podamos corregir.</li>
+    </ul>
+    <h2>Uso de la lectura</h2>
+    <p>La lectura es para tu uso personal o el de la persona a quien se la regalas. Puedes guardarla, imprimirla y compartirla con quien quieras, pero no revenderla ni publicarla como propia.</p>
+    <h2>Privacidad</h2>
+    <p>Usamos tus datos solo para preparar y enviar tu lectura. Los detalles están en la <a class="link-quiet" href="/privacidad">política de privacidad</a>.</p>
+    <h2>Cambios</h2>
+    <p>Si cambiamos estos términos, publicamos la nueva versión aquí con su fecha. Tu compra se rige por los términos vigentes el día en que la hiciste.</p>
+  </div>
+</section>`,
+});
+
 const FAQ = [
   ["¿Qué es una carta natal?", "Es un mapa del cielo calculado para la fecha, hora y lugar exactos de tu nacimiento. Muestra dónde estaban el Sol, la Luna y los planetas, y cómo se relacionan entre sí y con las áreas de tu vida."],
   ["¿Qué reportes puedo comprar?", "La carta natal completa y seis reportes temáticos: amor y vínculos, vocación y propósito, dinero y abundancia, patrones y transformación, revolución solar y compatibilidad de pareja. Todos llegan en PDF a tu correo entre 24 y 48 horas después de confirmar tu pago."],
@@ -581,7 +631,7 @@ const FAQ = [
   ["¿Necesito saber mi hora de nacimiento?", "Es lo ideal, porque de ella dependen el Ascendente y las casas. Si no la sabes con exactitud, usa la más aproximada que tengas: la mayoría de las secciones siguen siendo útiles."],
   ["¿Necesito crear una cuenta para comprar mi lectura?", "No. Tu lectura se compra una sola vez y es tuya: solo necesitas tus datos de nacimiento y el correo donde quieres recibirla."],
   ["¿En qué formato recibiré mi informe?", "En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."],
-  ["¿Puedo pedir un reembolso?", "El pago se procesa en Hotmart. Si necesitas un reembolso, escríbenos por WhatsApp con la referencia de tu pedido y lo revisamos contigo."],
+  ["¿Puedo pedir un reembolso?", "Sí. Tienes 7 días desde la compra para pedir el reembolso total, aunque ya hayas recibido tu lectura. Lo pides desde el correo de compra de Hotmart o por WhatsApp con la referencia de tu pedido. Los detalles están en Términos y reembolsos."],
   ["¿Puedo pedir una lectura para otra persona?", "Sí. Usa los datos de nacimiento de esa persona y el correo donde quieres recibir la lectura."],
 ];
 
@@ -601,7 +651,7 @@ paginas["preguntas-frecuentes.html"] = layout({
 </section>`,
 });
 
-const indexables = ["/", "/reportes", ...REPORTES.map((r) => `/reportes/${r.slug}`), "/como-funciona", "/sobre-astrea", "/preguntas-frecuentes", "/universo"];
+const indexables = ["/", "/reportes", ...REPORTES.map((r) => `/reportes/${r.slug}`), "/como-funciona", "/sobre-astrea", "/preguntas-frecuentes", "/terminos", "/universo"];
 paginas["sitemap.xml"] = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexables.map((u) => `  <url><loc>${SITIO}${u}</loc></url>`).join("\n")}

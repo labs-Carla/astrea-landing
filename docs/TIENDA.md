@@ -121,7 +121,7 @@ testimonios y preguntas frecuentes. Se genera, como el resto, con
 
 - **Testimonios.** El arreglo `TESTIMONIOS` está vacío y la sección no se
   muestra. Agrega solo testimonios reales y autorizados (`{ texto, nombre, detalle? }`).
-- **Términos y condiciones.** No hay página, así que el pie no la enlaza.
+- **Términos y reembolsos.** `/terminos` (generada): garantía de 7 días de Hotmart, reembolso total aunque la lectura ya se haya entregado. El pie y el paso «Revisa tu pedido» la enlazan. La garantía configurada en Hotmart debe seguir siendo de 7 días.
 
 ## Origen de la venta (`src` de Hotmart)
 
