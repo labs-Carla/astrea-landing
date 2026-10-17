@@ -10,6 +10,7 @@
  */
 import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, WHATSAPP } from "./config.js";
 import { reportePorSlug } from "./catalogo.js";
+import { conOrigen, origenActual } from "./origen.js";
 import { ESTADOS_PEDIDO, estadoAMostrar, pedidoVigente, referenciaDeOrden, rutaDeEstado, almacenSeguro } from "./compra.js";
 
 const CLAVE_PEDIDO = "astrea-tienda-pedido";
@@ -78,7 +79,7 @@ async function pintar() {
   if ((estado === "creado" || estado === "rechazado") && reporte && CHECKOUTS[reporte.slug]) {
     const url = new URL(CHECKOUTS[reporte.slug].url);
     url.searchParams.set("sck", referenciaDeOrden(pedido.ordenId, pedido.reporte));
-    hijos.push(el("p", {}, el("a", { class: "btn btn--gold", href: url.toString() }, "Ir al pago en Hotmart")));
+    hijos.push(el("p", {}, el("a", { class: "btn btn--gold", href: conOrigen(url.toString(), origenActual()) }, "Ir al pago en Hotmart")));
   }
   if (["creado", "pendiente", "confirmado"].includes(estado)) hijos.push(el("h3", { class: "bloque__titulo" }, "Qué sigue"), pasos);
   hijos.push(el("p", { class: "detalle__aviso" }, "¿Dudas con tu pedido? ", el("a", { class: "link-quiet", href: `${WHATSAPP}?text=${encodeURIComponent(`Hola, tengo una pregunta sobre mi pedido ${referenciaDeOrden(pedido.ordenId, pedido.reporte)}`)}` }, "Escríbenos por WhatsApp"), " con tu referencia."));

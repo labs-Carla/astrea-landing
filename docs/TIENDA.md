@@ -122,3 +122,24 @@ testimonios y preguntas frecuentes. Se genera, como el resto, con
 - **Testimonios.** El arreglo `TESTIMONIOS` está vacío y la sección no se
   muestra. Agrega solo testimonios reales y autorizados (`{ texto, nombre, detalle? }`).
 - **Términos y reembolsos.** `/terminos` (generada): garantía de 7 días de Hotmart, reembolso total aunque la lectura ya se haya entregado. El pie y el paso «Revisa tu pedido» la enlazan. La garantía configurada en Hotmart debe seguir siendo de 7 días.
+
+## Origen de la venta (`src` de Hotmart)
+
+Cada enlace de pago lleva `src` para que el historial de Hotmart (columna "Origen venta / SRC") diga qué canal
+vendió. Lo resuelve `tienda-assets/origen.js`, cargado en todas las páginas de la tienda y en `/link`,
+`/link-gratis` y `/universo`:
+
+1. `?src=` del enlace por el que entró la persona (o `?utm_source=` + `?utm_campaign=`).
+2. Si no hay, el sitio que la refirió: `tiktok`, `instagram`, `facebook`, `whatsapp`, `google`… u `otro-sitio`.
+3. Se guarda 30 días en el navegador (gana el último origen conocido).
+4. Sin nada de lo anterior: la página por la que pasó (`tienda`, `link`, `link-gratis`, `universo`).
+
+No pisa un `src` que el enlace ya traiga (afiliados de Hotmart) ni toca `sck`, que sigue identificando el pedido.
+
+| Dónde publicas el enlace | Enlace |
+|---|---|
+| Bio de TikTok | `https://astrea-charts.site/link?src=tiktok-bio` |
+| Bio de Instagram | `https://astrea-charts.site/link?src=ig-bio` |
+| WhatsApp | `https://astrea-charts.site/?src=whatsapp` |
+| Un video o campaña | `https://astrea-charts.site/?src=tiktok-<tema>` |
+| Afiliada (fuera de Hotmart) | `https://astrea-charts.site/?src=afiliado-<nombre>` |
