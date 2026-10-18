@@ -295,15 +295,20 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   assert.ok(!/escena|backdrop/.test(html), "sin la escena ni el vidrio del rediseño");
 });
 
-test("Astrea.ai en pausa: la tienda vende lecturas y no menciona Astrea.ai ni su app", () => {
+test("Astrea.ai en pausa: la tienda vende lecturas y no menciona el chat; la app solo para leer «Mi carta»", () => {
   const html = PAGINAS["index.html"];
   assert.ok(!html.includes('id="planes"'), "la portada ya no tiene la sección de planes");
   assert.ok(!/USD 9,99\/mes|USD 19,99\/mes|Astrea Plus|Astrea Pro|Elegir Plus|Elegir Pro/.test(html), "sin precios ni llamados a Plus/Pro en la portada");
   assert.ok(!html.includes("tienda-assets/planes.js"));
   assert.ok(!html.includes('id="astrea-ai"'), "sin la sección de Astrea.ai");
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
-    assert.ok(!/Astrea\.ai|Astrea AI|app\.astrea-charts\.site|5 preguntas/i.test(pagina), ruta);
+    assert.ok(!/Astrea\.ai|Astrea AI|5 preguntas/i.test(pagina), ruta);
+    // Desde 2026-10-18 quien compró su carta natal entra a leerla en la app: el único
+    // enlace a la app es «Mi carta» y lleva a su lectura (nunca al chat).
+    const enlaces = pagina.match(/https:\/\/app\.astrea-charts\.site[^"]*/g) || [];
+    assert.ok(enlaces.every((u) => u === "https://app.astrea-charts.site/lectura"), ruta);
   }
+  assert.ok(html.includes('href="https://app.astrea-charts.site/lectura" aria-label="Mi carta: entra a leer tu carta natal en Astrea">Mi carta</a>'));
   for (const r of REPORTES) assert.ok(!r.incluye.some((i) => /Astrea\.ai|preguntas/.test(i)), r.slug);
   // Nada de promesas que no existen, en todo el sitio generado.
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {

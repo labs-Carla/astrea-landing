@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/universo-assets/universo.css">
 <link rel="stylesheet" href="/tienda-assets/tienda.css">
-
+<link rel="preload" as="image" href="/universo-assets/img/hero-escultura-video.webp" fetchpriority="high">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Qué información necesito para hacer mi reporte?","acceptedAnswer":{"@type":"Answer","text":"Tu fecha, hora y lugar de nacimiento, y el correo donde quieres recibirlo. Para la revolución solar, también la ciudad donde pasarás tu cumpleaños; para la compatibilidad de pareja, los datos de la otra persona (su hora de nacimiento es opcional) y su consentimiento."}},{"@type":"Question","name":"¿Cuánto tiempo tarda en llegar?","acceptedAnswer":{"@type":"Answer","text":"Entre 24 y 48 horas después de que confirmamos tu pago en Hotmart."}},{"@type":"Question","name":"¿En qué formato recibiré mi informe?","acceptedAnswer":{"@type":"Answer","text":"En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."}},{"@type":"Question","name":"¿Los reportes son personalizados?","acceptedAnswer":{"@type":"Answer","text":"Sí. Cada reporte parte de tu carta, calculada con Swiss Ephemeris para tu fecha, hora y lugar exactos de nacimiento. La interpretación se redacta con apoyo de IA y la revisamos antes de enviarla."}},{"@type":"Question","name":"¿Puedo pedir un reembolso?","acceptedAnswer":{"@type":"Answer","text":"Sí. Tienes 7 días desde la compra para pedir el reembolso total, aunque ya hayas recibido tu lectura. Lo pides desde el correo de compra de Hotmart o por WhatsApp con la referencia de tu pedido. Los detalles están en Términos y reembolsos."}}]}</script>
 </head>
 <body>
@@ -67,7 +67,7 @@
       <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
     </nav>
     <div class="header-acciones">
-      <a class="btn btn--gold btn--sm" href="/reportes">Ver reportes</a>
+      <a class="btn btn--gold btn--sm" href="https://app.astrea-charts.site/lectura" aria-label="Mi carta: entra a leer tu carta natal en Astrea">Mi carta</a>
       <details class="menu-movil">
         <summary aria-label="Abrir menú"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></summary>
         <nav class="menu-movil__panel" aria-label="Menú">
@@ -96,7 +96,7 @@
       </div>
     </div>
     <figure class="hero__figure">
-      <div class="arch arch--framed"><div class="media-slot media-slot--hero"><img src="/universo-assets/img/hero-escultura.webp" alt="Escultura griega de mármol bajo un cielo nocturno" width="800" height="1000" fetchpriority="high"></div></div>
+      <div class="arch arch--framed"><div class="media-slot media-slot--hero"><video class="hero__video" autoplay muted loop playsinline preload="auto" poster="/universo-assets/img/hero-escultura-video.webp" width="720" height="900" aria-label="Escultura griega de Astrea, coronada de laurel, bajo la luna llena y un cielo estrellado" data-hero-video><source src="/universo-assets/video/hero-escultura.webm" type="video/webm"><source src="/universo-assets/video/hero-escultura.mp4" type="video/mp4"></video><button type="button" class="hero__sonido" data-hero-sonido aria-pressed="false" hidden><svg class="hero__sonido-icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="hero__sonido-ondas" d="M15.5 9a4.5 4.5 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/><path class="hero__sonido-mudo" d="m16 9.5 5 5m0-5-5 5"/></svg><span data-hero-sonido-texto>Escuchar</span></button></div></div>
     </figure>
   </div>
 </section>
@@ -310,5 +310,6 @@
   </div>
 </footer>
 <script type="module" src="/tienda-assets/origen.js"></script>
+<script type="module" src="/tienda-assets/hero-video.js"></script>
 </body>
 </html>
