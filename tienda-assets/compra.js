@@ -115,6 +115,8 @@ export function cuerpoDeOrden(d, slug = "carta-natal", extra = null) {
     ciudad: d.ciudad.trim(),
     pais: d.pais.trim(),
   };
+  // Casilla opcional «Quiero recibir correos de Astrea»: solo viaja si se marcó (POST … acepta_correos).
+  if (d.acepta_correos) base.acepta_correos = true;
   if (canalDe(slug) === "carta-natal") return base;
   if (canalDe(slug) === "pack") return { ...base, tematicos: tematicosElegidos(d) };
   const cuerpo = { ...base, producto: slug };
