@@ -38,6 +38,7 @@ const NAV = [
   ["/reportes", "Reportes"],
   ["/como-funciona", "Cómo funciona"],
   ["/sobre-astrea", "Sobre Astrea"],
+  ["/regalar", "Regalar"],
   ["/preguntas-frecuentes", "Preguntas frecuentes"],
 ];
 
@@ -647,6 +648,107 @@ paginas["baja.html"] = layout({
 </section>`,
 });
 
+// ---------------------------------------------------------------- tarjetas de regalo (astrea-API /regalos)
+const REGALABLES = disponibles;
+const camposNatales = (horas, minutos) => `
+            <div class="field field--full"><label for="nombre">Nombre para la lectura</label><input id="nombre" name="nombre" autocomplete="name" maxlength="150"><span class="error-campo" id="e-nombre" aria-live="polite"></span></div>
+            <div class="field field--full"><label for="fecha">Fecha de nacimiento</label><input id="fecha" name="fecha" type="date" min="1900-01-01"><span class="error-campo" id="e-fecha" aria-live="polite"></span></div>
+            <fieldset class="field field--hora">
+              <legend class="leyenda-campo">Hora de nacimiento</legend>
+              <div class="hora-selects">
+                <select id="hora" name="hora" aria-label="Hora"><option value="">Hora</option>${horas}</select>
+                <select id="minuto" name="minuto" aria-label="Minutos"><option value="">Minutos</option>${minutos}</select>
+              </div>
+              <small>Formato de 24 horas. Si no la sabes con exactitud, usa la más aproximada que tengas.</small>
+              <span class="error-campo" id="e-hora" aria-live="polite"></span>
+            </fieldset>
+            <div class="field"><label for="ciudad">Ciudad de nacimiento</label><input id="ciudad" name="ciudad" autocomplete="address-level2" maxlength="150" placeholder="Ej: Guadalajara"><span class="error-campo" id="e-ciudad" aria-live="polite"></span></div>
+            <div class="field"><label for="pais">País</label><input id="pais" name="pais" autocomplete="country-name" maxlength="150" placeholder="Ej: México"><span class="error-campo" id="e-pais" aria-live="polite"></span></div>`;
+{
+  const horas = Array.from({ length: 24 }, (_, h) => `<option value="${h}">${String(h).padStart(2, "0")} h</option>`).join("");
+  const minutos = Array.from({ length: 60 }, (_, m) => `<option value="${m}">${String(m).padStart(2, "0")} min</option>`).join("");
+
+  paginas["regalar.html"] = layout({
+    ruta: "/regalar",
+    titulo: "Regala una lectura · Astrea",
+    descripcion: "Regala una lectura de Astrea con una tarjeta de regalo: quien la recibe la canjea con sus propios datos de nacimiento.",
+    scripts: ["/tienda-assets/regalar.js"],
+    cuerpo: `${cabecera({ eyebrow: "Tarjeta de regalo", titulo: "Regala una lectura", lede: "No necesitas saber su hora de nacimiento: le das una tarjeta con un código y la persona la canjea con sus propios datos.", migas: [["/", "Inicio"], ["/regalar", "Regalar"]] })}
+<section class="sheet sheet--light sheet--lift seccion">
+  <div class="shell compra">
+    <div class="compra__panel">
+      <ol class="pasos-entrega">
+        <li>Eliges la lectura, escribes para quién es y una dedicatoria, y pagas en Hotmart.</li>
+        <li>Te enviamos la tarjeta de regalo en PDF, con su código, para imprimirla o reenviarla.</li>
+        <li>La persona entra a astrea-charts.site/canjear, escribe el código y sus datos, y recibe su lectura en 24 a 48 horas.</li>
+      </ol>
+      <form id="form-regalo" novalidate>
+        <div class="natal-form">
+          <div class="field field--full"><label for="producto">Lectura que regalas</label><select id="producto" name="producto"><option value="">Elige una lectura</option>${REGALABLES.map((r) => `<option value="${r.slug}">${esc(r.nombre)} · ${esc(CHECKOUTS[r.slug].precioReferencia)}</option>`).join("")}</select><span class="error-campo" id="e-producto" aria-live="polite"></span></div>
+          <div class="field field--full"><label for="para_nombre">¿Para quién es?</label><input id="para_nombre" name="para_nombre" maxlength="80" placeholder="Así aparecerá en la tarjeta"><span class="error-campo" id="e-para_nombre" aria-live="polite"></span></div>
+          <div class="field field--full"><label for="dedicatoria">Dedicatoria (opcional)</label><textarea id="dedicatoria" name="dedicatoria" maxlength="${300}" rows="3" placeholder="Para que te conozcas tan bien como yo te conozco."></textarea><small data-contador-dedicatoria></small><span class="error-campo" id="e-dedicatoria" aria-live="polite"></span></div>
+          <div class="field"><label for="comprador_nombre">Tu nombre</label><input id="comprador_nombre" name="comprador_nombre" autocomplete="name" maxlength="150"><span class="error-campo" id="e-comprador_nombre" aria-live="polite"></span></div>
+          <div class="field"><label for="comprador_email">Tu correo</label><input id="comprador_email" name="comprador_email" type="email" autocomplete="email" maxlength="150"><small>Ahí te llega la tarjeta.</small><span class="error-campo" id="e-comprador_email" aria-live="polite"></span></div>
+          <label class="check"><input type="checkbox" id="acepto" name="acepto"><span>Acepto los <a href="/terminos" target="_blank" rel="noopener">términos y la garantía de 7 días</a> y la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>. La tarjeta vale 12 meses.</span></label>
+          <span class="error-campo" id="e-acepto" aria-live="polite" style="grid-column:1/-1"></span>
+          <label class="check"><input type="checkbox" id="acepta_correos" name="acepta_correos"><span>Opcional: ${esc(CONSENTIMIENTO)}</span></label>
+          <div class="aviso aviso--error" data-error-pedido role="alert" hidden style="grid-column:1/-1"></div>
+          <div class="acciones-paso"><button class="btn btn--gold" type="submit" data-enviar>Ir al pago ${icono("i-lock")}</button></div>
+        </div>
+      </form>
+      <p class="detalle__aviso">¿Te regalaron una lectura? <a class="link-quiet" href="/canjear">Canjea tu tarjeta</a>.</p>
+    </div>
+  </div>
+</section>`,
+  });
+
+  paginas["canjear.html"] = layout({
+    ruta: "/canjear",
+    titulo: "Canjea tu tarjeta de regalo · Astrea",
+    descripcion: "Canjea tu tarjeta de regalo de Astrea: escribe tu código y tus datos de nacimiento.",
+    indexable: false,
+    scripts: ["/tienda-assets/canjear.js"],
+    cuerpo: `${cabecera({ eyebrow: "Tarjeta de regalo", titulo: "Canjea tu regalo", lede: "Escribe el código de tu tarjeta y tus datos de nacimiento. Tu lectura te llega en PDF a tu correo.", migas: [["/", "Inicio"], ["/canjear", "Canjear"]] })}
+<section class="sheet sheet--light sheet--lift seccion">
+  <div class="shell compra">
+    <div class="compra__panel">
+      <form id="form-codigo" novalidate>
+        <div class="natal-form">
+          <div class="field field--full"><label for="codigo">Código de tu tarjeta</label><input id="codigo" name="codigo" autocomplete="off" autocapitalize="characters" maxlength="20" placeholder="ASTR-XXXX-XXXX"></div>
+          <div class="acciones-paso"><button class="btn btn--night" type="submit">Ver mi regalo ${icono("i-arrow")}</button></div>
+          <p class="form-status" data-estado-codigo aria-live="polite"></p>
+        </div>
+      </form>
+      <div class="aviso aviso--info" data-regalo hidden>
+        <strong>Te regalaron: <span data-regalo-lectura></span></strong><br>
+        Para <span data-regalo-para></span> · válida hasta el <span data-regalo-vence></span>
+      </div>
+      <form id="form-canje" novalidate hidden>
+        <fieldset>
+          <legend><h2>Tus datos de nacimiento</h2></legend>
+          <div class="natal-form">
+            ${camposNatales(horas, minutos)}
+            <div data-extra-de="pack" hidden style="grid-column:1/-1">${camposExtra({ extra: "pack" })}</div>
+            <div data-extra-de="revolucion_solar" hidden style="grid-column:1/-1">${camposExtra({ extra: "revolucion_solar" })}</div>
+            <div data-extra-de="segunda_persona" hidden style="grid-column:1/-1">${camposExtra({ extra: "segunda_persona" })}</div>
+            <div class="field field--full"><label for="email">Correo electrónico</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email"><small>Ahí te enviaremos tu lectura.</small><span class="error-campo" id="e-email" aria-live="polite"></span></div>
+            <label class="check"><input type="checkbox" id="acepto" name="acepto"><span>Entiendo que la lectura es una herramienta de autoconocimiento y acepto los <a href="/terminos" target="_blank" rel="noopener">términos</a> y la <a href="/privacidad" target="_blank" rel="noopener">política de privacidad</a>.</span></label>
+            <span class="error-campo" id="e-acepto" aria-live="polite" style="grid-column:1/-1"></span>
+            <div class="aviso aviso--error" data-error-pedido role="alert" hidden style="grid-column:1/-1"></div>
+            <div class="acciones-paso"><button class="btn btn--gold" type="submit" data-enviar>Canjear mi regalo ${icono("i-arrow")}</button></div>
+          </div>
+        </fieldset>
+      </form>
+      <div class="aviso aviso--info" data-exito hidden>
+        <strong>¡Listo! Tu regalo quedó canjeado.</strong><br>
+        Preparamos tu lectura «<span data-exito-lectura></span>» y te la enviamos a <span data-exito-email></span> en 24 a 48 horas.
+      </div>
+    </div>
+  </div>
+</section>`,
+  });
+}
+
 const FAQ = [
   ["¿Qué es una carta natal?", "Es un mapa del cielo calculado para la fecha, hora y lugar exactos de tu nacimiento. Muestra dónde estaban el Sol, la Luna y los planetas, y cómo se relacionan entre sí y con las áreas de tu vida."],
   ["¿Qué reportes puedo comprar?", "La carta natal completa y seis reportes temáticos: amor y vínculos, vocación y propósito, dinero y abundancia, patrones y transformación, revolución solar y compatibilidad de pareja. Todos llegan en PDF a tu correo entre 24 y 48 horas después de confirmar tu pago."],
@@ -679,7 +781,7 @@ paginas["preguntas-frecuentes.html"] = layout({
 </section>`,
 });
 
-const indexables = ["/", "/reportes", ...REPORTES.map((r) => `/reportes/${r.slug}`), "/como-funciona", "/sobre-astrea", "/preguntas-frecuentes", "/terminos", "/universo"];
+const indexables = ["/", "/reportes", ...REPORTES.map((r) => `/reportes/${r.slug}`), "/como-funciona", "/sobre-astrea", "/preguntas-frecuentes", "/terminos", "/regalar", "/universo"];
 paginas["sitemap.xml"] = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexables.map((u) => `  <url><loc>${SITIO}${u}</loc></url>`).join("\n")}

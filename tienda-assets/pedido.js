@@ -11,7 +11,7 @@
 import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, WHATSAPP } from "./config.js";
 import { reportePorSlug } from "./catalogo.js";
 import { conOrigen, origenActual } from "./origen.js";
-import { ESTADOS_PEDIDO, estadoAMostrar, pedidoVigente, referenciaDeOrden, rutaDeEstado, almacenSeguro } from "./compra.js";
+import { ESTADOS_PEDIDO, estadoAMostrar, pedidoVigente, referenciaDePedido, rutaDeEstado, almacenSeguro } from "./compra.js";
 
 const CLAVE_PEDIDO = "astrea-tienda-pedido";
 const caja = document.querySelector("[data-estado-pedido]");
@@ -60,11 +60,18 @@ async function pintar() {
     volvioDelCheckout: params.has("retorno"),
     estadoBackend: await estadoDelBackend(pedido),
   });
-  const info = ESTADOS_PEDIDO[estado];
+  // Los regalos se entregan como tarjeta (PDF con código) a quien compró, no como lectura.
+  const info = pedido.regalo && estado === "enviado"
+    ? { titulo: "Tarjeta de regalo enviada", texto: "Te enviamos la tarjeta en PDF a tu correo, con el código para canjearla." }
+    : ESTADOS_PEDIDO[estado];
   const iconos = { creado: "i-pages", pendiente: "i-clock", confirmado: "i-check", enviado: "i-mail", reembolsado: "i-alert", rechazado: "i-alert", error: "i-alert" };
   caja.dataset.estado = estado;
 
-  const pasos = el("ol", { class: "pasos-entrega" },
+  const pasos = pedido.regalo ? el("ol", { class: "pasos-entrega" },
+    el("li", {}, "Verificamos tu pago en Hotmart."),
+    el("li", {}, "Te enviamos la tarjeta de regalo en PDF, con un código, para imprimirla o reenviarla."),
+    el("li", {}, "Quien la recibe la canjea en astrea-charts.site/canjear con sus datos, y su lectura le llega en 24 a 48 horas."),
+  ) : el("ol", { class: "pasos-entrega" },
     el("li", {}, "Verificamos tu pago en Hotmart y confirmamos tu pedido."),
     el("li", {}, "Calculamos y redactamos tu lectura, y la revisamos una por una."),
     el("li", {}, "Te la enviamos por correo entre 24 y 48 horas después de confirmar el pago."),
@@ -74,15 +81,15 @@ async function pintar() {
     el("div", { class: "estado-pedido__sello" }, icono(iconos[estado])),
     el("h2", { class: "h-section h-section--sm" }, info.titulo),
     el("p", {}, info.texto),
-    el("p", {}, `${reporte ? reporte.nombre : "Pedido"} · referencia `, el("span", { class: "estado-pedido__ref" }, referenciaDeOrden(pedido.ordenId, pedido.reporte))),
+    el("p", {}, `${pedido.regalo ? "Regalo: " : ""}${reporte ? reporte.nombre : "Pedido"} · referencia `, el("span", { class: "estado-pedido__ref" }, referenciaDePedido(pedido))),
   ];
   if ((estado === "creado" || estado === "rechazado") && reporte && CHECKOUTS[reporte.slug]) {
     const url = new URL(CHECKOUTS[reporte.slug].url);
-    url.searchParams.set("sck", referenciaDeOrden(pedido.ordenId, pedido.reporte));
+    url.searchParams.set("sck", referenciaDePedido(pedido));
     hijos.push(el("p", {}, el("a", { class: "btn btn--gold", href: conOrigen(url.toString(), origenActual()) }, "Ir al pago en Hotmart")));
   }
   if (["creado", "pendiente", "confirmado"].includes(estado)) hijos.push(el("h3", { class: "bloque__titulo" }, "Qué sigue"), pasos);
-  hijos.push(el("p", { class: "detalle__aviso" }, "¿Dudas con tu pedido? ", el("a", { class: "link-quiet", href: `${WHATSAPP}?text=${encodeURIComponent(`Hola, tengo una pregunta sobre mi pedido ${referenciaDeOrden(pedido.ordenId, pedido.reporte)}`)}` }, "Escríbenos por WhatsApp"), " con tu referencia."));
+  hijos.push(el("p", { class: "detalle__aviso" }, "¿Dudas con tu pedido? ", el("a", { class: "link-quiet", href: `${WHATSAPP}?text=${encodeURIComponent(`Hola, tengo una pregunta sobre mi pedido ${referenciaDePedido(pedido)}`)}` }, "Escríbenos por WhatsApp"), " con tu referencia."));
   caja.replaceChildren(...hijos);
 }
 

@@ -6,6 +6,7 @@ import {
   validarDatos, cuerpoDeOrden, urlDeCheckout, crearOrden, huellaDeDatos, mensajeDeError,
   estadoAMostrar, pedidoVigente, pedidoParaGuardar, almacenSeguro, VIGENCIA_PEDIDO_MS,
   canalDe, referenciaDeOrden, rutaDeEstado, aniosDeRevolucion,
+  validarRegalo, cuerpoDeRegalo, extraDeProducto, referenciaDePedido,
 } from "../tienda-assets/compra.js";
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
@@ -454,4 +455,28 @@ test("compra: la casilla de correos es opcional y solo viaja si se marca", () =>
   const html = PAGINAS["comprar/carta-natal.html"];
   assert.ok(html.includes('id="acepta_correos"') && html.includes(CONSENTIMIENTO.slice(0, 40)));
   assert.ok(!/id="acepta_correos"[^>]*required/.test(html), "no es obligatoria");
+});
+
+// ---------------------------------------------------------------- tarjetas de regalo
+test("regalo: validación, cuerpo, referencia y estado del pedido", () => {
+  const ok = { producto: "carta-natal", comprador_nombre: "Carla", comprador_email: "carla@example.com", para_nombre: "Vale", dedicatoria: "", acepto: true };
+  assert.deepEqual(validarRegalo(ok, ["carta-natal"]), {});
+  assert.deepEqual(Object.keys(validarRegalo({ ...ok, producto: "x", para_nombre: "", acepto: false, dedicatoria: "a".repeat(301) }, ["carta-natal"])).sort(),
+    ["acepto", "dedicatoria", "para_nombre", "producto"]);
+  assert.deepEqual(cuerpoDeRegalo({ ...ok, comprador_nombre: " Carla ", dedicatoria: "  " }),
+    { producto: "carta-natal", comprador_nombre: "Carla", comprador_email: "carla@example.com", para_nombre: "Vale", dedicatoria: null });
+  const guardado = pedidoParaGuardar(7, "carta-natal", 1, "r".repeat(22), true);
+  assert.equal(referenciaDePedido(guardado), "astrea-regalo-7");
+  assert.equal(rutaDeEstado(guardado), `/regalos/${"r".repeat(22)}/estado`);
+  assert.equal(referenciaDePedido(pedidoParaGuardar(7, "carta-natal", 1, null)), "astrea-orden-7", "un pedido normal no cambia");
+  assert.deepEqual(["pack", "revolucion-solar", "compatibilidad", "amor"].map(extraDeProducto), ["pack", "revolucion_solar", "segunda_persona", null]);
+});
+
+test("regalo: /regalar ofrece todas las lecturas y /canjear trae los datos extra de cada una", () => {
+  const regalar = PAGINAS["regalar.html"];
+  for (const r of REPORTES) assert.ok(regalar.includes(`<option value="${r.slug}">`), r.slug);
+  assert.ok(PAGINAS["index.html"].includes('href="/regalar"'), "en el menú");
+  const canjear = PAGINAS["canjear.html"];
+  for (const extra of ["pack", "revolucion_solar", "segunda_persona"]) assert.ok(canjear.includes(`data-extra-de="${extra}"`), extra);
+  assert.ok(canjear.includes('id="pack_amor"') && canjear.includes('id="rs_ciudad"') && canjear.includes('id="p2_nombre"') && canjear.includes("noindex"));
 });
