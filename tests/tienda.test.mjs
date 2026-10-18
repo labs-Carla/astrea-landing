@@ -446,3 +446,12 @@ test("baja: pide confirmación y valida el token", async () => {
   assert.deepEqual(llamada, [`http://api/lista/baja/${"t".repeat(32)}`, "POST"]);
   assert.equal((await darDeBaja({ token: "x", base: "y", fetchImpl: async () => ({ ok: false, status: 404 }) })).ok, false);
 });
+
+test("compra: la casilla de correos es opcional y solo viaja si se marca", () => {
+  assert.equal("acepta_correos" in cuerpoDeOrden(validos), false, "sin marcar no se envía");
+  assert.equal(cuerpoDeOrden({ ...validos, acepta_correos: true }).acepta_correos, true);
+  assert.equal(cuerpoDeOrden({ ...validos, acepta_correos: true }, "amor").acepta_correos, true);
+  const html = PAGINAS["comprar/carta-natal.html"];
+  assert.ok(html.includes('id="acepta_correos"') && html.includes(CONSENTIMIENTO.slice(0, 40)));
+  assert.ok(!/id="acepta_correos"[^>]*required/.test(html), "no es obligatoria");
+});

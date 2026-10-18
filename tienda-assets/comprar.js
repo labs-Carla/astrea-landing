@@ -35,7 +35,7 @@ const CAMPOS_EXTRA = {
   segunda_persona: ["p2_nombre", "p2_fecha", "p2_hora", "p2_minuto", "p2_ciudad", "p2_pais", "p2_consentimiento"],
   pack: PACK_TEMATICOS.map((t) => `pack_${t}`),
 };
-const CAMPOS = ["nombre", "fecha", "hora", "minuto", "ciudad", "pais", "email", ...(CAMPOS_EXTRA[extra] || [])];
+const CAMPOS = ["nombre", "fecha", "hora", "minuto", "ciudad", "pais", "email", "acepta_correos", ...(CAMPOS_EXTRA[extra] || [])];
 // Campos con mensaje de error y el paso donde se corrigen (hora/p2_hora agrupan hora + minutos).
 const PASO_DE_CAMPO = {
   nombre: 1, fecha: 1, hora: 1, ciudad: 1, pais: 1, email: 2,
@@ -185,6 +185,7 @@ form.addEventListener("submit", async (e) => {
   cajaError.hidden = true;
   estadoEnvio.textContent = "Registrando tu pedido…";
   const cuerpo = cuerpoDeOrden(leer(), reporte.slug, extra);
+  if (cuerpo.acepta_correos) cuerpo.origen = origenActual();
   const ordenes = sesion.leer(CLAVE_ORDENES) || {};
   try {
     const { ordenId, referencia } = await crearOrden({
