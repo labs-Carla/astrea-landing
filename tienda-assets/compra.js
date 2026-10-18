@@ -30,6 +30,8 @@ export const CANALES = {
   "carta-natal": { crear: "/carta-natal/orden", campoId: "orden_id", sck: "astrea-orden", estado: (ref) => `/carta-natal/orden/${encodeURIComponent(ref)}/estado` },
   pedido: { crear: "/pedidos", campoId: "pedido_id", sck: "astrea-pedido", estado: (ref) => `/pedidos/${encodeURIComponent(ref)}/estado` },
   pack: { crear: "/pedidos/pack", campoId: "orden_id", sck: "astrea-orden", estado: (ref) => `/carta-natal/orden/${encodeURIComponent(ref)}/estado` },
+  // Tarjeta de regalo (astrea-API /regalos): se paga con el checkout de la lectura regalada.
+  regalo: { crear: "/regalos", campoId: "regalo_id", sck: "astrea-regalo", estado: (ref) => `/regalos/${encodeURIComponent(ref)}/estado` },
 };
 
 /** La carta natal tiene su flujo de siempre; los demás reportes son pedidos. */
@@ -233,15 +235,21 @@ export function estadoAMostrar({ pedido, volvioDelCheckout, estadoBackend }) {
 }
 
 /** Ruta del estado público del pedido según su reporte (null sin referencia). */
+/** Canal de un pedido guardado: los regalos llevan `regalo: true`. */
+export const canalDePedido = (pedido) => (pedido?.regalo ? "regalo" : canalDe(pedido?.reporte));
+
+/** Referencia de Hotmart (`sck`) de un pedido guardado. */
+export const referenciaDePedido = (pedido) => `${CANALES[canalDePedido(pedido)].sck}-${pedido.ordenId}`;
+
 export function rutaDeEstado(pedido) {
-  return pedido?.referencia ? CANALES[canalDe(pedido.reporte)].estado(pedido.referencia) : null;
+  return pedido?.referencia ? CANALES[canalDePedido(pedido)].estado(pedido.referencia) : null;
 }
 
 // ---------------------------------------------------------------- persistencia local
 
 /** Pedido guardado en el navegador para la página de retorno: solo la referencia, nunca datos natales. */
-export function pedidoParaGuardar(ordenId, reporte, ahora = Date.now(), referencia = null) {
-  return { ordenId, reporte, creadoEn: ahora, referencia };
+export function pedidoParaGuardar(ordenId, reporte, ahora = Date.now(), referencia = null, regalo = false) {
+  return { ordenId, reporte, creadoEn: ahora, referencia, ...(regalo ? { regalo: true } : {}) };
 }
 
 export const VIGENCIA_PEDIDO_MS = 14 * 24 * 60 * 60 * 1000;
@@ -259,3 +267,33 @@ export function almacenSeguro(storage) {
     borrar(clave) { try { storage.removeItem(clave); } catch { /* nada */ } },
   };
 }
+
+// ---------------------------------------------------------------- tarjetas de regalo
+
+export const LIMITE_DEDICATORIA = 300;
+
+/** Errores del formulario de /regalar ({campo: mensaje}). `productos`: los slugs regalables. */
+export function validarRegalo(d, productos) {
+  const e = {};
+  if (!productos.includes(d.producto)) e.producto = "Elige la lectura que quieres regalar.";
+  if (largo(d.comprador_nombre) < LIMITES.nombreMin) e.comprador_nombre = "Escribe tu nombre.";
+  if (!EMAIL.test((d.comprador_email || "").trim())) e.comprador_email = "Revisa tu correo: ahí te enviaremos la tarjeta.";
+  if (largo(d.para_nombre) < LIMITES.nombreMin) e.para_nombre = "Escribe el nombre de quien recibe el regalo.";
+  else if (largo(d.para_nombre) > 80) e.para_nombre = "El nombre es demasiado largo.";
+  if (largo(d.dedicatoria) > LIMITE_DEDICATORIA) e.dedicatoria = `La dedicatoria puede tener hasta ${LIMITE_DEDICATORIA} caracteres.`;
+  if (!d.acepto) e.acepto = "Necesitamos que aceptes los términos para continuar.";
+  return e;
+}
+
+export function cuerpoDeRegalo(d) {
+  const cuerpo = {
+    producto: d.producto, comprador_nombre: d.comprador_nombre.trim(), comprador_email: d.comprador_email.trim(),
+    para_nombre: d.para_nombre.trim(), dedicatoria: (d.dedicatoria || "").trim() || null,
+  };
+  if (d.acepta_correos) cuerpo.acepta_correos = true;
+  return cuerpo;
+}
+
+/** Qué datos extra pide cada lectura al canjearla (mismo contrato que /comprar). */
+export const extraDeProducto = (producto) =>
+  ({ pack: "pack", "revolucion-solar": "revolucion_solar", compatibilidad: "segunda_persona" })[producto] || null;

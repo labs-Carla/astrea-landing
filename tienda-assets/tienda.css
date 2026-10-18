@@ -167,7 +167,7 @@
 }
 .field select:focus { outline: none; border-color: var(--gold); background: #fff; box-shadow: 0 0 0 3px rgba(176, 138, 79, .15); }
 .field select[aria-invalid="true"] { border-color: var(--error); }
-.field .error-campo { font-size: 0.78rem; color: var(--error); }
+.field .error-campo, .natal-form > .error-campo { font-size: 0.78rem; color: var(--error); }
 .field--hora { grid-column: 1 / -1; }
 .hora-selects { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
 .acciones-paso { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s-3); justify-content: space-between; margin-top: var(--s-3); }
@@ -407,3 +407,11 @@
   box-shadow: var(--shadow-lift);
   padding-top: var(--s-4);
 }
+
+/* Tarjeta de regalo (/regalar): la dedicatoria con el mismo estilo que los demás campos. */
+.field textarea {
+  width: 100%; min-height: 96px; padding: 12px var(--s-4); resize: vertical;
+  font: inherit; font-size: 1rem; line-height: 1.5; color: var(--ink);
+  background: rgba(255, 255, 255, .55); border: 1px solid var(--hairline-strong); border-radius: var(--r-hair);
+}
+.field textarea:focus { outline: none; border-color: var(--gold); background: #fff; box-shadow: 0 0 0 3px rgba(176, 138, 79, .15); }
