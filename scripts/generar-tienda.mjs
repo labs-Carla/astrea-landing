@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { REPORTES, ENTREGA, estadoDe } from "../tienda-assets/catalogo.js";
+import { REPORTES, ENTREGA, PACK_TEMATICOS, estadoDe, reportePorSlug } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -329,7 +329,7 @@ paginas["reportes.html"] = layout({
   <div class="shell">
     ${principales.length ? `<div class="grupo-catalogo">
       <h2 class="grupo-catalogo__titulo">La lectura de base</h2>
-      <p class="grupo-catalogo__texto">Tu carta natal completa: el mapa entero, para empezar a conocerte.</p>
+      <p class="grupo-catalogo__texto">Tu carta natal completa: el mapa entero, para empezar a conocerte. Sola o en pack con dos lecturas temáticas.</p>
       <div class="catalogo">${principales.map(tarjeta).join("\n")}</div>
     </div>` : ""}
     ${tematicos.length ? `<div class="grupo-catalogo">
@@ -356,7 +356,7 @@ for (const r of REPORTES) {
       <a class="btn btn--ghost btn--block" href="${WHATSAPP}?text=${encodeURIComponent(`Hola, quiero saber cuándo estará el reporte de ${r.nombre}`)}">Avísame cuando esté</a>
       <a class="link-quiet" href="/reportes/carta-natal">Mientras tanto, conoce la carta natal completa</a>`;
   const despues = disp
-    ? [r.extra === "segunda_persona" ? "Completas tus datos, los de la otra persona y tu correo." : r.extra === "revolucion_solar" ? "Completas tus datos de nacimiento, dónde pasarás tu cumpleaños y tu correo." : "Completas tus datos de nacimiento y tu correo.", "Pagas en Hotmart con tu pedido ya registrado.", "Confirmamos tu pago y preparamos tu lectura.", "La revisamos y te la enviamos por correo en 24–48 h."]
+    ? [r.extra === "segunda_persona" ? "Completas tus datos, los de la otra persona y tu correo." : r.extra === "revolucion_solar" ? "Completas tus datos de nacimiento, dónde pasarás tu cumpleaños y tu correo." : r.extra === "pack" ? "Completas tus datos de nacimiento, eliges tus 2 lecturas temáticas y dejas tu correo." : "Completas tus datos de nacimiento y tu correo.", "Pagas en Hotmart con tu pedido ya registrado.", "Confirmamos tu pago y preparamos tu lectura.", "La revisamos y te la enviamos por correo en 24–48 h."]
     : ["Cuando esté disponible, lo anunciaremos en esta página.", "Podrás pedirlo con tus datos de nacimiento.", "Lo recibirás por correo, revisado como todas nuestras lecturas."];
   const jsonLd = {
     "@context": "https://schema.org", "@type": "Product", name: `${r.nombre} · Astrea`, description: r.resumen,
@@ -411,6 +411,16 @@ function camposExtra(r) {
                 ${campo("rs_ciudad", "Ciudad donde pasarás tu cumpleaños", 'placeholder="Ej: Lima" required')}
                 ${campo("rs_pais", "País", 'placeholder="Ej: Perú" required')}
                 <div class="field field--full"><label for="rs_anio">Ciclo que quieres leer</label><select id="rs_anio" name="rs_anio" required data-anios-revolucion><option value="">Elige el año</option>${[anio - 1, anio, anio + 1].map((a) => `<option value="${a}">Cumpleaños de ${a}</option>`).join("")}</select><span class="error-campo" id="e-rs_anio" aria-live="polite"></span></div>
+              </div>
+            </fieldset>`;
+  }
+  if (r.extra === "pack") {
+    return `<fieldset class="field field--full grupo-extra">
+              <legend class="grupo-extra__titulo">Tus 2 lecturas temáticas</legend>
+              <p class="grupo-extra__texto">Además de tu carta natal, elige las dos áreas que quieres leer a fondo.</p>
+              <div class="natal-form natal-form--anidado">
+                ${PACK_TEMATICOS.map((t) => `<label class="check"><input type="checkbox" id="pack_${t}" name="pack_${t}"><span>${esc(reportePorSlug(t).nombre)}</span></label>`).join("\n                ")}
+                <span class="error-campo" id="e-pack" aria-live="polite" style="grid-column:1/-1"></span>
               </div>
             </fieldset>`;
   }

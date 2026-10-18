@@ -34,6 +34,7 @@ export function apiBase(loc = globalThis.location) {
 export const CHECKOUTS = {
   // checkoutMode=10: el checkout con el order bump de «Amor y vínculos» (2026-10-18); el de ?bid= no lo muestra.
   "carta-natal": { url: "https://pay.hotmart.com/B106744064D?checkoutMode=10", precioReferencia: "USD 12" },
+  pack: { url: "https://pay.hotmart.com/X108078579R?bid=1792280507082", precioReferencia: "USD 24" },
   amor: { url: "https://pay.hotmart.com/P107968115R", precioReferencia: "USD 9" },
   vocacion: { url: "https://pay.hotmart.com/N107968156X", precioReferencia: "USD 9" },
   dinero: { url: "https://pay.hotmart.com/W107968171W", precioReferencia: "USD 9" },

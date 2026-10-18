@@ -9,6 +9,7 @@
  * `extra` debe coincidir con astrea-API app/domain/productos_tienda.py:
  * - "revolucion_solar": ciudad y país donde la persona pasa su cumpleaños, y el año del ciclo.
  * - "segunda_persona": datos de nacimiento de la otra persona (hora opcional) y su consentimiento.
+ * - "pack": carta natal + 2 temáticos a elección (PACK_TEMATICOS; POST /pedidos/pack, 2026-10-18).
  *
  * `tarjeta`: texto corto de la tarjeta en la portada del sitio.
  * `portada`: base de las imágenes en tienda-assets/img (<slug>-480.webp y <slug>-960.webp,
@@ -47,6 +48,27 @@ export const REPORTES = [
     idealPara: "Quienes quieren comprender su carta natal más allá de su signo solar.",
     incluye: ["Más de 20 páginas", "Rueda natal, planetas, casas y aspectos", "Revisión humana antes del envío", ...INCLUYE_COMUN],
     datos: ["Nombre para la lectura", "Fecha de nacimiento", "Hora de nacimiento (la más aproximada que tengas)", "Ciudad y país de nacimiento", "Correo de entrega"],
+  },
+  {
+    slug: "pack",
+    tarjeta: "Tu carta natal completa y dos lecturas temáticas a tu elección, en un solo pedido.",
+    portada: "/tienda-assets/img/pack",
+    nombre: "Pack carta natal + 2 lecturas",
+    categoria: "Pack",
+    principal: true,
+    extra: "pack",
+    eyebrow: "Pack con descuento",
+    icono: "i-wheel",
+    resumen: "Tu carta natal completa y dos lecturas temáticas a tu elección: amor, vocación, dinero o patrones. Pagas menos que por separado.",
+    descripcion: "Empieza por el mapa completo de tu carta natal y profundiza en las dos áreas de tu vida que más te importan hoy. Las tres lecturas se preparan a partir de tus mismos datos de nacimiento y te llegan por correo, en PDF.",
+    explora: [
+      "Tu carta natal completa: Sol, Luna, Ascendente, planetas, casas y aspectos",
+      "Dos lecturas temáticas a tu elección",
+      "Amor y vínculos, vocación y propósito, dinero y abundancia o patrones y transformación",
+    ],
+    idealPara: "Quienes quieren su carta natal y, además, mirar a fondo dos áreas concretas de su vida.",
+    incluye: ["Carta natal completa (más de 20 páginas)", "2 reportes temáticos a elección", "Revisión humana antes del envío", "Tres PDF por correo en 24–48 h"],
+    datos: ["Nombre para la lectura", "Fecha, hora y lugar de nacimiento", "Las 2 lecturas temáticas que eliges", "Correo de entrega"],
   },
   {
     slug: "amor",
@@ -189,3 +211,6 @@ export function estadoDe(reporte, checkouts) {
 export function reportePorSlug(slug) {
   return REPORTES.find((r) => r.slug === slug) || null;
 }
+
+/** Temáticos que se pueden elegir en el pack (mismo contrato que astrea-API PACK_TEMATICOS). */
+export const PACK_TEMATICOS = ["amor", "vocacion", "dinero", "patrones"];

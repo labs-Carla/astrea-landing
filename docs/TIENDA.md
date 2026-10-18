@@ -87,6 +87,7 @@ GET /api/v1/carta-natal/orden/{referencia}/estado
 | Reporte | Precio mostrado | Hotmart | Canal | `sck` |
 |---|---|---|---|---|
 | Carta natal completa | USD 12 | `B106744064D` | `POST /carta-natal/orden` | `astrea-orden-<id>` |
+| Pack carta natal + 2 temáticos | USD 24 | `X108078579R` | `POST /pedidos/pack` + 2 de amor/vocación/dinero/patrones | `astrea-orden-<id>` |
 | Amor y vínculos | USD 9 | `P107968115R` | `POST /pedidos` | `astrea-pedido-<id>` |
 | Vocación y propósito | USD 9 | `N107968156X` | `POST /pedidos` | `astrea-pedido-<id>` |
 | Dinero y abundancia | USD 9 | `W107968171W` | `POST /pedidos` | `astrea-pedido-<id>` |
@@ -143,3 +144,11 @@ No pisa un `src` que el enlace ya traiga (afiliados de Hotmart) ni toca `sck`, q
 | WhatsApp | `https://astrea-charts.site/?src=whatsapp` |
 | Un video o campaña | `https://astrea-charts.site/?src=tiktok-<tema>` |
 | Afiliada (fuera de Hotmart) | `https://astrea-charts.site/?src=afiliado-<nombre>` |
+
+## Pack carta natal + 2 temáticos (desde 2026-10-18)
+
+`/comprar/pack` pide los datos natales y 2 casillas entre amor, vocación, dinero y patrones (`pack_<slug>`).
+`POST /pedidos/pack` (astrea-API #116) responde igual que `/carta-natal/orden`: es una orden de carta natal
+(`sck=astrea-orden-<id>`, mismo estado del pedido) con los 2 temáticos colgados. En el panel aparece en
+«Pagos por confirmar» con sus temáticos; al confirmarla pasan los tres a «Por preparar».
+Portada: `tienda-assets/img/pack-{480,960}.webp`, compuesta con las portadas de carta natal, amor y dinero.
