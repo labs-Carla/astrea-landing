@@ -34,7 +34,7 @@ async function nuevaPagina(viewport) {
   await p.locator(".menu-movil summary").click();
   await p.locator(".menu-movil__panel a", { hasText: "Reportes" }).click();
   await p.waitForURL(`${TIENDA}/reportes`);
-  ok((await p.locator(".tarjeta-reporte").count()) === 8, "catálogo móvil: 7 reportes y el pack");
+  ok((await p.locator(".tarjeta-reporte").count()) === 9, "catálogo móvil: 7 reportes, el pack y Tu 2027 (en preparación)");
   ok((await p.locator(".insignia--disponible").count()) === 8, "los 7 reportes y el pack están disponibles");
   for (const slug of ["carta-natal", "pack", "revolucion-solar", "compatibilidad", "amor", "vocacion", "dinero", "patrones"]) {
     const r = await p.goto(`${TIENDA}/reportes/${slug}`);

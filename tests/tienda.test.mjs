@@ -11,6 +11,7 @@ import {
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
 import { PAGINAS } from "../scripts/generar-tienda.mjs";
+const DISPONIBLES = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) === "disponible");
 import { validarSuscripcion, cuerpoSuscripcion, mensajeDeSuscripcion, suscribir, CONSENTIMIENTO } from "../tienda-assets/lista.js";
 import { tokenDeBaja, darDeBaja } from "../tienda-assets/baja.js";
 import { limpiarOrigen, origenDeVisita, origenVigente, origenDePagina, conOrigen, registrarVisita, CLAVE_ORIGEN } from "../tienda-assets/origen.js";
@@ -144,8 +145,9 @@ test("API: Railway en producción, backend local en local", () => {
 
 // ---------------------------------------------------------------- catálogo y páginas
 test("catálogo: 7 reportes y el pack, todos con checkout real y sus precios", () => {
-  assert.deepEqual(REPORTES.map((r) => r.slug), ["carta-natal", "pack", "amor", "vocacion", "dinero", "patrones", "revolucion-solar", "compatibilidad"]);
-  assert.ok(REPORTES.every((r) => estadoDe(r, CHECKOUTS) === "disponible"));
+  assert.deepEqual(REPORTES.map((r) => r.slug), ["carta-natal", "pack", "amor", "vocacion", "dinero", "patrones", "revolucion-solar", "compatibilidad", "tu-2027"]);
+  // «Tu 2027» queda «En preparación» hasta que exista su producto en Hotmart.
+  assert.deepEqual(REPORTES.filter((r) => estadoDe(r, CHECKOUTS) !== "disponible").map((r) => r.slug), ["tu-2027"]);
   const precios = Object.fromEntries(Object.entries(CHECKOUTS).map(([k, v]) => [k, v.precioReferencia]));
   assert.deepEqual(precios, { "carta-natal": "USD 12", pack: "USD 24", amor: "USD 9", vocacion: "USD 9", dinero: "USD 9", patrones: "USD 9", "revolucion-solar": "USD 12", compatibilidad: "USD 15" });
   const ids = Object.values(CHECKOUTS).map((c) => new URL(c.url).pathname);
@@ -201,13 +203,15 @@ test("cuerpo de un pedido temático y validación de sus datos extra", async () 
 
 test("existen todas las rutas del ecommerce", () => {
   for (const ruta of ["index.html", "reportes.html", "como-funciona.html", "sobre-astrea.html", "preguntas-frecuentes.html", "pedido.html",
-    ...REPORTES.map((r) => `reportes/${r.slug}.html`), ...REPORTES.map((r) => `comprar/${r.slug}.html`)]) {
+    ...REPORTES.map((r) => `reportes/${r.slug}.html`), ...DISPONIBLES.map((r) => `comprar/${r.slug}.html`)]) {
     assert.ok(PAGINAS[ruta], ruta);
   }
 });
 
 test("cada página de reporte lleva a su compra y cada compra trae sus campos", () => {
-  for (const r of REPORTES) {
+  assert.equal(PAGINAS["comprar/tu-2027.html"], undefined, "sin checkout no hay página de compra");
+  assert.ok(PAGINAS["reportes/tu-2027.html"].includes("Avísame cuando esté"), "la ficha avisa que está en preparación");
+  for (const r of DISPONIBLES) {
     assert.match(PAGINAS[`reportes/${r.slug}.html`], new RegExp(`href="/comprar/${r.slug}"`), r.slug);
     assert.match(PAGINAS[`reportes/${r.slug}.html`], new RegExp(CHECKOUTS[r.slug].precioReferencia), r.slug);
     const compra = PAGINAS[`comprar/${r.slug}.html`];
@@ -274,7 +278,7 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   assert.match(html, /href="\/universo#generador">Genera tu carta gratis/);
   for (const t of ["Astronomía real", "Revisión humana", "Directo a tu correo", "Autoconocimiento"]) assert.ok(html.includes(`<strong>${t}</strong>`), t);
   assert.match(html, /24–48 horas después de la confirmación del pago/);
-  for (const r of REPORTES) {
+  for (const r of DISPONIBLES) {
     assert.ok(html.includes(`href="/comprar/${r.slug}"`), `compra ${r.slug}`);
     assert.ok(html.includes(`href="/reportes/${r.slug}"`), `ficha ${r.slug}`);
     assert.ok(html.includes(`${r.portada}-480.webp`), `portada ${r.slug}`);
@@ -474,7 +478,8 @@ test("regalo: validación, cuerpo, referencia y estado del pedido", () => {
 
 test("regalo: /regalar ofrece todas las lecturas y /canjear trae los datos extra de cada una", () => {
   const regalar = PAGINAS["regalar.html"];
-  for (const r of REPORTES) assert.ok(regalar.includes(`<option value="${r.slug}">`), r.slug);
+  for (const r of DISPONIBLES) assert.ok(regalar.includes(`<option value="${r.slug}">`), r.slug);
+  assert.ok(!regalar.includes('<option value="tu-2027">'), "no se regala lo que todavía no se vende");
   assert.ok(PAGINAS["index.html"].includes('href="/regalar"'), "en el menú");
   const canjear = PAGINAS["canjear.html"];
   for (const extra of ["pack", "revolucion_solar", "segunda_persona"]) assert.ok(canjear.includes(`data-extra-de="${extra}"`), extra);
