@@ -1371,6 +1371,15 @@
     .big-three-item { flex-direction: row; text-align: left; }
     .que-es { align-items: flex-start; }
   }
+
+  /* Lista de correos (Big 3 por correo) */
+  .campo-big3 .opcional { font-weight: 400; opacity: .7; }
+  .campo .check-big3 { display: grid; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; margin: 12px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft, #5c5346); text-transform: none; letter-spacing: 0; font-weight: 400; }
+  .campo .check-big3 input { width: 18px; height: 18px; min-height: 0; margin: 2px 0 0; padding: 0; border-radius: 3px; accent-color: var(--gold, #b8955a); }
+  .campo .check-big3 a { color: inherit; }
+  .error-big3 { min-height: 1em; margin-top: 6px; font-size: 13px; color: #9b3b2f; }
+  .aviso-big3 { margin: 0 auto 18px; max-width: 520px; padding: 12px 16px; border: 1px solid var(--gold, #b8955a); border-radius: 10px; font-size: 14px; line-height: 1.5; text-align: center; background: rgba(255,255,255,.5); }
+  .aviso-big3[data-estado="error"] { border-color: #9b3b2f; color: #9b3b2f; }
 </style>
 </head>
 <body>
@@ -1440,6 +1449,14 @@
         <input type="text" id="fg_ciudad" name="ciudad_pais" placeholder="Ej. Ciudad de México, México" required>
       </div>
 
+      <div class="campo campo-big3">
+        <label for="fg_email">Tu correo <span class="opcional">(opcional)</span></label>
+        <input type="email" id="fg_email" name="email" autocomplete="email" placeholder="tu@correo.com" maxlength="150">
+        <div class="hint">Te enviamos <strong>«Tu Big 3 explicado»</strong>: un PDF de 7 páginas con tu Sol, tu Luna y tu Ascendente, su sombra y un consejo para esta semana.</div>
+        <label class="check-big3"><input type="checkbox" id="fg_consentimiento"><span>Acepto recibir correos de Astrea con contenido astrológico, novedades y ofertas. Puedo darme de baja cuando quiera desde cualquier correo. <a href="/privacidad" target="_blank" rel="noopener">Privacidad</a>.</span></label>
+        <div class="error-big3" id="fg_error_big3" aria-live="polite"></div>
+      </div>
+
       <button type="submit" id="fg_submit" class="btn-generar">✦ Generar mi carta</button>
     </form>
 
@@ -1452,6 +1469,8 @@
   </section>
 
   <section id="resultado-carta" class="resultado-carta" style="display:none;">
+
+    <p id="aviso-big3" class="aviso-big3" role="status" hidden></p>
 
     <p id="saludo-nombre" style="text-align: center; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--gold-soft); font-size: 16px; margin-bottom: 8px;"></p>
 
@@ -1908,5 +1927,19 @@
   });
 </script>
 <script type="module" src="/tienda-assets/origen.js"></script>
+<script type="module">
+  // Lista de correos: «Tu Big 3 explicado» en PDF si la persona deja su correo (tienda-assets/lista.js).
+  import { conectarListaDeCorreos } from "/tienda-assets/lista.js";
+  const v = (id) => document.getElementById(id).value.trim();
+  conectarListaDeCorreos({
+    form: "#natalFormGratis", email: "#fg_email", consentimiento: "#fg_consentimiento",
+    errorCampo: "#fg_error_big3", aviso: "#aviso-big3",
+    leer: () => {
+      const [ciudad, pais] = v("fg_ciudad").split(",").map((s) => s.trim());
+      if (!ciudad || !pais || !v("fg_fecha") || !v("fg_hora_h") || !v("fg_hora_m") || v("fg_nombre").length < 2) return null;
+      return { nombre: v("fg_nombre"), fecha_hora_local: `${v("fg_fecha")}T${v("fg_hora_h")}:${v("fg_hora_m")}:00`, ciudad, pais };
+    },
+  });
+</script>
 </body>
 </html>

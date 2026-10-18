@@ -116,6 +116,13 @@
           <input id="f-lugar" name="lugar" type="text" autocomplete="off" placeholder="Ciudad, País" aria-describedby="f-lugar-ayuda" required>
           <small id="f-lugar-ayuda">Escribe ciudad y país separados por coma. Ej.: Bogotá, Colombia</small>
         </div>
+        <div class="field field--full">
+          <label for="f-email">Tu correo <span class="opcional">(opcional)</span></label>
+          <input id="f-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" maxlength="150" aria-describedby="f-email-ayuda">
+          <small id="f-email-ayuda">Te enviamos <strong>«Tu Big 3 explicado»</strong>: un PDF de 7 páginas con tu Sol, tu Luna y tu Ascendente, su sombra y un consejo para esta semana.</small>
+        </div>
+        <label class="field field--full check-big3"><input type="checkbox" id="f-consentimiento"><span>Acepto recibir correos de Astrea con contenido astrológico, novedades y ofertas. Puedo darme de baja cuando quiera desde cualquier correo. <a href="/privacidad" target="_blank" rel="noopener">Privacidad</a>.</span></label>
+        <p class="error-big3 field--full" id="f-error-big3" aria-live="polite"></p>
         <p class="form-msg" id="form-msg" role="alert" hidden></p>
         <button class="btn btn--night btn--block" type="submit" id="f-submit">
           <span data-label>Generar mi carta</span> <svg class="icon"><use href="#i-arrow"/></svg>
@@ -139,6 +146,7 @@
       <p class="eyebrow">Tu resultado gratuito</p>
       <h3 class="h-section h-section--sm" id="res-titulo">Un primer vistazo a tu carta</h3>
       <p class="result__saludo" id="res-saludo"></p>
+      <p id="aviso-big3" class="aviso-big3" role="status" hidden></p>
 
       <div class="tabs" role="tablist" aria-label="Vistas de tu carta">
         <button class="tabs__tab" role="tab" id="tab-rueda" aria-controls="panel-rueda" aria-selected="true">Rueda natal</button>
@@ -459,5 +467,21 @@
 <script src="rueda-natal.js"></script>
 <script src="universo-assets/universo.js"></script>
 <script type="module" src="/tienda-assets/origen.js"></script>
+<script type="module">
+  // Lista de correos: «Tu Big 3 explicado» en PDF si la persona deja su correo (tienda-assets/lista.js).
+  import { conectarListaDeCorreos } from "/tienda-assets/lista.js";
+  const form = document.getElementById("natal-form");
+  conectarListaDeCorreos({
+    form: "#natal-form", email: "#f-email", consentimiento: "#f-consentimiento",
+    errorCampo: "#f-error-big3", aviso: "#aviso-big3",
+    leer: () => {
+      const nombre = form.nombre.value.trim(), fecha = form.fecha.value, hora = form.hora.value, lugar = form.lugar.value.trim();
+      const corte = lugar.lastIndexOf(",");
+      const ciudad = corte > 0 ? lugar.slice(0, corte).trim() : "", pais = corte > 0 ? lugar.slice(corte + 1).trim() : "";
+      if (nombre.length < 2 || !fecha || !hora || ciudad.length < 2 || pais.length < 2) return null;
+      return { nombre, fecha_hora_local: `${fecha}T${hora.slice(0, 5)}:00`, ciudad, pais };
+    },
+  });
+</script>
 </body>
 </html>
