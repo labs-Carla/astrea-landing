@@ -201,6 +201,27 @@ export const REPORTES = [
     incluye: ["Análisis comparativo en PDF", "Entrega por correo en 24–48 h"],
     datos: ["Tus datos de nacimiento", "Fecha, hora (si la sabes) y lugar de nacimiento de la otra persona", "La confirmación de que la otra persona acepta compartir sus datos", "Correo de entrega"],
   },
+  {
+    slug: "tu-2027",
+    tarjeta: "Tu año 2027 mes a mes: los tránsitos y eclipses que activan tu carta, y cómo aprovecharlos.",
+    portada: "/tienda-assets/img/tu-2027",
+    nombre: "Tu 2027",
+    categoria: "Ciclos",
+    eyebrow: "Nuevo",
+    icono: "i-sun",
+    resumen: "Tu año 2027 en el cielo, mes a mes: los tránsitos de los planetas lentos sobre tu carta, los eclipses y las temporadas que marcan tu año.",
+    descripcion: "Una lectura del año completo a partir de los tránsitos de Júpiter, Saturno, Urano, Neptuno y Plutón sobre tu carta natal, las áreas de tu vida que recorren y los eclipses de 2027. Te muestra qué se mueve en cada temporada y cómo acompañarlo, sin predicciones de eventos.",
+    explora: [
+      "El tono general de tu 2027",
+      "De enero a junio y de julio a diciembre, mes a mes",
+      "Dónde se expande tu vida y qué te pide madurar",
+      "Los eclipses de 2027 en tu carta",
+      "Tus temporadas clave del año",
+    ],
+    idealPara: "Quienes quieren empezar el año con un mapa claro de sus ciclos y temporadas.",
+    incluye: ["Más de 15 páginas", "Tránsitos y eclipses calculados para tu carta", ...INCLUYE_COMUN],
+    datos: ["Nombre para la lectura", "Fecha, hora y lugar de nacimiento", "Correo de entrega"],
+  },
 ];
 
 /** Un reporte se puede comprar solo si tiene checkout real configurado. */
