@@ -36,7 +36,7 @@ export function cuerpoSuscripcion(datos, email, origen) {
 
 export function mensajeDeSuscripcion(status, email) {
   if (status === 200) {
-    return { ok: true, texto: `Te enviamos «Tu Big 3 explicado» a ${email}. Si no lo ves en unos minutos, revisa la carpeta de spam o promociones.` };
+    return { ok: true, texto: `Te enviamos «Tu Big 3 explicado» a ${email}. Si te llega a Promociones, arrástralo a Principal para no perderte los próximos.` };
   }
   if (status === 429) return { ok: false, texto: "Hiciste varios pedidos seguidos. Espera un minuto y vuelve a pedir tu Big 3." };
   if (status === 400) return { ok: false, texto: "No encontramos ese lugar, así que no pudimos enviarte tu Big 3." };
