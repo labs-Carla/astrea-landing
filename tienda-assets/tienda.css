@@ -415,3 +415,21 @@
   background: rgba(255, 255, 255, .55); border: 1px solid var(--hairline-strong); border-radius: var(--r-hair);
 }
 .field textarea:focus { outline: none; border-color: var(--gold); background: #fff; box-shadow: 0 0 0 3px rgba(176, 138, 79, .15); }
+
+/* Hero: la escultura canta. El video arranca sin sonido (los navegadores no permiten
+   sonido automático) y este botón lo activa desde el inicio. */
+.hero__sonido {
+  position: absolute; right: 14px; bottom: 14px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px;
+  border: 1px solid rgba(212, 177, 114, .55); border-radius: 999px;
+  background: rgba(8, 10, 18, .58); color: #f4ead8; backdrop-filter: blur(6px);
+  font: 500 14px/1 "DM Sans", system-ui, sans-serif; letter-spacing: .02em; cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.hero__sonido:hover { background: rgba(8, 10, 18, .78); border-color: rgba(212, 177, 114, .9); }
+.hero__sonido:focus-visible { outline: 2px solid #d4b172; outline-offset: 3px; }
+.hero__sonido-icono { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.hero__sonido-icono path:first-child { fill: currentColor; stroke: none; }
+.hero__sonido .hero__sonido-ondas { display: none; }
+.hero__sonido[aria-pressed="true"] .hero__sonido-ondas { display: inline; }
+.hero__sonido[aria-pressed="true"] .hero__sonido-mudo { display: none; }

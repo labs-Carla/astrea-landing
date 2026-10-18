@@ -46,3 +46,7 @@ export const CHECKOUTS = {
 export const ESTADO_PEDIDO_HABILITADO = true;
 
 export const WHATSAPP = "https://wa.me/573132137456";
+
+// La app de Astrea: quien compró su carta natal la lee (y escucha) allí.
+// /lectura sin sesión lleva a «Entrar» y, con sesión, directo a su lectura.
+export const APP_ASTREA = "https://app.astrea-charts.site";

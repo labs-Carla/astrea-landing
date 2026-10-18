@@ -14,7 +14,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CONSENTIMIENTO } from "../tienda-assets/lista.js";
 import { REPORTES, ENTREGA, PACK_TEMATICOS, estadoDe, reportePorSlug } from "../tienda-assets/catalogo.js";
-import { CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
+import { APP_ASTREA, CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITIO = "https://astrea-charts.site";
@@ -89,7 +89,7 @@ ${SPRITE}
       ${enlaces}
     </nav>
     <div class="header-acciones">
-      <a class="btn btn--gold btn--sm" href="/reportes">Ver reportes</a>
+      <a class="btn btn--gold btn--sm" href="${APP_ASTREA}/lectura" aria-label="Mi carta: entra a leer tu carta natal en Astrea">Mi carta</a>
       <details class="menu-movil">
         <summary aria-label="Abrir menú">${icono("i-menu")}</summary>
         <nav class="menu-movil__panel" aria-label="Menú">
@@ -237,7 +237,7 @@ paginas["index.html"] = layout({
       </div>
     </div>
     <figure class="hero__figure">
-      <div class="arch arch--framed"><div class="media-slot media-slot--hero"><img src="/universo-assets/img/hero-escultura.webp" alt="Escultura griega de mármol bajo un cielo nocturno" width="800" height="1000" fetchpriority="high"></div></div>
+      <div class="arch arch--framed"><div class="media-slot media-slot--hero"><video class="hero__video" autoplay muted loop playsinline preload="auto" poster="/universo-assets/img/hero-escultura-video.webp" width="720" height="900" aria-label="Escultura griega de Astrea, coronada de laurel, bajo la luna llena y un cielo estrellado" data-hero-video><source src="/universo-assets/video/hero-escultura.webm" type="video/webm"><source src="/universo-assets/video/hero-escultura.mp4" type="video/mp4"></video><button type="button" class="hero__sonido" data-hero-sonido aria-pressed="false" hidden><svg class="hero__sonido-icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="hero__sonido-ondas" d="M15.5 9a4.5 4.5 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/><path class="hero__sonido-mudo" d="m16 9.5 5 5m0-5-5 5"/></svg><span data-hero-sonido-texto>Escuchar</span></button></div></div>
     </figure>
   </div>
 </section>
@@ -319,6 +319,8 @@ ${TESTIMONIOS.length ? `
     </div>
   </div>
 </section>`,
+  scripts: ["/tienda-assets/hero-video.js"],
+  preload: `<link rel="preload" as="image" href="/universo-assets/img/hero-escultura-video.webp" fetchpriority="high">`,
   jsonLd: { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ_PORTADA.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
 });
 
