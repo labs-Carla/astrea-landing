@@ -10,6 +10,8 @@ import {
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
 import { PAGINAS } from "../scripts/generar-tienda.mjs";
+import { validarSuscripcion, cuerpoSuscripcion, mensajeDeSuscripcion, suscribir, CONSENTIMIENTO } from "../tienda-assets/lista.js";
+import { tokenDeBaja, darDeBaja } from "../tienda-assets/baja.js";
 import { limpiarOrigen, origenDeVisita, origenVigente, origenDePagina, conOrigen, registrarVisita, CLAVE_ORIGEN } from "../tienda-assets/origen.js";
 
 const validos = { nombre: "Ana López", email: "ana@example.com", fecha: "1990-05-17", hora: "8", minuto: "5", ciudad: "Bogotá", pais: "Colombia" };
@@ -403,4 +405,44 @@ test("pack: el formulario ofrece los 4 temáticos para elegir 2", () => {
   assert.ok(html.includes('data-extra="pack"'));
   for (const t of ["amor", "vocacion", "dinero", "patrones"]) assert.ok(html.includes(`id="pack_${t}"`), t);
   assert.ok(html.includes('id="e-pack"'));
+});
+
+// ---------------------------------------------------------------- lista de correos (Big 3 por correo)
+
+test("lista: el correo es opcional, pero si se da necesita consentimiento", () => {
+  assert.equal(validarSuscripcion({ email: "", consentimiento: false }), null, "sin correo: la carta gratis sigue igual");
+  assert.equal(validarSuscripcion({ email: "no-es-correo", consentimiento: true }).campo, "email");
+  assert.equal(validarSuscripcion({ email: "ana@example.com", consentimiento: false }).campo, "consentimiento");
+  assert.equal(validarSuscripcion({ email: " ana@example.com ", consentimiento: true }), null);
+  assert.deepEqual(cuerpoSuscripcion({ nombre: "Ana", fecha_hora_local: "1990-05-15T14:30:00", ciudad: "Bogotá", pais: "Colombia" }, " ana@example.com ", "tiktok-bio"),
+    { nombre: "Ana", fecha_hora_local: "1990-05-15T14:30:00", ciudad: "Bogotá", pais: "Colombia", email: "ana@example.com", consentimiento: true, origen: "tiktok-bio" });
+});
+
+test("lista: mensajes según la respuesta del backend", async () => {
+  assert.ok(mensajeDeSuscripcion(200, "ana@example.com").texto.includes("ana@example.com"));
+  for (const s of [400, 422, 429, 502, 0]) assert.equal(mensajeDeSuscripcion(s, "x").ok, false, String(s));
+  const llamadas = [];
+  const r = await suscribir({ base: "http://api", cuerpo: { email: "ana@example.com" }, fetchImpl: async (url, op) => { llamadas.push([url, JSON.parse(op.body)]); return { status: 200 }; } });
+  assert.ok(r.ok && llamadas[0][0] === "http://api/lista/suscribir");
+  assert.equal((await suscribir({ base: "x", cuerpo: { email: "a" }, fetchImpl: async () => { throw new TypeError("red"); } })).ok, false);
+});
+
+test("lista: el consentimiento que se muestra es el que guarda el backend, en las dos páginas", () => {
+  for (const archivo of ["link-gratis.html", "universo.html"]) {
+    const html = readFileSync(new URL(`../${archivo}`, import.meta.url), "utf8");
+    assert.ok(html.includes(CONSENTIMIENTO), archivo);
+    assert.ok(html.includes('type="email"') && html.includes("conectarListaDeCorreos"), archivo);
+  }
+});
+
+test("baja: pide confirmación y valida el token", async () => {
+  assert.equal(tokenDeBaja("?t=abc"), null);
+  assert.equal(tokenDeBaja("?t=" + "a".repeat(32)), "a".repeat(32));
+  const html = PAGINAS["baja.html"];
+  assert.ok(html.includes("data-baja") && html.includes("Darme de baja") && html.includes("noindex"));
+  let llamada;
+  const r = await darDeBaja({ token: "t".repeat(32), base: "http://api", fetchImpl: async (url, op) => { llamada = [url, op.method]; return { ok: true, status: 200 }; } });
+  assert.ok(r.ok);
+  assert.deepEqual(llamada, [`http://api/lista/baja/${"t".repeat(32)}`, "POST"]);
+  assert.equal((await darDeBaja({ token: "x", base: "y", fetchImpl: async () => ({ ok: false, status: 404 }) })).ok, false);
 });

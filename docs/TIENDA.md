@@ -152,3 +152,15 @@ No pisa un `src` que el enlace ya traiga (afiliados de Hotmart) ni toca `sck`, q
 (`sck=astrea-orden-<id>`, mismo estado del pedido) con los 2 temáticos colgados. En el panel aparece en
 «Pagos por confirmar» con sus temáticos; al confirmarla pasan los tres a «Por preparar».
 Portada: `tienda-assets/img/pack-{480,960}.webp`, compuesta con las portadas de carta natal, amor y dinero.
+
+## Lista de correos: «Tu Big 3 explicado» (desde 2026-10-18)
+
+La carta gratis de `/link-gratis` y `/universo` ofrece un correo **opcional**. Si la persona lo deja y marca el
+consentimiento, `tienda-assets/lista.js` llama a `POST /lista/suscribir` (astrea-API #117) en paralelo a su
+carta: queda en la lista y recibe «Tu Big 3 explicado» en PDF. Si deja el correo sin marcar la casilla, no se
+genera nada y se le pide marcarla. Sin correo, la carta gratis funciona como siempre.
+
+- El texto del consentimiento (`CONSENTIMIENTO` en `lista.js`) debe ser idéntico a `CONSENTIMIENTO_V1` del backend.
+- `origen` = el `src` de `origen.js` (canal que trajo a la persona).
+- `/baja?t=<token>` (generada, `noindex`): el enlace de cada correo. Abrirla NO da de baja (los filtros de correo
+  abren enlaces solos); la persona confirma con el botón → `POST /lista/baja/{token}`.

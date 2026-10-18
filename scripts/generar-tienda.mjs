@@ -629,6 +629,22 @@ paginas["terminos.html"] = layout({
 </section>`,
 });
 
+paginas["baja.html"] = layout({
+  ruta: "/baja",
+  titulo: "Darte de baja · Astrea",
+  descripcion: "Deja de recibir los correos de Astrea.",
+  indexable: false,
+  scripts: ["/tienda-assets/baja.js"],
+  cuerpo: `${cabecera({ eyebrow: "Lista de correos", titulo: "Darte de baja", lede: "Confirma y dejarás de recibir nuestros correos.", migas: [["/", "Inicio"], ["/baja", "Darte de baja"]] })}
+<section class="sheet sheet--light sheet--lift seccion">
+  <div class="shell prosa" data-baja>
+    <p>Si te das de baja, no te enviaremos más correos con contenido astrológico, novedades ni ofertas. Tus lecturas compradas no cambian.</p>
+    <p><button class="btn btn--gold" type="button">Darme de baja</button></p>
+    <p class="form-status" data-estado-baja aria-live="polite"></p>
+  </div>
+</section>`,
+});
+
 const FAQ = [
   ["¿Qué es una carta natal?", "Es un mapa del cielo calculado para la fecha, hora y lugar exactos de tu nacimiento. Muestra dónde estaban el Sol, la Luna y los planetas, y cómo se relacionan entre sí y con las áreas de tu vida."],
   ["¿Qué reportes puedo comprar?", "La carta natal completa y seis reportes temáticos: amor y vínculos, vocación y propósito, dinero y abundancia, patrones y transformación, revolución solar y compatibilidad de pareja. Todos llegan en PDF a tu correo entre 24 y 48 horas después de confirmar tu pago."],
