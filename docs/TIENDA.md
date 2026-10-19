@@ -145,6 +145,14 @@ No pisa un `src` que el enlace ya traiga (afiliados de Hotmart) ni toca `sck`, q
 | Un video o campaña | `https://astrea-charts.site/?src=tiktok-<tema>` |
 | Afiliada (fuera de Hotmart) | `https://astrea-charts.site/?src=afiliado-<nombre>` |
 
+## Referidos (`?ref=`, desde 2026-10-19)
+
+Cada persona de Astrea tiene un enlace para invitar (`astrea-charts.site/?ref=ABCD2345`, lo muestra la app en
+«Tu perfil astrológico»). `tienda-assets/referido.js` toma el `?ref=` en cualquier página (lo carga `origen.js`),
+lo guarda 30 días en el navegador y `comprar.js` lo manda **solo en la orden de la carta natal**
+(`POST /carta-natal/orden` → `ref`). Un código con otra forma se ignora; el backend lo vuelve a validar, descarta
+el propio de quien compra y, cuando la carta se entrega, da 1 mes de Astrea Plus a las dos personas.
+
 ## Pack carta natal + 2 temáticos (desde 2026-10-18)
 
 `/comprar/pack` pide los datos natales y 2 casillas entre amor, vocación, dinero y patrones (`pack_<slug>`).
