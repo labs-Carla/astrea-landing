@@ -485,3 +485,19 @@ test("regalo: /regalar ofrece todas las lecturas y /canjear trae los datos extra
   for (const extra of ["pack", "revolucion_solar", "segunda_persona"]) assert.ok(canjear.includes(`data-extra-de="${extra}"`), extra);
   assert.ok(canjear.includes('id="pack_amor"') && canjear.includes('id="rs_ciudad"') && canjear.includes('id="p2_nombre"') && canjear.includes("noindex"));
 });
+
+// ---------------------------------------------------------------- referidos (?ref=)
+
+test("referido: ?ref= válido se guarda 30 días; uno con otra forma se ignora", async () => {
+  const { limpiarReferido, referidoVigente, registrarReferido, CLAVE_REFERIDO } = await import("../tienda-assets/referido.js");
+  const datos = {};
+  const storage = { getItem: (k) => datos[k] ?? null, setItem: (k, v) => { datos[k] = v; }, removeItem: (k) => { delete datos[k]; } };
+  assert.equal(limpiarReferido(" abcd2345 "), "ABCD2345");
+  assert.equal(limpiarReferido("ABCD234O"), null);          // O no existe en los códigos
+  assert.equal(limpiarReferido("<script>"), null);
+  assert.equal(registrarReferido({ search: "?ref=abcd2345", storage, ahora: 1000 }), "ABCD2345");
+  assert.equal(registrarReferido({ search: "?ref=malo", storage, ahora: 2000 }), "ABCD2345");   // no pisa uno válido
+  assert.equal(registrarReferido({ search: "", storage, ahora: 2000 }), "ABCD2345");
+  assert.equal(referidoVigente(JSON.parse(datos[CLAVE_REFERIDO]), 1000 + 31 * 864e5), null);
+  assert.equal(registrarReferido({ search: "", storage, ahora: 1000 + 31 * 864e5 }), null);
+});

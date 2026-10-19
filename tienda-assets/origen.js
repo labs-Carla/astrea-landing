@@ -14,6 +14,7 @@
  * No guarda datos personales: solo el nombre del canal y la fecha.
  */
 import { almacenSeguro } from "./compra.js";
+import { referidoActual } from "./referido.js";
 
 export const CLAVE_ORIGEN = "astrea-origen";
 const VIGENCIA_MS = 30 * 24 * 60 * 60 * 1000;
@@ -106,6 +107,7 @@ export function origenActual() {
 }
 
 if (typeof window !== "undefined" && typeof document !== "undefined") {
+  referidoActual();   // guarda el ?ref= de un enlace para invitar, en cualquier página de la tienda
   const src = origenActual();
   for (const a of document.querySelectorAll(`a[href^="${HOTMART}"]`)) a.href = conOrigen(a.href, src);
 }

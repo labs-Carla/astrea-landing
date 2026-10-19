@@ -13,6 +13,7 @@
  */
 import { apiBase, CHECKOUTS } from "./config.js";
 import { conOrigen, origenActual } from "./origen.js";
+import { referidoActual } from "./referido.js";
 import { PACK_TEMATICOS, reportePorSlug } from "./catalogo.js";
 import {
   validarDatos, cuerpoDeOrden, crearOrden, urlDeCheckout, referenciaDeOrden,
@@ -186,6 +187,9 @@ form.addEventListener("submit", async (e) => {
   estadoEnvio.textContent = "Registrando tu pedido…";
   const cuerpo = cuerpoDeOrden(leer(), reporte.slug, extra);
   if (cuerpo.acepta_correos) cuerpo.origen = origenActual();
+  // Referidos: solo la carta natal da el mes de Plus; el backend valida el código.
+  const ref = reporte.slug === "carta-natal" ? referidoActual() : null;
+  if (ref) cuerpo.ref = ref;
   const ordenes = sesion.leer(CLAVE_ORDENES) || {};
   try {
     const { ordenId, referencia } = await crearOrden({
