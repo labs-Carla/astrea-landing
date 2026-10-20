@@ -1,0 +1,111 @@
+/* Portada de Astrea. Se carga solo en /; reutiliza los tokens de Universo. */
+.portada-observatorio {
+  --marble: #F7F3EA;
+  --ivory: #FBF8F2;
+  --paper: #EFE8DA;
+  --ink: #2B2620;
+  --ink-soft: #5C5346;
+  --gold-deep: #8B6F47;
+  --hairline: #DDD3C1;
+  --hairline-strong: #C4B8A0;
+  --r-card: 16px;
+  --section-y: clamp(56px, 7vw, 96px);
+  background: var(--marble);
+}
+.portada-observatorio .site-header { background: rgba(247, 243, 234, .96); border-bottom: 1px solid var(--hairline); }
+.portada-observatorio .wordmark { color: var(--ink); font-size: 1.4rem; font-weight: 400; letter-spacing: .38em; }
+.portada-observatorio .site-nav a { color: var(--ink-soft); }
+.portada-observatorio .site-nav a:hover,
+.portada-observatorio .site-nav a[aria-current] { color: var(--gold-deep); }
+.portada-observatorio .btn { border-radius: 999px; min-height: 46px; }
+.portada-observatorio .btn--gold { background: var(--gold-deep); color: var(--ivory); border-color: var(--gold-deep); box-shadow: 0 5px 18px -12px var(--ink); }
+.portada-observatorio .btn--night { background: var(--ink); color: var(--ivory); }
+.portada-observatorio .btn--gold:hover { background: var(--ink); border-color: var(--ink); }
+.portada-observatorio .menu-movil > summary { color: var(--ink); border-color: var(--hairline-strong); border-radius: 50%; }
+.portada-observatorio .menu-movil__panel { background: var(--ivory); border-color: var(--hairline); box-shadow: var(--shadow-soft); }
+.portada-observatorio .menu-movil__panel a { color: var(--ink); border-color: var(--hairline); }
+.portada-observatorio .menu-movil__panel a[aria-current] { color: var(--gold-deep); }
+
+/* El observatorio ocupa la escena; el texto vive sobre una superficie tranquila. */
+.portada-observatorio .hero--tienda { position: relative; isolation: isolate; display: block; min-height: 0; padding: 74px 0 0; background: var(--marble); color: var(--ink); overflow: hidden; }
+.portada-observatorio .hero__grid { display: flex; flex-direction: column; gap: 0; position: relative; max-width: none; padding: 0; }
+.portada-observatorio .hero__figure { position: relative; order: -1; margin: 0; width: 100%; max-width: none; height: clamp(240px, 55vw, 420px); overflow: hidden; }
+.portada-observatorio .hero__figure img { width: 100%; height: 100%; object-fit: cover; object-position: center 14%; }
+.portada-observatorio .hero__figure::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 60%, var(--marble)); }
+.portada-observatorio .hero__copy { position: relative; z-index: 1; width: 100%; max-width: var(--shell); margin-inline: auto; padding: var(--s-5) var(--gutter) var(--s-7); }
+.portada-observatorio .hero__copy .eyebrow { color: var(--gold-deep); letter-spacing: .23em; font-size: .66rem; }
+.portada-observatorio .hero__copy .h-display { max-width: 12ch; font-size: clamp(2.8rem, 5vw, 4.8rem); line-height: 1.02; font-weight: 400; color: var(--ink); margin-bottom: var(--s-5); }
+.portada-observatorio .hero__copy .lede { max-width: 32rem; font-size: .95rem; line-height: 1.8; color: var(--ink-soft); margin-bottom: var(--s-5); }
+.portada-observatorio .hero__actions { gap: var(--s-4) var(--s-5); }
+.portada-observatorio .link-quiet--light { color: var(--gold-deep); }
+.portada-observatorio .hero--tienda + .confianza { margin-top: 0; border-radius: 0; box-shadow: none; border-top: 1px solid var(--hairline); padding-top: 0; background: var(--ivory); }
+.portada-observatorio .confianza__lista { padding-block: 28px; gap: var(--s-5); }
+.portada-observatorio .confianza__lista li { grid-template-columns: 32px 1fr; gap: var(--s-3); }
+.portada-observatorio .confianza__icono { width: 28px; height: 28px; stroke-width: 1.2; }
+.portada-observatorio .confianza__lista strong { font-size: 1.15rem; }
+.portada-observatorio .confianza__lista span { font-size: .78rem; line-height: 1.6; }
+
+/* Capítulos y catálogo, con el mismo papel que el workspace. */
+.portada-observatorio .capitulo--marmol,
+.portada-observatorio .capitulo--claro { background: var(--marble); }
+.portada-observatorio .capitulo--marmol::before,
+.portada-observatorio .capitulo--marmol::after,
+.portada-observatorio .capitulo--claro::before { display: none; }
+.portada-observatorio #reportes,
+.portada-observatorio #preguntas { background: var(--ivory); border-block: 1px solid var(--hairline); }
+.portada-observatorio .capitulo__titulo { font-size: clamp(2rem, 3.5vw, 3rem); }
+.portada-observatorio .capitulo__intro { font-size: .95rem; line-height: 1.8; }
+.portada-observatorio .capitulo__cabecera { margin-bottom: var(--s-6); }
+.portada-observatorio .paso { border: 1px solid var(--hairline); border-radius: var(--r-card); background: var(--ivory); padding: var(--s-5); }
+.portada-observatorio .paso__numero { font-family: var(--font-serif); color: var(--gold-deep); }
+.portada-observatorio .paso__titulo { font-weight: 400; }
+.portada-observatorio .paso p { font-size: .9rem; line-height: 1.75; }
+.portada-observatorio .tarjeta-portada { background: var(--ivory); box-shadow: none; }
+.portada-observatorio .tarjeta-portada:hover,
+.portada-observatorio .tarjeta-portada:focus-within { border-color: var(--gold); box-shadow: var(--shadow-soft); transform: translateY(-2px); }
+.portada-observatorio .tarjeta-portada__imagen { aspect-ratio: 4 / 3; }
+.portada-observatorio .tarjeta-portada__imagen img { object-position: center 26%; }
+.portada-observatorio .tarjeta-portada__cuerpo { padding: var(--s-5); }
+.portada-observatorio .tarjeta-portada__titulo { font-weight: 400; font-size: 1.6rem; }
+.portada-observatorio .tarjeta-portada__texto { font-size: .85rem; line-height: 1.7; }
+.portada-observatorio .tarjeta-portada__categoria { font-size: .62rem; }
+.portada-observatorio .accordion details { border-color: var(--hairline); }
+.portada-observatorio .pie { background: var(--paper); color: var(--ink-soft); border-color: var(--hairline); padding-top: var(--s-7); }
+.portada-observatorio .pie__grid { border-color: var(--hairline-strong); }
+.portada-observatorio .pie__marca .marca,
+.portada-observatorio .pie__marca .marca__texto,
+.portada-observatorio .pie__marca p { color: var(--ink); }
+.portada-observatorio .pie__marca p { font-size: 1.15rem; }
+.portada-observatorio .pie__titulo,
+.portada-observatorio .pie__legal a,
+.portada-observatorio .pie__marca small { color: var(--gold-deep); }
+.portada-observatorio .pie__columna a { color: var(--ink-soft); }
+.portada-observatorio .pie__columna a:hover { color: var(--gold-deep); }
+
+@media (min-width: 860px) {
+  .portada-observatorio .hero__grid { min-height: clamp(620px, 77vh, 790px); justify-content: center; }
+  .portada-observatorio .hero__figure { position: absolute; inset: 0; height: 100%; width: 100%; }
+  .portada-observatorio .hero__figure img { object-position: center top; }
+  .portada-observatorio .hero__figure::after { background: linear-gradient(to right, var(--marble) 4%, rgba(247,243,234,.96) 25%, rgba(247,243,234,.75) 43%, rgba(247,243,234,.06) 72%), linear-gradient(to top, var(--marble), transparent 25%); }
+  .portada-observatorio .hero__copy { padding-block: 64px 80px; }
+  .portada-observatorio .hero__copy .lede { max-width: 29rem; }
+  .portada-observatorio .hero__copy .h-display { max-width: 12ch; }
+  .portada-observatorio .catalogo-portada { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1180px) {
+  .portada-observatorio .hero__grid { min-height: min(78vh, 790px); }
+  .portada-observatorio .hero__copy .h-display { font-size: 4.8rem; }
+}
+@media (max-width: 599px) {
+  .portada-observatorio .hero__copy { padding-top: 0; }
+  .portada-observatorio .hero__copy .h-display { max-width: 13ch; }
+  .portada-observatorio .hero__copy .lede { font-size: .88rem; line-height: 1.75; }
+  .portada-observatorio .hero__actions { align-items: flex-start; flex-direction: column; }
+  .portada-observatorio .confianza__lista { gap: var(--s-5); }
+  .portada-observatorio .tarjeta-portada__imagen { aspect-ratio: auto; min-height: 210px; }
+  .portada-observatorio .tarjeta-portada__cuerpo { padding: var(--s-4); }
+  .portada-observatorio .tarjeta-portada__titulo { font-size: 1.3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portada-observatorio .tarjeta-portada:hover { transform: none; }
+}
