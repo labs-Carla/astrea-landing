@@ -1,4 +1,4 @@
-/* Portada de Astrea. Se carga solo en /; reutiliza los tokens de Universo. */
+/* Identidad del observatorio de Astrea para portada y Universo; reutiliza los tokens originales. */
 .portada-observatorio {
   --marble: #F7F3EA;
   --ivory: #FBF8F2;

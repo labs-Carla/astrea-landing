@@ -2,6 +2,8 @@
 
 Ilustración reutilizada de la variante aprobada para la conversación de Astrea: guía adulta con mapa celeste, esfera armilar, arquitectura griega y cielo astronómico. Fue creada con la herramienta integrada `image_gen`.
 
+La portada y `/universo` comparten estos recursos.
+
 Archivos web: `astrea-guia-960.webp` (94 KB) y `astrea-guia-1536.webp` (200 KB), codificados en WebP a calidad 0,88 desde el mismo original. El navegador elige el tamaño con `srcset`; el hero y el preload comparten sus candidatos.
 
 ## Prompt original
