@@ -270,9 +270,9 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   const html = PAGINAS["index.html"];
   assert.match(html, /<h1 class="h-display" id="hero-titulo">Tu carta natal, un lugar al que volver\.<\/h1>/);
   assert.ok(html.includes("Astrea es tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo."), "propuesta de valor en el hero");
-  assert.match(html, /observatorio\/astrea-guia-1536\.webp/, "observatorio con Astrea como guía");
+  assert.match(html, /observatorio\/astrea-estatua-1536\.webp/, "observatorio con Astrea como guía");
   assert.ok(html.includes('class="portada-observatorio"'), "tema editorial de la portada");
-  assert.match(html, /astrea-guia-960\.webp 960w/, "imagen adaptable para móvil");
+  assert.match(html, /astrea-estatua-960\.webp 960w/, "imagen adaptable para móvil");
   assert.match(html, /tienda-assets\/observatorio\.css/, "estilos del observatorio");
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
     if (ruta !== "index.html") assert.ok(!pagina.includes("observatorio.css"), `estilos aislados de ${ruta}`);

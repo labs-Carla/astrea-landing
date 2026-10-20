@@ -233,8 +233,8 @@ const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby=
 paginas["index.html"] = layout({
   ruta: "/",
   portada: true,
-  imagen: "/universo-assets/img/observatorio/astrea-guia-1536.webp",
-  preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-guia-1536.webp" imagesrcset="/universo-assets/img/observatorio/astrea-guia-960.webp 960w, /universo-assets/img/observatorio/astrea-guia-1536.webp 1536w" imagesizes="100vw">',
+  imagen: "/universo-assets/img/observatorio/astrea-estatua-1536.webp",
+  preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-estatua-1536.webp" imagesrcset="/universo-assets/img/observatorio/astrea-estatua-960.webp 960w, /universo-assets/img/observatorio/astrea-estatua-1536.webp 1536w" imagesizes="100vw">',
   titulo: "Astrea · Tu carta natal, un lugar al que volver",
   descripcion: "Tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo. Carta natal gratis, y lecturas personalizadas en PDF.",
   cuerpo: `<section class="hero hero--tienda" aria-labelledby="hero-titulo">
@@ -249,7 +249,7 @@ paginas["index.html"] = layout({
       </div>
     </div>
     <figure class="hero__figure">
-      <img src="/universo-assets/img/observatorio/astrea-guia-1536.webp" srcset="/universo-assets/img/observatorio/astrea-guia-960.webp 960w, /universo-assets/img/observatorio/astrea-guia-1536.webp 1536w" sizes="100vw" alt="Astrea, guía con un mapa celeste, junto a una esfera armilar en un observatorio griego" width="1536" height="1024" fetchpriority="high">
+      <img src="/universo-assets/img/observatorio/astrea-estatua-1536.webp" srcset="/universo-assets/img/observatorio/astrea-estatua-960.webp 960w, /universo-assets/img/observatorio/astrea-estatua-1536.webp 1536w" sizes="100vw" alt="Estatua de mármol de Astrea con un mapa celeste, junto a una esfera armilar en un observatorio griego" width="1536" height="1024" fetchpriority="high">
     </figure>
   </div>
 </section>

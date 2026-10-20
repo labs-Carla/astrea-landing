@@ -1,5 +1,12 @@
 # Observatorio de Astrea
 
+La portada y `/universo` usan la [variante de Astrea como estatua clásica](astrea-estatua.md), en `astrea-estatua-960.webp` y `astrea-estatua-1536.webp`. Ambos recursos usan WebP a calidad 0,88; `srcset` y el preload comparten sus candidatos.
+
+La variante anterior, con una figura humana, se conserva como referencia en `astrea-guia-960.webp` y `astrea-guia-1536.webp`.
+
+## Procedencia de la variante anterior
+
+
 Ilustración reutilizada de la variante aprobada para la conversación de Astrea: guía adulta con mapa celeste, esfera armilar, arquitectura griega y cielo astronómico. Fue creada con la herramienta integrada `image_gen`.
 
 La portada y `/universo` comparten estos recursos.
