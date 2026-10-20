@@ -270,8 +270,13 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   const html = PAGINAS["index.html"];
   assert.match(html, /<h1 class="h-display" id="hero-titulo">Tu carta natal, un lugar al que volver\.<\/h1>/);
   assert.ok(html.includes("Astrea es tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo."), "propuesta de valor en el hero");
-  assert.match(html, /hero-escultura\.webp/, "hero de producción");
-  assert.ok(!html.includes("hero__sky"), "hero sin el fondo de cielo: solo la ventana con la escultura");
+  assert.match(html, /observatorio\/astrea-estatua-1536\.webp/, "observatorio con Astrea como guía");
+  assert.ok(html.includes('class="portada-observatorio"'), "tema editorial de la portada");
+  assert.match(html, /astrea-estatua-960\.webp 960w/, "imagen adaptable para móvil");
+  assert.match(html, /tienda-assets\/observatorio\.css/, "estilos del observatorio");
+  for (const [ruta, pagina] of Object.entries(PAGINAS)) {
+    if (ruta !== "index.html") assert.ok(!pagina.includes("observatorio.css"), `estilos aislados de ${ruta}`);
+  }
   assert.match(html, /<a class="wordmark" href="\/"/, "header de producción");
   assert.match(html, /<a href="\/" aria-current="page">Inicio<\/a>/);
   assert.match(html, /href="\/reportes">Explorar reportes/);
@@ -292,7 +297,7 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   assert.ok(!/Historias reales/.test(html), "la sección de testimonios no se muestra sin testimonios reales");
   assert.match(html, /tiktok\.com\/@astrea\.charts/);
   assert.match(html, /fetchpriority="high"/, "el hero carga con prioridad");
-  assert.ok(!/escena|backdrop/.test(html), "sin la escena ni el vidrio del rediseño");
+  assert.ok(!html.includes('class="arch arch--framed"'), "la ilustración del hero no está encerrada en un arco");
 });
 
 test("Astrea.ai en pausa: la tienda vende lecturas y no menciona Astrea.ai ni su app", () => {
