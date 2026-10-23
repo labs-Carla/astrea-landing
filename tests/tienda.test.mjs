@@ -8,7 +8,7 @@ import {
   canalDe, referenciaDeOrden, rutaDeEstado, aniosDeRevolucion,
   validarRegalo, cuerpoDeRegalo, extraDeProducto, referenciaDePedido,
 } from "../tienda-assets/compra.js";
-import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
+import { REPORTES, estadoDe, MES_ASTREA_PLUS } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO, URL_APP_ENTRAR, URL_APP_CREAR } from "../tienda-assets/config.js";
 import { PAGINAS } from "../scripts/generar-tienda.mjs";
 const DISPONIBLES = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) === "disponible");
@@ -518,4 +518,14 @@ test("referido: ?ref= válido se guarda 30 días; uno con otra forma se ignora",
   assert.equal(registrarReferido({ search: "", storage, ahora: 2000 }), "ABCD2345");
   assert.equal(referidoVigente(JSON.parse(datos[CLAVE_REFERIDO]), 1000 + 31 * 864e5), null);
   assert.equal(registrarReferido({ search: "", storage, ahora: 1000 + 31 * 864e5 }), null);
+});
+
+
+test("la carta natal y el pack incluyen 1 mes de Astrea Plus; los temáticos no (2026-10-23)", () => {
+  for (const r of REPORTES) {
+    const ficha = PAGINAS[`reportes/${r.slug}.html`];
+    const lleva = r.slug === "carta-natal" || r.slug === "pack";
+    assert.equal(r.incluye.includes(MES_ASTREA_PLUS), lleva, r.slug);
+    if (ficha) assert.equal(ficha.includes(MES_ASTREA_PLUS), lleva, `ficha ${r.slug}`);
+  }
 });
