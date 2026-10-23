@@ -21,6 +21,8 @@
 .portada-observatorio .btn--gold { background: var(--gold-deep); color: var(--ivory); border-color: var(--gold-deep); box-shadow: 0 5px 18px -12px var(--ink); }
 .portada-observatorio .btn--night { background: var(--ink); color: var(--ivory); }
 .portada-observatorio .btn--gold:hover { background: var(--ink); border-color: var(--ink); }
+.portada-observatorio .site-header .header-tu-dia { color: var(--ink); border-color: var(--gold-deep); }
+.portada-observatorio .site-header .header-tu-dia:hover { color: var(--gold-deep); background: rgba(176, 138, 79, 0.08); }
 .portada-observatorio .menu-movil > summary { color: var(--ink); border-color: var(--hairline-strong); border-radius: 50%; }
 .portada-observatorio .menu-movil__panel { background: var(--ivory); border-color: var(--hairline); box-shadow: var(--shadow-soft); }
 .portada-observatorio .menu-movil__panel a { color: var(--ink); border-color: var(--hairline); }

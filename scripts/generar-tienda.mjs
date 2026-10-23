@@ -14,7 +14,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CONSENTIMIENTO } from "../tienda-assets/lista.js";
 import { REPORTES, ENTREGA, PACK_TEMATICOS, estadoDe, reportePorSlug } from "../tienda-assets/catalogo.js";
-import { CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
+import { CHECKOUTS, WHATSAPP, URL_APP_ENTRAR, URL_APP_CREAR } from "../tienda-assets/config.js";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITIO = "https://astrea-charts.site";
@@ -98,11 +98,13 @@ ${portada ? SPRITE_PORTADA : SPRITE}
       ${enlaces}
     </nav>
     <div class="header-acciones">
+      <a class="btn btn--ghost btn--sm header-tu-dia" href="${URL_APP_ENTRAR}">Tu día</a>
       <a class="btn btn--gold btn--sm" href="/reportes">Ver reportes</a>
       <details class="menu-movil">
         <summary aria-label="Abrir menú">${icono("i-menu")}</summary>
         <nav class="menu-movil__panel" aria-label="Menú">
           ${enlaces}
+          <a href="${URL_APP_ENTRAR}">Tu día</a>
         </nav>
       </details>
     </div>
@@ -245,7 +247,7 @@ paginas["index.html"] = layout({
       <p class="lede lede--light">Astrea es tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo. Calculada con astronomía real y leída con cuidado, para cada etapa de tu vida.</p>
       <div class="hero__actions">
         <a class="btn btn--gold" href="/reportes">Explorar reportes ${icono("i-arrow")}</a>
-        <a class="link-quiet link-quiet--light" href="/universo#generador">Genera tu carta gratis</a>
+        <a class="link-quiet link-quiet--light" href="${URL_APP_CREAR}">Tu horóscopo de hoy, gratis</a>
       </div>
     </div>
     <figure class="hero__figure">

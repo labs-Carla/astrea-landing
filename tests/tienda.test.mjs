@@ -9,7 +9,7 @@ import {
   validarRegalo, cuerpoDeRegalo, extraDeProducto, referenciaDePedido,
 } from "../tienda-assets/compra.js";
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
-import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
+import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO, URL_APP_ENTRAR, URL_APP_CREAR } from "../tienda-assets/config.js";
 import { PAGINAS } from "../scripts/generar-tienda.mjs";
 const DISPONIBLES = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) === "disponible");
 import { validarSuscripcion, cuerpoSuscripcion, mensajeDeSuscripcion, suscribir, CONSENTIMIENTO } from "../tienda-assets/lista.js";
@@ -280,7 +280,8 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   assert.match(html, /<a class="wordmark" href="\/"/, "header de producción");
   assert.match(html, /<a href="\/" aria-current="page">Inicio<\/a>/);
   assert.match(html, /href="\/reportes">Explorar reportes/);
-  assert.match(html, /href="\/universo#generador">Genera tu carta gratis/);
+  assert.match(html, /href="https:\/\/app\.astrea-charts\.site\/entrar\?modo=crear">Tu horóscopo de hoy, gratis/);
+  assert.ok(!html.includes("Genera tu carta gratis"), "un solo «gratis» en el hero");
   for (const t of ["Astronomía real", "Revisión humana", "Directo a tu correo", "Autoconocimiento"]) assert.ok(html.includes(`<strong>${t}</strong>`), t);
   assert.match(html, /24–48 horas después de la confirmación del pago/);
   for (const r of DISPONIBLES) {
@@ -300,14 +301,26 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   assert.ok(!html.includes('class="arch arch--framed"'), "la ilustración del hero no está encerrada en un arco");
 });
 
-test("Astrea.ai en pausa: la tienda vende lecturas y no menciona Astrea.ai ni su app", () => {
+test("app abierta (2026-10-22): «Tu día» en la cabecera y el menú móvil de cada página", () => {
+  for (const [ruta, pagina] of Object.entries(PAGINAS)) {
+    if (!pagina.includes('class="header-acciones"')) continue;
+    assert.ok(pagina.includes(`<a class="btn btn--ghost btn--sm header-tu-dia" href="${URL_APP_ENTRAR}">Tu día</a>`), `cabecera ${ruta}`);
+    assert.match(pagina, /<nav class="menu-movil__panel"[\s\S]*?href="https:\/\/app\.astrea-charts\.site\/entrar">Tu día<\/a>\s*<\/nav>/, `menú móvil ${ruta}`);
+  }
+});
+
+test("la tienda vende lecturas: no anuncia Astrea.ai, el chat ni planes (solo enlaza a la app)", () => {
   const html = PAGINAS["index.html"];
   assert.ok(!html.includes('id="planes"'), "la portada ya no tiene la sección de planes");
   assert.ok(!/USD 9,99\/mes|USD 19,99\/mes|Astrea Plus|Astrea Pro|Elegir Plus|Elegir Pro/.test(html), "sin precios ni llamados a Plus/Pro en la portada");
   assert.ok(!html.includes("tienda-assets/planes.js"));
   assert.ok(!html.includes('id="astrea-ai"'), "sin la sección de Astrea.ai");
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
-    assert.ok(!/Astrea\.ai|Astrea AI|app\.astrea-charts\.site|5 preguntas/i.test(pagina), ruta);
+    // La app solo se enlaza para entrar (horóscopo diario); nada de Astrea.ai ni preguntas.
+    assert.ok(!/Astrea\.ai|Astrea AI|5 preguntas/i.test(pagina), ruta);
+    for (const url of pagina.match(/https:\/\/app\.astrea-charts\.site[^"\s]*/g) || []) {
+      assert.ok(url === URL_APP_ENTRAR || url === URL_APP_CREAR, `${ruta}: ${url}`);
+    }
   }
   for (const r of REPORTES) assert.ok(!r.incluye.some((i) => /Astrea\.ai|preguntas/.test(i)), r.slug);
   // Nada de promesas que no existen, en todo el sitio generado.
