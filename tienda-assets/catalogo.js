@@ -26,6 +26,10 @@ const INCLUYE_COMUN = [
 
 export const ENTREGA = "Lo preparamos a partir de tu carta, calculada con astronomía real (Swiss Ephemeris), y lo revisamos antes de enviarlo. Te llega por correo, en PDF, entre 24 y 48 horas después de confirmar tu pago.";
 
+// La carta natal (y el pack, que la incluye) trae 1 mes de Astrea Plus (decisión 2026-10-23;
+// lo da el backend al entregarse: astrea-API domain/referidos.py). Los temáticos no.
+export const MES_ASTREA_PLUS = "1 mes de Astrea Plus para conversar sobre tu carta";
+
 export const REPORTES = [
   {
     slug: "carta-natal",
@@ -46,7 +50,7 @@ export const REPORTES = [
       "Los principales patrones de tu carta natal",
     ],
     idealPara: "Quienes quieren comprender su carta natal más allá de su signo solar.",
-    incluye: ["Más de 20 páginas", "Rueda natal, planetas, casas y aspectos", "Revisión humana antes del envío", ...INCLUYE_COMUN],
+    incluye: ["Más de 20 páginas", "Rueda natal, planetas, casas y aspectos", "Revisión humana antes del envío", MES_ASTREA_PLUS, ...INCLUYE_COMUN],
     datos: ["Nombre para la lectura", "Fecha de nacimiento", "Hora de nacimiento (la más aproximada que tengas)", "Ciudad y país de nacimiento", "Correo de entrega"],
   },
   {
@@ -67,7 +71,7 @@ export const REPORTES = [
       "Amor y vínculos, vocación y propósito, dinero y abundancia o patrones y transformación",
     ],
     idealPara: "Quienes quieren su carta natal y, además, mirar a fondo dos áreas concretas de su vida.",
-    incluye: ["Carta natal completa (más de 20 páginas)", "2 reportes temáticos a elección", "Revisión humana antes del envío", "Tres PDF por correo en 24–48 h"],
+    incluye: ["Carta natal completa (más de 20 páginas)", "2 reportes temáticos a elección", "Revisión humana antes del envío", MES_ASTREA_PLUS, "Tres PDF por correo en 24–48 h"],
     datos: ["Nombre para la lectura", "Fecha, hora y lugar de nacimiento", "Las 2 lecturas temáticas que eliges", "Correo de entrega"],
   },
   {
