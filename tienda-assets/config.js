@@ -46,3 +46,8 @@ export const CHECKOUTS = {
 export const ESTADO_PEDIDO_HABILITADO = true;
 
 export const WHATSAPP = "https://wa.me/573132137456";
+
+// Astrea app (beta abierta 2026-10-22): «Tu día» de la cabecera entra (o vuelve) a la app;
+// el enlace del hero abre directo «Crear cuenta».
+export const URL_APP_ENTRAR = "https://app.astrea-charts.site/entrar";
+export const URL_APP_CREAR = "https://app.astrea-charts.site/entrar?modo=crear";

@@ -12,6 +12,9 @@
 .nav-secundaria:hover { color: var(--gold-light); }
 .header-acciones { display: flex; align-items: center; gap: var(--s-4); }
 .header-acciones .nav-secundaria { display: none; }
+/* «Tu día» (entrada a la app): botón fantasma sobre el header oscuro; en móvil vive en el menú. */
+.site-header--tienda .header-tu-dia { display: none; color: var(--ink-on-dark); border-color: var(--hairline-dark); }
+.site-header--tienda .header-tu-dia:hover { color: var(--gold-light); border-color: var(--gold); background: transparent; }
 
 .menu-movil { position: relative; }
 .menu-movil > summary {
@@ -216,6 +219,7 @@
 @media (min-width: 860px) {
   .menu-movil { display: none; }
   .header-acciones .nav-secundaria { display: inline; }
+  .site-header--tienda .header-tu-dia { display: inline-flex; }
   .catalogo { grid-template-columns: repeat(3, 1fr); }
   .detalle { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: start; }
   .detalle__lateral { position: sticky; top: 96px; display: grid; gap: var(--s-5); }
