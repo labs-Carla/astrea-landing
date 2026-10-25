@@ -1,0 +1,114 @@
+{
+  "herramienta": "image_gen integrada",
+  "fecha": "2026-10-25",
+  "imagenes": [
+    {
+      "signo": "aries",
+      "archivos": [
+        "aries-320.webp",
+        "aries-640.webp",
+        "aries-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of ARIES: one majestic ram, full body in three-quarter profile, beautifully curled horns, standing on a small rocky ground. Centered standalone subject occupying the middle 70 percent, all horns and hooves fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "tauro",
+      "archivos": [
+        "tauro-320.webp",
+        "tauro-640.webp",
+        "tauro-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of TAURUS: one strong majestic bull, full body in three-quarter profile, curved horns, standing on a small rocky ground. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "geminis",
+      "archivos": [
+        "geminis-320.webp",
+        "geminis-640.webp",
+        "geminis-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of GEMINI: two adult classical Greek twins, brother and sister, in flowing modest ivory tunics, full body, standing side by side in a graceful mirrored pose, facing slightly toward one another. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "cancer",
+      "archivos": [
+        "cancer-320.webp",
+        "cancer-640.webp",
+        "cancer-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of CANCER: one exquisitely detailed crab viewed from above, two distinct claws and eight walking legs, symmetric natural anatomy. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "leo",
+      "archivos": [
+        "leo-320.webp",
+        "leo-640.webp",
+        "leo-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of LEO: one majestic male lion, full body in three-quarter profile, flowing detailed mane, standing calmly on a small rocky ground. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "virgo",
+      "archivos": [
+        "virgo-320.webp",
+        "virgo-640.webp",
+        "virgo-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of VIRGO: one graceful adult classical Greek maiden in a flowing modest tunic, full body, holding a small sheaf of wheat, standing in a serene contrapposto pose. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "libra",
+      "archivos": [
+        "libra-320.webp",
+        "libra-640.webp",
+        "libra-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of LIBRA: one exquisite classical brass balance scale with two identical empty suspended pans perfectly balanced, elegant pedestal and fine chains, symmetric composition. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "escorpio",
+      "archivos": [
+        "escorpio-320.webp",
+        "escorpio-640.webp",
+        "escorpio-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of SCORPIO: one exquisitely detailed scorpion viewed from above, two distinct pincers and eight walking legs, long segmented tail curving elegantly upward with one stinger, natural coherent anatomy. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "sagitario",
+      "archivos": [
+        "sagitario-320.webp",
+        "sagitario-640.webp",
+        "sagitario-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of SAGITTARIUS: one classical adult male centaur archer, full body in side profile, modestly draped human torso joining naturally at the waist to a horse body with four horse legs, holding one elegant bow with an arrow pointed diagonally upward, poised calmly on small rocky ground. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "capricornio",
+      "archivos": [
+        "capricornio-320.webp",
+        "capricornio-640.webp",
+        "capricornio-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of CAPRICORN: one mythological sea-goat, goat head with long curved horns and two front hooved legs, back half transforms gracefully into a single curled fish tail with scales, classical zodiac creature above small engraved waves. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "acuario",
+      "archivos": [
+        "acuario-320.webp",
+        "acuario-640.webp",
+        "acuario-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of AQUARIUS: one elegant ancient Greek amphora tipped diagonally and pouring a long graceful ribbon of water into small engraved waves, a botanical ornament engraved on the vessel, centered standalone object. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    },
+    {
+      "signo": "piscis",
+      "archivos": [
+        "piscis-320.webp",
+        "piscis-640.webp",
+        "piscis-960.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: square zodiac illustration for the Astrea weekly horoscope website, reused as a small editorial card illustration and a large sign-page image. Create a refined antique copperplate engraving of PISCES: exactly two graceful fish swimming in opposite directions, a balanced circular composition with their curved bodies forming a loose yin-yang arrangement, exquisite engraved scales, flowing fins, no enclosure. Centered standalone subject occupying the middle 70 percent, all body parts fully visible with generous blank margins. Warm uniform ivory paper background #F7F3EA with extremely subtle paper grain. Very fine sepia and antique gold etched lines, delicate crosshatching, elegant 19th-century celestial atlas aesthetic, anatomically coherent and recognizable. Small sparse engraved stars surrounding the animal, restrained ornament. Flat illustration, no 3D sculpture, no photography, no modern gradient, no vignette. No lettering, no numerals, no zodiac glyph, no border, no frame, no watermark. Square image."
+    }
+  ]
+}
