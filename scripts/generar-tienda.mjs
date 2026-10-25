@@ -120,7 +120,7 @@ ${SPRITE_PORTADA}
 
 <header class="site-header site-header--tienda">
   <div class="site-header__inner">
-    <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__sello" aria-hidden="true">${emblemaAstrea()}</span><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
+    <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
     <nav class="site-nav" aria-label="Principal">
       ${enlaces}
     </nav>
