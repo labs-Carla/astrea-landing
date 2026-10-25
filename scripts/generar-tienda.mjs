@@ -298,12 +298,12 @@ paginas["index.html"] = layout({
 <section class="cielo-semana" id="cielo-semana" aria-labelledby="cielo-semana-titulo" data-cielo-semana>
   <div class="shell cielo-semana__grid">
     <div class="cielo-semana__texto">
-      <p class="alm-eyebrow" data-cs="eyebrow">Almanaque semanal · cada lunes</p>
+      <p class="alm-eyebrow" data-cs="eyebrow">Horóscopo semanal · cada lunes</p>
       <h2 class="alm-h2" id="cielo-semana-titulo">Tu semana,<br>a la luz del cielo</h2>
       <p class="alm-rango" data-cs="rango"></p>
       <p class="cielo-semana__titulo" data-cs="titulo"></p>
       <p class="alm-lede" data-cs="resumen">Una pausa para mirar hacia arriba y volver a ti. Cada lunes, los movimientos del cielo y una lectura para acompañar tu semana.</p>
-      <a class="btn btn--gold" href="/blog/horoscopo-semanal" data-cs="url">Abrir el almanaque <span aria-hidden="true">↗</span></a>
+      <a class="btn btn--gold" href="/blog/horoscopo-semanal" data-cs="url">Leer mi horóscopo <span aria-hidden="true">↗</span></a>
     </div>
     <figure class="cielo-semana__rueda"><p class="cielo-semana__mapa">El mapa de estos días</p><div data-cs="rueda">${ruedaVacia()}</div><figcaption>Un cielo compartido.<br>Doce formas de vivirlo.</figcaption></figure>
   </div>

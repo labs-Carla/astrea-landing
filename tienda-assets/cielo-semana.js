@@ -11,7 +11,7 @@ async function cargar() {
   if (!respuesta.ok) return;
   const semana = await respuesta.json();
   const campo = (nombre) => raiz.querySelector(`[data-cs="${nombre}"]`);
-  campo("eyebrow").textContent = `Almanaque semanal · Semana ${semana.numero}`;
+  campo("eyebrow").textContent = `Horóscopo semanal · Semana ${semana.numero}`;
   campo("rango").textContent = semana.rango;
   campo("titulo").textContent = semana.titulo;
   campo("resumen").textContent = semana.resumen;
