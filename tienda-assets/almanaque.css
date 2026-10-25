@@ -1,0 +1,299 @@
+/* ==========================================================================
+   Astrea · Almanaque — el horóscopo semanal del blog y su banda en la portada.
+   Se apoya en los tokens de universo.css y en la identidad de observatorio.css:
+   mármol, dorado profundo, arcos de templo y la rueda del cielo dibujada con
+   las posiciones reales de la semana (Swiss Ephemeris).
+   ========================================================================== */
+
+.glifo,
+.rueda text { font-family: 'Noto Sans Symbols', var(--font-serif); font-weight: 400; }
+
+/* ---------- Rueda del cielo ---------- */
+.rueda { display: block; width: 100%; height: auto; overflow: visible; }
+.rueda__fondo { fill: var(--ivory); }
+.rueda__aro { fill: none; stroke: var(--hairline-strong); stroke-width: 1; }
+.rueda__aro--fino { stroke: var(--hairline); stroke-width: .8; }
+.rueda__division { stroke: var(--hairline-strong); stroke-width: .8; }
+.rueda__marca { stroke: var(--hairline-strong); stroke-width: .7; }
+.rueda__signo { fill: var(--gold-deep); font-size: 15px; }
+.rueda__planeta { fill: var(--ink); font-size: 15px; }
+.rueda__retro { fill: var(--gold-deep); font: 600 6.5px var(--font-sans); letter-spacing: .04em; }
+.rueda__marca-planeta { stroke: var(--ink); stroke-width: 1; }
+.rueda__punto { fill: var(--gold-deep); }
+.rueda__aspecto { stroke: var(--gold); stroke-width: 1; stroke-dasharray: 2 3; }
+.rueda__aspecto--tenso { stroke: var(--gold-deep); stroke-width: 1.2; stroke-dasharray: none; }
+.rueda__estrella { fill: var(--gold); }
+
+.rueda--noche .rueda__fondo { fill: rgba(255, 255, 255, .02); }
+.rueda--noche .rueda__aro,
+.rueda--noche .rueda__division,
+.rueda--noche .rueda__marca { stroke: rgba(212, 177, 114, .45); }
+.rueda--noche .rueda__aro--fino { stroke: rgba(212, 177, 114, .22); }
+.rueda--noche .rueda__signo,
+.rueda--noche .rueda__retro { fill: var(--gold-light); }
+.rueda--noche .rueda__planeta { fill: var(--ink-on-dark); }
+.rueda--noche .rueda__marca-planeta { stroke: var(--ink-on-dark); }
+.rueda--noche .rueda__punto,
+.rueda--noche .rueda__estrella { fill: var(--gold-light); }
+.rueda--noche .rueda__aspecto { stroke: rgba(212, 177, 114, .55); }
+.rueda--noche .rueda__aspecto--tenso { stroke: var(--gold-light); }
+
+/* ---------- Piezas comunes ---------- */
+.alm-eyebrow { display: flex; align-items: center; gap: .9em; margin: 0; font: 600 .66rem/1.4 var(--font-sans); letter-spacing: .23em; text-transform: uppercase; color: var(--gold-deep); }
+.alm-eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; flex: none; }
+.alm-h2 { margin: 0; font-family: var(--font-serif); font-weight: 400; font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.05; color: var(--ink); text-wrap: balance; }
+.alm-rango { margin: 0; font-family: var(--font-serif); font-style: italic; font-size: 1.3rem; color: var(--gold-deep); }
+.alm-lede { margin: 0; max-width: 34rem; font-size: .95rem; line-height: 1.8; color: var(--ink-soft); }
+.alm-shell { max-width: var(--shell); margin-inline: auto; padding-inline: var(--gutter); }
+.alm-ornamento { display: flex; align-items: center; justify-content: center; gap: var(--s-4); color: var(--gold); font-size: .8rem; }
+.alm-ornamento::before,
+.alm-ornamento::after { content: ""; height: 1px; width: min(120px, 22vw); background: linear-gradient(to var(--lado, right), transparent, var(--hairline-strong)); }
+.alm-ornamento::after { --lado: left; }
+
+/* ---------- Página: cuerpo ---------- */
+.blog-almanaque main { padding-top: 0; }
+.blog-almanaque [id] { scroll-margin-top: 116px; }
+
+/* Cabecera editorial: ocupa su espacio y acompaña la lectura al desplazarse. */
+.blog-almanaque .alm-header { position: sticky; inset: auto; top: 0; background: rgba(247, 243, 234, .97); border-top: 3px solid var(--gold-deep); border-bottom: 1px solid var(--hairline-strong); backdrop-filter: blur(12px); }
+.alm-header .site-header__inner { min-height: 88px; gap: var(--s-5); padding-block: var(--s-3); }
+.blog-almanaque .alm-marca { display: inline-flex; align-items: center; gap: 12px; flex: none; }
+.alm-marca__sello { display: grid; place-items: center; width: 40px; height: 46px; border: 1px solid var(--gold-deep); border-radius: 50% 50% 2px 2px; outline: 1px solid var(--hairline); outline-offset: 3px; color: var(--gold-deep); }
+.alm-marca__sello svg { display: block; width: 32px; height: 36px; }
+.alm-marca__texto { display: grid; gap: 7px; font-size: 1.45rem; line-height: 1; letter-spacing: .3em; }
+.alm-marca__texto small { font: 500 .55rem/1.2 var(--font-sans); letter-spacing: .17em; text-transform: uppercase; color: var(--gold-deep); }
+.blog-almanaque .site-nav { display: none; align-items: center; gap: var(--s-5); }
+.alm-header .site-nav a { position: relative; display: grid; place-items: center; min-height: 44px; white-space: nowrap; font-size: .82rem; }
+.alm-header .site-nav a[aria-current]::after { content: ""; position: absolute; bottom: 1px; left: 30%; right: 30%; height: 1px; background: var(--gold-deep); }
+.alm-header .header-acciones { gap: var(--s-3); }
+.alm-header .alm-header__cta { display: none; box-shadow: none; border-radius: 3px; gap: var(--s-3); min-height: 44px; }
+.blog-almanaque .menu-movil { display: block; }
+.alm-header .menu-movil > summary { width: auto; min-width: 88px; padding-inline: 12px; gap: 10px; border-color: var(--hairline-strong); border-radius: 3px; color: var(--gold-deep); font-size: .75rem; }
+.alm-header .menu-movil[open] > summary { background: var(--ivory); }
+.alm-header .menu-movil__panel { width: min(320px, calc(100vw - 2 * var(--gutter))); min-width: 0; background: var(--ivory); border-color: var(--hairline-strong); border-radius: 3px; }
+.alm-header .menu-movil__panel a { color: var(--ink-soft); }
+.alm-header .menu-movil__panel a[aria-current] { color: var(--gold-deep); background: var(--marble); }
+.alm-header a:focus-visible, .alm-header summary:focus-visible { outline: 2px solid var(--gold-deep); outline-offset: 4px; }
+
+/* Índice de lectura: todos los signos a mano antes de entrar al almanaque. */
+.alm-selector { padding-block: var(--s-5) var(--s-3); background: var(--ivory); border-bottom: 1px solid var(--hairline-strong); }
+.alm-selector__cabecera { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-3); }
+.alm-selector__etiqueta { margin: 0; font: italic 1.35rem/1.2 var(--font-serif); color: var(--ink); }
+.alm-selector__ayuda { margin: 0; font-size: .75rem; color: var(--ink-soft); }
+.alm-selector__desliza { width: 100%; margin-top: 4px; font: 500 .58rem/1.4 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--gold-deep); }
+.alm-selector__lista { display: grid; grid-auto-flow: column; grid-auto-columns: 86px; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: var(--hairline-strong) transparent; padding: 6px 4px 12px; margin: 0 -4px; list-style: none; }
+.alm-selector__lista a { display: grid; justify-items: center; align-content: start; gap: 10px; min-height: 110px; padding: 4px 2px; color: var(--ink-soft); text-decoration: none; font: 400 .95rem/1.2 var(--font-serif); scroll-snap-align: center; }
+.alm-medallon { position: relative; display: grid; place-items: center; flex: none; width: 66px; height: 76px; padding: 6px 3px 3px; border: 1px solid var(--hairline-strong); border-radius: 50% 50% 3px 3px; background: var(--marble); transition: border-color .2s var(--ease), background-color .2s var(--ease), transform .2s var(--ease); }
+.alm-medallon::before { content: ""; position: absolute; inset: 3px; border: 1px solid var(--hairline); border-radius: inherit; pointer-events: none; }
+.alm-medallon img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; mix-blend-mode: multiply; mask-image: radial-gradient(ellipse, #000 50%, transparent 75%); }
+a:hover .alm-medallon, a:focus-visible .alm-medallon { border-color: var(--gold-deep); transform: translateY(-2px); background: #f0e5d1; }
+a[aria-current="page"] .alm-medallon { background: #eadcc1; border-color: var(--gold-deep); box-shadow: 0 0 0 2px var(--ivory), 0 0 0 3px var(--hairline-strong); }
+a[aria-current="page"] .alm-medallon::after { content: "✦"; position: absolute; bottom: -7px; left: calc(50% - 7px); width: 14px; font-size: 12px; line-height: 14px; text-align: center; color: var(--gold-deep); background: var(--ivory); }
+.alm-selector__lista a[aria-current="page"] { color: var(--gold-deep); }
+.alm-selector a:focus-visible, .arco:focus-visible, .zodiaco a:focus-visible, .alm-volver:focus-visible { outline: 2px solid var(--gold-deep); outline-offset: 3px; }
+.alm-volver { display: inline-flex; align-items: center; gap: var(--s-2); width: fit-content; color: var(--gold-deep); font-size: .8rem; text-underline-offset: 4px; }
+
+.alm-portada { position: relative; background: radial-gradient(ellipse 70% 80% at 78% 45%, var(--ivory), var(--marble) 70%); border-bottom: 1px solid var(--hairline); }
+.alm-portada__grid { display: grid; gap: var(--s-7); align-items: center; padding-block: var(--s-7) calc(var(--s-8) + var(--s-6)); }
+.alm-portada__texto { display: grid; gap: var(--s-4); justify-items: start; }
+.alm-titulo { margin: var(--s-2) 0 0; max-width: 15ch; font-family: var(--font-serif); font-weight: 400; font-size: clamp(2.5rem, 4.8vw, 4.4rem); line-height: 1.02; letter-spacing: -.01em; color: var(--ink); text-wrap: balance; }
+.alm-portada .btn { margin-top: var(--s-2); }
+.alm-rueda { position: relative; justify-self: center; width: min(100%, 470px); margin: 0; }
+.alm-rueda figcaption { margin-top: var(--s-3); text-align: center; font-size: .72rem; letter-spacing: .06em; color: var(--ink-soft); }
+
+/* Los siete días: una regla de almanaque que monta sobre la portada. */
+.alm-dias { position: relative; z-index: 1; margin-top: calc(-1 * var(--s-8)); }
+.alm-dias ol { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; background: var(--ivory); border: 1px solid var(--hairline-strong); border-radius: var(--r-card); box-shadow: var(--shadow-soft); overflow: hidden; }
+.dia { display: flex; flex-direction: column; gap: 6px; min-height: 168px; padding: var(--s-4) var(--s-3) var(--s-4) var(--s-4); border-left: 1px solid var(--hairline); }
+.dia:first-child { border-left: 0; }
+.dia__fecha { display: grid; gap: 6px; }
+.dia__nombre { font: 600 .62rem/1 var(--font-sans); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-soft); }
+.dia__numero { font-family: var(--font-serif); font-size: 2.3rem; line-height: 1; color: var(--ink); }
+.dia--quieto .dia__numero { color: var(--hairline-strong); }
+.dia--activo { background: linear-gradient(to bottom, rgba(176, 138, 79, .07), transparent 70%); }
+.dia__evento { display: grid; gap: 3px; margin-top: auto; padding-top: var(--s-3); }
+.dia__evento + .dia__evento { margin-top: var(--s-2); border-top: 1px solid var(--hairline); }
+.dia__formula { display: flex; align-items: center; gap: 6px; font-size: 1.05rem; letter-spacing: .06em; color: var(--gold-deep); }
+.dia__texto { font-size: .74rem; line-height: 1.5; color: var(--ink-soft); }
+.dia__texto::first-letter { text-transform: uppercase; }
+.luna { width: 15px; height: 15px; flex: none; }
+.luna circle { fill: var(--ivory); stroke: var(--gold-deep); stroke-width: 1; }
+.luna path,
+.luna--nueva circle { fill: var(--gold-deep); }
+
+/* El cielo de la semana: texto de lectura en serif, con capitular. */
+.alm-cielo { display: grid; gap: var(--s-6); padding-block: var(--section-y); }
+.alm-cielo__cabecera { display: grid; gap: var(--s-4); align-content: start; }
+.alm-nota { margin: 0; max-width: 22rem; font-size: .8rem; line-height: 1.7; color: var(--ink-soft); }
+.prosa { max-width: 40rem; }
+.prosa p { margin: 0 0 1.05em; font-family: var(--font-serif); font-size: clamp(1.18rem, 1.1rem + .3vw, 1.32rem); line-height: 1.62; color: var(--ink); }
+.prosa p:first-child::first-letter { float: left; margin: .06em .12em 0 0; font-size: 4.3em; line-height: .82; font-weight: 500; color: var(--gold-deep); }
+
+/* Los doce signos, cada uno bajo su arco. */
+.alm-signos { padding-block: var(--section-y); background: var(--ivory); border-block: 1px solid var(--hairline); }
+.alm-signos__cabecera { display: grid; gap: var(--s-4); justify-items: center; text-align: center; }
+.alm-signos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6) var(--s-4); margin: var(--s-7) 0 0; padding: 0; list-style: none; }
+.arco { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; padding: var(--s-6) var(--s-4) var(--s-5); text-align: center; color: inherit; text-decoration: none; background: var(--marble); border: 1px solid var(--hairline-strong); border-radius: 999px 999px var(--r-card) var(--r-card); transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s var(--ease); }
+.arco::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--hairline); border-radius: inherit; pointer-events: none; }
+.arco:hover,
+.arco:focus-visible { transform: translateY(-4px); border-color: var(--gold); box-shadow: var(--shadow-soft); }
+.arco__numero { font-family: var(--font-serif); font-size: .85rem; letter-spacing: .2em; color: var(--gold-deep); }
+.arco__glifo { margin-top: var(--s-1); font-size: 2.5rem; line-height: 1.15; color: var(--gold-deep); }
+.arco__imagen, .arco-mayor__imagen { display: block; height: auto; aspect-ratio: 1; object-fit: contain; mix-blend-mode: multiply; mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent), linear-gradient(to bottom, transparent, #000 9%, #000 91%, transparent); mask-composite: intersect; }
+.arco__imagen { width: 100%; max-width: 180px; margin-block: var(--s-2); }
+.arco--ilustrado { padding-top: var(--s-5); }
+.arco__simbolo { display: inline-block; margin-right: .35em; font-size: .65em; vertical-align: .08em; color: var(--gold-deep); }
+.arco__nombre { font-family: var(--font-serif); font-size: 1.55rem; line-height: 1.1; color: var(--ink); }
+.arco__fechas { font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
+.arco__titulo { margin-top: var(--s-3); padding-top: var(--s-3); border-top: 1px solid var(--hairline); font-family: var(--font-serif); font-style: italic; font-size: 1.06rem; line-height: 1.35; color: var(--ink-soft); }
+.arco__leer { display: flex; align-items: center; gap: var(--s-2); margin-top: auto; padding-top: var(--s-5); font: 600 .62rem/1.5 var(--font-sans); letter-spacing: .08em; color: var(--gold-deep); }
+.arco__leer > span { font-size: 1rem; }
+
+/* Llamado a la carta natal: el cielo de noche. */
+.alm-cta { position: relative; isolation: isolate; overflow: hidden; padding-block: var(--section-y); background: var(--night-deep); color: var(--ink-on-dark); text-align: center; }
+.alm-cta::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .55; background:
+  radial-gradient(1px 1px at 12% 22%, #fff 50%, transparent), radial-gradient(1px 1px at 28% 68%, #fff 50%, transparent),
+  radial-gradient(1.4px 1.4px at 46% 18%, var(--gold-light) 50%, transparent), radial-gradient(1px 1px at 63% 74%, #fff 50%, transparent),
+  radial-gradient(1px 1px at 78% 30%, #fff 50%, transparent), radial-gradient(1.4px 1.4px at 90% 62%, var(--gold-light) 50%, transparent),
+  radial-gradient(1px 1px at 6% 82%, #fff 50%, transparent), radial-gradient(1px 1px at 54% 46%, #fff 50%, transparent); }
+.alm-cta__arco { display: grid; gap: var(--s-4); justify-items: center; max-width: 620px; margin-inline: auto; padding: var(--s-8) var(--s-6) var(--s-6); border: 1px solid var(--hairline-dark); border-bottom: 0; border-radius: 999px 999px 0 0; }
+.alm-cta .alm-eyebrow { color: var(--gold-light); }
+.alm-cta h2 { margin: 0; font-family: var(--font-serif); font-weight: 400; font-size: clamp(1.9rem, 3.4vw, 2.7rem); line-height: 1.1; color: var(--ink-on-dark); text-wrap: balance; }
+.alm-cta p { margin: 0; max-width: 30rem; font-size: .92rem; line-height: 1.75; color: var(--ink-on-dark-soft); }
+.alm-cta .btn--gold { background: var(--gold-light); color: var(--night); border-color: var(--gold-light); }
+
+.alm-pie { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-3); padding-block: var(--s-6); font-size: .85rem; }
+.alm-pie a { color: var(--gold-deep); }
+
+/* ---------- Página de un signo ---------- */
+.alm-portada--signo .alm-portada__grid { padding-bottom: var(--s-8); }
+.arco-mayor { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-2); justify-self: center; width: min(78vw, 300px); aspect-ratio: 3 / 4; text-align: center; background: var(--ivory); border: 1px solid var(--hairline-strong); border-radius: 999px 999px var(--r-card) var(--r-card); box-shadow: var(--shadow-soft); }
+.arco-mayor::before { content: ""; position: absolute; inset: 9px; border: 1px solid var(--hairline); border-radius: inherit; }
+.arco-mayor__glifo { font-size: clamp(5rem, 14vw, 7.5rem); line-height: 1.1; color: var(--gold-deep); }
+.arco-mayor--ilustrado { width: min(78vw, 360px); padding: var(--s-7) var(--s-4) var(--s-5); gap: var(--s-3); }
+.arco-mayor__imagen { width: 90%; max-width: 300px; }
+.arco-mayor .arco__nombre { font-size: 2rem; }
+.casas { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: 0; padding: 0; list-style: none; }
+.casas li { display: flex; align-items: baseline; gap: 6px; padding: 5px 12px; font-size: .8rem; color: var(--ink-soft); border: 1px solid var(--hairline-strong); border-radius: 999px; background: var(--ivory); }
+.casas b { font-family: var(--font-serif); font-size: .95rem; font-weight: 500; color: var(--gold-deep); }
+.alm-lectura { display: grid; justify-items: center; gap: var(--s-7); padding-block: var(--section-y) var(--s-8); }
+.alm-lectura .prosa { width: 100%; max-width: 38rem; }
+.alm-lectura__texto { display: grid; gap: var(--s-5); min-width: 0; }
+.alm-lectura__margen { display: grid; align-content: start; justify-items: center; gap: var(--s-6); width: 100%; min-width: 0; }
+.alm-lectura__margen .alm-clave { justify-items: center; padding: var(--s-5) 0; }
+.alm-clave .alm-eyebrow { font-size: .6rem; }
+.alm-clave .alm-eyebrow::before { display: none; }
+.alm-clave { display: grid; gap: var(--s-4); max-width: 34rem; margin: 0; text-align: center; }
+.alm-clave blockquote { margin: 0; font-family: var(--font-serif); font-style: italic; font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.15rem); line-height: 1.3; color: var(--ink); text-wrap: balance; }
+.alm-pregunta { display: grid; gap: var(--s-3); justify-items: center; width: 100%; max-width: 30rem; padding: var(--s-8) var(--s-6) var(--s-6); text-align: center; background: var(--ivory); border: 1px solid var(--hairline-strong); border-radius: 999px 999px var(--r-card) var(--r-card); }
+.alm-pregunta .alm-eyebrow::before { display: none; }
+.alm-pregunta p:not(.alm-eyebrow) { margin: 0; font-family: var(--font-serif); font-size: clamp(1.35rem, 1.2rem + .6vw, 1.7rem); line-height: 1.35; color: var(--ink); text-wrap: balance; }
+.zodiaco { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); margin: var(--s-6) 0 0; padding: 0; list-style: none; }
+.zodiaco a { display: grid; justify-items: center; gap: 4px; padding: var(--s-3) var(--s-1); color: var(--ink-soft); text-decoration: none; font-size: .78rem; border-radius: var(--r-card); transition: background-color .25s var(--ease), color .25s var(--ease); }
+.zodiaco .glifo { display: grid; place-items: center; width: 52px; height: 52px; font-size: 1.45rem; color: var(--gold-deep); border: 1px solid var(--hairline-strong); border-radius: 50%; background: var(--marble); transition: background-color .25s var(--ease), color .25s var(--ease); }
+.zodiaco a:hover .glifo,
+.zodiaco a[aria-current] .glifo { background: var(--gold-deep); color: var(--ivory); border-color: var(--gold-deep); }
+.zodiaco a[aria-current] { color: var(--ink); }
+.zodiaco--ilustrado { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.zodiaco--ilustrado a { gap: 12px; font: 400 1rem/1.2 var(--font-serif); }
+
+/* ---------- Índice del blog ---------- */
+.alm-semanas { margin: var(--s-7) 0 0; padding: 0; list-style: none; border-top: 1px solid var(--hairline-strong); }
+.alm-semanas a { display: grid; grid-template-columns: 5.5rem 1fr auto; gap: var(--s-5); align-items: center; padding: var(--s-5) 0; color: inherit; text-decoration: none; border-bottom: 1px solid var(--hairline); }
+.alm-semanas a:hover .alm-semanas__titulo { color: var(--gold-deep); }
+.alm-semanas__numero { font-family: var(--font-serif); font-size: 2.4rem; line-height: 1; color: var(--gold-deep); }
+.alm-semanas__numero small { display: block; font: 600 .58rem var(--font-sans); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-soft); }
+.alm-semanas__titulo { font-family: var(--font-serif); font-size: 1.5rem; line-height: 1.2; transition: color .25s var(--ease); }
+.alm-semanas__rango { display: block; margin-top: 4px; font-size: .8rem; color: var(--ink-soft); }
+.alm-semanas__flecha { color: var(--gold-deep); font-size: 1.2rem; }
+
+/* ---------- Portada de la tienda: «El cielo de esta semana» ---------- */
+.cielo-semana { position: relative; isolation: isolate; overflow: hidden; padding-block: var(--section-y) var(--s-7); background: var(--marble); color: var(--ink); border-block: 1px solid var(--hairline-strong); }
+.cielo-semana::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 65% 65% at 75% 30%, rgba(176, 138, 79, .07), transparent 75%); }
+.cielo-semana__grid { display: grid; gap: var(--s-7); align-items: center; }
+.cielo-semana__texto { display: grid; gap: var(--s-4); justify-items: start; }
+.cielo-semana .alm-eyebrow { color: var(--gold-deep); }
+.cielo-semana .alm-h2 { font-size: clamp(2.6rem, 4.5vw, 4rem); color: var(--ink); }
+.cielo-semana .alm-rango { color: var(--gold-deep); }
+.cielo-semana .alm-rango:empty { display: none; }
+.cielo-semana .alm-lede { color: var(--ink-soft); max-width: 29rem; }
+.cielo-semana .btn { margin-top: var(--s-3); }
+.cielo-semana__titulo { margin: 0; max-width: 26ch; font-family: var(--font-serif); font-style: italic; font-size: clamp(1.35rem, 1.2rem + .6vw, 1.75rem); line-height: 1.3; color: var(--ink); text-wrap: balance; }
+.cielo-semana__titulo:empty { display: none; }
+.cielo-semana .rueda { max-width: 480px; margin-inline: auto; filter: drop-shadow(0 18px 28px rgba(117, 87, 43, .12)); }
+.cielo-semana__signos { margin-top: var(--s-8); }
+.cielo-semana__cabecera-signos { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--s-3); padding-block: var(--s-5); border-top: 1px solid var(--hairline-strong); }
+.cielo-semana__cabecera-signos p { margin: 0; font-size: .78rem; color: var(--ink-soft); }
+.cielo-semana__elige { margin: 0; font: italic 1.5rem/1.2 var(--font-serif); color: var(--ink); }
+.cielo-semana .zodiaco { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-3); margin: 0; width: 100%; }
+.cielo-semana .zodiaco--ilustrado a { font: 400 1rem/1.2 var(--font-serif); color: var(--ink-soft); }
+.cielo-semana .alm-medallon { width: 66px; height: 76px; background: var(--ivory); }
+.cielo-semana__rueda { position: relative; isolation: isolate; justify-self: center; width: min(100%, 560px); margin: 0; padding-block: var(--s-3); }
+.cielo-semana__rueda::before { content: ""; position: absolute; z-index: -1; inset: -15%; border-radius: 50%; background: radial-gradient(ellipse, rgba(212, 177, 114, .24), rgba(212, 177, 114, .09) 40%, transparent 70%); pointer-events: none; animation: cielo-luz 8s ease-in-out infinite alternate; }
+.cielo-semana__mapa { margin: 0 0 var(--s-6); text-align: center; font: 600 .6rem/1.5 var(--font-sans); letter-spacing: .22em; text-transform: uppercase; color: var(--gold-deep); }
+.cielo-semana__escena { position: relative; isolation: isolate; padding: 5%; }
+.cielo-semana__escena [data-cs="rueda"] { position: relative; z-index: 1; }
+.cielo-semana__orbita { position: absolute; z-index: -1; inset: -2%; border: 1px solid rgba(176, 138, 79, .24); border-radius: 50%; pointer-events: none; }
+.cielo-semana__orbita--inclinada { inset: 5% -12%; transform: rotate(-27deg) scaleY(.7); border-color: rgba(176, 138, 79, .2); }
+.cielo-semana__rueda figcaption { margin-top: var(--s-6); text-align: center; font: italic 1.15rem/1.35 var(--font-serif); color: var(--gold-deep); }
+@keyframes cielo-luz { from { opacity: .55; transform: scale(.94); } to { opacity: 1; transform: scale(1.05); } }
+
+/* ---------- Pantallas medianas y grandes ---------- */
+@media (min-width: 520px) {
+  .zodiaco, .cielo-semana .zodiaco { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (min-width: 600px) {
+  .alm-header .alm-header__cta { display: inline-flex; }
+}
+@media (min-width: 700px) {
+  .alm-signos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .zodiaco { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .zodiaco--ilustrado { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .cielo-semana .zodiaco { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (min-width: 900px) {
+  .alm-lectura--con-margen { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); align-items: start; gap: var(--s-8); }
+  .alm-lectura__margen { position: sticky; top: 100px; }
+  .alm-lectura__margen .alm-clave blockquote { font-size: 1.65rem; }
+  .alm-lectura__margen .alm-pregunta { border-radius: var(--r-card); padding: var(--s-5); }
+  .alm-portada__grid { grid-template-columns: 1.05fr .95fr; }
+  .alm-portada--signo .alm-portada__grid { grid-template-columns: .8fr 1.2fr; }
+  .alm-portada--signo .arco-mayor { order: -1; }
+  .alm-cielo { grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr); gap: var(--s-8); }
+  .cielo-semana__grid { grid-template-columns: .95fr 1.05fr; gap: var(--s-7); }
+}
+@media (min-width: 1040px) {
+  .alm-signos__lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  .cielo-semana .zodiaco { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .zodiaco--ilustrado { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .alm-selector__lista { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .alm-selector__desliza { display: none; }
+  .blog-almanaque .site-nav { display: flex; }
+  .blog-almanaque .menu-movil { display: none; }
+}
+
+/* En el celular, los días pasan a ser renglones del almanaque. */
+@media (max-width: 760px) {
+  .alm-dias { margin-top: calc(-1 * var(--s-7)); }
+  .alm-dias ol { grid-template-columns: 1fr; }
+  .dia { display: grid; grid-template-columns: 3.4rem 1fr; column-gap: var(--s-4); row-gap: 0; align-items: start; min-height: 0; padding: var(--s-3) var(--s-4); border-left: 0; border-top: 1px solid var(--hairline); }
+  .dia:first-child { border-top: 0; }
+  .dia__fecha { grid-column: 1; grid-row: 1 / span 4; gap: 2px; align-self: start; }
+  .dia__numero { font-size: 1.7rem; }
+  .dia__evento { grid-column: 2; margin-top: 0; padding-top: 0; }
+  .dia__evento + .dia__evento { margin-top: 0; padding-top: var(--s-2); }
+  .dia--quieto { padding-block: var(--s-2); }
+  .dia--quieto .dia__fecha { display: flex; align-items: baseline; gap: var(--s-3); grid-column: 1 / -1; }
+  .dia--quieto .dia__numero { font-size: 1.2rem; }
+  .alm-semanas a { grid-template-columns: 3.8rem 1fr; }
+  .alm-semanas__flecha { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arco, .zodiaco a, .zodiaco .glifo, .alm-selector__lista a, .alm-medallon { transition: none; }
+  .arco:hover, .arco:focus-visible { transform: none; }
+  a:hover .alm-medallon, a:focus-visible .alm-medallon { transform: none; }
+  .cielo-semana__rueda::before { animation: none; }
+}

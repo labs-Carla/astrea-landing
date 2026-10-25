@@ -1,6 +1,8 @@
 # Observatorio de Astrea
 
-La portada, `/universo` y `/link` usan la [variante de Astrea como estatua clásica](astrea-estatua.md), en `astrea-estatua-960.webp` y `astrea-estatua-1536.webp`. Ambos recursos usan WebP a calidad 0,88; `srcset` y el preload comparten sus candidatos.
+El home usa el [grabado nítido de Astrea](astrea-grabado-hero-v2.md), con versiones WebP sin pérdida de 640, 960 y 1122 px. La figura clásica, los instrumentos astronómicos y la paleta marfil/sepia continúan el lenguaje de las ilustraciones de los doce signos.
+
+`/universo` y `/link` conservan la [variante de Astrea como estatua clásica](astrea-estatua.md), en `astrea-estatua-960.webp` y `astrea-estatua-1536.webp`. Los recursos usan WebP a calidad 0,88; `srcset` y el preload comparten sus candidatos.
 
 La variante anterior, con una figura humana, se conserva como referencia en `astrea-guia-960.webp` y `astrea-guia-1536.webp`.
 

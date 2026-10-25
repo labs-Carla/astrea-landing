@@ -1,0 +1,151 @@
+/* Identidad del sitio público: marfil, grabados y lectura editorial. */
+.astrea-publica {
+  --marble: #F7F3EA; --cream: #F7F3EA; --cream-deep: #EFE8DA;
+  --ivory: #FBF8F2; --paper: #EFE8DA;
+  --ink: #2B2620; --ink-soft: #5C5346;
+  --gold: #8B6F47; --gold-deep: #8B6F47; --gold-soft: #A98F63;
+  --hairline: #DDD3C1; --hairline-strong: #C4B8A0;
+  --papel-destacado: #F0E9DB;
+  --font-serif: 'Cormorant Garamond', Garamond, Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  background: var(--marble); color: var(--ink); color-scheme: light;
+}
+.astrea-publica .site-header { position: sticky; inset: auto; top: 0; border-top: 3px solid var(--gold-deep); border-bottom: 1px solid var(--hairline-strong); background: rgba(247,243,234,.97); backdrop-filter: blur(12px); }
+.astrea-publica .site-header__inner { min-height: 88px; gap: 24px; }
+.astrea-publica .alm-marca { display: inline-flex; align-items: center; gap: 12px; flex: none; }
+.astrea-publica .alm-marca__texto small { font-size: .5rem; letter-spacing: .1em; }
+.astrea-publica .site-nav { display: none; gap: 20px; }
+.astrea-publica .site-nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: .77rem; white-space: nowrap; }
+.astrea-publica .menu-movil, .astrea-publica .universo-menu { display: block; }
+.astrea-publica .site-header .btn { display: none; }
+.astrea-publica .menu-movil__panel { width: min(300px, calc(100vw - 40px)); min-width: 0; }
+.astrea-publica :is(a,button,summary,input,select):focus-visible { outline: 2px solid var(--gold-deep); outline-offset: 4px; }
+.astrea-publica [id] { scroll-margin-top: 112px; }
+.astrea-publica .btn { max-width: 100%; min-width: 0; white-space: normal; text-align: center; line-height: 1.45; padding-block: 12px; }
+.astrea-publica .hero--editorial { padding-top: 0; }
+.astrea-publica.universo-observatorio .gen__figure { border: 0; border-radius: 0; background: var(--marble); }
+.astrea-publica.universo-observatorio .gen__figure img { object-fit: contain; object-position: center; }
+.astrea-publica.universo-observatorio .gen__figure figcaption { background: var(--marble); position: relative; padding: 24px; font-size: 1.6rem; }
+.astrea-publica.universo-observatorio .price-card--featured { background: var(--paper); color: var(--ink); border-color: var(--gold-deep); box-shadow: none; }
+.astrea-publica.universo-observatorio .price-card--featured :is(.price-card__note,.checklist--light,.eyebrow--light) { color: var(--ink-soft); }
+.astrea-publica.universo-observatorio .price-card--featured .checklist--light .icon { color: var(--gold-deep); }
+.astrea-publica.bio-page .bio-scene { height: 200px; border-radius: 0; }
+.astrea-publica.bio-page .bio-scene img { object-fit: contain; }
+.astrea-publica.bio-page .bio-scene::after { display: none; }
+.astrea-publica.bio-page .link-card--featured .link-card-icon { background: var(--marble); color: var(--gold-deep); }
+.astrea-publica .pagina-cabecera { padding: clamp(36px, 5vw, 64px) 0; background: var(--marble); color: var(--ink); border-bottom: 1px solid var(--hairline); }
+.astrea-publica .pagina-cabecera::before { display: none; }
+.astrea-publica .pagina-cabecera .eyebrow { color: var(--gold-deep); }
+.astrea-publica .pagina-cabecera .h-display { max-width: 24ch; font-weight: 400; color: var(--ink); line-height: 1.05; text-wrap: balance; }
+.astrea-publica .pagina-cabecera .lede { color: var(--ink-soft); max-width: 43rem; font-size: .97rem; line-height: 1.8; }
+.astrea-publica .migas { margin-bottom: 24px; color: var(--ink-soft); }
+.astrea-publica .migas a { color: var(--gold-deep); }
+.astrea-publica .sheet--lift { margin-top: 0; border-radius: 0; box-shadow: none; }
+.astrea-publica .sheet--light { background: var(--ivory); }
+.astrea-publica .sheet--light::before { display: none; }
+.astrea-publica .tarjeta-reporte { border-radius: 12px; padding: 14px; box-shadow: none; background: var(--marble); }
+.astrea-publica .tarjeta-reporte__titulo { font-weight: 400; }
+.astrea-publica .tarjeta-reporte__texto { font-size: .88rem; line-height: 1.75; }
+.astrea-publica .portada--libro { border-radius: 7px; box-shadow: 0 10px 24px -20px rgba(43,38,32,.4); }
+.astrea-publica .tarjeta-reporte .portada--libro { max-height: 340px; aspect-ratio: 4 / 5; }
+.astrea-publica .tarjeta-reporte .portada--libro img { object-position: center 25%; }
+.astrea-publica .portada--atenuada { background: var(--paper); }
+.astrea-publica .portada__emblema, .astrea-publica .portada__titulo { color: var(--gold-deep); }
+.astrea-publica .detalle__compra { background: var(--marble); box-shadow: none; }
+.astrea-publica .detalle__lateral { top: 112px; }
+.astrea-publica .bloque__titulo, .astrea-publica .grupo-catalogo__titulo { font-weight: 400; }
+.astrea-publica .bloques .prosa p { font: 400 1.15rem/1.75 var(--font-serif); }
+.astrea-publica .prosa p:first-child::first-letter { float: none; margin: 0; font-size: inherit; line-height: inherit; font-weight: inherit; color: inherit; }
+.astrea-publica .documento-legal { max-width: 780px; }
+.astrea-publica .documento-legal ul { list-style: disc; padding-left: 20px; }
+.astrea-publica .documento-legal a { color: var(--gold-deep); overflow-wrap: anywhere; }
+.astrea-publica .documento-legal .fecha-actualizacion { margin-bottom: 28px; color: var(--ink-soft); font-size: .85rem; }
+.astrea-publica .checklist .icon { stroke-width: 1.2; }
+.astrea-publica .compra > aside, .astrea-publica .compra__resumen { background: var(--marble); box-shadow: none; }
+.astrea-publica .paso-compra { border-radius: 12px; background: var(--ivory); box-shadow: none; }
+.astrea-publica .natal-form input, .astrea-publica .natal-form select { min-width: 0; background: #FFFDFA; border: 1px solid var(--hairline-strong); border-radius: 5px; color: var(--ink); }
+.astrea-publica .natal-form select { min-height: 48px; }
+.astrea-publica .natal-form input:focus, .astrea-publica .natal-form select:focus { border-color: var(--gold-deep); }
+.astrea-publica .natal-form input[type="checkbox"] { width: 20px; height: 20px; min-height: 0; }
+.astrea-publica .btn--ghost { color: var(--gold-deep); border-color: var(--hairline-strong); }
+.astrea-publica .btn--ghost:hover { background: var(--paper); }
+.astrea-publica .estado-pedido__sello { border-radius: 50% 50% 4px 4px; }
+.astrea-publica .insignia--oscura.insignia--disponible { color: #496134; background: #EDF0E5; }
+.astrea-publica .insignia--oscura.insignia--proximamente { color: var(--gold-deep); }
+.astrea-publica .pie { background: var(--paper); color: var(--ink-soft); }
+.astrea-publica .muestra-editorial { display: grid; gap: 40px; }
+.astrea-publica .muestra-editorial > * { min-width: 0; }
+.astrea-publica .muestra-editorial__arte { width: min(100%, 340px); justify-self: center; }
+.astrea-publica .muestra-editorial__hoja { padding: clamp(24px, 4vw, 48px); background: var(--marble); border: 1px solid var(--hairline-strong); }
+.astrea-publica .muestra-editorial__hoja h2 { margin: 16px 0 24px; font: 400 2.3rem/1.1 var(--font-serif); }
+.astrea-publica .muestra-editorial__hoja p:not(.eyebrow) { margin-bottom: 16px; font: 400 1.15rem/1.75 var(--font-serif); }
+.astrea-publica .muestra-editorial__hoja .btn { margin-top: 16px; white-space: normal; text-align: center; line-height: 1.5; padding-block: 12px; }
+@media (min-width: 600px) { .astrea-publica .site-header .btn { display: inline-flex; } }
+@media (min-width: 860px) { .astrea-publica .muestra-editorial { grid-template-columns: .8fr 1.2fr; align-items: center; } }
+@media (min-width: 1200px) {
+  .astrea-publica .site-nav { display: flex; }
+  .astrea-publica .menu-movil, .astrea-publica .universo-menu { display: none; }
+}
+@media (max-width: 599px) {
+  .astrea-publica .resumen__fila { grid-template-columns: minmax(0,1fr); gap: 4px; }
+  .astrea-publica .acciones-paso { gap: 12px; }
+}
+
+/* Páginas antiguas: se mantienen sus formularios y resultados. */
+.astrea-legacy { --gold-light: #8B6F47; margin: 0; padding: 24px 20px 48px; font-family: var(--font-sans); background-image: none; line-height: 1.7; }
+.astrea-legacy::before { display: none; }
+.astrea-legacy .wrap { max-width: 1080px; }
+.astrea-legacy__header { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: min(100%,1080px); margin: 0 auto 40px; padding-bottom: 20px; border-bottom: 1px solid var(--hairline); }
+.astrea-legacy__marca { display: inline-flex; align-items: center; gap: 12px; font: 400 1.4rem/1 var(--font-serif); letter-spacing: .3em; color: var(--ink); text-decoration: none; }
+.astrea-legacy__marca img { display: block; }
+.astrea-legacy__header nav { display: flex; gap: 20px; font-size: .78rem; }
+.astrea-legacy__header nav a { color: var(--gold-deep); text-underline-offset: 4px; }
+.astrea-legacy :is(.campo input,.campo select) { background: #FFFDFA; border-color: var(--hairline-strong); border-radius: 5px; color: var(--ink); min-width: 0; }
+.astrea-legacy :is(.big-three-item,.esencia-card,.card,.vista-astral-card,.aspecto-destacado-box,.seccion-desplegable) { background: var(--ivory); border-color: var(--hairline); box-shadow: none; }
+.astrea-legacy :is(.cta,.btn-generar,.cta-comprar) { background: var(--gold-deep); color: var(--ivory); border-radius: 999px; box-shadow: none; }
+.astrea-legacy :is(.cta,.btn-generar,.cta-comprar):hover { background: var(--ink); color: var(--ivory); }
+.astrea-legacy .editorial-titulo { margin: 12px 0 20px; font: 400 clamp(2.3rem,5vw,3.5rem)/1.1 var(--font-serif); text-align: center; color: var(--ink); }
+.astrea-legacy[data-pagina="carta"] .wrap { max-width: 600px; }
+.astrea-legacy[data-pagina="gracias"] .wrap { max-width: 680px; }
+.astrea-legacy[data-pagina="gracias"] .wrap > header { display: none; }
+.astrea-legacy[data-pagina="gracias"] .intro-title { font: 400 2.7rem/1.1 var(--font-serif); }
+.astrea-legacy[data-pagina="gracias"] :is(input,select) { background: #FFFDFA; border: 1px solid var(--hairline-strong); padding: 12px; border-radius: 5px; }
+.astrea-legacy[data-pagina="gracias"] button { border-radius: 999px; background: var(--gold-deep); color: var(--ivory); }
+.astrea-legacy[data-pagina="link-gratis"] .wrap { width: 100%; padding: 0; }
+.astrea-legacy[data-pagina="link-gratis"] .wrap > .site-header { display: none; }
+.astrea-legacy[data-pagina="link-gratis"] .hero { min-height: 440px; margin: 0 0 36px; padding: 48px 46% 48px 0; }
+.astrea-legacy[data-pagina="link-gratis"] .hero::before { inset: 0 0 0 54%; background: url('/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp') center / contain no-repeat; mask-image: none; opacity: 1; }
+.astrea-legacy[data-pagina="link-gratis"] .hero-titulo { max-width: 15ch; font-size: clamp(2.7rem,5vw,4.3rem); color: var(--ink); line-height: 1.08; }
+.astrea-legacy[data-pagina="link-gratis"] .hero-titulo em { color: var(--gold-deep); }
+.astrea-legacy[data-pagina="link-gratis"] .hero-subtitulo { color: var(--ink-soft); font-size: .95rem; }
+.astrea-legacy[data-pagina="link-gratis"] .eyebrow-line { color: var(--gold-deep); }
+.astrea-legacy[data-pagina="link-gratis"] :is(.que-es,.form-card,.resultado-carta,.valor-card,.comparacion-col,.card-premium,.faq-glass) { background: var(--ivory); border: 1px solid var(--hairline); border-radius: 12px; box-shadow: none; }
+.astrea-legacy[data-pagina="link-gratis"] .que-es::before, .astrea-legacy[data-pagina="link-gratis"] .form-card::before { display: none; }
+.astrea-legacy[data-pagina="link-gratis"] .form-card { max-width: 720px; margin-inline: auto; }
+.astrea-legacy[data-pagina="link-gratis"] .comparacion-col.completo { background: var(--paper); color: var(--ink); box-shadow: none; }
+.astrea-legacy[data-pagina="link-gratis"] .comparacion-col.completo :is(.comparacion-titulo,.comparacion-lista li) { color: var(--ink); }
+.astrea-legacy[data-pagina="link-gratis"] .comparacion-col.completo .comparacion-lista li.si::before { color: var(--gold-deep); }
+.astrea-legacy[data-pagina="link-gratis"] :is(.premium-media,.benefit-icon) { background: var(--marble); }
+.astrea-legacy[data-pagina="link-gratis"] :is(.footer-brand,.footer-copy a,.scroll-indicador) { color: var(--gold-deep); }
+.astrea-legacy[data-pagina="link-gratis"] :is(.disclaimer,.footer-copy) { color: var(--ink-soft); }
+.astrea-legacy[data-pagina="link-gratis"] .premium-media { box-shadow: none; }
+.astrea-legacy[data-pagina="link-gratis"] .badge-recomendado { background: var(--paper); color: var(--gold-deep); }
+.astrea-legacy[data-pagina="link-gratis"] :is(.valor-cards,.comparacion,.card-premium) > * { min-width: 0; }
+.astrea-legacy[data-pagina="reporte"] { background: var(--marble); }
+.astrea-legacy[data-pagina="reporte"] :is(.elemento-card,.planeta-card,.aspecto-card,.casa-card,.dato-card,.panorama-card,.planeta-bloque,.aspecto-item) { background: var(--ivory); }
+.astrea-legacy .cargando { max-width: 680px; margin: 56px auto; padding: 0; color: var(--ink-soft); }
+.astrea-legacy .error-box { padding: 40px 24px; background: var(--ivory); border: 1px solid var(--hairline); border-radius: 12px; font: 400 .95rem/1.7 var(--font-sans); color: var(--ink-soft); }
+.astrea-legacy .error-box::before { content: "Tu lectura de Astrea"; display: block; margin-bottom: 16px; font: 400 2rem/1.15 var(--font-serif); color: var(--ink); }
+@media (max-width: 699px) {
+  .astrea-legacy__header { align-items: flex-start; gap: 16px; }
+  .astrea-legacy__header nav { flex-direction: column; gap: 6px; }
+  .astrea-legacy[data-pagina="link-gratis"] .hero { min-height: 0; padding: 20px 0 0; }
+  .astrea-legacy[data-pagina="link-gratis"] .hero::before { position: relative; inset: auto; order: 2; width: 100%; height: 320px; margin-top: 24px; }
+  .astrea-legacy[data-pagina="link-gratis"] .hero-titulo { max-width: 18ch; }
+  .astrea-legacy[data-pagina="link-gratis"] .valor-cards { grid-template-columns: minmax(0,1fr); }
+  .astrea-legacy[data-pagina="link-gratis"] .comparacion { flex-direction: column; }
+  .astrea-legacy[data-pagina="link-gratis"] .card-premium { grid-template-columns: minmax(0,1fr); padding: 24px; }
+  .astrea-legacy[data-pagina="link-gratis"] .card-premium > * { grid-column: 1; grid-row: auto; }
+  .astrea-legacy[data-pagina="link-gratis"] .premium-media { margin-inline: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .astrea-publica * { scroll-behavior: auto; } }

@@ -5,6 +5,12 @@ reporte, compra en 3 pasos, estado del pedido y páginas informativas. Es HTML
 estático, igual que el resto del sitio, y reutiliza el sistema de diseño de
 `/universo`.
 
+Desde la revisión del 25 de octubre de 2026, todas las páginas públicas comparten
+la identidad marfil/dorado y la tipografía editorial mediante `tienda-assets/sitio-publico.css`.
+Los estilos de las páginas antiguas se acotan con `astrea-legacy` y `data-pagina`;
+los flujos y contratos de compra, carta gratuita y entrega conservan su comportamiento.
+El registro de rutas y comprobaciones está en [REVISION-DISENO-PUBLICO-2026-10-25.md](REVISION-DISENO-PUBLICO-2026-10-25.md).
+
 ## Rutas
 
 | Ruta | Archivo | Notas |
@@ -32,6 +38,10 @@ No cambia: `/universo`, `/link`, `/link-gratis`, `/carta`, `/r/:token`,
 - `tienda-assets/tienda.css`: componentes nuevos sobre `universo.css`.
 - `scripts/generar-tienda.mjs`: genera los `.html` de la tienda. **Los `.html`
   generados no se editan a mano.**
+- `/privacidad` y `/ejemplo` también se generan. El contenido original de privacidad
+  está en `tienda-assets/contenido-privacidad.html`; su texto se conserva íntegro.
+- `tienda-assets/iconos-astrea.mjs`: familia vectorial y emblema; el generador
+  produce también `tienda-assets/astrea-emblema.svg` para las páginas antiguas.
 
 ```bash
 node scripts/generar-tienda.mjs           # regenerar después de cambiar el catálogo, la config o las plantillas

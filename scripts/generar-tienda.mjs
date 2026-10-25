@@ -15,6 +15,7 @@ import { fileURLToPath } from "node:url";
 import { CONSENTIMIENTO } from "../tienda-assets/lista.js";
 import { REPORTES, ENTREGA, PACK_TEMATICOS, estadoDe, reportePorSlug } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
+import { conIconosAstrea, emblemaAstrea } from "../tienda-assets/iconos-astrea.mjs";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITIO = "https://astrea-charts.site";
@@ -33,18 +34,41 @@ const SPRITE = SPRITE_UNIVERSO.replace("</svg>", `  <symbol id="i-menu" viewBox=
 
 const TERMINOS_VIGENTES_DESDE = "18 de octubre de 2026";
 
-// En la portada, instrumentos clásicos en lugar de ornamentos genéricos.
-const SELLOS_PORTADA = {
-  'i-orbita': '<circle cx="12" cy="11" r="8"/><circle cx="12" cy="11" r="5.5"/><ellipse cx="12" cy="11" rx="2.7" ry="8" transform="rotate(32 12 11)"/><path d="m5.5 15.7 13-9.4M12 1v2M10 19l-1.5 3h7L14 19"/>',
-  'i-sun': '<path d="M11 21C4 18 3 11 6 5M13 21c7-3 8-10 5-16M8 18c-4 0-5-2-5-4 3 0 5 1 5 4ZM6 13c-3-1-4-3-3-5 3 1 4 3 3 5Zm0-5C4 5 5 3 7 2c2 3 1 5-1 6Zm10 10c4 0 5-2 5-4-3 0-5 1-5 4Zm2-5c3-1 4-3 3-5-3 1-4 3-3 5Zm0-5c2-3 1-5-1-6-2 3-1 5 1 6Z"/>',
-  'i-loto': '<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5zM12 1v2M12 21v2M1 12h2M21 12h2"/>',
-};
-const SPRITE_PORTADA = Object.entries(SELLOS_PORTADA).reduce((sprite, [id, trazos]) =>
-  sprite.replace(new RegExp(`<symbol id="${id}"[^>]*>[\\s\\S]*?<\\/symbol>`), `<symbol id="${id}" viewBox="0 0 24 24">${trazos}</symbol>`), SPRITE);
+const SPRITE_PORTADA = conIconosAstrea(SPRITE);
+
+// Almanaque semanal (blog): los 12 signos y la rueda vacía que se ve hasta que llega la semana publicada.
+// La rueda real la dibuja astrea-API (/blog/horoscopo-semanal/portada.json) con la misma geometría.
+const SIGNOS_ALMANAQUE = [
+  ["aries", "Aries"], ["tauro", "Tauro"], ["geminis", "Géminis"], ["cancer", "Cáncer"], ["leo", "Leo"], ["virgo", "Virgo"],
+  ["libra", "Libra"], ["escorpio", "Escorpio"], ["sagitario", "Sagitario"], ["capricornio", "Capricornio"],
+  ["acuario", "Acuario"], ["piscis", "Piscis"],
+].map(([slug, nombre], i) => ({ slug, nombre, glifo: String.fromCodePoint(0x2648 + i) + "\uFE0E" }));
+
+function ruedaVacia() {
+  const punto = (lon, r) => {
+    const a = (lon * Math.PI) / 180;
+    return [+(200 - r * Math.cos(a)).toFixed(2), +(200 + r * Math.sin(a)).toFixed(2)];
+  };
+  const linea = (clase, [x1, y1], [x2, y2]) => `<line class="${clase}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  const divisiones = Array.from({ length: 12 }, (_, i) => linea("rueda__division", punto(i * 30, 166), punto(i * 30, 196))).join("");
+  const marcas = Array.from({ length: 72 }, (_, i) => i * 5).filter((g) => g % 30)
+    .map((g) => linea("rueda__marca", punto(g, 166), punto(g, 166 - (g % 10 ? 3 : 5)))).join("");
+  const signos = SIGNOS_ALMANAQUE.map((s, i) => {
+    const [x, y] = punto(i * 30 + 15, 181);
+    return `<text class="rueda__signo" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central">${s.glifo}</text>`;
+  }).join("");
+  return `<svg class="rueda" viewBox="-6 -6 412 412" role="img" aria-label="La rueda del zodíaco">
+  <circle class="rueda__fondo" cx="200" cy="200" r="196"/><circle class="rueda__aro" cx="200" cy="200" r="196"/>
+  <circle class="rueda__aro rueda__aro--fino" cx="200" cy="200" r="191"/><circle class="rueda__aro" cx="200" cy="200" r="166"/>
+  <circle class="rueda__aro rueda__aro--fino" cx="200" cy="200" r="112"/>${divisiones}${marcas}${signos}
+  <path class="rueda__estrella" d="M200 192 L202 198 L208 200 L202 202 L200 208 L198 202 L192 200 L198 198 Z"/>
+</svg>`;
+}
 
 const NAV = [
   ["/", "Inicio"],
   ["/reportes", "Reportes"],
+  ["/blog/horoscopo-semanal", "Horóscopo semanal"],
   ["/como-funciona", "Cómo funciona"],
   ["/sobre-astrea", "Sobre Astrea"],
   ["/regalar", "Regalar"],
@@ -76,24 +100,27 @@ ${indexable ? `<link rel="canonical" href="${SITIO}${ruta === "/" ? "/" : ruta}"
 <meta property="og:url" content="${SITIO}${ruta}">
 <meta property="og:image" content="${SITIO}${imagen}">
 <meta property="og:locale" content="es_LA">
-<meta name="theme-color" content="${portada ? '#F7F3EA' : '#0B1220'}">
+<meta name="theme-color" content="#F7F3EA">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Noto+Sans+Symbols&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/universo-assets/universo.css">
-<link rel="stylesheet" href="/tienda-assets/tienda.css">${portada ? '\n<link rel="stylesheet" href="/tienda-assets/observatorio.css">' : ''}
+<link rel="stylesheet" href="/tienda-assets/tienda.css">
+<link rel="stylesheet" href="/tienda-assets/observatorio.css">
+<link rel="stylesheet" href="/tienda-assets/almanaque.css">
+<link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
 ${preload}
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}</head>
-<body${portada ? ' class="portada-observatorio"' : ''}>
+<body class="portada-observatorio astrea-publica">
 <!-- Generado por scripts/generar-tienda.mjs a partir de tienda-assets/catalogo.js. No editar a mano. -->
 
-${portada ? SPRITE_PORTADA : SPRITE}
+${SPRITE_PORTADA}
 
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <header class="site-header site-header--tienda">
   <div class="site-header__inner">
-    <a class="wordmark" href="/" aria-label="Astrea, inicio">ASTREA</a>
+    <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__sello" aria-hidden="true">${emblemaAstrea()}</span><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
     <nav class="site-nav" aria-label="Principal">
       ${enlaces}
     </nav>
@@ -109,7 +136,7 @@ ${portada ? SPRITE_PORTADA : SPRITE}
   </div>
 </header>
 
-<main id="contenido">
+<main id="contenido" tabindex="-1">
 ${cuerpo}
 </main>
 
@@ -122,6 +149,7 @@ ${cuerpo}
     <nav class="pie__columna" aria-label="Explora">
       <h2 class="pie__titulo">Explora</h2>
       <a href="/reportes">Reportes</a>
+      <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
       <a href="/como-funciona">Cómo funciona</a>
       <a href="/sobre-astrea">Sobre Astrea</a>
       <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
@@ -137,7 +165,7 @@ ${cuerpo}
     <p><a href="/terminos">Términos y reembolsos</a> · <a href="/privacidad">Política de privacidad</a> · © ${new Date().getFullYear()} Astrea Charts</p>
   </div>
 </footer>
-${["/tienda-assets/origen.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
+${["/tienda-assets/origen.js", "/tienda-assets/sitio-publico.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
 </body>
 </html>
 `;
@@ -152,7 +180,7 @@ function cabecera({ eyebrow, titulo, lede, migas = [] }) {
     ${m}
     <p class="eyebrow eyebrow--light">${esc(eyebrow)}</p>
     <h1 class="h-display">${esc(titulo)}</h1>
-    ${lede ? `<p class="lede lede--light">${esc(lede)}</p>` : ""}
+${lede ? `    <p class="lede lede--light">${esc(lede)}</p>` : ""}
   </div>
 </section>`;
 }
@@ -211,8 +239,8 @@ const FAQ_PORTADA = [
 
 
 const RECORRIDO = [
-  ["i-wheel", "Descubre tu carta", "Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.", "/universo#generador", "Generar mi carta gratis"],
-  ["i-pages", "Profundiza con una lectura", "La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.", "/reportes", "Ver reportes"],
+  ["i-astrolabio", "Descubre tu carta", "Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.", "/universo#generador", "Generar mi carta gratis"],
+  ["i-libro", "Profundiza con una lectura", "La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.", "/reportes", "Ver reportes"],
 ];
 
 const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby="tp-${r.slug}">
@@ -233,34 +261,63 @@ const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby=
 paginas["index.html"] = layout({
   ruta: "/",
   portada: true,
-  imagen: "/universo-assets/img/observatorio/astrea-estatua-1536.webp",
-  preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-estatua-1536.webp" imagesrcset="/universo-assets/img/observatorio/astrea-estatua-960.webp 960w, /universo-assets/img/observatorio/astrea-estatua-1536.webp 1536w" imagesizes="100vw">',
-  titulo: "Astrea · Tu carta natal, un lugar al que volver",
-  descripcion: "Tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo. Carta natal gratis, y lecturas personalizadas en PDF.",
-  cuerpo: `<section class="hero hero--tienda" aria-labelledby="hero-titulo">
+  scripts: ["/tienda-assets/cielo-semana.js"],
+  imagen: "/universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp",
+  preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp" imagesrcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp 960w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" imagesizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw">',
+  titulo: "Astrea · Tu cielo. Tu forma de ser.",
+  descripcion: "Un espacio para conocerte a través de tu carta natal. Astronomía precisa, astrología cercana y lecturas para volver a ti. Descubre tu carta gratis.",
+  cuerpo: `<section class="hero hero--tienda hero--editorial" aria-labelledby="hero-titulo">
   <div class="hero__grid shell">
     <div class="hero__copy">
-      <p class="eyebrow eyebrow--light">Un observatorio para todos</p>
-      <h1 class="h-display" id="hero-titulo">Tu carta natal, un lugar al que volver.</h1>
-      <p class="lede lede--light">Astrea es tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo. Calculada con astronomía real y leída con cuidado, para cada etapa de tu vida.</p>
+      <p class="eyebrow">Astrología para conocerte</p>
+      <h1 class="h-display" id="hero-titulo">Tu cielo.<br><em>Tu forma de ser.</em></h1>
+      <p class="lede">Un espacio para conocerte a través de tu carta natal. Astronomía precisa, astrología cercana y lecturas para volver a ti.</p>
       <div class="hero__actions">
-        <a class="btn btn--gold" href="/reportes">Explorar reportes ${icono("i-arrow")}</a>
-        <a class="link-quiet link-quiet--light" href="/universo#generador">Genera tu carta gratis</a>
+        <a class="btn btn--gold" href="/universo#generador">Descubrir mi carta gratis ${icono("i-arrow")}</a>
+        <a class="link-quiet" href="/reportes">Explorar lecturas <span aria-hidden="true">↗</span></a>
       </div>
     </div>
     <figure class="hero__figure">
-      <img src="/universo-assets/img/observatorio/astrea-estatua-1536.webp" srcset="/universo-assets/img/observatorio/astrea-estatua-960.webp 960w, /universo-assets/img/observatorio/astrea-estatua-1536.webp 1536w" sizes="100vw" alt="Estatua de mármol de Astrea con un mapa celeste, junto a una esfera armilar en un observatorio griego" width="1536" height="1024" fetchpriority="high">
+      <img src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp" srcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp 960w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" sizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw" alt="Grabado de Astrea con un astrolabio, una esfera armilar sobre una columna griega y un mapa de estrellas" width="1122" height="1402" fetchpriority="high">
     </figure>
   </div>
 </section>
 
 <section class="confianza" aria-label="Por qué confiar en Astrea">
   <ul class="shell confianza__lista">
-    <li>${icono("i-orbita", "icon confianza__icono")}<div><strong>Astronomía real</strong><span>Cálculos con Swiss Ephemeris y datos astronómicos precisos.</span></div></li>
-    <li>${icono("i-sun", "icon confianza__icono")}<div><strong>Revisión humana</strong><span>Interpretaciones asistidas por IA y revisadas por una astróloga.</span></div></li>
-    <li>${icono("i-mail", "icon confianza__icono")}<div><strong>Directo a tu correo</strong><span>Recibe tu informe en 24–48 horas después de la confirmación del pago.</span></div></li>
-    <li>${icono("i-loto", "icon confianza__icono")}<div><strong>Autoconocimiento</strong><span>Herramientas para comprenderte y tomar decisiones más alineadas.</span></div></li>
+    <li>${icono("i-armilar", "icon confianza__icono")}<div><strong>Astronomía real</strong><span>Cálculos con Swiss Ephemeris y datos astronómicos precisos.</span></div></li>
+    <li>${icono("i-pluma", "icon confianza__icono")}<div><strong>Revisión humana</strong><span>Interpretaciones asistidas por IA y revisadas por una astróloga.</span></div></li>
+    <li>${icono("i-pergamino", "icon confianza__icono")}<div><strong>Directo a tu correo</strong><span>Recibe tu informe en 24–48 horas después de la confirmación del pago.</span></div></li>
+    <li>${icono("i-espejo", "icon confianza__icono")}<div><strong>Autoconocimiento</strong><span>Herramientas para comprenderte y tomar decisiones más alineadas.</span></div></li>
   </ul>
+</section>
+
+<section class="cielo-semana" id="cielo-semana" aria-labelledby="cielo-semana-titulo" data-cielo-semana>
+  <div class="shell cielo-semana__grid">
+    <div class="cielo-semana__texto">
+      <p class="alm-eyebrow" data-cs="eyebrow">Horóscopo semanal · cada lunes</p>
+      <h2 class="alm-h2" id="cielo-semana-titulo">Tu semana,<br>a la luz del cielo</h2>
+      <p class="alm-rango" data-cs="rango"></p>
+      <p class="cielo-semana__titulo" data-cs="titulo"></p>
+      <p class="alm-lede" data-cs="resumen">Una pausa para mirar hacia arriba y volver a ti. Cada lunes, los movimientos del cielo y una lectura para acompañar tu semana.</p>
+      <a class="btn btn--gold" href="/blog/horoscopo-semanal" data-cs="url">Leer mi horóscopo <span aria-hidden="true">↗</span></a>
+    </div>
+    <figure class="cielo-semana__rueda">
+      <p class="cielo-semana__mapa">El cielo, en movimiento</p>
+      <div class="cielo-semana__escena">
+        <span class="cielo-semana__orbita" aria-hidden="true"></span>
+        <span class="cielo-semana__orbita cielo-semana__orbita--inclinada" aria-hidden="true"></span>
+        <div data-cs="rueda">${ruedaVacia()}</div>
+      </div>
+      <figcaption>Un cielo compartido. Doce formas de vivirlo.</figcaption>
+    </figure>
+  </div>
+  <div class="shell cielo-semana__signos">
+    <div class="cielo-semana__cabecera-signos"><h3 class="cielo-semana__elige">Un cielo, doce miradas</h3><p>Empieza por tu signo solar. Explora también tu Ascendente.</p></div>
+    <ul class="zodiaco zodiaco--ilustrado">
+        ${SIGNOS_ALMANAQUE.map((s) => `<li><a href="/blog/horoscopo-semanal/${s.slug}" data-signo="${s.slug}"><span class="alm-medallon" aria-hidden="true"><img src="/universo-assets/img/almanaque/${s.slug}-320.webp" width="80" height="80" alt="" loading="lazy" decoding="async"></span>${s.nombre}</a></li>`).join("\n        ")}
+    </ul>
+  </div>
 </section>
 
 <section class="capitulo capitulo--marmol" id="recorrido" aria-labelledby="recorrido-titulo">
@@ -300,9 +357,9 @@ paginas["index.html"] = layout({
       <h2 class="capitulo__titulo" id="pasos-titulo">Tres pasos para recibir tu reporte</h2>
     </header>
     <ol class="pasos">
-      <li class="paso"><span class="paso__numero">01</span>${icono("i-pages", "icon paso__icono")}<h3 class="paso__titulo">Comparte tus datos de nacimiento</h3><p>Completa tu fecha, hora y lugar de nacimiento, y los datos de tu pareja si aplica.</p></li>
-      <li class="paso"><span class="paso__numero">02</span>${icono("i-wheel", "icon paso__icono")}<h3 class="paso__titulo">Calculamos tu carta</h3><p>Usamos Swiss Ephemeris y una interpretación asistida por IA, revisada por una astróloga.</p></li>
-      <li class="paso"><span class="paso__numero">03</span>${icono("i-mail", "icon paso__icono")}<h3 class="paso__titulo">Recibes tu informe personalizado</h3><p>Te lo enviamos a tu correo en 24–48 horas, contadas desde la confirmación del pago.</p></li>
+      <li class="paso"><span class="paso__numero">01</span>${icono("i-nacimiento", "icon paso__icono")}<h3 class="paso__titulo">Comparte tus datos de nacimiento</h3><p>Completa tu fecha, hora y lugar de nacimiento, y los datos de tu pareja si aplica.</p></li>
+      <li class="paso"><span class="paso__numero">02</span>${icono("i-astrolabio", "icon paso__icono")}<h3 class="paso__titulo">Calculamos tu carta</h3><p>Usamos Swiss Ephemeris y una interpretación asistida por IA, revisada por una astróloga.</p></li>
+      <li class="paso"><span class="paso__numero">03</span>${icono("i-pergamino", "icon paso__icono")}<h3 class="paso__titulo">Recibes tu informe personalizado</h3><p>Te lo enviamos a tu correo en 24–48 horas, contadas desde la confirmación del pago.</p></li>
     </ol>
   </div>
 </section>
@@ -793,7 +850,31 @@ paginas["preguntas-frecuentes.html"] = layout({
 </section>`,
 });
 
-const indexables = ["/", "/reportes", ...REPORTES.map((r) => `/reportes/${r.slug}`), "/como-funciona", "/sobre-astrea", "/preguntas-frecuentes", "/terminos", "/regalar", "/universo"];
+paginas["privacidad.html"] = layout({
+  ruta: "/privacidad", titulo: "Política de privacidad · Astrea", descripcion: "Cómo tratamos tus datos y cómo ejercer tus derechos en Astrea.",
+  cuerpo: `${cabecera({ eyebrow: "Tus datos, con cuidado", titulo: "Política de privacidad", migas: [["/", "Inicio"], ["/privacidad", "Privacidad"]] })}
+<section class="sheet sheet--light seccion"><div class="shell prosa documento-legal">${readFileSync(join(RAIZ, "tienda-assets/contenido-privacidad.html"), "utf8")}</div></section>`,
+});
+
+paginas["ejemplo.html"] = layout({
+  ruta: "/ejemplo", titulo: "Así se ve una lectura de Astrea", descripcion: "Una muestra del estilo editorial de nuestras lecturas de carta natal.",
+  cuerpo: `${cabecera({ eyebrow: "Antes de elegir tu lectura", titulo: "Así se lee tu cielo", lede: "Una muestra del diseño y del tono de nuestras lecturas: imágenes cuidadas, espacio para reflexionar y un lenguaje cercano.", migas: [["/", "Inicio"], ["/ejemplo", "Muestra de lectura"]] })}
+<section class="sheet sheet--light seccion"><div class="shell muestra-editorial">
+  <img class="muestra-editorial__arte" src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp" alt="Grabado de Astrea junto a una esfera armilar" width="640" height="800">
+  <article class="muestra-editorial__hoja">
+    <p class="eyebrow">Fragmento ilustrativo · Tu mundo emocional</p>
+    <h2>Lo que te hace sentir en casa</h2>
+    <p>Tu Luna habla de lo que necesitas para sentirte en casa, de cómo sientes y de lo que te da calma.</p>
+    <p>Una lectura de tu carta es una oportunidad para detenerte en esas preguntas: qué cuidas, qué necesitas y qué lugar quieres dar a tu mundo emocional.</p>
+    <p class="nota-reflexion">Este fragmento muestra el tono editorial. Tu informe se prepara a partir de tus propios datos de nacimiento.</p>
+    <a class="btn btn--gold" href="/reportes/carta-natal">Conocer la carta natal completa ${icono("i-arrow")}</a>
+  </article>
+</div></section>`,
+});
+
+paginas["tienda-assets/astrea-emblema.svg"] = emblemaAstrea().replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" style="color:#8B6F47" ');
+
+const indexables = ["/", "/reportes", ...REPORTES.map((r) => `/reportes/${r.slug}`), "/como-funciona", "/sobre-astrea", "/preguntas-frecuentes", "/terminos", "/privacidad", "/ejemplo", "/regalar", "/universo"];
 paginas["sitemap.xml"] = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexables.map((u) => `  <url><loc>${SITIO}${u}</loc></url>`).join("\n")}
@@ -805,6 +886,7 @@ Disallow: /r/
 Disallow: /comprar/
 Disallow: /pedido
 Sitemap: ${SITIO}/sitemap.xml
+Sitemap: ${SITIO}/blog/sitemap.xml
 `;
 
 // ---------------------------------------------------------------- escritura / verificación

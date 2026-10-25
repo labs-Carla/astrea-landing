@@ -9,13 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-estatua-1536.webp" imagesrcset="/universo-assets/img/observatorio/astrea-estatua-960.webp 960w, /universo-assets/img/observatorio/astrea-estatua-1536.webp 1536w" imagesizes="100vw">
+<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp" imagesrcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" imagesizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw">
 <link rel="stylesheet" href="universo-assets/universo.css">
 <link rel="stylesheet" href="/tienda-assets/observatorio.css">
 <link rel="stylesheet" href="/universo-assets/observatorio.css">
 <script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
 </head>
-<body class="portada-observatorio universo-observatorio">
+<body class="portada-observatorio universo-observatorio astrea-publica">
 
 <!-- Sprite de iconos de línea dorada. Todos los iconos de la página se usan
      con <svg><use href="#i-..."/></svg> para no repetir paths. -->
@@ -74,21 +75,21 @@
 <main id="contenido">
 
 <!-- ============ 1. HERO ============ -->
-<section class="hero hero--tienda" id="inicio" aria-labelledby="hero-titulo">
+<section class="hero hero--tienda hero--editorial" id="inicio" aria-labelledby="hero-titulo">
   <div class="hero__grid shell">
     <div class="hero__copy">
       <p class="eyebrow eyebrow--light reveal">Astrea · Lectura de carta natal</p>
-      <h1 class="h-display reveal" id="hero-titulo">Una lectura para volver a ti una y otra vez.</h1>
+      <h1 class="h-display reveal" id="hero-titulo">Conoce tu cielo.<br><em>Empieza por ti.</em></h1>
       <p class="lede lede--light reveal">Tu carta natal es un mapa único del cielo en el momento en que naciste. Una guía para comprenderte, tomar mejores decisiones y vivir más en alineación contigo.</p>
       <div class="hero__actions reveal">
-        <a class="btn btn--gold" href="#precios">Quiero mi carta natal <svg class="icon"><use href="#i-arrow"/></svg></a>
-        <a class="link-quiet link-quiet--light" href="#generador">o genera tu carta gratis</a>
+        <a class="btn btn--gold" href="#generador">Descubrir mi carta gratis <svg class="icon"><use href="#i-arrow"/></svg></a>
+        <a class="link-quiet link-quiet--light" href="/reportes">Explorar lecturas</a>
       </div>
       <a class="hero__scroll" href="#generador" aria-label="Ir al generador gratuito"><svg class="icon"><use href="#i-down"/></svg></a>
     </div>
 
     <figure class="hero__figure">
-      <img src="/universo-assets/img/observatorio/astrea-estatua-1536.webp" srcset="/universo-assets/img/observatorio/astrea-estatua-960.webp 960w, /universo-assets/img/observatorio/astrea-estatua-1536.webp 1536w" sizes="100vw" alt="Estatua de mármol de Astrea con un mapa celeste, junto a una esfera armilar en un observatorio griego" fetchpriority="high" width="1536" height="1024">
+      <img src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp" srcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" sizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw" alt="Grabado de Astrea con un astrolabio y una esfera armilar" fetchpriority="high" width="1122" height="1402">
     </figure>
   </div>
 </section>
@@ -135,7 +136,7 @@
     </div>
 
     <figure class="gen__figure" aria-hidden="true">
-      <img src="/universo-assets/img/observatorio/astrea-estatua-960.webp" alt="" loading="lazy" width="960" height="640">
+      <img src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp" alt="" loading="lazy" width="640" height="800">
       <figcaption><span>Tu cielo de nacimiento</span>Un mapa para empezar a conocerte.</figcaption>
     </figure>
   </div>

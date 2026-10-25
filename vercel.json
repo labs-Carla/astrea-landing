@@ -9,6 +9,14 @@
   ],
   "rewrites": [
     {
+      "source": "/blog",
+      "destination": "https://astrea-api-production.up.railway.app/api/v1/blog"
+    },
+    {
+      "source": "/blog/:path*",
+      "destination": "https://astrea-api-production.up.railway.app/api/v1/blog/:path*"
+    },
+    {
       "source": "/r/:token",
       "destination": "https://astrea-informe-react.vercel.app/r/:token"
     },
