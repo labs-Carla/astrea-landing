@@ -122,11 +122,9 @@
 .portada-observatorio .hero--editorial .hero__actions { flex-direction: row; flex-wrap: wrap; align-items: center; gap: var(--s-4) var(--s-5); }
 .portada-observatorio .hero--editorial .hero__actions .btn { padding-inline: var(--s-5); font-size: .8rem; }
 .portada-observatorio .hero--editorial .hero__actions .link-quiet { display: inline-flex; align-items: center; gap: 12px; color: var(--gold-deep); font-size: .8rem; }
-.portada-observatorio .hero--editorial .hero__firma { display: flex; align-items: center; gap: 10px; margin: var(--s-6) 0 0; color: var(--ink-soft); font: italic .95rem/1.5 var(--font-serif); }
-.hero--editorial .hero__firma > span { color: var(--gold-deep); font-size: .7rem; }
 .portada-observatorio .hero--editorial .hero__figure { position: relative; inset: auto; order: 0; justify-self: center; width: min(100%, 360px); max-width: none; height: auto; margin: 0; overflow: visible; }
 .portada-observatorio .hero--editorial .hero__figure::after { display: none; }
-.portada-observatorio .hero--editorial .hero__figure img { display: block; width: 100%; height: auto; object-fit: contain; object-position: center; mix-blend-mode: multiply; mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent), linear-gradient(to bottom, transparent, #000 4%, #000 94%, transparent); mask-composite: intersect; }
+.portada-observatorio .hero--editorial .hero__figure img { display: block; width: 100%; height: auto; object-fit: contain; object-position: center; }
 @media (min-width: 860px) {
   .portada-observatorio .hero--editorial .hero__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: var(--s-6); padding-block: var(--s-6); }
   .portada-observatorio .hero--editorial .hero__figure { width: min(100%, 440px); justify-self: end; }

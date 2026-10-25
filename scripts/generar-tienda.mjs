@@ -265,8 +265,8 @@ paginas["index.html"] = layout({
   ruta: "/",
   portada: true,
   scripts: ["/tienda-assets/cielo-semana.js"],
-  imagen: "/universo-assets/img/observatorio/astrea-grabado-hero-v1-1440.webp",
-  preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-grabado-hero-v1-960.webp" imagesrcset="/universo-assets/img/observatorio/astrea-grabado-hero-v1-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v1-960.webp 960w, /universo-assets/img/observatorio/astrea-grabado-hero-v1-1440.webp 1440w" imagesizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw">',
+  imagen: "/universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp",
+  preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp" imagesrcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp 960w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" imagesizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw">',
   titulo: "Astrea · Tu cielo. Tu forma de ser.",
   descripcion: "Un espacio para conocerte a través de tu carta natal. Astronomía precisa, astrología cercana y lecturas para volver a ti. Descubre tu carta gratis.",
   cuerpo: `<section class="hero hero--tienda hero--editorial" aria-labelledby="hero-titulo">
@@ -279,10 +279,9 @@ paginas["index.html"] = layout({
         <a class="btn btn--gold" href="/universo#generador">Descubrir mi carta gratis ${icono("i-arrow")}</a>
         <a class="link-quiet" href="/reportes">Explorar lecturas <span aria-hidden="true">↗</span></a>
       </div>
-      <p class="hero__firma"><span aria-hidden="true">✦</span> El cielo como punto de partida. Tú, en el centro.</p>
     </div>
     <figure class="hero__figure">
-      <img src="/universo-assets/img/observatorio/astrea-grabado-hero-v1-960.webp" srcset="/universo-assets/img/observatorio/astrea-grabado-hero-v1-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v1-960.webp 960w, /universo-assets/img/observatorio/astrea-grabado-hero-v1-1440.webp 1440w" sizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw" alt="Grabado de Astrea con un astrolabio, una esfera armilar sobre una columna griega y un mapa de estrellas" width="1122" height="1402" fetchpriority="high">
+      <img src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp" srcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp 960w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" sizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw" alt="Grabado de Astrea con un astrolabio, una esfera armilar sobre una columna griega y un mapa de estrellas" width="1122" height="1402" fetchpriority="high">
     </figure>
   </div>
 </section>
