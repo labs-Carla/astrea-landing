@@ -45,6 +45,7 @@ const SPRITE_PORTADA = Object.entries(SELLOS_PORTADA).reduce((sprite, [id, trazo
 const NAV = [
   ["/", "Inicio"],
   ["/reportes", "Reportes"],
+  ["/blog/horoscopo-semanal", "Horóscopo semanal"],
   ["/como-funciona", "Cómo funciona"],
   ["/sobre-astrea", "Sobre Astrea"],
   ["/regalar", "Regalar"],
@@ -122,6 +123,7 @@ ${cuerpo}
     <nav class="pie__columna" aria-label="Explora">
       <h2 class="pie__titulo">Explora</h2>
       <a href="/reportes">Reportes</a>
+      <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
       <a href="/como-funciona">Cómo funciona</a>
       <a href="/sobre-astrea">Sobre Astrea</a>
       <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
@@ -805,6 +807,7 @@ Disallow: /r/
 Disallow: /comprar/
 Disallow: /pedido
 Sitemap: ${SITIO}/sitemap.xml
+Sitemap: ${SITIO}/blog/sitemap.xml
 `;
 
 // ---------------------------------------------------------------- escritura / verificación

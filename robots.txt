@@ -4,3 +4,4 @@ Disallow: /r/
 Disallow: /comprar/
 Disallow: /pedido
 Sitemap: https://astrea-charts.site/sitemap.xml
+Sitemap: https://astrea-charts.site/blog/sitemap.xml
