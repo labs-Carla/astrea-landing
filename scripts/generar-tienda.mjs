@@ -303,13 +303,13 @@ paginas["index.html"] = layout({
       <p class="alm-rango" data-cs="rango"></p>
       <p class="cielo-semana__titulo" data-cs="titulo"></p>
       <p class="alm-lede" data-cs="resumen">Cada lunes dibujamos el cielo real de la semana y escribimos una lectura para cada signo: qué áreas de tu vida se activan y qué te invita a mirar.</p>
-      <p class="cielo-semana__elige">Elige tu signo</p>
+      <p class="cielo-semana__elige">Tu lectura de la semana <span>Signo solar o Ascendente</span></p>
       <ul class="zodiaco">
         ${SIGNOS_ALMANAQUE.map((s) => `<li><a href="/blog/horoscopo-semanal/${s.slug}" data-signo="${s.slug}"><span class="glifo" aria-hidden="true">${s.glifo}</span>${s.nombre}</a></li>`).join("\n        ")}
       </ul>
       <a class="link-quiet" href="/blog/horoscopo-semanal" data-cs="url">Leer el horóscopo de la semana</a>
     </div>
-    <figure class="cielo-semana__rueda" data-cs="rueda">${ruedaVacia()}</figure>
+    <figure class="cielo-semana__rueda"><div data-cs="rueda">${ruedaVacia()}</div><figcaption>Un cielo compartido. Doce formas de vivirlo.</figcaption></figure>
   </div>
 </section>
 
