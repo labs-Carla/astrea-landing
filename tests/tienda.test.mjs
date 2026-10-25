@@ -268,19 +268,19 @@ test("cada reporte tiene su portada en los dos tamaños, y la usa su ficha", () 
 
 test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y preguntas", () => {
   const html = PAGINAS["index.html"];
-  assert.match(html, /<h1 class="h-display" id="hero-titulo">Tu carta natal, un lugar al que volver\.<\/h1>/);
-  assert.ok(html.includes("Astrea es tu espacio personal para comprender tu carta natal, explorar tus patrones y encontrar nuevas perspectivas a lo largo del tiempo."), "propuesta de valor en el hero");
-  assert.match(html, /observatorio\/astrea-estatua-1536\.webp/, "observatorio con Astrea como guía");
+  assert.match(html, /<h1 class="h-display" id="hero-titulo">Tu cielo\.<br><em>Tu forma de ser\.<\/em><\/h1>/);
+  assert.ok(html.includes("Un espacio para conocerte a través de tu carta natal."), "propuesta de valor en el hero");
+  assert.match(html, /observatorio\/astrea-grabado-hero-v1-1440\.webp/, "grabado editorial de Astrea");
   assert.ok(html.includes('class="portada-observatorio"'), "tema editorial de la portada");
-  assert.match(html, /astrea-estatua-960\.webp 960w/, "imagen adaptable para móvil");
+  assert.match(html, /astrea-grabado-hero-v1-640\.webp 640w/, "imagen adaptable para móvil");
   assert.match(html, /tienda-assets\/observatorio\.css/, "estilos del observatorio");
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
     if (ruta !== "index.html") assert.ok(!pagina.includes("observatorio.css"), `estilos aislados de ${ruta}`);
   }
   assert.match(html, /<a class="wordmark" href="\/"/, "header de producción");
   assert.match(html, /<a href="\/" aria-current="page">Inicio<\/a>/);
-  assert.match(html, /href="\/reportes">Explorar reportes/);
-  assert.match(html, /href="\/universo#generador">Genera tu carta gratis/);
+  assert.match(html, /href="\/reportes">Explorar lecturas/);
+  assert.match(html, /href="\/universo#generador">Descubrir mi carta gratis/);
   for (const t of ["Astronomía real", "Revisión humana", "Directo a tu correo", "Autoconocimiento"]) assert.ok(html.includes(`<strong>${t}</strong>`), t);
   assert.match(html, /24–48 horas después de la confirmación del pago/);
   for (const r of DISPONIBLES) {
