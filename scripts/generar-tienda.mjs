@@ -42,6 +42,35 @@ const SELLOS_PORTADA = {
 const SPRITE_PORTADA = Object.entries(SELLOS_PORTADA).reduce((sprite, [id, trazos]) =>
   sprite.replace(new RegExp(`<symbol id="${id}"[^>]*>[\\s\\S]*?<\\/symbol>`), `<symbol id="${id}" viewBox="0 0 24 24">${trazos}</symbol>`), SPRITE);
 
+// Almanaque semanal (blog): los 12 signos y la rueda vacía que se ve hasta que llega la semana publicada.
+// La rueda real la dibuja astrea-API (/blog/horoscopo-semanal/portada.json) con la misma geometría.
+const SIGNOS_ALMANAQUE = [
+  ["aries", "Aries"], ["tauro", "Tauro"], ["geminis", "Géminis"], ["cancer", "Cáncer"], ["leo", "Leo"], ["virgo", "Virgo"],
+  ["libra", "Libra"], ["escorpio", "Escorpio"], ["sagitario", "Sagitario"], ["capricornio", "Capricornio"],
+  ["acuario", "Acuario"], ["piscis", "Piscis"],
+].map(([slug, nombre], i) => ({ slug, nombre, glifo: String.fromCodePoint(0x2648 + i) + "\uFE0E" }));
+
+function ruedaVacia() {
+  const punto = (lon, r) => {
+    const a = (lon * Math.PI) / 180;
+    return [+(200 - r * Math.cos(a)).toFixed(2), +(200 + r * Math.sin(a)).toFixed(2)];
+  };
+  const linea = (clase, [x1, y1], [x2, y2]) => `<line class="${clase}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  const divisiones = Array.from({ length: 12 }, (_, i) => linea("rueda__division", punto(i * 30, 166), punto(i * 30, 196))).join("");
+  const marcas = Array.from({ length: 72 }, (_, i) => i * 5).filter((g) => g % 30)
+    .map((g) => linea("rueda__marca", punto(g, 166), punto(g, 166 - (g % 10 ? 3 : 5)))).join("");
+  const signos = SIGNOS_ALMANAQUE.map((s, i) => {
+    const [x, y] = punto(i * 30 + 15, 181);
+    return `<text class="rueda__signo" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central">${s.glifo}</text>`;
+  }).join("");
+  return `<svg class="rueda rueda--noche" viewBox="-6 -6 412 412" role="img" aria-label="La rueda del zodíaco">
+  <circle class="rueda__fondo" cx="200" cy="200" r="196"/><circle class="rueda__aro" cx="200" cy="200" r="196"/>
+  <circle class="rueda__aro rueda__aro--fino" cx="200" cy="200" r="191"/><circle class="rueda__aro" cx="200" cy="200" r="166"/>
+  <circle class="rueda__aro rueda__aro--fino" cx="200" cy="200" r="112"/>${divisiones}${marcas}${signos}
+  <path class="rueda__estrella" d="M200 192 L202 198 L208 200 L202 202 L200 208 L198 202 L192 200 L198 198 Z"/>
+</svg>`;
+}
+
 const NAV = [
   ["/", "Inicio"],
   ["/reportes", "Reportes"],
@@ -80,9 +109,9 @@ ${indexable ? `<link rel="canonical" href="${SITIO}${ruta === "/" ? "/" : ruta}"
 <meta name="theme-color" content="${portada ? '#F7F3EA' : '#0B1220'}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Noto+Sans+Symbols&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/universo-assets/universo.css">
-<link rel="stylesheet" href="/tienda-assets/tienda.css">${portada ? '\n<link rel="stylesheet" href="/tienda-assets/observatorio.css">' : ''}
+<link rel="stylesheet" href="/tienda-assets/tienda.css">${portada ? '\n<link rel="stylesheet" href="/tienda-assets/observatorio.css">\n<link rel="stylesheet" href="/tienda-assets/almanaque.css">' : ''}
 ${preload}
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}</head>
 <body${portada ? ' class="portada-observatorio"' : ''}>
@@ -235,6 +264,7 @@ const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby=
 paginas["index.html"] = layout({
   ruta: "/",
   portada: true,
+  scripts: ["/tienda-assets/cielo-semana.js"],
   imagen: "/universo-assets/img/observatorio/astrea-estatua-1536.webp",
   preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-estatua-1536.webp" imagesrcset="/universo-assets/img/observatorio/astrea-estatua-960.webp 960w, /universo-assets/img/observatorio/astrea-estatua-1536.webp 1536w" imagesizes="100vw">',
   titulo: "Astrea · Tu carta natal, un lugar al que volver",
@@ -263,6 +293,24 @@ paginas["index.html"] = layout({
     <li>${icono("i-mail", "icon confianza__icono")}<div><strong>Directo a tu correo</strong><span>Recibe tu informe en 24–48 horas después de la confirmación del pago.</span></div></li>
     <li>${icono("i-loto", "icon confianza__icono")}<div><strong>Autoconocimiento</strong><span>Herramientas para comprenderte y tomar decisiones más alineadas.</span></div></li>
   </ul>
+</section>
+
+<section class="cielo-semana" id="cielo-semana" aria-labelledby="cielo-semana-titulo" data-cielo-semana>
+  <div class="shell cielo-semana__grid">
+    <div class="cielo-semana__texto">
+      <p class="alm-eyebrow" data-cs="eyebrow">Almanaque semanal · cada lunes</p>
+      <h2 class="alm-h2" id="cielo-semana-titulo">El cielo de esta semana</h2>
+      <p class="alm-rango" data-cs="rango"></p>
+      <p class="cielo-semana__titulo" data-cs="titulo"></p>
+      <p class="alm-lede" data-cs="resumen">Cada lunes dibujamos el cielo real de la semana y escribimos una lectura para cada signo: qué áreas de tu vida se activan y qué te invita a mirar.</p>
+      <p class="cielo-semana__elige">Elige tu signo</p>
+      <ul class="zodiaco">
+        ${SIGNOS_ALMANAQUE.map((s) => `<li><a href="/blog/horoscopo-semanal/${s.slug}" data-signo="${s.slug}"><span class="glifo" aria-hidden="true">${s.glifo}</span>${s.nombre}</a></li>`).join("\n        ")}
+      </ul>
+      <a class="link-quiet" href="/blog/horoscopo-semanal" data-cs="url">Leer el horóscopo de la semana</a>
+    </div>
+    <figure class="cielo-semana__rueda" data-cs="rueda">${ruedaVacia()}</figure>
+  </div>
 </section>
 
 <section class="capitulo capitulo--marmol" id="recorrido" aria-labelledby="recorrido-titulo">
