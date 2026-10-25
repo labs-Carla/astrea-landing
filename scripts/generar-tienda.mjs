@@ -262,24 +262,24 @@ paginas["index.html"] = layout({
   ruta: "/",
   portada: true,
   scripts: ["/tienda-assets/cielo-semana.js"],
-  imagen: "/universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp",
-  preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp" imagesrcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp 960w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" imagesizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw">',
+  imagen: "/universo-assets/img/observatorio/astrea-editorial-hero.webp",
+  preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-editorial-hero.webp" fetchpriority="high">',
   titulo: "Astrea · Tu cielo. Tu forma de ser.",
   descripcion: "Un espacio para conocerte a través de tu carta natal. Astronomía precisa, astrología cercana y lecturas para volver a ti. Descubre tu carta gratis.",
-  cuerpo: `<section class="hero hero--tienda hero--editorial" aria-labelledby="hero-titulo">
-  <div class="hero__grid shell">
-    <div class="hero__copy">
-      <p class="eyebrow">Astrología para conocerte</p>
-      <h1 class="h-display" id="hero-titulo">Tu cielo.<br><em>Tu forma de ser.</em></h1>
-      <p class="lede">Un espacio para conocerte a través de tu carta natal. Astronomía precisa, astrología cercana y lecturas para volver a ti.</p>
+  cuerpo: `<section class="hero hero--tienda hero--editorial hero--astrea-atlas" aria-labelledby="hero-titulo">
+  <div class="hero-atlas__art" aria-hidden="true"></div>
+  <div class="hero-atlas__veil" aria-hidden="true"></div>
+  <div class="hero-atlas__inner shell">
+    <div class="hero-atlas__copy">
+      <p class="eyebrow">Un atlas de tu universo personal</p>
+      <h1 class="h-display" id="hero-titulo">El universo<br>empieza<br><em>contigo.</em></h1>
+      <p class="lede">Astrología para conocerte, explorar tus ciclos y descubrir nuevas formas de ser tú.</p>
       <div class="hero__actions">
         <a class="btn btn--gold" href="/universo#generador">Descubrir mi carta gratis ${icono("i-arrow")}</a>
         <a class="link-quiet" href="/reportes">Explorar lecturas <span aria-hidden="true">↗</span></a>
       </div>
+      <p class="hero-atlas__footnote">✳ Tu carta natal es solo el comienzo.</p>
     </div>
-    <figure class="hero__figure">
-      <img src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp" srcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-960.webp 960w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" sizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw" alt="Grabado de Astrea con un astrolabio, una esfera armilar sobre una columna griega y un mapa de estrellas" width="1122" height="1402" fetchpriority="high">
-    </figure>
   </div>
 </section>
 

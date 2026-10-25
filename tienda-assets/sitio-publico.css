@@ -149,3 +149,49 @@
   .astrea-legacy[data-pagina="link-gratis"] .premium-media { margin-inline: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .astrea-publica * { scroll-behavior: auto; } }
+
+/* ASTREA EDITORIAL v2 — imagen completa, a escala, sin zoom ni recorte. */
+.astrea-publica:has(.hero--astrea-atlas) { --marble:#F3F0E8; --cream:#F3F0E8; --ivory:#FAF7F0; --ink:#252721; --ink-soft:#494943; --gold:#A54C39; --gold-deep:#A54C39; --gold-soft:#3457A5; --hairline:#DCD3C5; --hairline-strong:#CFC3B1; }
+.astrea-publica:has(.hero--astrea-atlas) .site-header { border-top:0; border-bottom:1px solid rgba(71,62,52,.16); background:rgba(243,240,232,.96); }
+.astrea-publica:has(.hero--astrea-atlas) .site-header__inner { min-height:76px; }
+.astrea-publica:has(.hero--astrea-atlas) .site-header .btn { background:#A54C39; color:#fff; }
+/* La proporción del lienzo coincide con el archivo original (1942×809).
+   Nunca usar cover: mantiene visibles las notas, la costa y las columnas. */
+.astrea-publica .hero--astrea-atlas { isolation:isolate; position:relative; overflow:hidden; width:100%; aspect-ratio:1942/809; min-height:0; display:flex; align-items:center; padding:0; background:#F3F0E8; }
+.astrea-publica .hero--astrea-atlas .hero-atlas__art { position:absolute; z-index:-2; inset:0; background-image:url('/universo-assets/img/observatorio/astrea-editorial-hero.webp'); background-position:center; background-size:100% 100%; background-repeat:no-repeat; }
+/* Velo localizado: legibilidad sin borrar la mitad derecha del collage. */
+.astrea-publica .hero--astrea-atlas .hero-atlas__veil { position:absolute; z-index:-1; inset:0; pointer-events:none; background:linear-gradient(90deg,rgba(250,247,240,.96) 0%,rgba(250,247,240,.95) 19%,rgba(250,247,240,.88) 28%,rgba(250,247,240,.48) 38%,rgba(250,247,240,0) 48%); }
+.astrea-publica .hero--astrea-atlas .hero-atlas__inner { width:100%; padding-block:clamp(24px,3.2vw,64px); }
+.astrea-publica .hero--astrea-atlas .hero-atlas__copy { width:41%; max-width:550px; }
+.astrea-publica .hero--astrea-atlas .eyebrow { color:#A54C39; letter-spacing:.18em; font-size:clamp(.56rem,.7vw,.75rem); }
+.astrea-publica .hero--astrea-atlas .h-display { color:#252721; font-family:var(--font-serif); font-weight:500; font-size:clamp(3.25rem,5.55vw,7rem); line-height:.91; letter-spacing:-.035em; margin:clamp(15px,2vw,32px) 0 clamp(18px,2vw,32px); }
+.astrea-publica .hero--astrea-atlas .h-display em { color:#3457A5; font-weight:400; }
+.astrea-publica .hero--astrea-atlas .lede { color:#34352F; font-size:clamp(.82rem,1.02vw,1.1rem); max-width:370px; line-height:1.55; }
+.astrea-publica .hero--astrea-atlas .hero__actions { display:flex; flex-wrap:wrap; align-items:center; gap:12px 22px; margin-top:clamp(16px,2.2vw,30px); }
+.astrea-publica .hero--astrea-atlas .btn--gold { background:#A54C39; color:#fff; border-color:#A54C39; border-radius:999px; }
+.astrea-publica .hero--astrea-atlas .btn--gold:hover { background:#813B2D; border-color:#813B2D; }
+.astrea-publica .hero--astrea-atlas .link-quiet { color:#3A3A35; text-decoration:underline; text-underline-offset:6px; }
+.astrea-publica .hero--astrea-atlas .hero-atlas__footnote { margin-top:clamp(16px,2.8vw,42px); color:#625F57; font-size:.75rem; letter-spacing:.05em; }
+/* Pantallas medianas: misma imagen completa, sin crop; tipografía proporcionada. */
+@media (min-width:851px) and (max-width:1250px) {
+ .astrea-publica .hero--astrea-atlas .hero-atlas__copy { width:44%; }
+ .astrea-publica .hero--astrea-atlas .h-display { font-size:clamp(3rem,5.25vw,4.6rem); }
+ .astrea-publica .hero--astrea-atlas .hero-atlas__footnote { margin-top:15px; }
+ .astrea-publica .hero--astrea-atlas .hero__actions { margin-top:14px; }
+}
+/* Móvil: la imagen completa va arriba y el texto debajo. Sin zoom, sin recortes. */
+@media(max-width:850px) {
+ .astrea-publica .hero--astrea-atlas { aspect-ratio:auto; display:block; overflow:hidden; }
+ .astrea-publica .hero--astrea-atlas .hero-atlas__art { position:relative; inset:auto; width:100%; height:auto; aspect-ratio:1942/809; background-size:100% 100%; background-position:center; }
+ .astrea-publica .hero--astrea-atlas .hero-atlas__veil { display:none; }
+ .astrea-publica .hero--astrea-atlas .hero-atlas__inner { padding-block:24px 48px; }
+ .astrea-publica .hero--astrea-atlas .hero-atlas__copy { width:100%; max-width:620px; }
+ .astrea-publica .hero--astrea-atlas .h-display { font-size:clamp(3.7rem,10vw,6rem); margin:20px 0 22px; }
+ .astrea-publica .hero--astrea-atlas .hero-atlas__footnote { margin-top:28px; }
+}
+@media(max-width:520px) {
+ .astrea-publica .hero--astrea-atlas .hero-atlas__inner { padding-top:24px; padding-bottom:40px; }
+ .astrea-publica .hero--astrea-atlas .h-display { font-size:clamp(3.5rem,13vw,5rem); }
+ .astrea-publica .hero--astrea-atlas .hero__actions { align-items:stretch; flex-direction:column; }
+ .astrea-publica .hero--astrea-atlas .hero__actions .btn { width:100%; }
+}
