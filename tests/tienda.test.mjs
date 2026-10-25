@@ -268,11 +268,11 @@ test("cada reporte tiene su portada en los dos tamaños, y la usa su ficha", () 
 
 test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y preguntas", () => {
   const html = PAGINAS["index.html"];
-  assert.match(html, /<h1 class="h-display" id="hero-titulo">Tu cielo\.<br><em>Tu forma de ser\.<\/em><\/h1>/);
-  assert.ok(html.includes("Un espacio para conocerte a través de tu carta natal."), "propuesta de valor en el hero");
-  assert.match(html, /observatorio\/astrea-grabado-hero-v2-1122\.webp/, "grabado editorial de Astrea");
+  assert.match(html, /<h1 class="h-display" id="hero-titulo">El universo<br>empieza<br><em>contigo\.<\/em><\/h1>/);
+  assert.ok(html.includes("Astrología para conocerte, explorar tus ciclos"), "propuesta de valor en el hero");
+  assert.match(html, /observatorio\/astrea-editorial-hero\.webp/, "grabado editorial de Astrea");
   assert.ok(html.includes('class="portada-observatorio astrea-publica"'), "tema editorial del sitio público");
-  assert.match(html, /astrea-grabado-hero-v2-640\.webp 640w/, "imagen adaptable para móvil");
+  assert.match(html, /astrea-editorial-hero\.webp/, "imagen adaptable para móvil");
   assert.match(html, /tienda-assets\/observatorio\.css/, "estilos del observatorio");
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
     if (ruta.endsWith(".html")) assert.ok(pagina.includes("sitio-publico.css"), `identidad común en ${ruta}`);
