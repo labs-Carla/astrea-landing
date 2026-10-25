@@ -15,6 +15,7 @@ import { fileURLToPath } from "node:url";
 import { CONSENTIMIENTO } from "../tienda-assets/lista.js";
 import { REPORTES, ENTREGA, PACK_TEMATICOS, estadoDe, reportePorSlug } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
+import { conIconosAstrea } from "../tienda-assets/iconos-astrea.mjs";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITIO = "https://astrea-charts.site";
@@ -33,14 +34,7 @@ const SPRITE = SPRITE_UNIVERSO.replace("</svg>", `  <symbol id="i-menu" viewBox=
 
 const TERMINOS_VIGENTES_DESDE = "18 de octubre de 2026";
 
-// En la portada, instrumentos clásicos en lugar de ornamentos genéricos.
-const SELLOS_PORTADA = {
-  'i-orbita': '<circle cx="12" cy="11" r="8"/><circle cx="12" cy="11" r="5.5"/><ellipse cx="12" cy="11" rx="2.7" ry="8" transform="rotate(32 12 11)"/><path d="m5.5 15.7 13-9.4M12 1v2M10 19l-1.5 3h7L14 19"/>',
-  'i-sun': '<path d="M11 21C4 18 3 11 6 5M13 21c7-3 8-10 5-16M8 18c-4 0-5-2-5-4 3 0 5 1 5 4ZM6 13c-3-1-4-3-3-5 3 1 4 3 3 5Zm0-5C4 5 5 3 7 2c2 3 1 5-1 6Zm10 10c4 0 5-2 5-4-3 0-5 1-5 4Zm2-5c3-1 4-3 3-5-3 1-4 3-3 5Zm0-5c2-3 1-5-1-6-2 3-1 5 1 6Z"/>',
-  'i-loto': '<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5zM12 1v2M12 21v2M1 12h2M21 12h2"/>',
-};
-const SPRITE_PORTADA = Object.entries(SELLOS_PORTADA).reduce((sprite, [id, trazos]) =>
-  sprite.replace(new RegExp(`<symbol id="${id}"[^>]*>[\\s\\S]*?<\\/symbol>`), `<symbol id="${id}" viewBox="0 0 24 24">${trazos}</symbol>`), SPRITE);
+const SPRITE_PORTADA = conIconosAstrea(SPRITE);
 
 // Almanaque semanal (blog): los 12 signos y la rueda vacía que se ve hasta que llega la semana publicada.
 // La rueda real la dibuja astrea-API (/blog/horoscopo-semanal/portada.json) con la misma geometría.
@@ -242,8 +236,8 @@ const FAQ_PORTADA = [
 
 
 const RECORRIDO = [
-  ["i-wheel", "Descubre tu carta", "Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.", "/universo#generador", "Generar mi carta gratis"],
-  ["i-pages", "Profundiza con una lectura", "La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.", "/reportes", "Ver reportes"],
+  ["i-astrolabio", "Descubre tu carta", "Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.", "/universo#generador", "Generar mi carta gratis"],
+  ["i-libro", "Profundiza con una lectura", "La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.", "/reportes", "Ver reportes"],
 ];
 
 const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby="tp-${r.slug}">
@@ -288,10 +282,10 @@ paginas["index.html"] = layout({
 
 <section class="confianza" aria-label="Por qué confiar en Astrea">
   <ul class="shell confianza__lista">
-    <li>${icono("i-orbita", "icon confianza__icono")}<div><strong>Astronomía real</strong><span>Cálculos con Swiss Ephemeris y datos astronómicos precisos.</span></div></li>
-    <li>${icono("i-sun", "icon confianza__icono")}<div><strong>Revisión humana</strong><span>Interpretaciones asistidas por IA y revisadas por una astróloga.</span></div></li>
-    <li>${icono("i-mail", "icon confianza__icono")}<div><strong>Directo a tu correo</strong><span>Recibe tu informe en 24–48 horas después de la confirmación del pago.</span></div></li>
-    <li>${icono("i-loto", "icon confianza__icono")}<div><strong>Autoconocimiento</strong><span>Herramientas para comprenderte y tomar decisiones más alineadas.</span></div></li>
+    <li>${icono("i-armilar", "icon confianza__icono")}<div><strong>Astronomía real</strong><span>Cálculos con Swiss Ephemeris y datos astronómicos precisos.</span></div></li>
+    <li>${icono("i-pluma", "icon confianza__icono")}<div><strong>Revisión humana</strong><span>Interpretaciones asistidas por IA y revisadas por una astróloga.</span></div></li>
+    <li>${icono("i-pergamino", "icon confianza__icono")}<div><strong>Directo a tu correo</strong><span>Recibe tu informe en 24–48 horas después de la confirmación del pago.</span></div></li>
+    <li>${icono("i-espejo", "icon confianza__icono")}<div><strong>Autoconocimiento</strong><span>Herramientas para comprenderte y tomar decisiones más alineadas.</span></div></li>
   </ul>
 </section>
 
@@ -310,9 +304,6 @@ paginas["index.html"] = layout({
       <div class="cielo-semana__escena">
         <span class="cielo-semana__orbita" aria-hidden="true"></span>
         <span class="cielo-semana__orbita cielo-semana__orbita--inclinada" aria-hidden="true"></span>
-        <span class="cielo-semana__destello cielo-semana__destello--uno" aria-hidden="true">✦</span>
-        <span class="cielo-semana__destello cielo-semana__destello--dos" aria-hidden="true">✧</span>
-        <span class="cielo-semana__destello cielo-semana__destello--tres" aria-hidden="true">✦</span>
         <div data-cs="rueda">${ruedaVacia()}</div>
       </div>
       <figcaption>Un cielo compartido. Doce formas de vivirlo.</figcaption>
@@ -363,9 +354,9 @@ paginas["index.html"] = layout({
       <h2 class="capitulo__titulo" id="pasos-titulo">Tres pasos para recibir tu reporte</h2>
     </header>
     <ol class="pasos">
-      <li class="paso"><span class="paso__numero">01</span>${icono("i-pages", "icon paso__icono")}<h3 class="paso__titulo">Comparte tus datos de nacimiento</h3><p>Completa tu fecha, hora y lugar de nacimiento, y los datos de tu pareja si aplica.</p></li>
-      <li class="paso"><span class="paso__numero">02</span>${icono("i-wheel", "icon paso__icono")}<h3 class="paso__titulo">Calculamos tu carta</h3><p>Usamos Swiss Ephemeris y una interpretación asistida por IA, revisada por una astróloga.</p></li>
-      <li class="paso"><span class="paso__numero">03</span>${icono("i-mail", "icon paso__icono")}<h3 class="paso__titulo">Recibes tu informe personalizado</h3><p>Te lo enviamos a tu correo en 24–48 horas, contadas desde la confirmación del pago.</p></li>
+      <li class="paso"><span class="paso__numero">01</span>${icono("i-nacimiento", "icon paso__icono")}<h3 class="paso__titulo">Comparte tus datos de nacimiento</h3><p>Completa tu fecha, hora y lugar de nacimiento, y los datos de tu pareja si aplica.</p></li>
+      <li class="paso"><span class="paso__numero">02</span>${icono("i-astrolabio", "icon paso__icono")}<h3 class="paso__titulo">Calculamos tu carta</h3><p>Usamos Swiss Ephemeris y una interpretación asistida por IA, revisada por una astróloga.</p></li>
+      <li class="paso"><span class="paso__numero">03</span>${icono("i-pergamino", "icon paso__icono")}<h3 class="paso__titulo">Recibes tu informe personalizado</h3><p>Te lo enviamos a tu correo en 24–48 horas, contadas desde la confirmación del pago.</p></li>
     </ol>
   </div>
 </section>
