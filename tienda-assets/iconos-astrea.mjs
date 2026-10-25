@@ -60,10 +60,16 @@ const ICONOS = {
 };
 
 export function conIconosAstrea(sprite) {
-  for (const [id, [lado, trazos]] of Object.entries(ICONOS)) {
+  const alias = { "i-wheel": "i-astrolabio", "i-pages": "i-libro", "i-mail": "i-pergamino", "i-compass": "i-espejo", "i-orbita": "i-armilar", "i-loto": "i-espejo", "i-eye": "i-pluma" };
+  const familia = { ...ICONOS, ...Object.fromEntries(Object.entries(alias).map(([id, original]) => [id, ICONOS[original]])) };
+  for (const [id, [lado, trazos]] of Object.entries(familia)) {
     const simbolo = `<symbol id="${id}" viewBox="0 0 ${lado} ${lado}">${trazos}</symbol>`;
     const anterior = new RegExp(`<symbol id="${id}"[^>]*>[\\s\\S]*?<\\/symbol>`);
     sprite = anterior.test(sprite) ? sprite.replace(anterior, simbolo) : sprite.replace("</svg>", `${simbolo}</svg>`);
   }
   return sprite;
+}
+
+export function emblemaAstrea() {
+  return `<svg viewBox="0 0 64 64" width="32" height="36" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONOS["i-armilar"][1]}</svg>`;
 }

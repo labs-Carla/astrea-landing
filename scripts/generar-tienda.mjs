@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 import { CONSENTIMIENTO } from "../tienda-assets/lista.js";
 import { REPORTES, ENTREGA, PACK_TEMATICOS, estadoDe, reportePorSlug } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
-import { conIconosAstrea } from "../tienda-assets/iconos-astrea.mjs";
+import { conIconosAstrea, emblemaAstrea } from "../tienda-assets/iconos-astrea.mjs";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITIO = "https://astrea-charts.site";
@@ -100,24 +100,27 @@ ${indexable ? `<link rel="canonical" href="${SITIO}${ruta === "/" ? "/" : ruta}"
 <meta property="og:url" content="${SITIO}${ruta}">
 <meta property="og:image" content="${SITIO}${imagen}">
 <meta property="og:locale" content="es_LA">
-<meta name="theme-color" content="${portada ? '#F7F3EA' : '#0B1220'}">
+<meta name="theme-color" content="#F7F3EA">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Noto+Sans+Symbols&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/universo-assets/universo.css">
-<link rel="stylesheet" href="/tienda-assets/tienda.css">${portada ? '\n<link rel="stylesheet" href="/tienda-assets/observatorio.css">\n<link rel="stylesheet" href="/tienda-assets/almanaque.css">' : ''}
+<link rel="stylesheet" href="/tienda-assets/tienda.css">
+<link rel="stylesheet" href="/tienda-assets/observatorio.css">
+<link rel="stylesheet" href="/tienda-assets/almanaque.css">
+<link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
 ${preload}
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}</head>
-<body${portada ? ' class="portada-observatorio"' : ''}>
+<body class="portada-observatorio astrea-publica">
 <!-- Generado por scripts/generar-tienda.mjs a partir de tienda-assets/catalogo.js. No editar a mano. -->
 
-${portada ? SPRITE_PORTADA : SPRITE}
+${SPRITE_PORTADA}
 
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <header class="site-header site-header--tienda">
   <div class="site-header__inner">
-    <a class="wordmark" href="/" aria-label="Astrea, inicio">ASTREA</a>
+    <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__sello" aria-hidden="true">${emblemaAstrea()}</span><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
     <nav class="site-nav" aria-label="Principal">
       ${enlaces}
     </nav>
@@ -133,7 +136,7 @@ ${portada ? SPRITE_PORTADA : SPRITE}
   </div>
 </header>
 
-<main id="contenido">
+<main id="contenido" tabindex="-1">
 ${cuerpo}
 </main>
 
@@ -162,7 +165,7 @@ ${cuerpo}
     <p><a href="/terminos">Términos y reembolsos</a> · <a href="/privacidad">Política de privacidad</a> · © ${new Date().getFullYear()} Astrea Charts</p>
   </div>
 </footer>
-${["/tienda-assets/origen.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
+${["/tienda-assets/origen.js", "/tienda-assets/sitio-publico.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
 </body>
 </html>
 `;
@@ -177,7 +180,7 @@ function cabecera({ eyebrow, titulo, lede, migas = [] }) {
     ${m}
     <p class="eyebrow eyebrow--light">${esc(eyebrow)}</p>
     <h1 class="h-display">${esc(titulo)}</h1>
-    ${lede ? `<p class="lede lede--light">${esc(lede)}</p>` : ""}
+${lede ? `    <p class="lede lede--light">${esc(lede)}</p>` : ""}
   </div>
 </section>`;
 }
@@ -847,7 +850,31 @@ paginas["preguntas-frecuentes.html"] = layout({
 </section>`,
 });
 
-const indexables = ["/", "/reportes", ...REPORTES.map((r) => `/reportes/${r.slug}`), "/como-funciona", "/sobre-astrea", "/preguntas-frecuentes", "/terminos", "/regalar", "/universo"];
+paginas["privacidad.html"] = layout({
+  ruta: "/privacidad", titulo: "Política de privacidad · Astrea", descripcion: "Cómo tratamos tus datos y cómo ejercer tus derechos en Astrea.",
+  cuerpo: `${cabecera({ eyebrow: "Tus datos, con cuidado", titulo: "Política de privacidad", migas: [["/", "Inicio"], ["/privacidad", "Privacidad"]] })}
+<section class="sheet sheet--light seccion"><div class="shell prosa documento-legal">${readFileSync(join(RAIZ, "tienda-assets/contenido-privacidad.html"), "utf8")}</div></section>`,
+});
+
+paginas["ejemplo.html"] = layout({
+  ruta: "/ejemplo", titulo: "Así se ve una lectura de Astrea", descripcion: "Una muestra del estilo editorial de nuestras lecturas de carta natal.",
+  cuerpo: `${cabecera({ eyebrow: "Antes de elegir tu lectura", titulo: "Así se lee tu cielo", lede: "Una muestra del diseño y del tono de nuestras lecturas: imágenes cuidadas, espacio para reflexionar y un lenguaje cercano.", migas: [["/", "Inicio"], ["/ejemplo", "Muestra de lectura"]] })}
+<section class="sheet sheet--light seccion"><div class="shell muestra-editorial">
+  <img class="muestra-editorial__arte" src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp" alt="Grabado de Astrea junto a una esfera armilar" width="640" height="800">
+  <article class="muestra-editorial__hoja">
+    <p class="eyebrow">Fragmento ilustrativo · Tu mundo emocional</p>
+    <h2>Lo que te hace sentir en casa</h2>
+    <p>Tu Luna habla de lo que necesitas para sentirte en casa, de cómo sientes y de lo que te da calma.</p>
+    <p>Una lectura de tu carta es una oportunidad para detenerte en esas preguntas: qué cuidas, qué necesitas y qué lugar quieres dar a tu mundo emocional.</p>
+    <p class="nota-reflexion">Este fragmento muestra el tono editorial. Tu informe se prepara a partir de tus propios datos de nacimiento.</p>
+    <a class="btn btn--gold" href="/reportes/carta-natal">Conocer la carta natal completa ${icono("i-arrow")}</a>
+  </article>
+</div></section>`,
+});
+
+paginas["tienda-assets/astrea-emblema.svg"] = emblemaAstrea().replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" style="color:#8B6F47" ');
+
+const indexables = ["/", "/reportes", ...REPORTES.map((r) => `/reportes/${r.slug}`), "/como-funciona", "/sobre-astrea", "/preguntas-frecuentes", "/terminos", "/privacidad", "/ejemplo", "/regalar", "/universo"];
 paginas["sitemap.xml"] = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexables.map((u) => `  <url><loc>${SITIO}${u}</loc></url>`).join("\n")}

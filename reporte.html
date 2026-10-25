@@ -318,8 +318,13 @@
     .mirada-grid, .panorama-grid { flex-direction: column; }
   }
 </style>
+<link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
 </head>
-<body>
+<body class="astrea-publica astrea-legacy" data-pagina="reporte">
+<header class="astrea-legacy__header">
+  <a class="astrea-legacy__marca" href="/" aria-label="Astrea, inicio"><img src="/tienda-assets/astrea-emblema.svg" width="32" height="36" alt="">ASTREA</a>
+  <nav aria-label="Explora Astrea"><a href="/reportes">Explorar lecturas</a><a href="/blog/horoscopo-semanal">Horóscopo semanal</a></nav>
+</header>
 
 <div id="cargando" class="cargando">Preparando tu lectura...</div>
 <div id="contenido-reporte" style="display:none;"></div>

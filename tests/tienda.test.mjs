@@ -271,13 +271,13 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   assert.match(html, /<h1 class="h-display" id="hero-titulo">Tu cielo\.<br><em>Tu forma de ser\.<\/em><\/h1>/);
   assert.ok(html.includes("Un espacio para conocerte a través de tu carta natal."), "propuesta de valor en el hero");
   assert.match(html, /observatorio\/astrea-grabado-hero-v2-1122\.webp/, "grabado editorial de Astrea");
-  assert.ok(html.includes('class="portada-observatorio"'), "tema editorial de la portada");
+  assert.ok(html.includes('class="portada-observatorio astrea-publica"'), "tema editorial del sitio público");
   assert.match(html, /astrea-grabado-hero-v2-640\.webp 640w/, "imagen adaptable para móvil");
   assert.match(html, /tienda-assets\/observatorio\.css/, "estilos del observatorio");
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
-    if (ruta !== "index.html") assert.ok(!pagina.includes("observatorio.css"), `estilos aislados de ${ruta}`);
+    if (ruta.endsWith(".html")) assert.ok(pagina.includes("sitio-publico.css"), `identidad común en ${ruta}`);
   }
-  assert.match(html, /<a class="wordmark" href="\/"/, "header de producción");
+  assert.match(html, /<a class="wordmark alm-marca" href="\/"/, "header de producción");
   assert.match(html, /<a href="\/" aria-current="page">Inicio<\/a>/);
   assert.match(html, /href="\/reportes">Explorar lecturas/);
   assert.match(html, /href="\/universo#generador">Descubrir mi carta gratis/);
