@@ -58,7 +58,8 @@
 .blog-almanaque .alm-header { position: sticky; inset: auto; top: 0; background: rgba(247, 243, 234, .97); border-top: 3px solid var(--gold-deep); border-bottom: 1px solid var(--hairline-strong); backdrop-filter: blur(12px); }
 .alm-header .site-header__inner { min-height: 88px; gap: var(--s-5); padding-block: var(--s-3); }
 .blog-almanaque .alm-marca { display: inline-flex; align-items: center; gap: 12px; flex: none; }
-.alm-marca__sello { display: grid; place-items: center; width: 40px; height: 46px; border: 1px solid var(--gold-deep); border-radius: 50% 50% 2px 2px; outline: 1px solid var(--hairline); outline-offset: 3px; font-size: 1.35rem; color: var(--gold-deep); }
+.alm-marca__sello { display: grid; place-items: center; width: 40px; height: 46px; border: 1px solid var(--gold-deep); border-radius: 50% 50% 2px 2px; outline: 1px solid var(--hairline); outline-offset: 3px; color: var(--gold-deep); }
+.alm-marca__sello svg { display: block; width: 32px; height: 36px; }
 .alm-marca__texto { display: grid; gap: 7px; font-size: 1.45rem; line-height: 1; letter-spacing: .3em; }
 .alm-marca__texto small { font: 500 .55rem/1.2 var(--font-sans); letter-spacing: .17em; text-transform: uppercase; color: var(--gold-deep); }
 .blog-almanaque .site-nav { display: none; align-items: center; gap: var(--s-5); }
