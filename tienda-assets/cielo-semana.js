@@ -18,6 +18,7 @@ async function cargar() {
   campo("url").href = semana.url;
   // SVG generado por astrea-API solo a partir de números y glifos fijos.
   campo("rueda").innerHTML = semana.rueda_svg;
+  campo("rueda").querySelector(".rueda")?.classList.remove("rueda--noche");
   for (const s of semana.signos) {
     const enlace = raiz.querySelector(`[data-signo="${s.url.split("/").pop()}"]`);
     if (enlace) {

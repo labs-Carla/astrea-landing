@@ -63,7 +63,7 @@ function ruedaVacia() {
     const [x, y] = punto(i * 30 + 15, 181);
     return `<text class="rueda__signo" x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central">${s.glifo}</text>`;
   }).join("");
-  return `<svg class="rueda rueda--noche" viewBox="-6 -6 412 412" role="img" aria-label="La rueda del zodíaco">
+  return `<svg class="rueda" viewBox="-6 -6 412 412" role="img" aria-label="La rueda del zodíaco">
   <circle class="rueda__fondo" cx="200" cy="200" r="196"/><circle class="rueda__aro" cx="200" cy="200" r="196"/>
   <circle class="rueda__aro rueda__aro--fino" cx="200" cy="200" r="191"/><circle class="rueda__aro" cx="200" cy="200" r="166"/>
   <circle class="rueda__aro rueda__aro--fino" cx="200" cy="200" r="112"/>${divisiones}${marcas}${signos}
@@ -299,17 +299,19 @@ paginas["index.html"] = layout({
   <div class="shell cielo-semana__grid">
     <div class="cielo-semana__texto">
       <p class="alm-eyebrow" data-cs="eyebrow">Almanaque semanal · cada lunes</p>
-      <h2 class="alm-h2" id="cielo-semana-titulo">El cielo de esta semana</h2>
+      <h2 class="alm-h2" id="cielo-semana-titulo">Tu semana,<br>a la luz del cielo</h2>
       <p class="alm-rango" data-cs="rango"></p>
       <p class="cielo-semana__titulo" data-cs="titulo"></p>
       <p class="alm-lede" data-cs="resumen">Una pausa para mirar hacia arriba y volver a ti. Cada lunes, los movimientos del cielo y una lectura para acompañar tu semana.</p>
-      <p class="cielo-semana__elige">Un cielo, doce miradas <span>Empieza por tu signo solar. Explora también tu Ascendente.</span></p>
-      <ul class="zodiaco zodiaco--ilustrado">
-        ${SIGNOS_ALMANAQUE.map((s) => `<li><a href="/blog/horoscopo-semanal/${s.slug}" data-signo="${s.slug}"><span class="alm-medallon" aria-hidden="true"><img src="/universo-assets/img/almanaque/${s.slug}-320.webp" width="80" height="80" alt="" loading="lazy" decoding="async"></span>${s.nombre}</a></li>`).join("\n        ")}
-      </ul>
-      <a class="link-quiet" href="/blog/horoscopo-semanal" data-cs="url">Abrir el almanaque de la semana</a>
+      <a class="btn btn--gold" href="/blog/horoscopo-semanal" data-cs="url">Abrir el almanaque <span aria-hidden="true">↗</span></a>
     </div>
-    <figure class="cielo-semana__rueda"><div data-cs="rueda">${ruedaVacia()}</div><figcaption>Un cielo compartido. Doce formas de vivirlo.</figcaption></figure>
+    <figure class="cielo-semana__rueda"><p class="cielo-semana__mapa">El mapa de estos días</p><div data-cs="rueda">${ruedaVacia()}</div><figcaption>Un cielo compartido.<br>Doce formas de vivirlo.</figcaption></figure>
+  </div>
+  <div class="shell cielo-semana__signos">
+    <div class="cielo-semana__cabecera-signos"><h3 class="cielo-semana__elige">Un cielo, doce miradas</h3><p>Empieza por tu signo solar. Explora también tu Ascendente.</p></div>
+    <ul class="zodiaco zodiaco--ilustrado">
+        ${SIGNOS_ALMANAQUE.map((s) => `<li><a href="/blog/horoscopo-semanal/${s.slug}" data-signo="${s.slug}"><span class="alm-medallon" aria-hidden="true"><img src="/universo-assets/img/almanaque/${s.slug}-320.webp" width="80" height="80" alt="" loading="lazy" decoding="async"></span>${s.nombre}</a></li>`).join("\n        ")}
+    </ul>
   </div>
 </section>
 
