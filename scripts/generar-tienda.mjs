@@ -302,12 +302,12 @@ paginas["index.html"] = layout({
       <h2 class="alm-h2" id="cielo-semana-titulo">El cielo de esta semana</h2>
       <p class="alm-rango" data-cs="rango"></p>
       <p class="cielo-semana__titulo" data-cs="titulo"></p>
-      <p class="alm-lede" data-cs="resumen">Cada lunes dibujamos el cielo real de la semana y escribimos una lectura para cada signo: qué áreas de tu vida se activan y qué te invita a mirar.</p>
-      <p class="cielo-semana__elige">Tu lectura de la semana <span>Signo solar o Ascendente</span></p>
-      <ul class="zodiaco">
-        ${SIGNOS_ALMANAQUE.map((s) => `<li><a href="/blog/horoscopo-semanal/${s.slug}" data-signo="${s.slug}"><span class="glifo" aria-hidden="true">${s.glifo}</span>${s.nombre}</a></li>`).join("\n        ")}
+      <p class="alm-lede" data-cs="resumen">Una pausa para mirar hacia arriba y volver a ti. Cada lunes, los movimientos del cielo y una lectura para acompañar tu semana.</p>
+      <p class="cielo-semana__elige">Un cielo, doce miradas <span>Empieza por tu signo solar. Explora también tu Ascendente.</span></p>
+      <ul class="zodiaco zodiaco--ilustrado">
+        ${SIGNOS_ALMANAQUE.map((s) => `<li><a href="/blog/horoscopo-semanal/${s.slug}" data-signo="${s.slug}"><span class="alm-medallon" aria-hidden="true"><img src="/universo-assets/img/almanaque/${s.slug}-320.webp" width="80" height="80" alt="" loading="lazy" decoding="async"></span>${s.nombre}</a></li>`).join("\n        ")}
       </ul>
-      <a class="link-quiet" href="/blog/horoscopo-semanal" data-cs="url">Leer el horóscopo de la semana</a>
+      <a class="link-quiet" href="/blog/horoscopo-semanal" data-cs="url">Abrir el almanaque de la semana</a>
     </div>
     <figure class="cielo-semana__rueda"><div data-cs="rueda">${ruedaVacia()}</div><figcaption>Un cielo compartido. Doce formas de vivirlo.</figcaption></figure>
   </div>

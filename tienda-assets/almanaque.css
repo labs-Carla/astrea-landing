@@ -51,19 +51,44 @@
 .alm-ornamento::after { --lado: left; }
 
 /* ---------- Página: cuerpo ---------- */
-.blog-almanaque main { padding-top: 74px; }
-.blog-almanaque [id] { scroll-margin-top: 96px; }
+.blog-almanaque main { padding-top: 0; }
+.blog-almanaque [id] { scroll-margin-top: 116px; }
+
+/* Cabecera editorial: ocupa su espacio y acompaña la lectura al desplazarse. */
+.blog-almanaque .alm-header { position: sticky; inset: auto; top: 0; background: rgba(247, 243, 234, .97); border-top: 3px solid var(--gold-deep); border-bottom: 1px solid var(--hairline-strong); backdrop-filter: blur(12px); }
+.alm-header .site-header__inner { min-height: 88px; gap: var(--s-5); padding-block: var(--s-3); }
+.blog-almanaque .alm-marca { display: inline-flex; align-items: center; gap: 12px; flex: none; }
+.alm-marca__sello { display: grid; place-items: center; width: 40px; height: 46px; border: 1px solid var(--gold-deep); border-radius: 50% 50% 2px 2px; outline: 1px solid var(--hairline); outline-offset: 3px; font-size: 1.35rem; color: var(--gold-deep); }
+.alm-marca__texto { display: grid; gap: 7px; font-size: 1.45rem; line-height: 1; letter-spacing: .3em; }
+.alm-marca__texto small { font: 500 .55rem/1.2 var(--font-sans); letter-spacing: .17em; text-transform: uppercase; color: var(--gold-deep); }
+.blog-almanaque .site-nav { display: none; align-items: center; gap: var(--s-5); }
+.alm-header .site-nav a { position: relative; display: grid; place-items: center; min-height: 44px; white-space: nowrap; font-size: .82rem; }
+.alm-header .site-nav a[aria-current]::after { content: ""; position: absolute; bottom: 1px; left: 30%; right: 30%; height: 1px; background: var(--gold-deep); }
+.alm-header .header-acciones { gap: var(--s-3); }
+.alm-header .alm-header__cta { display: none; box-shadow: none; border-radius: 3px; gap: var(--s-3); min-height: 44px; }
+.blog-almanaque .menu-movil { display: block; }
+.alm-header .menu-movil > summary { width: auto; min-width: 88px; padding-inline: 12px; gap: 10px; border-color: var(--hairline-strong); border-radius: 3px; color: var(--gold-deep); font-size: .75rem; }
+.alm-header .menu-movil[open] > summary { background: var(--ivory); }
+.alm-header .menu-movil__panel { width: min(320px, calc(100vw - 2 * var(--gutter))); min-width: 0; background: var(--ivory); border-color: var(--hairline-strong); border-radius: 3px; }
+.alm-header .menu-movil__panel a { color: var(--ink-soft); }
+.alm-header .menu-movil__panel a[aria-current] { color: var(--gold-deep); background: var(--marble); }
+.alm-header a:focus-visible, .alm-header summary:focus-visible { outline: 2px solid var(--gold-deep); outline-offset: 4px; }
 
 /* Índice de lectura: todos los signos a mano antes de entrar al almanaque. */
-.alm-selector { padding-block: var(--s-4); background: var(--ivory); border-bottom: 1px solid var(--hairline-strong); }
-.alm-selector__etiqueta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-2); margin: 0 0 var(--s-3); font: 600 .65rem/1.5 var(--font-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--gold-deep); }
-.alm-selector__etiqueta span { font-weight: 400; letter-spacing: .02em; text-transform: none; color: var(--ink-soft); }
-.alm-selector__lista { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; padding: 0; margin: 0; list-style: none; }
-.alm-selector__lista a { display: grid; justify-items: center; align-content: center; gap: 5px; min-height: 64px; padding: 8px 2px; border: 1px solid transparent; border-radius: var(--r-card); color: var(--ink-soft); text-decoration: none; font-size: clamp(.6rem, 1.5vw, .72rem); transition: background-color .2s var(--ease), color .2s var(--ease); }
-.alm-selector__lista .glifo { font-size: 1.35rem; line-height: 1.2; color: var(--gold-deep); }
-.alm-selector__lista a:hover { background: var(--marble); border-color: var(--hairline-strong); }
-.alm-selector__lista a[aria-current="page"] { background: var(--night-deep); color: var(--ink-on-dark); border-color: var(--night-deep); }
-.alm-selector__lista a[aria-current="page"] .glifo { color: var(--gold-light); }
+.alm-selector { padding-block: var(--s-5) var(--s-3); background: var(--ivory); border-bottom: 1px solid var(--hairline-strong); }
+.alm-selector__cabecera { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-3); }
+.alm-selector__etiqueta { margin: 0; font: italic 1.35rem/1.2 var(--font-serif); color: var(--ink); }
+.alm-selector__ayuda { margin: 0; font-size: .75rem; color: var(--ink-soft); }
+.alm-selector__desliza { width: 100%; margin-top: 4px; font: 500 .58rem/1.4 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--gold-deep); }
+.alm-selector__lista { display: grid; grid-auto-flow: column; grid-auto-columns: 86px; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: var(--hairline-strong) transparent; padding: 6px 4px 12px; margin: 0 -4px; list-style: none; }
+.alm-selector__lista a { display: grid; justify-items: center; align-content: start; gap: 10px; min-height: 110px; padding: 4px 2px; color: var(--ink-soft); text-decoration: none; font: 400 .95rem/1.2 var(--font-serif); scroll-snap-align: center; }
+.alm-medallon { position: relative; display: grid; place-items: center; flex: none; width: 66px; height: 76px; padding: 6px 3px 3px; border: 1px solid var(--hairline-strong); border-radius: 50% 50% 3px 3px; background: var(--marble); transition: border-color .2s var(--ease), background-color .2s var(--ease), transform .2s var(--ease); }
+.alm-medallon::before { content: ""; position: absolute; inset: 3px; border: 1px solid var(--hairline); border-radius: inherit; pointer-events: none; }
+.alm-medallon img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; mix-blend-mode: multiply; mask-image: radial-gradient(ellipse, #000 50%, transparent 75%); }
+a:hover .alm-medallon, a:focus-visible .alm-medallon { border-color: var(--gold-deep); transform: translateY(-2px); background: #f0e5d1; }
+a[aria-current="page"] .alm-medallon { background: #eadcc1; border-color: var(--gold-deep); box-shadow: 0 0 0 2px var(--ivory), 0 0 0 3px var(--hairline-strong); }
+a[aria-current="page"] .alm-medallon::after { content: "✦"; position: absolute; bottom: -7px; left: calc(50% - 7px); width: 14px; font-size: 12px; line-height: 14px; text-align: center; color: var(--gold-deep); background: var(--ivory); }
+.alm-selector__lista a[aria-current="page"] { color: var(--gold-deep); }
 .alm-selector a:focus-visible, .arco:focus-visible, .zodiaco a:focus-visible, .alm-volver:focus-visible { outline: 2px solid var(--gold-deep); outline-offset: 3px; }
 .alm-volver { display: inline-flex; align-items: center; gap: var(--s-2); width: fit-content; color: var(--gold-deep); font-size: .8rem; text-underline-offset: 4px; }
 
@@ -168,6 +193,8 @@
 .zodiaco a:hover .glifo,
 .zodiaco a[aria-current] .glifo { background: var(--gold-deep); color: var(--ivory); border-color: var(--gold-deep); }
 .zodiaco a[aria-current] { color: var(--ink); }
+.zodiaco--ilustrado { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.zodiaco--ilustrado a { gap: 12px; font: 400 1rem/1.2 var(--font-serif); }
 
 /* ---------- Índice del blog ---------- */
 .alm-semanas { margin: var(--s-7) 0 0; padding: 0; list-style: none; border-top: 1px solid var(--hairline-strong); }
@@ -195,6 +222,8 @@
 .cielo-semana .zodiaco a { color: var(--ink-on-dark-soft); font-size: .7rem; }
 .cielo-semana .zodiaco .glifo { width: 44px; height: 44px; font-size: 1.2rem; color: var(--gold-light); background: transparent; border-color: rgba(212, 177, 114, .4); }
 .cielo-semana .zodiaco a:hover .glifo { background: var(--gold-light); color: var(--night); border-color: var(--gold-light); }
+.cielo-semana .zodiaco--ilustrado a { font: 400 .95rem/1.2 var(--font-serif); color: var(--ink-on-dark); }
+.cielo-semana .alm-medallon { width: 60px; height: 70px; background: var(--ivory); }
 .cielo-semana .link-quiet { color: var(--gold-light); }
 .cielo-semana__elige { margin: var(--s-3) 0 0; font: 600 .62rem var(--font-sans); letter-spacing: .22em; text-transform: uppercase; color: var(--ink-on-dark-soft); }
 .cielo-semana__elige span { display: block; margin-top: 8px; font-size: .76rem; font-weight: 400; letter-spacing: .01em; text-transform: none; }
@@ -206,13 +235,16 @@
 @media (min-width: 520px) {
   .zodiaco, .cielo-semana .zodiaco { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
+@media (min-width: 600px) {
+  .alm-header .alm-header__cta { display: inline-flex; }
+}
 @media (min-width: 700px) {
   .alm-signos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .zodiaco { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .zodiaco--ilustrado { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .cielo-semana .zodiaco { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 @media (min-width: 900px) {
-  .alm-selector__lista { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .alm-lectura--con-margen { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); align-items: start; gap: var(--s-8); }
   .alm-lectura__margen { position: sticky; top: 100px; }
   .alm-lectura__margen .alm-clave blockquote { font-size: 1.65rem; }
@@ -225,6 +257,13 @@
 }
 @media (min-width: 1040px) {
   .alm-signos__lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  .zodiaco--ilustrado { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .alm-selector__lista { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .alm-selector__desliza { display: none; }
+  .blog-almanaque .site-nav { display: flex; }
+  .blog-almanaque .menu-movil { display: none; }
 }
 
 /* En el celular, los días pasan a ser renglones del almanaque. */
@@ -246,6 +285,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .arco, .zodiaco a, .zodiaco .glifo, .alm-selector__lista a { transition: none; }
+  .arco, .zodiaco a, .zodiaco .glifo, .alm-selector__lista a, .alm-medallon { transition: none; }
   .arco:hover, .arco:focus-visible { transform: none; }
+  a:hover .alm-medallon, a:focus-visible .alm-medallon { transform: none; }
 }
