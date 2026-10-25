@@ -219,7 +219,7 @@ a[aria-current="page"] .alm-medallon::after { content: "✦"; position: absolute
 .cielo-semana .btn { margin-top: var(--s-3); }
 .cielo-semana__titulo { margin: 0; max-width: 26ch; font-family: var(--font-serif); font-style: italic; font-size: clamp(1.35rem, 1.2rem + .6vw, 1.75rem); line-height: 1.3; color: var(--ink); text-wrap: balance; }
 .cielo-semana__titulo:empty { display: none; }
-.cielo-semana .rueda { max-width: 340px; margin-inline: auto; }
+.cielo-semana .rueda { max-width: 480px; margin-inline: auto; filter: drop-shadow(0 18px 28px rgba(117, 87, 43, .12)); }
 .cielo-semana__signos { margin-top: var(--s-8); }
 .cielo-semana__cabecera-signos { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--s-3); padding-block: var(--s-5); border-top: 1px solid var(--hairline-strong); }
 .cielo-semana__cabecera-signos p { margin: 0; font-size: .78rem; color: var(--ink-soft); }
@@ -227,10 +227,19 @@ a[aria-current="page"] .alm-medallon::after { content: "✦"; position: absolute
 .cielo-semana .zodiaco { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-3); margin: 0; width: 100%; }
 .cielo-semana .zodiaco--ilustrado a { font: 400 1rem/1.2 var(--font-serif); color: var(--ink-soft); }
 .cielo-semana .alm-medallon { width: 66px; height: 76px; background: var(--ivory); }
-.cielo-semana__rueda { position: relative; justify-self: center; width: min(100%, 400px); margin: 0; padding: var(--s-7) var(--s-4) var(--s-5); background: var(--ivory); border: 1px solid var(--hairline-strong); border-radius: 999px 999px 4px 4px; }
-.cielo-semana__rueda::before { content: ""; position: absolute; inset: 7px; border: 1px solid var(--hairline); border-radius: inherit; pointer-events: none; }
-.cielo-semana__mapa { margin: 0 0 var(--s-4); text-align: center; font: 600 .6rem/1.5 var(--font-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--gold-deep); }
-.cielo-semana__rueda figcaption { margin-top: var(--s-4); text-align: center; font: italic 1.15rem/1.35 var(--font-serif); color: var(--gold-deep); }
+.cielo-semana__rueda { position: relative; isolation: isolate; justify-self: center; width: min(100%, 560px); margin: 0; padding-block: var(--s-3); }
+.cielo-semana__rueda::before { content: ""; position: absolute; z-index: -1; inset: -15%; border-radius: 50%; background: radial-gradient(ellipse, rgba(212, 177, 114, .24), rgba(212, 177, 114, .09) 40%, transparent 70%); pointer-events: none; animation: cielo-luz 8s ease-in-out infinite alternate; }
+.cielo-semana__mapa { margin: 0 0 var(--s-6); text-align: center; font: 600 .6rem/1.5 var(--font-sans); letter-spacing: .22em; text-transform: uppercase; color: var(--gold-deep); }
+.cielo-semana__escena { position: relative; isolation: isolate; padding: 5%; }
+.cielo-semana__escena [data-cs="rueda"] { position: relative; z-index: 1; }
+.cielo-semana__orbita { position: absolute; z-index: -1; inset: -2%; border: 1px solid rgba(176, 138, 79, .24); border-radius: 50%; pointer-events: none; }
+.cielo-semana__orbita--inclinada { inset: 5% -12%; transform: rotate(-27deg) scaleY(.7); border-color: rgba(176, 138, 79, .2); }
+.cielo-semana__destello { position: absolute; z-index: 2; color: var(--gold-deep); font-family: var(--font-serif); font-size: 1.3rem; pointer-events: none; }
+.cielo-semana__destello--uno { left: 1%; top: 25%; }
+.cielo-semana__destello--dos { right: -2%; top: 60%; font-size: 1.7rem; }
+.cielo-semana__destello--tres { right: 12%; top: 1%; font-size: .8rem; }
+.cielo-semana__rueda figcaption { margin-top: var(--s-6); text-align: center; font: italic 1.15rem/1.35 var(--font-serif); color: var(--gold-deep); }
+@keyframes cielo-luz { from { opacity: .55; transform: scale(.94); } to { opacity: 1; transform: scale(1.05); } }
 
 /* ---------- Pantallas medianas y grandes ---------- */
 @media (min-width: 520px) {
@@ -254,7 +263,7 @@ a[aria-current="page"] .alm-medallon::after { content: "✦"; position: absolute
   .alm-portada--signo .alm-portada__grid { grid-template-columns: .8fr 1.2fr; }
   .alm-portada--signo .arco-mayor { order: -1; }
   .alm-cielo { grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr); gap: var(--s-8); }
-  .cielo-semana__grid { grid-template-columns: 1fr 1fr; gap: var(--s-8); }
+  .cielo-semana__grid { grid-template-columns: .95fr 1.05fr; gap: var(--s-7); }
 }
 @media (min-width: 1040px) {
   .alm-signos__lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -289,4 +298,5 @@ a[aria-current="page"] .alm-medallon::after { content: "✦"; position: absolute
   .arco, .zodiaco a, .zodiaco .glifo, .alm-selector__lista a, .alm-medallon { transition: none; }
   .arco:hover, .arco:focus-visible { transform: none; }
   a:hover .alm-medallon, a:focus-visible .alm-medallon { transform: none; }
+  .cielo-semana__rueda::before { animation: none; }
 }

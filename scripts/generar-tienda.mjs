@@ -305,7 +305,18 @@ paginas["index.html"] = layout({
       <p class="alm-lede" data-cs="resumen">Una pausa para mirar hacia arriba y volver a ti. Cada lunes, los movimientos del cielo y una lectura para acompañar tu semana.</p>
       <a class="btn btn--gold" href="/blog/horoscopo-semanal" data-cs="url">Leer mi horóscopo <span aria-hidden="true">↗</span></a>
     </div>
-    <figure class="cielo-semana__rueda"><p class="cielo-semana__mapa">El mapa de estos días</p><div data-cs="rueda">${ruedaVacia()}</div><figcaption>Un cielo compartido.<br>Doce formas de vivirlo.</figcaption></figure>
+    <figure class="cielo-semana__rueda">
+      <p class="cielo-semana__mapa">El cielo, en movimiento</p>
+      <div class="cielo-semana__escena">
+        <span class="cielo-semana__orbita" aria-hidden="true"></span>
+        <span class="cielo-semana__orbita cielo-semana__orbita--inclinada" aria-hidden="true"></span>
+        <span class="cielo-semana__destello cielo-semana__destello--uno" aria-hidden="true">✦</span>
+        <span class="cielo-semana__destello cielo-semana__destello--dos" aria-hidden="true">✧</span>
+        <span class="cielo-semana__destello cielo-semana__destello--tres" aria-hidden="true">✦</span>
+        <div data-cs="rueda">${ruedaVacia()}</div>
+      </div>
+      <figcaption>Un cielo compartido. Doce formas de vivirlo.</figcaption>
+    </figure>
   </div>
   <div class="shell cielo-semana__signos">
     <div class="cielo-semana__cabecera-signos"><h3 class="cielo-semana__elige">Un cielo, doce miradas</h3><p>Empieza por tu signo solar. Explora también tu Ascendente.</p></div>
