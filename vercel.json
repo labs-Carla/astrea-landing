@@ -28,5 +28,20 @@
       "source": "/assets/:path*",
       "destination": "https://astrea-informe-react.vercel.app/assets/:path*"
     }
+  ],
+  "headers": [
+    {
+      "source": "/universo-assets/contacto/(.*)\\.vcf",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/vcard; charset=utf-8"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"Carla-Valderrama.vcf\""
+        }
+      ]
+    }
   ]
 }
