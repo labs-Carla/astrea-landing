@@ -74,7 +74,7 @@ if (escena) {
       opacity: [0, 1],
       transform: [`perspective(1000px) translateX(${dir * 70}px) rotateY(${dir * -26}deg) scale(.92)`, "perspective(1000px) translateX(0px) rotateY(0deg) scale(1)"],
     }, { duration: 0.75, ease });
-    animate(titulo, { opacity: [0, 1], clipPath: ["inset(0 0 100% 0)", "inset(0 0 0% 0)"] }, { duration: 0.7, delay: 0.08, ease });
+    animate(titulo, { opacity: [0, 1], clipPath: ["inset(-20% -100vw 100% -100vw)", "inset(-20% -100vw -20% -100vw)"] }, { duration: 0.7, delay: 0.08, ease });
     animate(resto, { opacity: [0, 1] }, { duration: 0.5, delay: 0.2, ease });
   }
 

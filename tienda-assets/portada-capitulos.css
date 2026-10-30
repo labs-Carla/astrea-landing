@@ -120,6 +120,8 @@ body.capitulos-vivos #reportes .tarjeta-portada__imagen img { height: 100%; obje
 body.capitulos-vivos #reportes .tarjeta-portada__cuerpo { position: absolute; inset: 0; display: block; padding: 0 !important; pointer-events: none; }
 body.capitulos-vivos #reportes .tarjeta-portada__titulo {
   position: absolute; z-index: 2; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+  /* flex: «TRANSFORMACIÓN» no cabe en 14ch y sin esto se correría a la derecha. */
+  display: flex; justify-content: center;
   margin: 0 auto; max-width: 14ch; text-align: center;
   font-size: clamp(3rem, 1rem + 6.4vw, 8.4rem) !important; line-height: .88; letter-spacing: -.02em;
   font-weight: 500; text-transform: uppercase; color: #FBF7EF;
@@ -210,13 +212,17 @@ body.capitulos.glass.astrea-publica .pie { margin: 0 10px 10px; border-radius: 2
   .hoja__capitulo { top: 20px; left: 22px; }
   body.capitulos main { padding-top: 6px; }
   .hoja--hero { padding-top: 70px; }
-  body.capitulos .hoja--confianza .confianza__lista li { margin-left: 0 !important; }
+  body.capitulos .hoja--confianza .confianza__lista { grid-template-columns: minmax(0, 1fr) !important; gap: 30px; }
+  body.capitulos .hoja--confianza .confianza__lista li { margin-left: 0 !important; grid-template-columns: 40px minmax(0, 1fr); align-items: start; gap: 14px; }
+  /* La hoja recorta sin avisar: el tamaño sale de «Autoconocimiento», la palabra más larga. */
+  body.capitulos .hoja--confianza .confianza__lista strong { font-size: clamp(1.2rem, 6vw, 3rem); line-height: 1; }
+  body.capitulos .hoja--confianza .confianza__lista span { margin-top: 8px; }
   body.capitulos-vivos #reportes .catalogo-portada { height: auto; }
   body.capitulos-vivos #reportes .tarjeta-portada__imagen {
     position: relative; left: auto; display: block; height: auto; width: min(64vw, 300px); margin: 0 auto;
   }
   body.capitulos-vivos #reportes .tarjeta-portada__cuerpo { position: relative; display: grid; gap: 10px; margin-top: -2.2em; }
-  body.capitulos-vivos #reportes .tarjeta-portada__titulo { position: relative; top: auto; transform: none; font-size: clamp(2.4rem, 11vw, 3.6rem) !important; }
+  body.capitulos-vivos #reportes .tarjeta-portada__titulo { position: relative; top: auto; transform: none; max-width: none; font-size: clamp(1.8rem, 9.2vw, 3.6rem) !important; }
   body.capitulos-vivos #reportes :is(.tarjeta-portada__categoria, .tarjeta-portada__texto, .tarjeta-portada__pie) { position: static; max-width: none; text-align: center; justify-content: center; }
   body.capitulos-vivos #reportes .tarjeta-portada__categoria { order: -1; }
   .totems__pastillas { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; max-width: 100%; padding-bottom: 4px; scrollbar-width: none; }
