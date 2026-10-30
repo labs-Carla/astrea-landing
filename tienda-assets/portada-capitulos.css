@@ -1,0 +1,233 @@
+/* Capítulos (estructura inspirada en GRAIL): hojas redondeadas sobre un marco
+   oscuro que se apilan al hacer scroll, titulares serif enormes, carrusel de
+   reportes y escenario del recorrido. Solo diseño: el texto no cambia. */
+
+body.capitulos { background: #16130F; --velo-alto: .66; --velo-bajo: .54; }  /* el vidrio se lee también sobre hojas oscuras */
+/* Las hojas entran inclinadas: sin el recorte, el navegador móvil ensancha toda la página. */
+body.capitulos main { padding: 10px 0 0; overflow-x: clip; }
+
+/* ---------- Hojas ---------- */
+.hoja {
+  position: relative;
+  margin: 0 10px 10px; border-radius: 28px; overflow: clip;
+  min-height: calc(100svh - 20px);
+  display: flex; flex-direction: column; justify-content: center;
+  transform-origin: 50% 0;
+}
+/* Se apilan solo con portada-capitulos.js: sin su ajuste, una hoja alta taparía su propio final. */
+body.capitulos-vivos .hoja { position: sticky; top: 0; }
+.hoja:not(.hoja--hero) { padding-bottom: 92px; }  /* el final de cada hoja no queda bajo el dock */
+.hoja > section { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.hoja__capitulo {
+  position: absolute; z-index: 4; top: 26px; left: 30px; margin: 0;
+  font: 500 .66rem/1 var(--font-sans); letter-spacing: .26em; text-transform: uppercase;
+  color: currentColor; opacity: .55;
+}
+.hoja__tapa { position: absolute; inset: 0; z-index: 6; background: #0B0907; opacity: 0; pointer-events: none; }
+
+.hoja--hero { min-height: 0; padding-top: 74px; background: var(--marble); justify-content: flex-start; }
+.hoja--hero > section { flex: none; display: flex; }
+.hoja--confianza { background: var(--ivory); color: var(--ink); }
+.hoja--arena { background: radial-gradient(120% 90% at 50% 40%, #F7EEDF 0%, #EBDCC3 100%); color: var(--ink); }
+.hoja--marfil { background: var(--ivory); color: var(--ink); }
+.hoja--noche {
+  background: radial-gradient(70% 70% at 50% 45%, #4A3A22 0%, #1E1810 55%, #100D09 100%);
+  color: #F4EDE1;
+}
+.hoja--azul { background: radial-gradient(90% 90% at 70% 40%, #22345A 0%, #13203A 60%, #0C1528 100%); color: #EDE5D6; }
+.hoja section { background: transparent !important; }
+.hoja section::before, .hoja section::after { content: none !important; }
+
+/* Titulares grandes, en mayúsculas, como GRAIL. */
+body.capitulos .hoja .capitulo__titulo,
+body.capitulos .hoja .alm-h2 {
+  font-family: var(--font-serif); font-weight: 500; text-transform: uppercase;
+  font-size: clamp(2.6rem, 1rem + 5.4vw, 6.6rem); line-height: .9; letter-spacing: -.02em;
+}
+body.capitulos .hoja .capitulo__cabecera { display: grid; gap: 22px; grid-template-columns: 1fr !important; margin-bottom: clamp(32px, 5vw, 64px); }
+body.capitulos .hoja .capitulo__intro { max-width: 30rem; font-size: .92rem; }
+
+/* ---------- I · Confianza: cuatro frases enormes, escalonadas ---------- */
+.hoja--confianza .confianza { border: 0; padding-block: clamp(80px, 10vw, 140px); }
+body.capitulos .hoja--confianza .confianza__lista { grid-template-columns: 1fr !important; gap: clamp(18px, 3vw, 40px); padding-block: 0; }
+body.capitulos .hoja--confianza .confianza__lista li {
+  grid-template-columns: auto 1fr; align-items: end; gap: 18px;
+  border: 0 !important; padding: 0 !important; max-width: 62rem;
+}
+body.capitulos .hoja--confianza .confianza__lista li:nth-child(2) { margin-left: 14%; }
+body.capitulos .hoja--confianza .confianza__lista li:nth-child(3) { margin-left: 5%; }
+body.capitulos .hoja--confianza .confianza__lista li:nth-child(4) { margin-left: 20%; }
+body.capitulos .hoja--confianza .confianza__icono { width: clamp(40px, 5vw, 72px); height: clamp(40px, 5vw, 72px); }
+body.capitulos .hoja--confianza .confianza__lista strong {
+  font-size: clamp(2.2rem, .8rem + 5vw, 6rem); line-height: .9; letter-spacing: -.02em;
+  text-transform: uppercase; font-weight: 500;
+}
+body.capitulos .hoja--confianza .confianza__lista span { display: block; max-width: 24rem; margin-top: 10px; font-size: .84rem; line-height: 1.6; }
+
+/* ---------- II · Recorrido: dos pasos con la carta en el centro ---------- */
+body.capitulos .hoja--arena .capitulo__cabecera { text-align: center; justify-items: center; }
+body.capitulos #recorrido .pasos--dos {
+  grid-template-columns: 1fr minmax(220px, 20vw) 1fr !important; align-items: center;
+  gap: clamp(24px, 4vw, 64px) !important;
+}
+body.capitulos #recorrido .paso {
+  background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important;
+}
+body.capitulos #recorrido .paso::before, body.capitulos #recorrido .paso::after { content: none !important; }
+body.capitulos #recorrido .paso:last-of-type { align-items: flex-end; text-align: right; }
+body.capitulos #recorrido .paso:last-of-type p { margin-left: auto; }
+body.capitulos #recorrido .paso:last-of-type .paso__enlace { align-self: flex-end; }
+body.capitulos #recorrido .paso__titulo {
+  font-size: clamp(2.2rem, .6rem + 4.2vw, 5.4rem); line-height: .9; letter-spacing: -.02em;
+  text-transform: uppercase; font-weight: 500;
+}
+body.capitulos #recorrido .paso__numero { font-size: 1.4rem; }
+body.capitulos #recorrido .paso__icono { width: 48px; height: 48px; }
+.recorrido__visual { list-style: none; display: grid; place-items: center; }
+.telefono {
+  position: relative; width: 100%; max-width: 280px; aspect-ratio: 9 / 18.5;
+  border-radius: 44px; padding: 10px; background: #15120E;
+  box-shadow: inset 0 0 0 1.5px #3A332A, 0 50px 90px -40px rgba(40, 28, 12, .75), 0 20px 40px -24px rgba(40, 28, 12, .5);
+  animation: telefono-flota 6s ease-in-out infinite;
+}
+.telefono::before { content: ""; position: absolute; z-index: 2; top: 20px; left: 50%; width: 30%; height: 20px; border-radius: 99px; background: #15120E; transform: translateX(-50%); }
+.telefono img { width: 100%; height: 100%; object-fit: cover; border-radius: 34px; display: block; }
+@keyframes telefono-flota { 0%, 100% { transform: translateY(0) rotate(-1.2deg); } 50% { transform: translateY(-12px) rotate(1.2deg); } }
+
+/* ---------- III · Reportes: carrusel con el título enorme encima ---------- */
+.hoja--noche .eyebrow { color: #D4B172; }
+.hoja--noche .capitulo__titulo { color: #FBF7EF; }
+.hoja--noche .capitulo__intro { color: rgba(237, 229, 214, .72); }
+body.capitulos-vivos #reportes .catalogo-portada {
+  position: relative; display: grid; grid-template-columns: 1fr !important;
+  height: min(62vh, 620px); margin: 0; touch-action: pan-y;
+}
+body.capitulos-vivos #reportes .catalogo-portada .tarjeta-portada {
+  grid-area: 1 / 1; display: block; position: relative;
+  background: none; border: 0; border-radius: 0; box-shadow: none; transform: none;
+  opacity: 0; visibility: hidden; transition: opacity .22s ease-out, visibility 0s .22s;
+}
+body.capitulos-vivos #reportes .catalogo-portada .tarjeta-portada.is-activa { opacity: 1; visibility: visible; transition: opacity .5s cubic-bezier(.23, 1, .32, 1); }
+body.capitulos-vivos #reportes .tarjeta-portada__imagen {
+  position: absolute; left: 50%; top: 0; height: 100%; width: auto; aspect-ratio: 2 / 3;
+  margin-left: calc(-1 * min(62vh, 620px) / 3);
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, .85), 0 0 0 1px rgba(212, 177, 114, .25);
+  animation: portada-flota 7s ease-in-out infinite;
+}
+body.capitulos-vivos #reportes .tarjeta-portada__imagen img { height: 100%; object-fit: cover; object-position: center; transform: none !important; }
+@keyframes portada-flota { 0%, 100% { translate: 0 0; rotate: -1.4deg; } 50% { translate: 0 -14px; rotate: 1.4deg; } }
+body.capitulos-vivos #reportes .tarjeta-portada__cuerpo { position: absolute; inset: 0; display: block; padding: 0 !important; pointer-events: none; }
+body.capitulos-vivos #reportes .tarjeta-portada__titulo {
+  position: absolute; z-index: 2; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+  margin: 0 auto; max-width: 14ch; text-align: center;
+  font-size: clamp(3rem, 1rem + 6.4vw, 8.4rem) !important; line-height: .88; letter-spacing: -.02em;
+  font-weight: 500; text-transform: uppercase; color: #FBF7EF;
+  text-shadow: 0 14px 50px rgba(0, 0, 0, .55);
+  pointer-events: auto;
+}
+body.capitulos-vivos #reportes .tarjeta-portada__titulo a { color: inherit; text-decoration: none; }
+body.capitulos-vivos #reportes .tarjeta-portada__categoria { position: absolute; left: 0; top: 0; color: #D4B172; }
+body.capitulos-vivos #reportes .tarjeta-portada__texto { position: absolute; right: 0; bottom: 78px; max-width: 19rem; color: rgba(237, 229, 214, .78); font-size: .88rem !important; }
+body.capitulos-vivos #reportes .tarjeta-portada__pie {
+  position: absolute; right: 0; bottom: 0; gap: 18px; margin: 0; padding: 0; border: 0; pointer-events: auto;
+}
+body.capitulos-vivos #reportes .tarjeta-portada__precio { color: #FBF7EF; font-size: 1.7rem; }
+
+.totems__control { display: none; }
+body.capitulos-vivos .totems__control { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; margin-top: clamp(24px, 3vw, 40px); }
+.totems__navegar { display: flex; align-items: center; gap: 10px; }
+.totems__contador { margin: 0 10px 0 0; font: 400 clamp(2rem, 3vw, 3rem)/1 var(--font-serif); color: #FBF7EF; min-width: 3ch; }
+.totems__flecha {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255, 255, 255, .06); border: 1px solid rgba(212, 177, 114, .4); color: #F4EDE1; cursor: pointer;
+  transition: background-color .2s cubic-bezier(.23, 1, .32, 1);
+}
+.totems__flecha:hover { background: rgba(212, 177, 114, .18); }
+.totems__flecha .icon { width: 18px; height: 18px; }
+.totems__pastillas { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; max-width: 46rem; }
+.totems__pastilla {
+  min-height: 34px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+  font: 500 .74rem/1 var(--font-sans); letter-spacing: .02em;
+  background: rgba(255, 255, 255, .06); color: rgba(237, 229, 214, .8); border: 1px solid rgba(212, 177, 114, .22);
+  transition: background-color .2s cubic-bezier(.23, 1, .32, 1), color .2s, border-color .2s;
+}
+.totems__pastilla:hover { color: #FBF7EF; border-color: rgba(212, 177, 114, .55); }
+.totems__pastilla[aria-pressed="true"] { background: #E8CC86; color: #241904; border-color: #E8CC86; }
+
+/* ---------- IV · Cómo funciona: filas numeradas escalonadas ---------- */
+body.capitulos #como-funciona .capitulo__cabecera--centro { text-align: left; justify-items: start; }
+body.capitulos #como-funciona .pasos { grid-template-columns: 1fr !important; gap: 0; }
+body.capitulos #como-funciona .paso {
+  display: grid; grid-template-columns: 90px 64px minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: clamp(16px, 3vw, 40px);
+  padding: clamp(22px, 2.6vw, 34px) 0; background: none; border: 0; border-top: 1px solid var(--hairline-strong); border-radius: 0;
+}
+body.capitulos #como-funciona .paso:last-child { border-bottom: 1px solid var(--hairline-strong); }
+body.capitulos #como-funciona .paso:nth-child(2) { padding-left: 7%; }
+body.capitulos #como-funciona .paso:nth-child(3) { padding-left: 14%; }
+body.capitulos #como-funciona .paso__numero { font-size: clamp(2.4rem, 4vw, 3.6rem); }
+body.capitulos #como-funciona .paso__titulo { font-size: clamp(1.6rem, 1rem + 1.6vw, 2.6rem); line-height: 1.05; }
+body.capitulos #como-funciona .paso p { max-width: 24rem; }
+
+/* ---------- V · Horóscopo en azul noche ---------- */
+.hoja--azul .alm-eyebrow, .hoja--azul .eyebrow { color: #D4B172; }
+.hoja--azul :is(.alm-h2, .cielo-semana__elige, .cielo-semana__titulo) { color: #FBF7EF; }
+.hoja--azul :is(.alm-lede, .alm-rango, .cielo-semana__cabecera-signos p, figcaption, .cielo-semana__mapa) { color: rgba(237, 229, 214, .78); }
+.hoja--azul .zodiaco a { color: #EDE5D6; }
+body.glass.astrea-publica.astrea-publica .hoja--azul .cielo-semana .btn.btn-metal { color: #F4EDE1; border-color: rgba(212, 177, 114, .6); background: rgba(255, 255, 255, .06); }
+body.glass.astrea-publica.astrea-publica .hoja--azul .cielo-semana .btn.btn-metal:hover { background: var(--pri-fondo); color: var(--pri-texto); }
+
+/* ---------- Footer como otra hoja ---------- */
+body.capitulos.glass.astrea-publica .pie { margin: 0 10px 10px; border-radius: 28px; border: 0; position: relative; z-index: 1; }
+
+/* ---------- Pantalla de carga: la carta gira y se abre ---------- */
+.intro {
+  position: fixed; inset: 0; z-index: 200; display: grid; place-items: center;
+  background: #F3EEE5; perspective: 1200px;
+  /* Si el JS falla o tarda, la pantalla de carga no se queda tapando la tienda. */
+  animation: intro-salida .3s 4s forwards;
+}
+@keyframes intro-salida { to { opacity: 0; visibility: hidden; } }
+.intro__carta {
+  width: clamp(96px, 11vw, 150px); aspect-ratio: 2 / 3; border-radius: 8px; overflow: hidden;
+  box-shadow: 0 30px 60px -24px rgba(43, 38, 32, .55);
+  transform-style: preserve-3d;
+}
+.intro__carta img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.intro[hidden] { display: none; }
+
+/* ---------- Tablet y celular ---------- */
+@media (max-width: 1099px) {
+  body.capitulos #recorrido .pasos--dos { grid-template-columns: 1fr !important; }
+  body.capitulos #recorrido .paso:last-of-type { align-items: flex-start; text-align: left; }
+  body.capitulos #recorrido .paso:last-of-type p { margin-left: 0; }
+  body.capitulos #recorrido .paso:last-of-type .paso__enlace { align-self: flex-start; }
+  .recorrido__visual { order: 0; }
+  .telefono { max-width: 220px; }
+}
+@media (max-width: 859px) {
+  .hoja { margin: 0 6px 6px; border-radius: 22px; }
+  .hoja__capitulo { top: 20px; left: 22px; }
+  body.capitulos main { padding-top: 6px; }
+  .hoja--hero { padding-top: 70px; }
+  body.capitulos .hoja--confianza .confianza__lista li { margin-left: 0 !important; }
+  body.capitulos-vivos #reportes .catalogo-portada { height: auto; }
+  body.capitulos-vivos #reportes .tarjeta-portada__imagen {
+    position: relative; left: auto; display: block; height: auto; width: min(64vw, 300px); margin: 0 auto;
+  }
+  body.capitulos-vivos #reportes .tarjeta-portada__cuerpo { position: relative; display: grid; gap: 10px; margin-top: -2.2em; }
+  body.capitulos-vivos #reportes .tarjeta-portada__titulo { position: relative; top: auto; transform: none; font-size: clamp(2.4rem, 11vw, 3.6rem) !important; }
+  body.capitulos-vivos #reportes :is(.tarjeta-portada__categoria, .tarjeta-portada__texto, .tarjeta-portada__pie) { position: static; max-width: none; text-align: center; justify-content: center; }
+  body.capitulos-vivos #reportes .tarjeta-portada__categoria { order: -1; }
+  .totems__pastillas { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; max-width: 100%; padding-bottom: 4px; scrollbar-width: none; }
+  .totems__pastilla { flex: none; }
+  .totems__control { justify-content: center; }
+  body.capitulos #como-funciona .paso { grid-template-columns: 56px 1fr; padding-left: 0 !important; }
+  body.capitulos #como-funciona .paso__icono { display: none; }
+  body.capitulos #como-funciona .paso p { grid-column: 2; }
+  body.capitulos.glass.astrea-publica .pie { margin: 0 6px 6px; border-radius: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .telefono, body.capitulos-vivos #reportes .tarjeta-portada__imagen { animation: none; }
+}
