@@ -30,6 +30,10 @@ The home is built in chapters: `layout({ portada: true })` adds the glass header
 sheets and the reports carousel), with matching `.css` files. The footer wordmark is in every store page:
 `PIE_GIGANTE` + `tienda-assets/pie-gigante.js` (no dependencies); its outlines are `scripts/pie-letras.mjs`.
 
+The floating menu is shared: `tienda-assets/nav-flotante.{css,js}`, enabled by `body.glass`. It is self-contained
+because `/universo` and the blog do not load the same stylesheets. `universo.html` and
+`app/templates/blog/base.html` in `astrea-API` repeat its markup by hand, so change the three together.
+
 Must keep working without JS: the intro starts `hidden` and removes itself by CSS after 4 s, and the sticky
 sheets and carousel only apply under `body.capitulos-vivos`, a class set by `portada-capitulos.js`. Otherwise a
 JS failure would hide the reports.

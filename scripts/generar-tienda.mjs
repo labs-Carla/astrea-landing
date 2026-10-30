@@ -130,7 +130,6 @@ function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null
   const navPrincipal = `<nav class="site-nav" aria-label="Principal">
       ${enlaces}
     </nav>`;
-  const botonHeader = `<a class="btn ${portada ? "btn-metal " : ""}btn--gold btn--sm" href="/reportes">Ver reportes</a>`;
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -155,9 +154,10 @@ ${indexable ? `<link rel="canonical" href="${SITIO}${ruta === "/" ? "/" : ruta}"
 <link rel="stylesheet" href="/tienda-assets/observatorio.css">
 <link rel="stylesheet" href="/tienda-assets/almanaque.css">
 <link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
+<link rel="stylesheet" href="/tienda-assets/nav-flotante.css">
 ${portada ? '<link rel="stylesheet" href="/tienda-assets/portada-vidrio.css">\n<link rel="stylesheet" href="/tienda-assets/portada-capitulos.css">\n' : ""}${preload}
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}</head>
-<body class="portada-observatorio astrea-publica${portada ? " capitulos glass glass--oro glass--mixta" : ""}">
+<body class="portada-observatorio astrea-publica${portada ? " capitulos glass glass--oro glass--mixta" : " glass glass--oro"}">
 <!-- Generado por scripts/generar-tienda.mjs a partir de tienda-assets/catalogo.js. No editar a mano. -->
 
 ${SPRITE_PORTADA}
@@ -167,9 +167,11 @@ ${portada ? INTRO_PORTADA : ""}<a class="skip-link" href="#contenido">Saltar al 
 <header class="site-header site-header--tienda">
   <div class="site-header__inner">
     <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
-    ${portada ? `<div class="isla-nav">\n    ${navPrincipal}\n    ${botonHeader}\n    </div>` : navPrincipal}
+    <div class="isla-nav">
+    ${navPrincipal}
+    <a class="btn btn-metal btn--gold btn--sm" href="/reportes">Ver reportes</a>
+    </div>
     <div class="header-acciones">
-      ${portada ? "" : botonHeader}
       <details class="menu-movil">
         <summary aria-label="Abrir menú">${icono("i-menu")}</summary>
         <nav class="menu-movil__panel" aria-label="Menú">
@@ -209,7 +211,7 @@ ${cuerpo}
     <p><a href="/terminos">Términos y reembolsos</a> · <a href="/privacidad">Política de privacidad</a> · © ${new Date().getFullYear()} Astrea Charts</p>
   </div>
 </footer>${portada ? DOCK_PORTADA : ""}
-${["/tienda-assets/origen.js", "/tienda-assets/sitio-publico.js", "/tienda-assets/pie-gigante.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
+${["/tienda-assets/origen.js", "/tienda-assets/sitio-publico.js", "/tienda-assets/nav-flotante.js", "/tienda-assets/pie-gigante.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
 </body>
 </html>
 `;

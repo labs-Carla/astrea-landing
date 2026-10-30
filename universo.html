@@ -15,8 +15,9 @@
 <link rel="stylesheet" href="/universo-assets/observatorio.css">
 <script>document.documentElement.classList.add("js")</script>
 <link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
+<link rel="stylesheet" href="/tienda-assets/nav-flotante.css">
 </head>
-<body class="portada-observatorio universo-observatorio astrea-publica">
+<body class="portada-observatorio universo-observatorio astrea-publica glass glass--oro">
 
 <!-- Sprite de iconos de línea dorada. Todos los iconos de la página se usan
      con <svg><use href="#i-..."/></svg> para no repetir paths. -->
@@ -46,26 +47,32 @@
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <!-- ============ HEADER ============ -->
-<header class="site-header" data-header>
+<header class="site-header site-header--tienda" data-header>
   <div class="site-header__inner">
-    <a class="wordmark" href="/" aria-label="Astrea, inicio">ASTREA</a>
-    <nav class="site-nav" aria-label="Secciones">
-      <a href="#inicio">Inicio</a>
-      <a href="#generador">Carta natal</a>
-      <a href="#que-es">Cómo funciona</a>
-      <a href="#testimonios">Testimonios</a>
-      <a href="#faq">FAQ</a>
+    <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
+    <div class="isla-nav">
+    <nav class="site-nav" aria-label="Principal">
+      <a href="/">Inicio</a>
+      <a href="/reportes">Reportes</a>
+      <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
+      <a href="/como-funciona">Cómo funciona</a>
+      <a href="/sobre-astrea">Sobre Astrea</a>
+      <a href="/regalar">Regalar</a>
+      <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
     </nav>
-    <div class="universo-acciones">
-      <a class="btn btn--gold btn--sm" href="#generador">Mi carta gratis</a>
-      <details class="universo-menu">
+    <a class="btn btn-metal btn--gold btn--sm" href="/reportes">Ver reportes</a>
+    </div>
+    <div class="header-acciones">
+      <details class="menu-movil">
         <summary aria-label="Abrir menú"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
-        <nav aria-label="Menú de Universo">
-          <a href="/">Portada</a>
-          <a href="#generador">Carta natal gratis</a>
-          <a href="#que-es">Cómo funciona</a>
-          <a href="#producto">Tu lectura completa</a>
-          <a href="#faq">Preguntas frecuentes</a>
+        <nav class="menu-movil__panel" aria-label="Menú">
+          <a href="/">Inicio</a>
+          <a href="/reportes">Reportes</a>
+          <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
+          <a href="/como-funciona">Cómo funciona</a>
+          <a href="/sobre-astrea">Sobre Astrea</a>
+          <a href="/regalar">Regalar</a>
+          <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
         </nav>
       </details>
     </div>
@@ -469,6 +476,8 @@
 <script src="universo-assets/universo.js"></script>
 <script type="module" src="universo-assets/observatorio.js"></script>
 <script type="module" src="/tienda-assets/origen.js"></script>
+<script type="module" src="/tienda-assets/sitio-publico.js"></script>
+<script type="module" src="/tienda-assets/nav-flotante.js"></script>
 <script type="module">
   // Lista de correos: «Tu Big 3 explicado» en PDF si la persona deja su correo (tienda-assets/lista.js).
   import { conectarListaDeCorreos } from "/tienda-assets/lista.js";
