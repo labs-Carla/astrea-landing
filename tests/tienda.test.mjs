@@ -271,7 +271,7 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   assert.match(html, /<h1 class="h-display" id="hero-titulo">El universo<br>empieza<br><em>contigo\.<\/em><\/h1>/);
   assert.ok(html.includes("Astrología para conocerte, explorar tus ciclos"), "propuesta de valor en el hero");
   assert.match(html, /observatorio\/astrea-editorial-hero\.webp/, "grabado editorial de Astrea");
-  assert.ok(html.includes('class="portada-observatorio astrea-publica"'), "tema editorial del sitio público");
+  assert.ok(html.includes('class="portada-observatorio astrea-publica capitulos'), "tema editorial del sitio público");
   assert.match(html, /astrea-editorial-hero\.webp/, "imagen adaptable para móvil");
   assert.match(html, /tienda-assets\/observatorio\.css/, "estilos del observatorio");
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
@@ -298,6 +298,37 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   assert.match(html, /tiktok\.com\/@astrea\.charts/);
   assert.match(html, /fetchpriority="high"/, "el hero carga con prioridad");
   assert.ok(!html.includes('class="arch arch--framed"'), "la ilustración del hero no está encerrada en un arco");
+});
+
+test("portada en capítulos: orden del embudo, sin CDN y funciona si falla el JS", () => {
+  const html = PAGINAS["index.html"];
+  const orden = ["hero-titulo", 'class="confianza"', 'id="recorrido"', 'id="reportes"', 'id="como-funciona"', 'id="cielo-semana"', 'id="preguntas"'].map((m) => html.indexOf(m));
+  assert.ok(orden.every((p, i) => p > 0 && (i === 0 || p > orden[i - 1])), "secciones en el orden del embudo");
+  assert.equal((html.match(/data-hoja>/g) || []).length, 7, "una hoja por sección");
+  assert.match(html, /<link rel="canonical" href="https:\/\/astrea-charts\.site\/">/, "la portada sigue indexable");
+  assert.ok(!/noindex|experimento/.test(html), "sin restos de la vista previa");
+  assert.ok(!/cdn\.jsdelivr|unpkg/.test(html), "las librerías se sirven desde el sitio");
+  for (const f of ["portada-vidrio.js", "portada-capitulos.js", "pie-gigante.js"]) {
+    const js = readFileSync(new URL(`../tienda-assets/${f}`, import.meta.url), "utf8");
+    assert.ok(!/https?:\/\//.test(js) && !js.includes("experimento"), `${f} no depende de otros dominios`);
+    assert.ok(html.includes(`/tienda-assets/${f}`), f);
+  }
+  for (const l of ["lenis", "motion", "anime", "liquidgl"]) assert.ok(readFileSync(new URL(`../tienda-assets/vendor/${l}.min.js`, import.meta.url)).length > 10_000, l);
+  const vidrio = readFileSync(new URL("../tienda-assets/portada-vidrio.js", import.meta.url), "utf8");
+  assert.ok(!/^import .*liquidgl/m.test(vidrio) && !/modulepreload[^>]*liquidgl/.test(html), "liquidGL no se descarga en teléfonos");
+  assert.match(html, /<div class="intro" data-intro[^>]* hidden>/, "la pantalla de carga nace oculta");
+  const css = readFileSync(new URL("../tienda-assets/portada-capitulos.css", import.meta.url), "utf8");
+  assert.ok(!/body\.capitulos #reportes/.test(css), "el carrusel solo oculta reportes cuando su JS corre");
+  assert.match(css, /animation: intro-salida/, "la pantalla de carga se quita sola");
+  assert.equal((html.match(/class="totems__pastilla"/g) || []).length, DISPONIBLES.length, "una pastilla por reporte");
+});
+
+test("footer: la marca gigante va en todas las páginas de la tienda", () => {
+  for (const [ruta, html] of Object.entries(PAGINAS)) {
+    if (!ruta.endsWith(".html")) continue;
+    assert.equal((html.match(/data-pie-gigante/g) || []).length, 1, ruta);
+    assert.ok(html.includes("/tienda-assets/pie-gigante.js"), ruta);
+  }
 });
 
 test("Astrea.ai en pausa: la tienda vende lecturas y no menciona Astrea.ai ni su app", () => {

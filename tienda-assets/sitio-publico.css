@@ -195,3 +195,19 @@
  .astrea-publica .hero--astrea-atlas .hero__actions { align-items:stretch; flex-direction:column; }
  .astrea-publica .hero--astrea-atlas .hero__actions .btn { width:100%; }
 }
+
+/* Footer: la marca en grande, en todas las páginas */
+.astrea-publica .pie { padding-top: 0; }
+.astrea-publica .pie__grid { padding-top: clamp(32px, 4vw, 56px); }
+.pie__gigante {
+  max-width: 1440px; margin-inline: auto;
+  padding: clamp(36px, 6vw, 96px) var(--gutter) clamp(14px, 2vw, 28px);
+  border-bottom: 1px solid var(--hairline);
+}
+.pie__gigante svg { display: block; width: 100%; height: auto; overflow: visible; }
+.pie__gigante-trazo path { fill: rgba(176, 138, 79, .07); stroke: url(#pie-trazo); stroke-width: 1.25; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.pie__gigante-luz { fill: url(#pie-metal); stroke: #8F6A2B; stroke-width: 1; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+@media (max-width: 700px) {
+  .pie__gigante-trazo path { stroke-width: .75; }
+  .pie__gigante-luz { stroke-width: .6; }
+}

@@ -16,6 +16,7 @@ import { CONSENTIMIENTO } from "../tienda-assets/lista.js";
 import { REPORTES, ENTREGA, PACK_TEMATICOS, estadoDe, reportePorSlug } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
 import { conIconosAstrea, emblemaAstrea } from "../tienda-assets/iconos-astrea.mjs";
+import { LETRAS } from "./pie-letras.mjs";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITIO = "https://astrea-charts.site";
@@ -82,9 +83,54 @@ const tematicos = disponibles.filter((r) => !r.principal);
 
 const MARCA = `<span class="marca__texto">ASTREA<small>CHARTS</small></span>`;
 
+// Footer: la marca en grande, en contorno, de lado a lado. La anima tienda-assets/pie-gigante.js.
+const PIE_GIGANTE = `
+  <div class="pie__gigante" aria-hidden="true" data-pie-gigante>
+    <svg viewBox="0 0 1200 232" preserveAspectRatio="xMidYMid meet" focusable="false">
+      <defs>
+        <linearGradient id="pie-trazo" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="232">
+          <stop offset="0" stop-color="#C9A869"/><stop offset="1" stop-color="#8A6A36"/>
+        </linearGradient>
+        <linearGradient id="pie-metal" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="210" y2="96" spreadMethod="reflect">
+          <stop offset="0" stop-color="#8F6A2B"/><stop offset=".42" stop-color="#C39A48"/><stop offset=".72" stop-color="#F4E4B4"/><stop offset="1" stop-color="#B98F3E"/>
+        </linearGradient>
+        <radialGradient id="pie-luz-grad"><stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#fff" stop-opacity=".92"/><stop offset=".8" stop-color="#fff" stop-opacity=".3"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <mask id="pie-luz" maskUnits="userSpaceOnUse" x="-20" y="-20" width="1240" height="272">
+          <circle data-pie-luz cx="-400" cy="116" r="300" fill="url(#pie-luz-grad)"/>
+        </mask>
+      </defs>
+      <g class="pie__gigante-trazo">${LETRAS.map((d) => `<path d="${d}"/>`).join("")}</g>
+      <path class="pie__gigante-luz" d="${LETRAS.join("")}" mask="url(#pie-luz)"/>
+    </svg>
+  </div>`;
+
+// Pantalla de carga de la portada: oculta por defecto. El script en línea la muestra solo en la
+// primera visita de la sesión, así un fallo de los módulos no la deja tapando la tienda.
+const INTRO_PORTADA = `<div class="intro" data-intro data-liquid-ignore aria-hidden="true" hidden><div class="intro__carta"><img src="/tienda-assets/img/carta-natal-480.webp" alt="" width="480" height="720"></div></div>
+<script>try{if(!sessionStorage.getItem("astrea-intro")&&!matchMedia("(prefers-reduced-motion: reduce)").matches){sessionStorage.setItem("astrea-intro","1");document.querySelector("[data-intro]").hidden=false}}catch(e){}</script>
+`;
+
+// Dock del recorrido en la portada: mismos textos y destinos que ya existen en ella.
+const DOCK_PORTADA = `
+<nav class="embudo-dock" data-embudo-dock aria-label="Tu recorrido con Astrea">
+  <ol class="embudo-dock__pasos">
+    <li><a href="#recorrido" data-paso="1"><span class="embudo-dock__num">I</span>Descubre tu carta</a></li>
+    <li aria-hidden="true" class="embudo-dock__linea"></li>
+    <li><a href="#reportes" data-paso="2"><span class="embudo-dock__num">II</span>Profundiza con una lectura</a></li>
+  </ol>
+  <div class="embudo-dock__acciones">
+    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="/universo#generador">Descubrir mi carta gratis ${icono("i-arrow")}</a>
+    <a class="btn btn-metal btn--ghost btn--sm" href="#reportes">Ver reportes</a>
+  </div>
+</nav>`;
+
 function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null, indexable = true, imagen = "/universo-assets/img/hero-escultura.webp", portada = false, preload = "" }) {
   const actual = (href) => (href === ruta || (href !== "/" && ruta.startsWith(href + "/")) ? ' aria-current="page"' : "");
   const enlaces = NAV.map(([href, texto]) => `<a href="${href}"${actual(href)}>${texto}</a>`).join("\n      ");
+  const navPrincipal = `<nav class="site-nav" aria-label="Principal">
+      ${enlaces}
+    </nav>`;
+  const botonHeader = `<a class="btn ${portada ? "btn-metal " : ""}btn--gold btn--sm" href="/reportes">Ver reportes</a>`;
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -109,23 +155,21 @@ ${indexable ? `<link rel="canonical" href="${SITIO}${ruta === "/" ? "/" : ruta}"
 <link rel="stylesheet" href="/tienda-assets/observatorio.css">
 <link rel="stylesheet" href="/tienda-assets/almanaque.css">
 <link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
-${preload}
+${portada ? '<link rel="stylesheet" href="/tienda-assets/portada-vidrio.css">\n<link rel="stylesheet" href="/tienda-assets/portada-capitulos.css">\n' : ""}${preload}
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}</head>
-<body class="portada-observatorio astrea-publica">
+<body class="portada-observatorio astrea-publica${portada ? " capitulos glass glass--oro glass--mixta" : ""}">
 <!-- Generado por scripts/generar-tienda.mjs a partir de tienda-assets/catalogo.js. No editar a mano. -->
 
 ${SPRITE_PORTADA}
 
-<a class="skip-link" href="#contenido">Saltar al contenido</a>
+${portada ? INTRO_PORTADA : ""}<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <header class="site-header site-header--tienda">
   <div class="site-header__inner">
     <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
-    <nav class="site-nav" aria-label="Principal">
-      ${enlaces}
-    </nav>
+    ${portada ? `<div class="isla-nav">\n    ${navPrincipal}\n    ${botonHeader}\n    </div>` : navPrincipal}
     <div class="header-acciones">
-      <a class="btn btn--gold btn--sm" href="/reportes">Ver reportes</a>
+      ${portada ? "" : botonHeader}
       <details class="menu-movil">
         <summary aria-label="Abrir menú">${icono("i-menu")}</summary>
         <nav class="menu-movil__panel" aria-label="Menú">
@@ -140,7 +184,7 @@ ${SPRITE_PORTADA}
 ${cuerpo}
 </main>
 
-<footer class="pie">
+<footer class="pie">${PIE_GIGANTE}
   <div class="shell pie__grid">
     <div class="pie__marca">
       <a class="marca" href="/" aria-label="Astrea Charts, inicio">${MARCA}</a>
@@ -164,8 +208,8 @@ ${cuerpo}
     <p>Astrea Charts es una herramienta de autoconocimiento. No reemplaza asesoría médica, psicológica ni financiera.</p>
     <p><a href="/terminos">Términos y reembolsos</a> · <a href="/privacidad">Política de privacidad</a> · © ${new Date().getFullYear()} Astrea Charts</p>
   </div>
-</footer>
-${["/tienda-assets/origen.js", "/tienda-assets/sitio-publico.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
+</footer>${portada ? DOCK_PORTADA : ""}
+${["/tienda-assets/origen.js", "/tienda-assets/sitio-publico.js", "/tienda-assets/pie-gigante.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
 </body>
 </html>
 `;
@@ -253,20 +297,19 @@ const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby=
     <p class="tarjeta-portada__texto">${esc(r.tarjeta)}</p>
     <div class="tarjeta-portada__pie">
       <span class="tarjeta-portada__precio">${esc(CHECKOUTS[r.slug].precioReferencia)}</span>
-      <a class="btn btn--night btn--sm" href="/comprar/${r.slug}" aria-label="Comprar ${esc(r.nombre)}">Comprar ${icono("i-arrow")}</a>
+      <a class="btn btn-metal btn--gold btn--sm" href="/comprar/${r.slug}" aria-label="Comprar ${esc(r.nombre)}">Comprar ${icono("i-arrow")}</a>
     </div>
   </div>
 </article>`;
 
-paginas["index.html"] = layout({
-  ruta: "/",
-  portada: true,
-  scripts: ["/tienda-assets/cielo-semana.js"],
-  imagen: "/universo-assets/img/observatorio/astrea-editorial-hero.webp",
-  preload: '<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-editorial-hero.webp" fetchpriority="high">',
-  titulo: "Astrea · Tu cielo. Tu forma de ser.",
-  descripcion: "Un espacio para conocerte a través de tu carta natal. Astronomía precisa, astrología cercana y lecturas para volver a ti. Descubre tu carta gratis.",
-  cuerpo: `<section class="hero hero--tienda hero--editorial hero--astrea-atlas" aria-labelledby="hero-titulo">
+// Cada sección va en una «hoja» que se apila al hacer scroll, en el orden del embudo:
+// atención, confianza, los dos pasos, oferta, cómo se recibe, contenido para volver y objeciones.
+const hojaPortada = ([tema, seccion], i) => `<div class="hoja hoja--${tema}" data-hoja>${i ? `<p class="hoja__capitulo" aria-hidden="true">Capítulo ${String(i).padStart(2, "0")}</p>` : ""}
+${seccion}
+<div class="hoja__tapa" aria-hidden="true"></div></div>`;
+
+const HOJAS_PORTADA = [
+  ["hero", `<section class="hero hero--tienda hero--editorial hero--astrea-atlas" aria-labelledby="hero-titulo">
   <div class="hero-atlas__art" aria-hidden="true"></div>
   <div class="hero-atlas__veil" aria-hidden="true"></div>
   <div class="hero-atlas__inner shell">
@@ -275,24 +318,84 @@ paginas["index.html"] = layout({
       <h1 class="h-display" id="hero-titulo">El universo<br>empieza<br><em>contigo.</em></h1>
       <p class="lede">Astrología para conocerte, explorar tus ciclos y descubrir nuevas formas de ser tú.</p>
       <div class="hero__actions">
-        <a class="btn btn--gold" href="/universo#generador">Descubrir mi carta gratis ${icono("i-arrow")}</a>
+        <a class="btn btn-metal btn--gold metal-marmol" href="/universo#generador">Descubrir mi carta gratis ${icono("i-arrow")}</a>
         <a class="link-quiet" href="/reportes">Explorar lecturas <span aria-hidden="true">↗</span></a>
       </div>
       <p class="hero-atlas__footnote">✳ Tu carta natal es solo el comienzo.</p>
     </div>
   </div>
-</section>
-
-<section class="confianza" aria-label="Por qué confiar en Astrea">
+</section>`],
+  ["confianza", `<section class="confianza" aria-label="Por qué confiar en Astrea">
   <ul class="shell confianza__lista">
     <li>${icono("i-armilar", "icon confianza__icono")}<div><strong>Astronomía real</strong><span>Cálculos con Swiss Ephemeris y datos astronómicos precisos.</span></div></li>
     <li>${icono("i-pluma", "icon confianza__icono")}<div><strong>Revisión humana</strong><span>Interpretaciones asistidas por IA y revisadas por una astróloga.</span></div></li>
     <li>${icono("i-pergamino", "icon confianza__icono")}<div><strong>Directo a tu correo</strong><span>Recibe tu informe en 24–48 horas después de la confirmación del pago.</span></div></li>
     <li>${icono("i-espejo", "icon confianza__icono")}<div><strong>Autoconocimiento</strong><span>Herramientas para comprenderte y tomar decisiones más alineadas.</span></div></li>
   </ul>
-</section>
-
-<section class="cielo-semana" id="cielo-semana" aria-labelledby="cielo-semana-titulo" data-cielo-semana>
+</section>`],
+  ["arena", `<section class="capitulo capitulo--marmol" id="recorrido" aria-labelledby="recorrido-titulo">
+  <div class="shell">
+    <header class="capitulo__cabecera">
+      <div>
+        <p class="eyebrow">Tu recorrido con Astrea</p>
+        <h2 class="capitulo__titulo" id="recorrido-titulo">Una experiencia que crece contigo.</h2>
+      </div>
+      <p class="capitulo__intro">Tu carta natal es el punto de partida. A partir de ella, cada lectura se escribe para ti, y puedes volver en distintos momentos para explorar nuevos temas de tu vida.</p>
+    </header>
+    <ol class="pasos pasos--dos">
+      ${RECORRIDO.map(([ic, t, d, href, accion], i) => `<li class="paso"><span class="paso__numero">${["I", "II"][i]}</span>${icono(ic, "icon paso__icono")}<h3 class="paso__titulo">${esc(t)}</h3><p>${esc(d)}</p><a class="btn btn-metal btn--gold btn--sm paso__enlace${href === "/universo#generador" ? " metal-marmol" : ""}" href="${href}">${esc(accion)}</a></li>`).join(`
+      <li class="recorrido__visual" aria-hidden="true"><div class="telefono"><img src="/tienda-assets/img/carta-natal-480.webp" alt="" width="480" height="720" loading="lazy" decoding="async"></div></li>
+      `)}
+    </ol>
+  </div>
+</section>`],
+  ["noche", `<section class="capitulo capitulo--claro" id="reportes" aria-labelledby="reportes-titulo">
+  <div class="shell">
+    <header class="capitulo__cabecera">
+      <div>
+        <p class="eyebrow">Nuestros reportes</p>
+        <h2 class="capitulo__titulo" id="reportes-titulo">Tu historia tiene muchas capas.</h2>
+      </div>
+      <p class="capitulo__intro">Lecturas en PDF, escritas a partir de tu carta natal y revisadas antes de llegar a ti.</p>
+    </header>
+    <div class="catalogo-portada" data-totems>
+      ${disponibles.map(tarjetaPortada).join("\n      ")}
+    </div>
+    <div class="totems__control" data-totems-control>
+      <div class="totems__navegar">
+        <p class="totems__contador" aria-live="polite">(<span data-totems-n>1</span>)</p>
+        <button type="button" class="totems__flecha" data-totems-paso="-1" aria-label="Reporte anterior">${icono("i-prev")}</button>
+        <button type="button" class="totems__flecha" data-totems-paso="1" aria-label="Reporte siguiente">${icono("i-next")}</button>
+      </div>
+      <div class="totems__pastillas" aria-label="Elegir reporte">${disponibles.map((r, i) => `<button type="button" class="totems__pastilla" data-totem="${i}" aria-controls="tp-${r.slug}">${esc(r.nombre)}</button>`).join("")}</div>
+    </div>
+  </div>
+</section>`],
+  ["marfil", `<section class="capitulo capitulo--marmol" id="como-funciona" aria-labelledby="pasos-titulo">
+  <div class="shell">
+    <header class="capitulo__cabecera capitulo__cabecera--centro">
+      <p class="eyebrow">Cómo funciona</p>
+      <h2 class="capitulo__titulo" id="pasos-titulo">Tres pasos para recibir tu reporte</h2>
+    </header>
+    <ol class="pasos">
+      <li class="paso"><span class="paso__numero">01</span>${icono("i-nacimiento", "icon paso__icono")}<h3 class="paso__titulo">Comparte tus datos de nacimiento</h3><p>Completa tu fecha, hora y lugar de nacimiento, y los datos de tu pareja si aplica.</p></li>
+      <li class="paso"><span class="paso__numero">02</span>${icono("i-astrolabio", "icon paso__icono")}<h3 class="paso__titulo">Calculamos tu carta</h3><p>Usamos Swiss Ephemeris y una interpretación asistida por IA, revisada por una astróloga.</p></li>
+      <li class="paso"><span class="paso__numero">03</span>${icono("i-pergamino", "icon paso__icono")}<h3 class="paso__titulo">Recibes tu informe personalizado</h3><p>Te lo enviamos a tu correo en 24–48 horas, contadas desde la confirmación del pago.</p></li>
+    </ol>
+  </div>
+</section>`],
+  ...(TESTIMONIOS.length ? [["marfil", `<section class="capitulo capitulo--claro" aria-labelledby="testimonios-titulo">
+  <div class="shell">
+    <header class="capitulo__cabecera capitulo__cabecera--centro">
+      <p class="eyebrow">Lo que dicen</p>
+      <h2 class="capitulo__titulo" id="testimonios-titulo">Historias reales</h2>
+    </header>
+    <div class="testimonios">
+      ${TESTIMONIOS.map((t) => `<figure class="testimonio"><blockquote>${esc(t.texto)}</blockquote><figcaption>${esc(t.nombre)}${t.detalle ? ` · ${esc(t.detalle)}` : ""}</figcaption></figure>`).join("\n      ")}
+    </div>
+  </div>
+</section>`]] : []),
+  ["azul", `<section class="cielo-semana" id="cielo-semana" aria-labelledby="cielo-semana-titulo" data-cielo-semana>
   <div class="shell cielo-semana__grid">
     <div class="cielo-semana__texto">
       <p class="alm-eyebrow" data-cs="eyebrow">Horóscopo semanal · cada lunes</p>
@@ -300,7 +403,7 @@ paginas["index.html"] = layout({
       <p class="alm-rango" data-cs="rango"></p>
       <p class="cielo-semana__titulo" data-cs="titulo"></p>
       <p class="alm-lede" data-cs="resumen">Una pausa para mirar hacia arriba y volver a ti. Cada lunes, los movimientos del cielo y una lectura para acompañar tu semana.</p>
-      <a class="btn btn--gold" href="/blog/horoscopo-semanal" data-cs="url">Leer mi horóscopo <span aria-hidden="true">↗</span></a>
+      <a class="btn btn-metal btn--gold" href="/blog/horoscopo-semanal" data-cs="url">Leer mi horóscopo <span aria-hidden="true">↗</span></a>
     </div>
     <figure class="cielo-semana__rueda">
       <p class="cielo-semana__mapa">El cielo, en movimiento</p>
@@ -318,65 +421,8 @@ paginas["index.html"] = layout({
         ${SIGNOS_ALMANAQUE.map((s) => `<li><a href="/blog/horoscopo-semanal/${s.slug}" data-signo="${s.slug}"><span class="alm-medallon" aria-hidden="true"><img src="/universo-assets/img/almanaque/${s.slug}-320.webp" width="80" height="80" alt="" loading="lazy" decoding="async"></span>${s.nombre}</a></li>`).join("\n        ")}
     </ul>
   </div>
-</section>
-
-<section class="capitulo capitulo--marmol" id="recorrido" aria-labelledby="recorrido-titulo">
-  <div class="shell">
-    <header class="capitulo__cabecera">
-      <div>
-        <p class="eyebrow">Tu recorrido con Astrea</p>
-        <h2 class="capitulo__titulo" id="recorrido-titulo">Una experiencia que crece contigo.</h2>
-      </div>
-      <p class="capitulo__intro">Tu carta natal es el punto de partida. A partir de ella, cada lectura se escribe para ti, y puedes volver en distintos momentos para explorar nuevos temas de tu vida.</p>
-    </header>
-    <ol class="pasos pasos--dos">
-      ${RECORRIDO.map(([ic, t, d, href, accion], i) => `<li class="paso"><span class="paso__numero">${["I", "II"][i]}</span>${icono(ic, "icon paso__icono")}<h3 class="paso__titulo">${esc(t)}</h3><p>${esc(d)}</p><a class="link-quiet paso__enlace" href="${href}">${esc(accion)}</a></li>`).join("\n      ")}
-    </ol>
-  </div>
-</section>
-
-<section class="capitulo capitulo--claro" id="reportes" aria-labelledby="reportes-titulo">
-  <div class="shell">
-    <header class="capitulo__cabecera">
-      <div>
-        <p class="eyebrow">Nuestros reportes</p>
-        <h2 class="capitulo__titulo" id="reportes-titulo">Tu historia tiene muchas capas.</h2>
-      </div>
-      <p class="capitulo__intro">Lecturas en PDF, escritas a partir de tu carta natal y revisadas antes de llegar a ti.</p>
-    </header>
-    <div class="catalogo-portada">
-      ${disponibles.map(tarjetaPortada).join("\n      ")}
-    </div>
-  </div>
-</section>
-
-<section class="capitulo capitulo--marmol" id="como-funciona" aria-labelledby="pasos-titulo">
-  <div class="shell">
-    <header class="capitulo__cabecera capitulo__cabecera--centro">
-      <p class="eyebrow">Cómo funciona</p>
-      <h2 class="capitulo__titulo" id="pasos-titulo">Tres pasos para recibir tu reporte</h2>
-    </header>
-    <ol class="pasos">
-      <li class="paso"><span class="paso__numero">01</span>${icono("i-nacimiento", "icon paso__icono")}<h3 class="paso__titulo">Comparte tus datos de nacimiento</h3><p>Completa tu fecha, hora y lugar de nacimiento, y los datos de tu pareja si aplica.</p></li>
-      <li class="paso"><span class="paso__numero">02</span>${icono("i-astrolabio", "icon paso__icono")}<h3 class="paso__titulo">Calculamos tu carta</h3><p>Usamos Swiss Ephemeris y una interpretación asistida por IA, revisada por una astróloga.</p></li>
-      <li class="paso"><span class="paso__numero">03</span>${icono("i-pergamino", "icon paso__icono")}<h3 class="paso__titulo">Recibes tu informe personalizado</h3><p>Te lo enviamos a tu correo en 24–48 horas, contadas desde la confirmación del pago.</p></li>
-    </ol>
-  </div>
-</section>
-
-${TESTIMONIOS.length ? `
-<section class="capitulo capitulo--claro" aria-labelledby="testimonios-titulo">
-  <div class="shell">
-    <header class="capitulo__cabecera capitulo__cabecera--centro">
-      <p class="eyebrow">Lo que dicen</p>
-      <h2 class="capitulo__titulo" id="testimonios-titulo">Historias reales</h2>
-    </header>
-    <div class="testimonios">
-      ${TESTIMONIOS.map((t) => `<figure class="testimonio"><blockquote>${esc(t.texto)}</blockquote><figcaption>${esc(t.nombre)}${t.detalle ? ` · ${esc(t.detalle)}` : ""}</figcaption></figure>`).join("\n      ")}
-    </div>
-  </div>
-</section>` : ""}
-<section class="capitulo capitulo--claro" id="preguntas" aria-labelledby="faq-titulo">
+</section>`],
+  ["marfil", `<section class="capitulo capitulo--claro" id="preguntas" aria-labelledby="faq-titulo">
   <div class="shell faq-portada">
     <header class="capitulo__cabecera capitulo__cabecera--apilada">
       <p class="eyebrow">Preguntas frecuentes</p>
@@ -387,7 +433,19 @@ ${TESTIMONIOS.length ? `
       ${FAQ_PORTADA.map(([q, a]) => `<details><summary>${esc(q)}${icono("i-plus")}</summary><p>${esc(a)}</p></details>`).join("\n      ")}
     </div>
   </div>
-</section>`,
+</section>`],
+];
+
+paginas["index.html"] = layout({
+  ruta: "/",
+  portada: true,
+  scripts: ["/tienda-assets/cielo-semana.js", "/tienda-assets/portada-vidrio.js", "/tienda-assets/portada-capitulos.js"],
+  imagen: "/universo-assets/img/observatorio/astrea-editorial-hero.webp",
+  preload: ['<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-editorial-hero.webp" fetchpriority="high">',
+    ...["lenis", "motion", "anime"].map((l) => `<link rel="modulepreload" href="/tienda-assets/vendor/${l}.min.js">`)].join("\n"),
+  titulo: "Astrea · Tu cielo. Tu forma de ser.",
+  descripcion: "Un espacio para conocerte a través de tu carta natal. Astronomía precisa, astrología cercana y lecturas para volver a ti. Descubre tu carta gratis.",
+  cuerpo: HOJAS_PORTADA.map(hojaPortada).join("\n\n"),
   jsonLd: { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ_PORTADA.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
 });
 

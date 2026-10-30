@@ -22,6 +22,24 @@ There's no CI or lint tooling. The store (see below) has dependency-free tests:
 LOCAL backend (`tests/e2e/tienda.e2e.mjs`). Serve locally with `node scripts/servidor-local.mjs` (port 5500,
 clean URLs like Vercel).
 
+## Home page
+
+The home is built in chapters: `layout({ portada: true })` adds the glass header, funnel dock and intro, and
+`HOJAS_PORTADA` in `scripts/generar-tienda.mjs` holds each section in funnel order. Behavior lives in
+`tienda-assets/portada-vidrio.js` (Lenis, Motion, liquidGL) and `tienda-assets/portada-capitulos.js` (stacked
+sheets and the reports carousel), with matching `.css` files. The footer wordmark is in every store page:
+`PIE_GIGANTE` + `tienda-assets/pie-gigante.js` (no dependencies); its outlines are `scripts/pie-letras.mjs`.
+
+Must keep working without JS: the intro starts `hidden` and removes itself by CSS after 4 s, and the sticky
+sheets and carousel only apply under `body.capitulos-vivos`, a class set by `portada-capitulos.js`. Otherwise a
+JS failure would hide the reports.
+
+liquidGL is imported dynamically and only runs on desktop with a real GPU (`puedeVidrioWebGL`): it snapshots the
+whole page and froze the page on a throttled phone. Everywhere else the header and dock use the CSS glass.
+
+`tienda-assets/vendor/` holds single-file builds of lenis 1.3.26, motion 14.1.0, animejs 4.5.0 and liquid-gl
+3.0.0 (esbuild `--minify`, keeping only the imports used). The site loads none of them from a CDN.
+
 ## Store (Astrea Reports ecommerce)
 
 `index.html`, `reportes.html`, `reportes/*.html`, `comprar/*.html`, `pedido.html`, `como-funciona.html`,

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="220" viewBox="0 0 640 220">
+  <defs>
+    <!-- Nube suave del fondo -->
+    <filter id="nube" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency=".008 .02" numOctaves="4" seed="4"/>
+      <feColorMatrix values="0 0 0 0 .62  0 0 0 0 .6  0 0 0 0 .57  0 0 0 .32 -.1"/>
+    </filter>
+    <!-- Vetas grises finas -->
+    <filter id="vetas" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="turbulence" baseFrequency=".0035 .014" numOctaves="5" seed="9"/>
+      <feColorMatrix values="0 0 0 0 .52  0 0 0 0 .5  0 0 0 0 .49  1 0 0 0 0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 .42 0 0 0 0 0 .18 0 0 0 0 0 0"/></feComponentTransfer>
+    </filter>
+    <!-- Veta dorada -->
+    <filter id="oro" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="turbulence" baseFrequency=".0025 .009" numOctaves="4" seed="23"/>
+      <feColorMatrix values="0 0 0 0 .72  0 0 0 0 .55  0 0 0 0 .24  1 0 0 0 0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 .95 0 0 0 0 0 0 0 0 0 0"/></feComponentTransfer>
+    </filter>
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FDFBF7"/>
+      <stop offset=".55" stop-color="#F3EEE5"/>
+      <stop offset="1" stop-color="#E8E1D4"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="220" fill="url(#base)"/>
+  <rect width="640" height="220" filter="url(#nube)"/>
+  <rect width="640" height="220" filter="url(#vetas)"/>
+  <rect width="640" height="220" filter="url(#oro)"/>
+</svg>
