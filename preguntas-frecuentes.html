@@ -22,10 +22,11 @@
 <link rel="stylesheet" href="/tienda-assets/observatorio.css">
 <link rel="stylesheet" href="/tienda-assets/almanaque.css">
 <link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
+<link rel="stylesheet" href="/tienda-assets/nav-flotante.css">
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Qué es una carta natal?","acceptedAnswer":{"@type":"Answer","text":"Es un mapa del cielo calculado para la fecha, hora y lugar exactos de tu nacimiento. Muestra dónde estaban el Sol, la Luna y los planetas, y cómo se relacionan entre sí y con las áreas de tu vida."}},{"@type":"Question","name":"¿Qué reportes puedo comprar?","acceptedAnswer":{"@type":"Answer","text":"La carta natal completa y seis reportes temáticos: amor y vínculos, vocación y propósito, dinero y abundancia, patrones y transformación, revolución solar y compatibilidad de pareja. Todos llegan en PDF a tu correo entre 24 y 48 horas después de confirmar tu pago."}},{"@type":"Question","name":"¿Qué necesito para la revolución solar?","acceptedAnswer":{"@type":"Answer","text":"Tus datos de nacimiento, la ciudad donde pasarás tu cumpleaños y el año del ciclo que quieres leer: la carta de tu año se calcula para ese lugar."}},{"@type":"Question","name":"¿Qué necesito para la compatibilidad de pareja?","acceptedAnswer":{"@type":"Answer","text":"Tus datos de nacimiento y los de la otra persona. Si no sabes su hora de nacimiento, puedes dejarla vacía. Te pedimos confirmar que esa persona aceptó compartir sus datos."}},{"@type":"Question","name":"¿Cómo pago?","acceptedAnswer":{"@type":"Answer","text":"Primero registras tus datos de nacimiento y tu correo. Después te llevamos al pago seguro de Hotmart, en tu moneda local. Astrea no ve ni guarda datos de tarjetas."}},{"@type":"Question","name":"Ya pagué, ¿por qué mi pedido aparece como pendiente?","acceptedAnswer":{"@type":"Answer","text":"Confirmamos cada pago verificando la venta en Hotmart. Volver de la página de pago no basta para confirmarlo. Cuando lo confirmamos, preparamos tu lectura; no necesitas volver a enviar tus datos."}},{"@type":"Question","name":"¿Cuánto tiempo tarda en llegar?","acceptedAnswer":{"@type":"Answer","text":"Entre 24 y 48 horas después de confirmar tu pago, directo a tu correo."}},{"@type":"Question","name":"¿Qué tan precisa es la lectura?","acceptedAnswer":{"@type":"Answer","text":"Las posiciones se calculan con astronomía real (Swiss Ephemeris), no con tablas genéricas. La interpretación se redacta con apoyo de asistentes de IA y después la revisamos una por una antes de enviarla. Es una herramienta de autoconocimiento, no una predicción."}},{"@type":"Question","name":"¿Necesito saber mi hora de nacimiento?","acceptedAnswer":{"@type":"Answer","text":"Es lo ideal, porque de ella dependen el Ascendente y las casas. Si no la sabes con exactitud, usa la más aproximada que tengas: la mayoría de las secciones siguen siendo útiles."}},{"@type":"Question","name":"¿Necesito crear una cuenta para comprar mi lectura?","acceptedAnswer":{"@type":"Answer","text":"No. Tu lectura se compra una sola vez y es tuya: solo necesitas tus datos de nacimiento y el correo donde quieres recibirla."}},{"@type":"Question","name":"¿En qué formato recibiré mi informe?","acceptedAnswer":{"@type":"Answer","text":"En PDF, por correo electrónico, con un diseño editorial pensado para leerse con calma en el celular, en la computadora o impreso."}},{"@type":"Question","name":"¿Puedo pedir un reembolso?","acceptedAnswer":{"@type":"Answer","text":"Sí. Tienes 7 días desde la compra para pedir el reembolso total, aunque ya hayas recibido tu lectura. Lo pides desde el correo de compra de Hotmart o por WhatsApp con la referencia de tu pedido. Los detalles están en Términos y reembolsos."}},{"@type":"Question","name":"¿Puedo pedir una lectura para otra persona?","acceptedAnswer":{"@type":"Answer","text":"Sí. Usa los datos de nacimiento de esa persona y el correo donde quieres recibir la lectura."}}]}</script>
 </head>
-<body class="portada-observatorio astrea-publica">
+<body class="portada-observatorio astrea-publica glass glass--oro">
 <!-- Generado por scripts/generar-tienda.mjs a partir de tienda-assets/catalogo.js. No editar a mano. -->
 
 <svg class="sprite" aria-hidden="true" focusable="false">
@@ -152,6 +153,7 @@
 <header class="site-header site-header--tienda">
   <div class="site-header__inner">
     <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
+    <div class="isla-nav">
     <nav class="site-nav" aria-label="Principal">
       <a href="/">Inicio</a>
       <a href="/reportes">Reportes</a>
@@ -161,8 +163,9 @@
       <a href="/regalar">Regalar</a>
       <a href="/preguntas-frecuentes" aria-current="page">Preguntas frecuentes</a>
     </nav>
+    <a class="btn btn-metal btn--gold btn--sm" href="/reportes">Ver reportes</a>
+    </div>
     <div class="header-acciones">
-      <a class="btn btn--gold btn--sm" href="/reportes">Ver reportes</a>
       <details class="menu-movil">
         <summary aria-label="Abrir menú"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></summary>
         <nav class="menu-movil__panel" aria-label="Menú">
@@ -255,6 +258,7 @@
 </footer>
 <script type="module" src="/tienda-assets/origen.js"></script>
 <script type="module" src="/tienda-assets/sitio-publico.js"></script>
+<script type="module" src="/tienda-assets/nav-flotante.js"></script>
 <script type="module" src="/tienda-assets/pie-gigante.js"></script>
 </body>
 </html>

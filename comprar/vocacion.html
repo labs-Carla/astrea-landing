@@ -22,9 +22,10 @@
 <link rel="stylesheet" href="/tienda-assets/observatorio.css">
 <link rel="stylesheet" href="/tienda-assets/almanaque.css">
 <link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
+<link rel="stylesheet" href="/tienda-assets/nav-flotante.css">
 
 </head>
-<body class="portada-observatorio astrea-publica">
+<body class="portada-observatorio astrea-publica glass glass--oro">
 <!-- Generado por scripts/generar-tienda.mjs a partir de tienda-assets/catalogo.js. No editar a mano. -->
 
 <svg class="sprite" aria-hidden="true" focusable="false">
@@ -151,6 +152,7 @@
 <header class="site-header site-header--tienda">
   <div class="site-header__inner">
     <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
+    <div class="isla-nav">
     <nav class="site-nav" aria-label="Principal">
       <a href="/">Inicio</a>
       <a href="/reportes">Reportes</a>
@@ -160,8 +162,9 @@
       <a href="/regalar">Regalar</a>
       <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
     </nav>
+    <a class="btn btn-metal btn--gold btn--sm" href="/reportes">Ver reportes</a>
+    </div>
     <div class="header-acciones">
-      <a class="btn btn--gold btn--sm" href="/reportes">Ver reportes</a>
       <details class="menu-movil">
         <summary aria-label="Abrir menú"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></summary>
         <nav class="menu-movil__panel" aria-label="Menú">
@@ -294,6 +297,7 @@
 </footer>
 <script type="module" src="/tienda-assets/origen.js"></script>
 <script type="module" src="/tienda-assets/sitio-publico.js"></script>
+<script type="module" src="/tienda-assets/nav-flotante.js"></script>
 <script type="module" src="/tienda-assets/pie-gigante.js"></script>
 <script type="module" src="/tienda-assets/comprar.js"></script>
 </body>

@@ -118,21 +118,8 @@ pasoActivo(1);
 const hero = document.querySelector(".hero");
 const reportes = document.querySelector("#reportes");
 const pie = document.querySelector(".pie");
-// El logo del header se esconde al bajar y vuelve arriba del todo.
-const logo = document.querySelector(".site-header .alm-marca");
-let logoVisible = true;
-function mostrarLogo(visible) {
-  if (!logo || visible === logoVisible) return;
-  logoVisible = visible;
-  logo.style.pointerEvents = visible ? "auto" : "none";
-  logo.setAttribute("aria-hidden", visible ? "false" : "true");
-  logo.tabIndex = visible ? 0 : -1;
-  animate(logo, visible ? { opacity: 1, transform: "translateY(0px)", filter: "blur(0px)" } : { opacity: 0, transform: "translateY(-14px)", filter: "blur(4px)" },
-    quieto ? { duration: 0 } : { duration: visible ? 0.35 : 0.25, ease });
-}
 function alHacerScroll() {
   const y = scrollY;
-  mostrarLogo(y < 80);
   const finHero = hero ? hero.offsetTop + hero.offsetHeight * 0.6 : 400;
   const enPie = pie ? pie.getBoundingClientRect().top < innerHeight * 0.85 : false;
   mostrarDock(y > finHero && !enPie);

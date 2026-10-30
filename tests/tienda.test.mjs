@@ -323,6 +323,18 @@ test("portada en capítulos: orden del embudo, sin CDN y funciona si falla el JS
   assert.equal((html.match(/class="totems__pastilla"/g) || []).length, DISPONIBLES.length, "una pastilla por reporte");
 });
 
+test("menú flotante: el mismo en todas las páginas con header, también /universo", () => {
+  const enlaces = (html) => [...html.match(/<nav class="site-nav"[\s\S]*?<\/nav>/)[0].matchAll(/<a href="([^"]+)"/g)].map((m) => m[1]);
+  const base = enlaces(PAGINAS["index.html"]);
+  assert.equal(base.length, 7, "los 7 enlaces del menú");
+  const universo = readFileSync(new URL("../universo.html", import.meta.url), "utf8");
+  for (const [ruta, html] of [...Object.entries(PAGINAS).filter(([r]) => r.endsWith(".html")), ["universo.html", universo]]) {
+    assert.deepEqual(enlaces(html), base, ruta);
+    for (const marca of ['class="isla-nav"', 'btn btn-metal btn--gold btn--sm" href="/reportes"', "/tienda-assets/nav-flotante.css", "/tienda-assets/nav-flotante.js"]) assert.ok(html.includes(marca), `${ruta}: ${marca}`);
+    assert.match(html, /<body class="[^"]*\bglass glass--oro\b/, ruta);
+  }
+});
+
 test("footer: la marca gigante va en todas las páginas de la tienda", () => {
   for (const [ruta, html] of Object.entries(PAGINAS)) {
     if (!ruta.endsWith(".html")) continue;
