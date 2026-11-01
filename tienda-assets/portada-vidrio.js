@@ -76,6 +76,7 @@ const GRUPOS = [
   "#como-funciona .capitulo__cabecera", "#como-funciona .paso",
   ".cielo-semana__texto", ".cielo-semana__rueda", ".cielo-semana__cabecera-signos", ".zodiaco > li",
   "#preguntas .capitulo__cabecera", "#preguntas .accordion > details",
+  ".hoja .rev-tarjeta", ".hoja .rev-producto",
   ".pie__gigante", ".pie__grid > *", ".pie__legal",
 ];
 function prepararRevelado() {

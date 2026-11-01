@@ -17,6 +17,7 @@ import { REPORTES, ENTREGA, PACK_TEMATICOS, estadoDe, reportePorSlug } from "../
 import { CHECKOUTS, WHATSAPP } from "../tienda-assets/config.js";
 import { conIconosAstrea, emblemaAstrea } from "../tienda-assets/iconos-astrea.mjs";
 import { LETRAS } from "./pie-letras.mjs";
+import { ARTICULOS, CATEGORIAS, URL_CARTA_GRATIS } from "./revista-muestra.mjs";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITIO = "https://astrea-charts.site";
@@ -67,13 +68,8 @@ function ruedaVacia() {
 }
 
 const NAV = [
-  ["/", "Inicio"],
-  ["/reportes", "Reportes"],
-  ["/blog/horoscopo-semanal", "Horóscopo semanal"],
-  ["/como-funciona", "Cómo funciona"],
-  ["/sobre-astrea", "Sobre Astrea"],
-  ["/regalar", "Regalar"],
-  ["/preguntas-frecuentes", "Preguntas frecuentes"],
+  ...CATEGORIAS.map((c) => [`/revista/${c.slug}`, c.nombre]),
+  ["/reportes", "TIENDA"],
 ];
 
 const disponibles = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) === "disponible");
@@ -119,12 +115,24 @@ const DOCK_PORTADA = `
     <li><a href="#reportes" data-paso="2"><span class="embudo-dock__num">II</span>Profundiza con una lectura</a></li>
   </ol>
   <div class="embudo-dock__acciones">
-    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="/universo#generador">Descubrir mi carta gratis ${icono("i-arrow")}</a>
-    <a class="btn btn-metal btn--ghost btn--sm" href="#reportes">Ver reportes</a>
+    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="${URL_CARTA_GRATIS}">Descubrir mi carta gratis ${icono("i-arrow")}</a>
+    <a class="btn btn-metal btn--ghost btn--sm" href="#reportes">Ir a la TIENDA</a>
   </div>
 </nav>`;
 
-function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null, indexable = true, imagen = "/universo-assets/img/hero-escultura.webp", portada = false, preload = "" }) {
+// El mismo dock en el resto del sitio, sin los pasos del recorrido de la portada.
+const DOCK_INTERIOR = `
+<nav class="embudo-dock embudo-dock--interior" data-embudo-dock aria-label="Accesos rápidos">
+  <div class="embudo-dock__acciones">
+    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="${URL_CARTA_GRATIS}">Mi carta gratis ${icono("i-arrow")}</a>
+    <a class="btn btn-metal btn--ghost btn--sm" href="/reportes">Ir a la TIENDA</a>
+  </div>
+</nav>`;
+
+function layout({ ruta, titulo, descripcion, cuerpo, scripts = [], jsonLd = null, indexable = true, imagen = "/universo-assets/img/hero-escultura.webp", portada = false, revista = false, preload = "" }) {
+  // Los pasos de compra llevan el mismo diseño, sin scroll suave ni hojas apiladas: no se toca lo que vende.
+  const flujo = /^\/(comprar|pedido|canjear|regalar|baja)(\/|$)/.test(ruta);
+  const scriptsPagina = [...(portada || flujo ? [] : ["/tienda-assets/portada-vidrio.js", "/tienda-assets/portada-capitulos.js"]), ...scripts];
   const actual = (href) => (href === ruta || (href !== "/" && ruta.startsWith(href + "/")) ? ' aria-current="page"' : "");
   const enlaces = NAV.map(([href, texto]) => `<a href="${href}"${actual(href)}>${texto}</a>`).join("\n      ");
   const navPrincipal = `<nav class="site-nav" aria-label="Principal">
@@ -155,9 +163,12 @@ ${indexable ? `<link rel="canonical" href="${SITIO}${ruta === "/" ? "/" : ruta}"
 <link rel="stylesheet" href="/tienda-assets/almanaque.css">
 <link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
 <link rel="stylesheet" href="/tienda-assets/nav-flotante.css">
-${portada ? '<link rel="stylesheet" href="/tienda-assets/portada-vidrio.css">\n<link rel="stylesheet" href="/tienda-assets/portada-capitulos.css">\n' : ""}${preload}
+<link rel="stylesheet" href="/tienda-assets/portada-vidrio.css">
+<link rel="stylesheet" href="/tienda-assets/portada-capitulos.css">
+<link rel="stylesheet" href="/tienda-assets/revista.css">
+${preload}
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}</head>
-<body class="portada-observatorio astrea-publica${portada ? " capitulos glass glass--oro glass--mixta" : " glass glass--oro"}">
+<body class="portada-observatorio astrea-publica capitulos glass glass--oro glass--mixta${revista ? " revista" : ""}${flujo ? " flujo" : ""}">
 <!-- Generado por scripts/generar-tienda.mjs a partir de tienda-assets/catalogo.js. No editar a mano. -->
 
 ${SPRITE_PORTADA}
@@ -169,13 +180,14 @@ ${portada ? INTRO_PORTADA : ""}<a class="skip-link" href="#contenido">Saltar al 
     <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
     <div class="isla-nav">
     ${navPrincipal}
-    <a class="btn btn-metal btn--gold btn--sm" href="/reportes">Ver reportes</a>
+    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="${URL_CARTA_GRATIS}">Mi carta gratis</a>
     </div>
     <div class="header-acciones">
       <details class="menu-movil">
         <summary aria-label="Abrir menú">${icono("i-menu")}</summary>
         <nav class="menu-movil__panel" aria-label="Menú">
           ${enlaces}
+          <a href="${URL_CARTA_GRATIS}">Mi carta gratis</a>
         </nav>
       </details>
     </div>
@@ -183,7 +195,7 @@ ${portada ? INTRO_PORTADA : ""}<a class="skip-link" href="#contenido">Saltar al 
 </header>
 
 <main id="contenido" tabindex="-1">
-${cuerpo}
+${portada || revista ? cuerpo : enHojas(cuerpo)}
 </main>
 
 <footer class="pie">${PIE_GIGANTE}
@@ -194,9 +206,11 @@ ${cuerpo}
     </div>
     <nav class="pie__columna" aria-label="Explora">
       <h2 class="pie__titulo">Explora</h2>
-      <a href="/reportes">Reportes</a>
+      <a href="/reportes">TIENDA</a>
       <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
+      <a href="/revista">Revista</a>
       <a href="/como-funciona">Cómo funciona</a>
+      <a href="/regalar">Regalar</a>
       <a href="/sobre-astrea">Sobre Astrea</a>
       <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
     </nav>
@@ -210,8 +224,8 @@ ${cuerpo}
     <p>Astrea Charts es una herramienta de autoconocimiento. No reemplaza asesoría médica, psicológica ni financiera.</p>
     <p><a href="/terminos">Términos y reembolsos</a> · <a href="/privacidad">Política de privacidad</a> · © ${new Date().getFullYear()} Astrea Charts</p>
   </div>
-</footer>${portada ? DOCK_PORTADA : ""}
-${["/tienda-assets/origen.js", "/tienda-assets/sitio-publico.js", "/tienda-assets/nav-flotante.js", "/tienda-assets/pie-gigante.js", ...scripts].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
+</footer>${portada ? DOCK_PORTADA : flujo ? "" : DOCK_INTERIOR}
+${["/tienda-assets/origen.js", "/tienda-assets/sitio-publico.js", "/tienda-assets/nav-flotante.js", "/tienda-assets/pie-gigante.js", ...scriptsPagina].map((s) => `<script type="module" src="${s}"></script>`).join("\n")}
 </body>
 </html>
 `;
@@ -285,8 +299,8 @@ const FAQ_PORTADA = [
 
 
 const RECORRIDO = [
-  ["i-astrolabio", "Descubre tu carta", "Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.", "/universo#generador", "Generar mi carta gratis"],
-  ["i-libro", "Profundiza con una lectura", "La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.", "/reportes", "Ver reportes"],
+  ["i-astrolabio", "Descubre tu carta", "Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.", URL_CARTA_GRATIS, "Generar mi carta gratis"],
+  ["i-libro", "Profundiza con una lectura", "La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.", "/reportes", "Ir a la TIENDA"],
 ];
 
 const tarjetaPortada = (r) => `<article class="tarjeta-portada" aria-labelledby="tp-${r.slug}">
@@ -310,6 +324,16 @@ const hojaPortada = ([tema, seccion], i) => `<div class="hoja hoja--${tema}" dat
 ${seccion}
 <div class="hoja__tapa" aria-hidden="true"></div></div>`;
 
+// Páginas internas: la cabecera y cada sección de primer nivel van en su propia hoja.
+function enHojas(cuerpo) {
+  return cuerpo.split(/^(?=<section\b)/m).filter((p) => p.trim()).map((p) => {
+    const tema = p.includes("pagina-cabecera") ? "portadilla" : "marfil";
+    return `<div class="hoja hoja--${tema}" data-hoja>
+${p}
+<div class="hoja__tapa" aria-hidden="true"></div></div>`;
+  }).join("\n\n");
+}
+
 const HOJAS_PORTADA = [
   ["hero", `<section class="hero hero--tienda hero--editorial hero--astrea-atlas" aria-labelledby="hero-titulo">
   <div class="hero-atlas__art" aria-hidden="true"></div>
@@ -320,8 +344,8 @@ const HOJAS_PORTADA = [
       <h1 class="h-display" id="hero-titulo">El universo<br>empieza<br><em>contigo.</em></h1>
       <p class="lede">Astrología para conocerte, explorar tus ciclos y descubrir nuevas formas de ser tú.</p>
       <div class="hero__actions">
-        <a class="btn btn-metal btn--gold metal-marmol" href="/universo#generador">Descubrir mi carta gratis ${icono("i-arrow")}</a>
-        <a class="link-quiet" href="/reportes">Explorar lecturas <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-metal btn--gold metal-marmol" href="${URL_CARTA_GRATIS}">Descubrir mi carta gratis ${icono("i-arrow")}</a>
+        <a class="link-quiet" href="/reportes">Ir a la TIENDA <span aria-hidden="true">↗</span></a>
       </div>
       <p class="hero-atlas__footnote">✳ Tu carta natal es solo el comienzo.</p>
     </div>
@@ -355,10 +379,10 @@ const HOJAS_PORTADA = [
   <div class="shell">
     <header class="capitulo__cabecera">
       <div>
-        <p class="eyebrow">Nuestros reportes</p>
+        <p class="eyebrow">TIENDA</p>
         <h2 class="capitulo__titulo" id="reportes-titulo">Tu historia tiene muchas capas.</h2>
       </div>
-      <p class="capitulo__intro">Lecturas en PDF, escritas a partir de tu carta natal y revisadas antes de llegar a ti.</p>
+      <p class="capitulo__intro">Lecturas en PDF, escritas a partir de tu carta natal y revisadas antes de llegar a ti. <a class="link-quiet" href="/reportes">Ver toda la TIENDA</a></p>
     </header>
     <div class="catalogo-portada" data-totems>
       ${disponibles.map(tarjetaPortada).join("\n      ")}
@@ -438,7 +462,8 @@ const HOJAS_PORTADA = [
 </section>`],
 ];
 
-paginas["index.html"] = layout({
+// Se llama después de sumar el capítulo de la revista a HOJAS_PORTADA.
+const paginaInicio = () => layout({
   ruta: "/",
   portada: true,
   scripts: ["/tienda-assets/cielo-semana.js", "/tienda-assets/portada-vidrio.js", "/tienda-assets/portada-capitulos.js"],
@@ -451,11 +476,218 @@ paginas["index.html"] = layout({
   jsonLd: { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ_PORTADA.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) },
 });
 
+// ---------------------------------------------------------------- revista (muestra)
+
+const AVISO_MUESTRA = '<p class="rev-muestra">Muestra: los artículos son de ejemplo y todavía no están aprobados.</p>';
+const categoriaDe = (a) => CATEGORIAS.find((c) => c.slug === a.categoria);
+const articuloRuta = (a) => `/revista/articulo/${a.slug}`;
+const articulo = (slug) => ARTICULOS.find((a) => a.slug === slug);
+const deCategoria = (slug) => ARTICULOS.filter((a) => a.categoria === slug);
+
+const etiquetaCategoria = (a) => `<a class="rev-etiqueta" href="/revista/${a.categoria}">${esc(categoriaDe(a).nombre)}</a>`;
+
+const tarjetaArticulo = (a, { grande = false } = {}) => `<article class="rev-tarjeta${grande ? " rev-tarjeta--grande" : ""}">
+  <a class="rev-tarjeta__img" href="${articuloRuta(a)}" tabindex="-1" aria-hidden="true"><img src="${a.imagen}" alt="" loading="lazy"></a>
+  <div>${etiquetaCategoria(a)}</div>
+  <h3 class="rev-titulo"><a href="${articuloRuta(a)}">${esc(a.titulo)}</a></h3>
+  <p class="rev-entradilla">${esc(a.entradilla)}</p>
+</article>`;
+
+const historiaCarrusel = (a, i) => `<article class="rev-historia">
+  <a class="rev-historia__img" href="${articuloRuta(a)}" tabindex="-1" aria-hidden="true"><img src="${a.imagen}" alt=""${i ? ' loading="lazy"' : ""}></a>
+  <div class="rev-historia__texto">
+    <div>${etiquetaCategoria(a)}</div>
+    <h2 class="rev-titulo"><a href="${articuloRuta(a)}">${esc(a.titulo)}</a></h2>
+    <p class="rev-entradilla">${esc(a.entradilla)}</p>
+    <a class="rev-mas" href="${articuloRuta(a)}">Leer ${a.minutos} min</a>
+  </div>
+</article>`;
+
+const bloqueTema = (slug) => {
+  const c = CATEGORIAS.find((x) => x.slug === slug);
+  const [principal, ...resto] = deCategoria(slug);
+  return `<section class="rev-bloque">
+  <div class="rev-shell">
+    <div class="rev-bloque__cab"><h2>${esc(c.nombre)}</h2><a class="rev-mas" href="/revista/${c.slug}">Ver todo</a></div>
+    <div class="rev-tema">
+      ${tarjetaArticulo(principal, { grande: true })}
+      <div class="rev-tema__lado">${resto.map((a) => tarjetaArticulo(a)).join("\n")}</div>
+    </div>
+  </div>
+</section>`;
+};
+
+const productoTienda = (slug) => {
+  const r = reportePorSlug(slug);
+  return `<a class="rev-producto" href="/reportes/${slug}">
+  <img src="/tienda-assets/img/${slug}-480.webp" alt="" width="480" height="720" loading="lazy">
+  <strong>${esc(r.nombre)}</strong>
+  <span>${esc(CHECKOUTS[slug]?.precioReferencia ?? "")}</span>
+</a>`;
+};
+
+const enCapitulos = (hojas) => hojas.map((h) => hojaPortada(h, 0)).join("\n\n");  // sin numeración de capítulos: esa es de la portada
+
+const bloque = (titulo, contenido, enlace = "") => `<section class="rev-bloque">
+  <div class="rev-shell">
+    <div class="rev-bloque__cab"><h2>${esc(titulo)}</h2>${enlace}</div>
+    ${contenido}
+  </div>
+</section>`;
+
+const PORTADA_REVISTA = enCapitulos([
+  ["portadilla", `${cabecera({ eyebrow: "Revista", titulo: "Cultura y autoconocimiento", lede: "Ideas, mitos y preguntas para mirar el cielo y mirarte a ti." })}${AVISO_MUESTRA}`],
+  ["marfil", `<section class="rev-apertura">
+  <div class="rev-shell">
+    <div class="rev-apertura__cab">
+      <p class="rev-franja">Esta semana, Mercurio y Venus siguen retrógrados.<a href="/blog/horoscopo-semanal">Lee tu horóscopo</a></p>
+      <div class="rev-flechas">
+        <button class="rev-flecha" type="button" data-carrusel-prev aria-label="Artículo anterior">←</button>
+        <button class="rev-flecha" type="button" data-carrusel-next aria-label="Artículo siguiente">→</button>
+      </div>
+    </div>
+    <div class="rev-carrusel" data-carrusel tabindex="0" aria-label="Artículos recientes">
+      ${["venus-retrograda-lo-que-vuelve", "tu-luna-no-es-tu-humor", "casa-7-a-quien-eliges", "medio-cielo-que-quieres-hacer", "quien-fue-astrea"].map((s, i) => historiaCarrusel(articulo(s), i)).join("\n")}
+    </div>
+  </div>
+</section>`],
+  ["noche", `<section class="rev-app">
+  <div class="rev-shell rev-app__grid">
+    <div class="rev-app__texto">
+      <p class="rev-etiqueta">La app de Astrea</p>
+      <h2>Empieza por tu propia carta</h2>
+      <p>Todo lo que lees aquí cambia cuando lo miras desde tu fecha, tu hora y tu lugar de nacimiento.</p>
+      <ul class="rev-app__lista">
+        <li>Tu carta natal, gratis y guardada</li>
+        <li>Tu cielo de cada día</li>
+        <li>Conversaciones con Astrea, con Plus</li>
+      </ul>
+      <div class="rev-app__acciones">
+        <a class="btn btn-metal btn--gold metal-marmol" href="${URL_CARTA_GRATIS}">Mi carta gratis ${icono("i-arrow")}</a>
+        <a class="rev-mas" href="/reportes">Ir a la TIENDA</a>
+      </div>
+    </div>
+    <div class="rev-app__img" role="img" aria-label="Astrea, la figura de la marca, bajo el cielo"></div>
+  </div>
+</section>`],
+  ["arena", bloque("Para leer hoy", `<div class="rev-rejilla">
+      ${["como-leer-un-transito", "compatibilidad-no-es-destino", "dejar-de-repetir-la-misma-historia"].map((s) => tarjetaArticulo(articulo(s))).join("\n")}
+    </div>`)],
+  ["marfil", bloqueTema("vinculos")],
+  ["arena", bloqueTema("proposito")],
+  ["marfil", bloqueTema("cultura")],
+  ["noche", bloque("TIENDA", `<div class="rev-tienda__rejilla">
+      ${["carta-natal", "pack", "amor", "compatibilidad"].map(productoTienda).join("\n")}
+    </div>`, '<a class="rev-mas" href="/reportes">Ver todo</a>')],
+  ["marfil", bloque("Todos los artículos", `<div class="rev-rejilla" data-articulos>
+      ${ARTICULOS.map((a) => tarjetaArticulo(a)).join("\n")}
+    </div>
+    <div class="rev-cargar"><button type="button" data-cargar-mas hidden>Cargar más</button></div>`)],
+  ["azul", `<section class="rev-correo">
+  <div class="rev-shell">
+    <p class="rev-etiqueta">Lista de correo</p>
+    <h2>Tu Big 3 explicado, gratis</h2>
+    <p>Recíbelo en tu correo y sigue con nosotras: el cielo de la semana, nuevas lecturas y lo mejor de la revista.</p>
+    <a class="btn btn-metal btn--gold metal-marmol" href="/link-gratis">Quiero recibirlo ${icono("i-arrow")}</a>
+  </div>
+</section>`],
+]);
+
+paginas["revista.html"] = layout({
+  ruta: "/revista",
+  revista: true,
+  indexable: false,
+  scripts: ["/tienda-assets/revista.js"],
+  imagen: "/universo-assets/img/observatorio/astrea-editorial-hero.webp",
+  titulo: "Revista · Astrea",
+  descripcion: "Astrología, cultura y autoconocimiento. Lee la revista de Astrea y descubre tu carta natal gratis.",
+  cuerpo: PORTADA_REVISTA,
+});
+
+// Capítulo de la revista en la portada, justo después del recorrido.
+const [principalRevista, ...ladoRevista] = ["venus-retrograda-lo-que-vuelve", "tu-luna-no-es-tu-humor", "casa-7-a-quien-eliges", "quien-fue-astrea"].map(articulo);
+HOJAS_PORTADA.splice(3, 0, ["marfil", `<section class="capitulo capitulo--claro" id="revista" aria-labelledby="revista-titulo">
+  <div class="shell">
+    <header class="capitulo__cabecera">
+      <div>
+        <p class="eyebrow">Revista</p>
+        <h2 class="capitulo__titulo" id="revista-titulo">Cultura y autoconocimiento.</h2>
+      </div>
+      <p class="capitulo__intro">Ideas, mitos y preguntas para mirar el cielo y mirarte a ti. <a class="link-quiet" href="/revista">Ver toda la revista</a></p>
+    </header>
+    <div class="rev-tema">
+      ${tarjetaArticulo(principalRevista, { grande: true })}
+      <div class="rev-tema__lado">${ladoRevista.map((a) => tarjetaArticulo(a)).join("\n")}</div>
+    </div>
+    <nav class="rev-temas" aria-label="Temas de la revista">${CATEGORIAS.map((c) => `<a href="/revista/${c.slug}">${esc(c.nombre)}</a>`).join("")}</nav>
+  </div>
+</section>`]);
+
+paginas["index.html"] = paginaInicio();
+
+for (const c of CATEGORIAS) {
+  paginas[`revista/${c.slug}.html`] = layout({
+    ruta: `/revista/${c.slug}`,
+    revista: true,
+    indexable: false,
+    titulo: `${c.nombre} · Astrea`,
+    descripcion: c.lema,
+    cuerpo: enCapitulos([
+      ["portadilla", `${cabecera({ eyebrow: "Revista", titulo: c.nombre, lede: c.lema })}${AVISO_MUESTRA}`],
+      ["marfil", bloque("Artículos", `<div class="rev-rejilla">${deCategoria(c.slug).map((a) => tarjetaArticulo(a)).join("\n")}</div>`)],
+      ...(c.slug === "cosmos" ? [["azul", `<section class="rev-correo"><div class="rev-shell">
+  <p class="rev-etiqueta">Cada lunes</p>
+  <h2>Horóscopo semanal</h2>
+  <p>Los movimientos del cielo y una lectura para acompañar tu semana.</p>
+  <a class="btn btn-metal btn--gold metal-marmol" href="/blog/horoscopo-semanal">Leer mi horóscopo ${icono("i-arrow")}</a>
+</div></section>`]] : []),
+    ]),
+  });
+}
+
+for (const a of ARTICULOS) {
+  const c = categoriaDe(a);
+  const r = reportePorSlug(a.lectura);
+  const otros = ARTICULOS.filter((x) => x.slug !== a.slug);
+  const relacionados = [...otros.filter((x) => x.categoria === a.categoria), ...otros.filter((x) => x.categoria !== a.categoria)].slice(0, 3);
+  paginas[`revista/articulo/${a.slug}.html`] = layout({
+    ruta: articuloRuta(a),
+    revista: true,
+    indexable: false,
+    titulo: `${a.titulo} · Astrea`,
+    descripcion: a.entradilla,
+    imagen: a.imagen,
+    cuerpo: enCapitulos([
+      ["portadilla", `${cabecera({ eyebrow: c.nombre, titulo: a.titulo, lede: a.entradilla })}${AVISO_MUESTRA}`],
+      ["marfil", `<section class="rev-lectura">
+  <figure class="rev-articulo__img"><img src="${a.imagen}" alt=""></figure>
+  <p class="rev-articulo__datos">Por Astrea · ${a.minutos} min de lectura</p>
+  <div class="rev-prosa">
+    ${a.cuerpo.map(([sub, texto]) => `${sub ? `<h2>${esc(sub)}</h2>` : ""}<p>${esc(texto)}</p>`).join("\n    ")}
+  </div>
+  <div class="rev-siguiente">
+    <div class="rev-en-tu-carta">
+      <p class="rev-etiqueta">En tu carta</p>
+      <h2>${esc(a.enTuCarta)}</h2>
+      <p>Crea tu carta gratis y mira este tema con tus propios datos.</p>
+      <a class="btn btn-metal btn--gold metal-marmol" href="${URL_CARTA_GRATIS}">Mi carta gratis ${icono("i-arrow")}</a>
+    </div>
+    <a class="rev-relacionada" href="/reportes/${r.slug}">
+      <img src="/tienda-assets/img/${r.slug}-480.webp" alt="" width="480" height="720" loading="lazy">
+      <div><span class="rev-etiqueta">TIENDA</span><strong>${esc(r.nombre)}</strong><span>${esc(CHECKOUTS[r.slug]?.precioReferencia ?? "")}</span></div>
+    </a>
+  </div>
+</section>`],
+      ["arena", bloque("Sigue leyendo", `<div class="rev-rejilla">${relacionados.map((x) => tarjetaArticulo(x)).join("\n")}</div>`)],
+    ]),
+  });
+}
+
 paginas["reportes.html"] = layout({
   ruta: "/reportes",
   titulo: "Reportes astrológicos · Astrea",
   descripcion: "Carta natal completa, revolución solar, compatibilidad de pareja y reportes de amor, vocación, dinero y patrones. Precios y qué incluye cada uno.",
-  cuerpo: `${cabecera({ eyebrow: "Catálogo", titulo: "Reportes de Astrea", lede: "Cada reporte mira tu carta desde una pregunta distinta. Todos llegan en PDF a tu correo.", migas: [["/", "Inicio"], ["/reportes", "Reportes"]] })}
+  cuerpo: `${cabecera({ eyebrow: "Lecturas de Astrea", titulo: "TIENDA", lede: "Cada reporte mira tu carta desde una pregunta distinta. Todos llegan en PDF a tu correo.", migas: [["/", "Inicio"], ["/reportes", "TIENDA"]] })}
 <section class="sheet sheet--light sheet--lift seccion">
   <div class="shell">
     ${principales.length ? `<div class="grupo-catalogo">
@@ -500,7 +732,7 @@ for (const r of REPORTES) {
     descripcion: `${r.resumen}${disp ? "" : " Próximamente."}`,
     jsonLd: { ...jsonLd, image: `${SITIO}${r.portada}-960.webp` },
     imagen: `${r.portada}-960.webp`,
-    cuerpo: `${cabecera({ eyebrow: r.eyebrow, titulo: r.nombre, lede: r.resumen, migas: [["/", "Inicio"], ["/reportes", "Reportes"], [`/reportes/${r.slug}`, r.nombre]] })}
+    cuerpo: `${cabecera({ eyebrow: r.eyebrow, titulo: r.nombre, lede: r.resumen, migas: [["/", "Inicio"], ["/reportes", "TIENDA"], [`/reportes/${r.slug}`, r.nombre]] })}
 <section class="sheet sheet--light sheet--lift seccion">
   <div class="shell detalle">
     <aside class="detalle__lateral">
@@ -590,7 +822,7 @@ for (const r of disponibles) {
     descripcion: `Registra tus datos de nacimiento para pedir tu ${r.nombre.toLowerCase()}.`,
     indexable: false,
     scripts: ["/tienda-assets/comprar.js"],
-    cuerpo: `${cabecera({ eyebrow: "Tu pedido", titulo: r.nombre, lede: "Tres pasos: tus datos de nacimiento, tu correo y la revisión del pedido. Después pagas en Hotmart.", migas: [["/", "Inicio"], ["/reportes", "Reportes"], [`/reportes/${r.slug}`, r.nombre], [`/comprar/${r.slug}`, "Pedido"]] })}
+    cuerpo: `${cabecera({ eyebrow: "Tu pedido", titulo: r.nombre, lede: "Tres pasos: tus datos de nacimiento, tu correo y la revisión del pedido. Después pagas en Hotmart.", migas: [["/", "Inicio"], ["/reportes", "TIENDA"], [`/reportes/${r.slug}`, r.nombre], [`/comprar/${r.slug}`, "Pedido"]] })}
 <section class="sheet sheet--light sheet--lift seccion">
   <div class="shell compra">
     <div class="compra__panel">

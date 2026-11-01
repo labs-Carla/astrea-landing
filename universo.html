@@ -16,8 +16,11 @@
 <script>document.documentElement.classList.add("js")</script>
 <link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
 <link rel="stylesheet" href="/tienda-assets/nav-flotante.css">
+<link rel="stylesheet" href="/tienda-assets/portada-vidrio.css">
+<link rel="stylesheet" href="/tienda-assets/portada-capitulos.css">
+<link rel="stylesheet" href="/tienda-assets/revista.css">
 </head>
-<body class="portada-observatorio universo-observatorio astrea-publica glass glass--oro">
+<body class="portada-observatorio universo-observatorio astrea-publica capitulos flujo glass glass--oro glass--mixta">
 
 <!-- Sprite de iconos de línea dorada. Todos los iconos de la página se usan
      con <svg><use href="#i-..."/></svg> para no repetir paths. -->
@@ -52,27 +55,26 @@
     <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
     <div class="isla-nav">
     <nav class="site-nav" aria-label="Principal">
-      <a href="/">Inicio</a>
-      <a href="/reportes">Reportes</a>
-      <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
-      <a href="/como-funciona">Cómo funciona</a>
-      <a href="/sobre-astrea">Sobre Astrea</a>
-      <a href="/regalar">Regalar</a>
-      <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
+      <a href="/revista/cosmos">Cosmos</a>
+      <a href="/revista/autoconocimiento">Autoconocimiento</a>
+      <a href="/revista/vinculos">Vínculos</a>
+      <a href="/revista/proposito">Propósito</a>
+      <a href="/revista/cultura">Cultura</a>
+      <a href="/reportes">TIENDA</a>
     </nav>
-    <a class="btn btn-metal btn--gold btn--sm" href="/reportes">Ver reportes</a>
+    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="https://app.astrea-charts.site/entrar?modo=crear">Mi carta gratis</a>
     </div>
     <div class="header-acciones">
       <details class="menu-movil">
         <summary aria-label="Abrir menú"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
         <nav class="menu-movil__panel" aria-label="Menú">
-          <a href="/">Inicio</a>
-          <a href="/reportes">Reportes</a>
-          <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
-          <a href="/como-funciona">Cómo funciona</a>
-          <a href="/sobre-astrea">Sobre Astrea</a>
-          <a href="/regalar">Regalar</a>
-          <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
+          <a href="/revista/cosmos">Cosmos</a>
+          <a href="/revista/autoconocimiento">Autoconocimiento</a>
+          <a href="/revista/vinculos">Vínculos</a>
+          <a href="/revista/proposito">Propósito</a>
+          <a href="/revista/cultura">Cultura</a>
+          <a href="/reportes">TIENDA</a>
+          <a href="https://app.astrea-charts.site/entrar?modo=crear">Mi carta gratis</a>
         </nav>
       </details>
     </div>
@@ -82,6 +84,7 @@
 <main id="contenido">
 
 <!-- ============ 1. HERO ============ -->
+<div class="hoja hoja--libre">
 <section class="hero hero--tienda hero--editorial" id="inicio" aria-labelledby="hero-titulo">
   <div class="hero__grid shell">
     <div class="hero__copy">
@@ -100,8 +103,10 @@
     </figure>
   </div>
 </section>
+</div>
 
 <!-- ============ 2. GENERADOR GRATUITO ============ -->
+<div class="hoja hoja--libre">
 <section class="sheet sheet--light sheet--lift" id="generador" aria-labelledby="gen-titulo">
   <div class="shell gen">
     <div class="gen__form-col">
@@ -187,8 +192,10 @@
     </div>
   </div>
 </section>
+</div>
 
 <!-- ============ 3. ¿QUÉ ES UNA CARTA NATAL? ============ -->
+<div class="hoja hoja--libre">
 <section class="about" id="que-es" aria-labelledby="que-es-titulo">
   <div class="shell about__grid">
     <div class="about__copy">
@@ -210,8 +217,10 @@
     </div>
   </div>
 </section>
+</div>
 
 <!-- ============ 4. PRODUCTO ============ -->
+<div class="hoja hoja--libre">
 <section class="sheet sheet--marble product" id="producto" aria-labelledby="prod-titulo">
   <div class="product__arch" aria-hidden="true">
     <div class="arch arch--open">
@@ -263,8 +272,10 @@
     </aside>
   </div>
 </section>
+</div>
 
 <!-- ============ 5. PREVIEW ============ -->
+<div class="hoja hoja--libre">
 <section class="sheet sheet--light sheet--lift preview" id="preview" aria-labelledby="prev-titulo">
   <div class="shell">
     <header class="center-head">
@@ -317,8 +328,10 @@
   </div>
   <p class="preview__note shell">Páginas de muestra con texto ilustrativo. Tu lectura se escribe a partir de tu carta.</p>
 </section>
+</div>
 
 <!-- ============ 6. PRICING ============ -->
+<div class="hoja hoja--libre">
 <section class="pricing" id="precios" aria-labelledby="precios-titulo">
   <div class="pricing__arch pricing__arch--left" aria-hidden="true"></div>
   <div class="shell">
@@ -359,8 +372,10 @@
     </div>
   </div>
 </section>
+</div>
 
 <!-- ============ 7. TESTIMONIOS ============ -->
+<div class="hoja hoja--libre">
 <section class="sheet sheet--dark testimonials" id="testimonios" aria-labelledby="test-titulo">
   <div class="shell">
     <header class="center-head">
@@ -386,8 +401,10 @@
     </div>
   </div>
 </section>
+</div>
 
 <!-- ============ 8. FAQ ============ -->
+<div class="hoja hoja--libre">
 <section class="sheet sheet--light sheet--lift faq" id="faq" aria-labelledby="faq-titulo">
   <div class="shell faq__grid">
     <div class="faq__col">
@@ -427,8 +444,10 @@
     </figure>
   </div>
 </section>
+</div>
 
 <!-- ============ 9. VALORES ============ -->
+<div class="hoja hoja--libre">
 <section class="values" aria-labelledby="valores-titulo">
   <div class="shell">
     <p class="eyebrow eyebrow--light reveal">Conecta contigo</p>
@@ -440,8 +459,10 @@
     </ul>
   </div>
 </section>
+</div>
 
 <!-- ============ 10. CIERRE ============ -->
+<div class="hoja hoja--libre">
 <section class="closing" aria-labelledby="cierre-titulo">
   <svg class="constellation closing__constellation" viewBox="0 0 300 120" aria-hidden="true">
     <path d="M10 90 L60 60 L110 72 L150 30 L210 44 L260 18 L290 50"/>
@@ -454,6 +475,7 @@
     <p class="eyebrow eyebrow--light closing__tag">Un mapa para tu historia</p>
   </div>
 </section>
+</div>
 
 </main>
 

@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="/tienda-assets/nav-flotante.css">
 <link rel="stylesheet" href="/tienda-assets/portada-vidrio.css">
 <link rel="stylesheet" href="/tienda-assets/portada-capitulos.css">
+<link rel="stylesheet" href="/tienda-assets/revista.css">
 <link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-editorial-hero.webp" fetchpriority="high">
 <link rel="modulepreload" href="/tienda-assets/vendor/lenis.min.js">
 <link rel="modulepreload" href="/tienda-assets/vendor/motion.min.js">
@@ -162,27 +163,26 @@
     <a class="wordmark alm-marca" href="/" aria-label="Astrea, inicio"><span class="alm-marca__texto">ASTREA<small>Astrología para conocerte</small></span></a>
     <div class="isla-nav">
     <nav class="site-nav" aria-label="Principal">
-      <a href="/" aria-current="page">Inicio</a>
-      <a href="/reportes">Reportes</a>
-      <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
-      <a href="/como-funciona">Cómo funciona</a>
-      <a href="/sobre-astrea">Sobre Astrea</a>
-      <a href="/regalar">Regalar</a>
-      <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
+      <a href="/revista/cosmos">Cosmos</a>
+      <a href="/revista/autoconocimiento">Autoconocimiento</a>
+      <a href="/revista/vinculos">Vínculos</a>
+      <a href="/revista/proposito">Propósito</a>
+      <a href="/revista/cultura">Cultura</a>
+      <a href="/reportes">TIENDA</a>
     </nav>
-    <a class="btn btn-metal btn--gold btn--sm" href="/reportes">Ver reportes</a>
+    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="https://app.astrea-charts.site/entrar?modo=crear">Mi carta gratis</a>
     </div>
     <div class="header-acciones">
       <details class="menu-movil">
         <summary aria-label="Abrir menú"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></summary>
         <nav class="menu-movil__panel" aria-label="Menú">
-          <a href="/" aria-current="page">Inicio</a>
-      <a href="/reportes">Reportes</a>
-      <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
-      <a href="/como-funciona">Cómo funciona</a>
-      <a href="/sobre-astrea">Sobre Astrea</a>
-      <a href="/regalar">Regalar</a>
-      <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
+          <a href="/revista/cosmos">Cosmos</a>
+      <a href="/revista/autoconocimiento">Autoconocimiento</a>
+      <a href="/revista/vinculos">Vínculos</a>
+      <a href="/revista/proposito">Propósito</a>
+      <a href="/revista/cultura">Cultura</a>
+      <a href="/reportes">TIENDA</a>
+          <a href="https://app.astrea-charts.site/entrar?modo=crear">Mi carta gratis</a>
         </nav>
       </details>
     </div>
@@ -200,8 +200,8 @@
       <h1 class="h-display" id="hero-titulo">El universo<br>empieza<br><em>contigo.</em></h1>
       <p class="lede">Astrología para conocerte, explorar tus ciclos y descubrir nuevas formas de ser tú.</p>
       <div class="hero__actions">
-        <a class="btn btn-metal btn--gold metal-marmol" href="/universo#generador">Descubrir mi carta gratis <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <a class="link-quiet" href="/reportes">Explorar lecturas <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-metal btn--gold metal-marmol" href="https://app.astrea-charts.site/entrar?modo=crear">Descubrir mi carta gratis <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="link-quiet" href="/reportes">Ir a la TIENDA <span aria-hidden="true">↗</span></a>
       </div>
       <p class="hero-atlas__footnote">✳ Tu carta natal es solo el comienzo.</p>
     </div>
@@ -231,23 +231,64 @@
       <p class="capitulo__intro">Tu carta natal es el punto de partida. A partir de ella, cada lectura se escribe para ti, y puedes volver en distintos momentos para explorar nuevos temas de tu vida.</p>
     </header>
     <ol class="pasos pasos--dos">
-      <li class="paso"><span class="paso__numero">I</span><svg class="icon paso__icono" aria-hidden="true"><use href="#i-astrolabio"/></svg><h3 class="paso__titulo">Descubre tu carta</h3><p>Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.</p><a class="btn btn-metal btn--gold btn--sm paso__enlace metal-marmol" href="/universo#generador">Generar mi carta gratis</a></li>
+      <li class="paso"><span class="paso__numero">I</span><svg class="icon paso__icono" aria-hidden="true"><use href="#i-astrolabio"/></svg><h3 class="paso__titulo">Descubre tu carta</h3><p>Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.</p><a class="btn btn-metal btn--gold btn--sm paso__enlace" href="https://app.astrea-charts.site/entrar?modo=crear">Generar mi carta gratis</a></li>
       <li class="recorrido__visual" aria-hidden="true"><div class="telefono"><img src="/tienda-assets/img/carta-natal-480.webp" alt="" width="480" height="720" loading="lazy" decoding="async"></div></li>
-      <li class="paso"><span class="paso__numero">II</span><svg class="icon paso__icono" aria-hidden="true"><use href="#i-libro"/></svg><h3 class="paso__titulo">Profundiza con una lectura</h3><p>La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.</p><a class="btn btn-metal btn--gold btn--sm paso__enlace" href="/reportes">Ver reportes</a></li>
+      <li class="paso"><span class="paso__numero">II</span><svg class="icon paso__icono" aria-hidden="true"><use href="#i-libro"/></svg><h3 class="paso__titulo">Profundiza con una lectura</h3><p>La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.</p><a class="btn btn-metal btn--gold btn--sm paso__enlace" href="/reportes">Ir a la TIENDA</a></li>
     </ol>
   </div>
 </section>
 <div class="hoja__tapa" aria-hidden="true"></div></div>
 
-<div class="hoja hoja--noche" data-hoja><p class="hoja__capitulo" aria-hidden="true">Capítulo 03</p>
+<div class="hoja hoja--marfil" data-hoja><p class="hoja__capitulo" aria-hidden="true">Capítulo 03</p>
+<section class="capitulo capitulo--claro" id="revista" aria-labelledby="revista-titulo">
+  <div class="shell">
+    <header class="capitulo__cabecera">
+      <div>
+        <p class="eyebrow">Revista</p>
+        <h2 class="capitulo__titulo" id="revista-titulo">Cultura y autoconocimiento.</h2>
+      </div>
+      <p class="capitulo__intro">Ideas, mitos y preguntas para mirar el cielo y mirarte a ti. <a class="link-quiet" href="/revista">Ver toda la revista</a></p>
+    </header>
+    <div class="rev-tema">
+      <article class="rev-tarjeta rev-tarjeta--grande">
+  <a class="rev-tarjeta__img" href="/revista/articulo/venus-retrograda-lo-que-vuelve" tabindex="-1" aria-hidden="true"><img src="/universo-assets/img/almanaque/libra-960.webp" alt="" loading="lazy"></a>
+  <div><a class="rev-etiqueta" href="/revista/cosmos">Cosmos</a></div>
+  <h3 class="rev-titulo"><a href="/revista/articulo/venus-retrograda-lo-que-vuelve">Venus retrógrada: lo que vuelve no siempre viene a quedarse</a></h3>
+  <p class="rev-entradilla">Hasta el 14 de noviembre, el cielo nos invita a revisar lo que amamos, lo que valoramos y lo que ya no nos queda.</p>
+</article>
+      <div class="rev-tema__lado"><article class="rev-tarjeta">
+  <a class="rev-tarjeta__img" href="/revista/articulo/tu-luna-no-es-tu-humor" tabindex="-1" aria-hidden="true"><img src="/universo-assets/img/almanaque/cancer-960.webp" alt="" loading="lazy"></a>
+  <div><a class="rev-etiqueta" href="/revista/autoconocimiento">Autoconocimiento</a></div>
+  <h3 class="rev-titulo"><a href="/revista/articulo/tu-luna-no-es-tu-humor">Tu Luna no es tu humor: es lo que necesitas para sentirte a salvo</a></h3>
+  <p class="rev-entradilla">Conocemos nuestro signo solar de memoria. La Luna, en cambio, cuenta lo que casi nunca decimos en voz alta.</p>
+</article>
+<article class="rev-tarjeta">
+  <a class="rev-tarjeta__img" href="/revista/articulo/casa-7-a-quien-eliges" tabindex="-1" aria-hidden="true"><img src="/universo-assets/img/arco-luna.webp" alt="" loading="lazy"></a>
+  <div><a class="rev-etiqueta" href="/revista/vinculos">Vínculos</a></div>
+  <h3 class="rev-titulo"><a href="/revista/articulo/casa-7-a-quien-eliges">Lo que tu casa 7 dice de a quién eliges</a></h3>
+  <p class="rev-entradilla">La casa de las relaciones no predice con quién terminarás. Muestra qué buscas en otra persona, y por qué.</p>
+</article>
+<article class="rev-tarjeta">
+  <a class="rev-tarjeta__img" href="/revista/articulo/quien-fue-astrea" tabindex="-1" aria-hidden="true"><img src="/universo-assets/img/observatorio/astrea-estatua-960.webp" alt="" loading="lazy"></a>
+  <div><a class="rev-etiqueta" href="/revista/cultura">Cultura</a></div>
+  <h3 class="rev-titulo"><a href="/revista/articulo/quien-fue-astrea">Quién fue Astrea, la diosa que se fue de la Tierra</a></h3>
+  <p class="rev-entradilla">La última inmortal en abandonarnos subió al cielo y, según el mito, sigue ahí arriba.</p>
+</article></div>
+    </div>
+    <nav class="rev-temas" aria-label="Temas de la revista"><a href="/revista/cosmos">Cosmos</a><a href="/revista/autoconocimiento">Autoconocimiento</a><a href="/revista/vinculos">Vínculos</a><a href="/revista/proposito">Propósito</a><a href="/revista/cultura">Cultura</a></nav>
+  </div>
+</section>
+<div class="hoja__tapa" aria-hidden="true"></div></div>
+
+<div class="hoja hoja--noche" data-hoja><p class="hoja__capitulo" aria-hidden="true">Capítulo 04</p>
 <section class="capitulo capitulo--claro" id="reportes" aria-labelledby="reportes-titulo">
   <div class="shell">
     <header class="capitulo__cabecera">
       <div>
-        <p class="eyebrow">Nuestros reportes</p>
+        <p class="eyebrow">TIENDA</p>
         <h2 class="capitulo__titulo" id="reportes-titulo">Tu historia tiene muchas capas.</h2>
       </div>
-      <p class="capitulo__intro">Lecturas en PDF, escritas a partir de tu carta natal y revisadas antes de llegar a ti.</p>
+      <p class="capitulo__intro">Lecturas en PDF, escritas a partir de tu carta natal y revisadas antes de llegar a ti. <a class="link-quiet" href="/reportes">Ver toda la TIENDA</a></p>
     </header>
     <div class="catalogo-portada" data-totems>
       <article class="tarjeta-portada" aria-labelledby="tp-carta-natal">
@@ -375,7 +416,7 @@
 </section>
 <div class="hoja__tapa" aria-hidden="true"></div></div>
 
-<div class="hoja hoja--marfil" data-hoja><p class="hoja__capitulo" aria-hidden="true">Capítulo 04</p>
+<div class="hoja hoja--marfil" data-hoja><p class="hoja__capitulo" aria-hidden="true">Capítulo 05</p>
 <section class="capitulo capitulo--marmol" id="como-funciona" aria-labelledby="pasos-titulo">
   <div class="shell">
     <header class="capitulo__cabecera capitulo__cabecera--centro">
@@ -391,7 +432,7 @@
 </section>
 <div class="hoja__tapa" aria-hidden="true"></div></div>
 
-<div class="hoja hoja--azul" data-hoja><p class="hoja__capitulo" aria-hidden="true">Capítulo 05</p>
+<div class="hoja hoja--azul" data-hoja><p class="hoja__capitulo" aria-hidden="true">Capítulo 06</p>
 <section class="cielo-semana" id="cielo-semana" aria-labelledby="cielo-semana-titulo" data-cielo-semana>
   <div class="shell cielo-semana__grid">
     <div class="cielo-semana__texto">
@@ -437,7 +478,7 @@
 </section>
 <div class="hoja__tapa" aria-hidden="true"></div></div>
 
-<div class="hoja hoja--marfil" data-hoja><p class="hoja__capitulo" aria-hidden="true">Capítulo 06</p>
+<div class="hoja hoja--marfil" data-hoja><p class="hoja__capitulo" aria-hidden="true">Capítulo 07</p>
 <section class="capitulo capitulo--claro" id="preguntas" aria-labelledby="faq-titulo">
   <div class="shell faq-portada">
     <header class="capitulo__cabecera capitulo__cabecera--apilada">
@@ -483,9 +524,11 @@
     </div>
     <nav class="pie__columna" aria-label="Explora">
       <h2 class="pie__titulo">Explora</h2>
-      <a href="/reportes">Reportes</a>
+      <a href="/reportes">TIENDA</a>
       <a href="/blog/horoscopo-semanal">Horóscopo semanal</a>
+      <a href="/revista">Revista</a>
       <a href="/como-funciona">Cómo funciona</a>
+      <a href="/regalar">Regalar</a>
       <a href="/sobre-astrea">Sobre Astrea</a>
       <a href="/preguntas-frecuentes">Preguntas frecuentes</a>
     </nav>
@@ -507,8 +550,8 @@
     <li><a href="#reportes" data-paso="2"><span class="embudo-dock__num">II</span>Profundiza con una lectura</a></li>
   </ol>
   <div class="embudo-dock__acciones">
-    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="/universo#generador">Descubrir mi carta gratis <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-    <a class="btn btn-metal btn--ghost btn--sm" href="#reportes">Ver reportes</a>
+    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="https://app.astrea-charts.site/entrar?modo=crear">Descubrir mi carta gratis <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <a class="btn btn-metal btn--ghost btn--sm" href="#reportes">Ir a la TIENDA</a>
   </div>
 </nav>
 <script type="module" src="/tienda-assets/origen.js"></script>

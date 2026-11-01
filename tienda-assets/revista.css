@@ -1,0 +1,232 @@
+/* Revista y páginas internas sobre las hojas de capítulos de la portada.
+   Las hojas, el marco oscuro y el vidrio vienen de portada-capitulos.css y portada-vidrio.css. */
+
+/* Portadilla: la versión interior del hero de la portada. */
+.hoja--portadilla { min-height: min(68svh, 620px); padding-top: 74px; background: var(--marble); color: var(--ink); justify-content: flex-end; }
+.hoja--portadilla::before { content: ""; position: absolute; inset: 0; background: url("/universo-assets/img/observatorio/astrea-editorial-hero.webp") right center / auto 118% no-repeat; -webkit-mask-image: linear-gradient(90deg, transparent 50%, #000 80%); mask-image: linear-gradient(90deg, transparent 50%, #000 80%); pointer-events: none; }
+.hoja--portadilla > section { position: relative; z-index: 1; }
+body.capitulos .hoja--portadilla .pagina-cabecera { padding-block: clamp(36px, 6vw, 72px); border: 0; }
+body.capitulos .hoja--portadilla .eyebrow { color: #A54C39; }
+body.capitulos .hoja--portadilla .h-display { max-width: min(19ch, 62%); margin-bottom: 18px; font-family: var(--font-serif); font-weight: 500; text-transform: uppercase; font-size: clamp(2.2rem, 1rem + 3.9vw, 4.8rem); line-height: .95; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+body.capitulos .hoja--portadilla .lede { max-width: min(34rem, 54%); color: var(--ink-soft); }
+body.capitulos .hoja--portadilla .migas, body.capitulos .hoja--portadilla .migas a { color: var(--ink-soft); }
+.hoja--portadilla .rev-muestra { position: relative; z-index: 1; }
+
+/* Secciones de la tienda dentro de las hojas */
+.hoja .sheet { margin: 0; border-radius: 0; box-shadow: none; }
+.hoja--marfil > .sheet.seccion { padding-block: clamp(56px, 7vw, 96px); }
+
+body.capitulos .hoja .grupo-catalogo__titulo { font-family: var(--font-serif); font-weight: 500; text-transform: uppercase; font-size: clamp(2rem, 1rem + 3.2vw, 4rem); line-height: .95; letter-spacing: -.02em; margin-bottom: 14px; }
+
+/* Dock del resto del sitio y pasos de compra */
+.embudo-dock.embudo-dock--interior { width: max-content; padding: 8px; }
+body.flujo .hoja { position: relative; min-height: 0; }
+body.flujo .hoja:not(.hoja--hero) { padding-bottom: 0; }
+
+/* /universo: conserva sus secciones dentro de hojas fijas. */
+.hoja--libre { background: var(--ivory); color: var(--ink); }
+.universo-observatorio .hoja--libre:first-child { padding-top: 74px; background: var(--marble); }
+body.capitulos.universo-observatorio .hoja--libre :is(h1, h2) { font-family: var(--font-serif); font-weight: 500; text-transform: uppercase; font-size: clamp(2rem, 1rem + 3.4vw, 4.4rem); line-height: .95; letter-spacing: -.02em; }
+
+/* Textos sobre hojas oscuras */
+.hoja--noche .rev-etiqueta, .hoja--azul .rev-etiqueta { color: var(--gold-light); }
+.hoja--noche .rev-bloque__cab h2, .hoja--azul .rev-correo h2 { color: #FBF7EF; }
+.hoja--noche .rev-mas, .hoja--azul .rev-mas { color: #EDE5D6; }
+.hoja--noche .rev-producto { color: #FBF7EF; }
+.hoja--noche .rev-producto span { color: rgba(237, 229, 214, .72); }
+.hoja--noche .rev-producto:hover strong { color: var(--gold-light); }
+.hoja--azul .rev-correo p:not(.rev-etiqueta) { color: rgba(237, 229, 214, .78); }
+.hoja section.rev-correo { background: none; }
+
+/* Títulos de bloque, como los capítulos de la portada */
+body.capitulos .hoja :is(.rev-bloque__cab h2, .rev-app h2, .rev-correo h2) { font-family: var(--font-serif); font-weight: 500; text-transform: uppercase; font-size: clamp(2.2rem, 1rem + 4.6vw, 5.4rem); line-height: .92; letter-spacing: -.02em; }
+
+.rev-shell { width: min(1240px, 100% - 48px); margin-inline: auto; }
+
+.rev-etiqueta { font: 600 .72rem/1.2 var(--font-sans); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-deep); text-decoration: none; }
+.rev-titulo { font-family: var(--font-serif); font-weight: 500; line-height: 1.04; letter-spacing: -.01em; color: var(--ink); margin: 0; text-wrap: balance; }
+.rev-entradilla { color: var(--ink-soft); line-height: 1.55; margin: 0; }
+.rev-mas { font: 600 .8rem/1.2 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); text-underline-offset: 5px; text-decoration-color: var(--gold); white-space: nowrap; }
+.rev-mas:hover { color: var(--gold-deep); }
+.rev-muestra { margin: 0; padding: 0 30px 16px; color: var(--ink-soft); font: 500 .72rem/1.3 var(--font-sans); }
+
+/* Línea del cielo */
+.rev-franja { margin: 0; color: var(--ink-soft); font: 500 .92rem/1.4 var(--font-sans); }
+.rev-franja a { color: #A54C39; text-underline-offset: 3px; margin-left: 6px; white-space: nowrap; }
+
+/* Apertura en carrusel */
+.rev-apertura { padding-block: 64px 24px; }
+.rev-apertura__cab { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.rev-flechas { display: flex; gap: 8px; }
+.rev-flecha { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(29, 26, 21, .25); background: none; color: var(--ink); font: 400 1.1rem/1 var(--font-sans); cursor: pointer; }
+.rev-flecha:hover { background: var(--ink); color: var(--ivory); }
+.rev-carrusel { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.rev-carrusel::-webkit-scrollbar { display: none; }
+.rev-historia { scroll-snap-align: start; display: grid; grid-template-columns: 1.35fr 1fr; background: #fff; border: 1px solid rgba(29, 26, 21, .1); border-radius: 18px; overflow: hidden; min-width: 0; }
+.rev-historia__img { display: block; min-width: 0; }
+.rev-historia__img img { width: 100%; height: 100%; min-height: 520px; max-height: 620px; object-fit: cover; display: block; }
+.rev-historia__texto { padding: clamp(28px, 4.4vw, 64px); display: flex; flex-direction: column; justify-content: center; gap: 18px; min-width: 0; }
+.rev-historia .rev-titulo { font-size: clamp(2.2rem, 4.2vw, 3.6rem); }
+.rev-historia .rev-titulo a { color: inherit; text-decoration: none; }
+.rev-historia .rev-titulo a:hover { color: var(--gold-deep); }
+.rev-historia .rev-entradilla { font-size: 1.08rem; }
+
+/* Tarjetas de artículo */
+.rev-tarjeta { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.rev-tarjeta__img { display: block; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 14px; background: var(--paper); }
+.rev-tarjeta__img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.23, 1, .32, 1); }
+.rev-tarjeta:hover .rev-tarjeta__img img { transform: scale(1.03); }
+.rev-tarjeta .rev-titulo { font-size: 1.6rem; line-height: 1.12; }
+.rev-tarjeta .rev-titulo a { color: inherit; text-decoration: none; }
+.rev-tarjeta .rev-titulo a:hover { color: var(--gold-deep); }
+.rev-tarjeta .rev-entradilla { font-size: .95rem; }
+.rev-tarjeta--grande .rev-titulo { font-size: clamp(1.9rem, 3vw, 2.6rem); }
+.rev-tarjeta--grande .rev-tarjeta__img { aspect-ratio: 16 / 10; }
+
+/* Bloques */
+.rev-bloque { padding-block: clamp(56px, 6vw, 88px) clamp(24px, 3vw, 40px); }
+.rev-bloque__cab { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+.rev-bloque__cab h2 { margin: 0; color: var(--ink); }
+.rev-rejilla { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 28px; }
+.rev-tema { display: grid; grid-template-columns: 1.5fr 1fr; gap: 36px; }
+.rev-tema__lado { display: grid; gap: 28px; align-content: start; }
+.rev-tema__lado .rev-tarjeta { grid-template-columns: 132px minmax(0, 1fr); column-gap: 16px; row-gap: 8px; align-content: start; }
+.rev-tema__lado .rev-tarjeta__img { aspect-ratio: 1; grid-row: 1 / span 3; }
+.rev-tema__lado .rev-entradilla { display: none; }
+.rev-tema__lado .rev-titulo { font-size: 1.4rem; }
+
+/* Capítulo de la revista en la portada */
+.rev-temas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+.rev-temas a { font: 500 .84rem/1 var(--font-sans); color: var(--ink); text-decoration: none; padding: 11px 16px; border: 1px solid rgba(29, 26, 21, .22); border-radius: 999px; }
+.rev-temas a:hover { background: var(--ink); color: var(--ivory); }
+
+/* «AUTOCONOCIMIENTO.» es una sola palabra larga: la hoja recorta lo que se salga. */
+@media (max-width: 900px) {
+  body.capitulos .hoja #revista-titulo { font-size: clamp(1.5rem, 8vw, 4.4rem); }
+}
+
+/* La app: el bloque que más empuja */
+.rev-app { color: var(--ink-on-dark); padding-block: 56px 16px; }
+.rev-app__grid { display: grid; grid-template-columns: 1.1fr 1fr; align-items: stretch; gap: 32px; }
+.rev-app__texto { display: flex; flex-direction: column; gap: 20px; justify-content: center; align-items: flex-start; }
+.rev-app .rev-etiqueta { color: var(--gold-light); }
+.rev-app h2 { margin: 0; color: var(--ink-on-dark); text-wrap: balance; }
+.rev-app p { margin: 0; color: var(--ink-on-dark-soft); line-height: 1.6; max-width: 48ch; font-size: 1.06rem; }
+.rev-app__lista { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; color: var(--ink-on-dark); }
+.rev-app__lista li::before { content: "✦"; color: var(--gold-light); margin-right: 10px; font-size: .75em; }
+.rev-app__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 6px; }
+.rev-app__acciones .rev-mas { color: var(--ink-on-dark); }
+.rev-app__img { min-height: 460px; border-radius: 18px; background: url("/universo-assets/img/observatorio/astrea-editorial-hero.webp") center / cover; }
+
+/* TIENDA dentro de la revista */
+.rev-tienda__rejilla { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.rev-producto { display: grid; gap: 10px; align-content: start; text-decoration: none; color: var(--ink); min-width: 0; }
+.rev-producto img { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; display: block; border-radius: 14px; background: var(--paper); }
+.rev-producto strong { font-family: var(--font-serif); font-weight: 500; font-size: 1.35rem; line-height: 1.15; }
+.rev-producto span { color: var(--ink-soft); font-size: .9rem; }
+.rev-producto:hover strong { color: var(--gold-deep); }
+
+.rev-cargar { display: flex; justify-content: center; margin-top: 36px; }
+.rev-cargar button { font: 600 .8rem/1 var(--font-sans); letter-spacing: .1em; text-transform: uppercase; background: none; color: var(--ink); border: 1px solid var(--ink); padding: 15px 28px; cursor: pointer; }
+.rev-cargar button:hover { background: var(--ink); color: var(--ivory); }
+.rev-cargar button[hidden] { display: none; }
+
+/* Correo */
+.rev-correo { text-align: center; padding-block: clamp(56px, 7vw, 96px); }
+.rev-correo .rev-shell { display: grid; gap: 14px; justify-items: center; }
+.rev-correo h2 { margin: 0; color: var(--ink); }
+.rev-correo p { margin: 0 0 8px; color: var(--ink-soft); max-width: 50ch; line-height: 1.55; }
+
+/* Artículo */
+.rev-lectura { padding-block: clamp(56px, 6vw, 80px) 24px; }
+.rev-articulo__datos { width: min(680px, 100% - 48px); margin: 20px auto 0; color: var(--ink-soft); font-size: .84rem; }
+.rev-articulo__img { width: min(1080px, 100% - 48px); margin: 0 auto; }
+.rev-articulo__img img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 18px; }
+.rev-prosa { width: min(680px, 100% - 48px); margin-inline: auto; padding-block: 24px 16px; font-family: var(--font-serif); font-size: 1.32rem; line-height: 1.6; color: var(--ink); }
+.rev-prosa p { margin: 0 0 1.1em; }
+.rev-prosa h2 { font-family: var(--font-serif); font-weight: 500; font-size: 1.9rem; line-height: 1.15; margin: 1.5em 0 .5em; color: var(--ink); }
+
+.rev-siguiente { width: min(860px, 100% - 48px); margin: 16px auto 0; display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; }
+.rev-en-tu-carta { background: var(--night); color: var(--ink-on-dark); padding: 32px; border-radius: 18px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; justify-content: center; }
+.rev-en-tu-carta .rev-etiqueta { color: var(--gold-light); }
+.rev-en-tu-carta h2 { font-family: var(--font-serif); font-weight: 500; font-size: 1.9rem; line-height: 1.12; margin: 0; color: var(--ink-on-dark); }
+.rev-en-tu-carta p { margin: 0; color: var(--ink-on-dark-soft); line-height: 1.5; }
+.rev-relacionada { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 16px; align-items: center; padding: 18px; border-radius: 18px; background: #fff; border: 1px solid rgba(29, 26, 21, .12); color: var(--ink); text-decoration: none; }
+.rev-relacionada img { width: 104px; height: auto; aspect-ratio: 2 / 3; object-fit: cover; display: block; }
+.rev-relacionada div { display: grid; gap: 6px; min-width: 0; }
+.rev-relacionada strong { font-family: var(--font-serif); font-weight: 500; font-size: 1.3rem; line-height: 1.15; }
+.rev-relacionada span:last-child { color: var(--ink-soft); font-size: .9rem; }
+.rev-relacionada:hover strong { color: var(--gold-deep); }
+
+@media (max-width: 960px) {
+  .rev-historia { grid-template-columns: 1fr; }
+  .rev-historia__img img { min-height: 0; max-height: none; aspect-ratio: 4 / 3; }
+  .rev-rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rev-tema { grid-template-columns: 1fr; }
+  .rev-tienda__rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rev-app__grid { grid-template-columns: 1fr; }
+  .rev-app__texto { padding-right: 0; }
+  .rev-app__img { min-height: 280px; order: -1; }
+  .rev-siguiente { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .rev-shell, .rev-articulo__img, .rev-prosa, .rev-siguiente, .rev-articulo__datos { width: calc(100% - 32px); }
+  .hoja--portadilla::before { opacity: .22; background-position: center; background-size: cover; -webkit-mask-image: none; mask-image: none; }
+  body.capitulos .hoja--portadilla .h-display, body.capitulos .hoja--portadilla .lede { max-width: 100%; }
+  body.capitulos .hoja--portadilla .h-display { font-size: clamp(1.7rem, 8vw, 2.8rem); }
+  .rev-muestra { padding-inline: 16px; }
+  .rev-rejilla { grid-template-columns: 1fr; }
+  .rev-apertura { padding-top: 22px; }
+  .rev-flechas { display: none; }
+  .rev-carrusel { grid-auto-columns: 92%; gap: 12px; }
+  .rev-bloque__cab { align-items: center; }
+  .rev-prosa { font-size: 1.22rem; }
+  .rev-tarjeta .rev-titulo { font-size: 1.5rem; }
+  .rev-tema__lado .rev-tarjeta { grid-template-columns: 104px minmax(0, 1fr); }
+  .rev-tema__lado .rev-titulo { font-size: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rev-tarjeta__img img { transition: none; }
+  .rev-tarjeta:hover .rev-tarjeta__img img { transform: none; }
+}
+
+/* Blog (se sirve desde astrea-API): el horóscopo semanal sobre las mismas hojas. */
+.hoja--portadilla .alm-rango { margin: 0 0 14px; color: #A54C39; }
+body.capitulos .hoja--portadilla .pagina-cabecera .btn { margin-top: 22px; }
+.blog-bloque { padding-block: clamp(56px, 7vw, 96px) 24px; }
+.hoja .alm-selector { padding-block: 0 clamp(32px, 4vw, 56px); background: none; border: 0; }
+.hoja .alm-dias { margin-top: 0; }
+.hoja .alm-dias ol { margin-top: 24px; }
+.hoja section.alm-signos { padding-block: clamp(56px, 7vw, 96px) 24px; border: 0; }
+body.capitulos .hoja :is(.alm-h2, .alm-cta h2) { font-family: var(--font-serif); font-weight: 500; text-transform: uppercase; font-size: clamp(2.2rem, 1rem + 4.6vw, 5.4rem); line-height: .92; letter-spacing: -.02em; }
+.hoja .alm-signos__cabecera .alm-eyebrow, .hoja .alm-cta .alm-eyebrow { justify-content: center; }
+.blog-cielo { padding-block: clamp(56px, 7vw, 96px) 24px; }
+.blog-cielo .alm-cielo__cabecera { display: grid; gap: 16px; }
+.blog-cielo .alm-nota { max-width: 36rem; color: rgba(237, 229, 214, .72); }
+.blog-cielo__grid { display: grid; gap: clamp(32px, 5vw, 72px); align-items: center; margin-top: clamp(32px, 4vw, 56px); }
+.hoja--azul .prosa p { color: #EDE5D6; }
+.hoja--azul .prosa p:first-child::first-letter { color: var(--gold-light); }
+.hoja--noche .alm-pie { width: 100%; }
+.hoja--noche .alm-pie a { color: var(--gold-light); }
+.hoja--noche .alm-cta { padding-block: clamp(56px, 7vw, 96px) 24px; }
+.hoja--noche .alm-cta__arco { max-width: 760px; }
+.hoja--arena .alm-pie a { color: var(--gold-deep); }
+.hoja--portadilla-signo { background: radial-gradient(ellipse 70% 80% at 78% 45%, var(--ivory), var(--marble) 70%); }
+.hoja--portadilla-signo::before { content: none; }
+body.capitulos .hoja--portadilla-signo .h-display, body.capitulos .hoja--portadilla-signo .lede { max-width: 100%; }
+.hoja--portadilla-signo .alm-portada__grid { padding-block: 0; align-items: center; }
+.hoja--corta { min-height: 0; }
+.hoja--portadilla-signo .alm-portada__texto { gap: 10px; }
+@media (max-width: 899px) {
+  .hoja--portadilla-signo .alm-portada__texto { order: -1; }
+  .hoja--portadilla-signo .arco-mayor--ilustrado { width: min(62vw, 260px); }
+}
+@media (max-width: 600px) {
+  .hoja--portadilla .eyebrow { letter-spacing: .14em; }
+}
+@media (min-width: 900px) {
+  .blog-cielo__grid { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); }
+  .hoja--portadilla-signo .alm-portada--signo .alm-portada__grid { grid-template-columns: 1.25fr .75fr; }
+  .hoja--portadilla-signo .alm-portada--signo .arco-mayor { order: 1; }
+  .hoja--marfil .alm-lectura__margen { top: 100px; }
+}
