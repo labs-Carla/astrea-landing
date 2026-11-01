@@ -30,6 +30,13 @@ The home is built in chapters: `layout({ portada: true })` adds the glass header
 sheets and the reports carousel), with matching `.css` files. The footer wordmark is in every store page:
 `PIE_GIGANTE` + `tienda-assets/pie-gigante.js` (no dependencies); its outlines are `scripts/pie-letras.mjs`.
 
+Every store page keeps the home design: `layout()` wraps the body in sheets with `enHojas()` (or the page passes
+its own with `enCapitulos()` and `revista: true`). Page headers use the `hoja--portadilla` sheet, styled in
+`tienda-assets/revista.css`. Purchase steps (`/comprar`, `/pedido`, `/canjear`, `/regalar`, `/baja`) get `body.flujo`:
+same look, no stacking, no smooth scroll and no dock, so forms stay simple. `universo.html` is handmade with
+`hoja--libre` sheets, which keep their own section backgrounds.
+The blog in `astrea-API` uses the same sheets and loads these stylesheets, so deploy this repo first.
+
 The floating menu is shared: `tienda-assets/nav-flotante.{css,js}`, enabled by `body.glass`. It is self-contained
 because `/universo` and the blog do not load the same stylesheets. `universo.html` and
 `app/templates/blog/base.html` in `astrea-API` repeat its markup by hand, so change the three together.

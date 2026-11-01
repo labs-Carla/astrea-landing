@@ -278,9 +278,9 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
     if (ruta.endsWith(".html")) assert.ok(pagina.includes("sitio-publico.css"), `identidad común en ${ruta}`);
   }
   assert.match(html, /<a class="wordmark alm-marca" href="\/"/, "header de producción");
-  assert.match(html, /<a href="\/" aria-current="page">Inicio<\/a>/);
-  assert.match(html, /href="\/reportes">Explorar lecturas/);
-  assert.match(html, /href="\/universo#generador">Descubrir mi carta gratis/);
+  assert.match(html, /<a href="\/reportes">TIENDA<\/a>/);
+  assert.match(html, /href="\/reportes">Ir a la TIENDA/);
+  assert.match(html, /href="https:\/\/app\.astrea-charts\.site\/entrar\?modo=crear">Descubrir mi carta gratis/);
   for (const t of ["Astronomía real", "Revisión humana", "Directo a tu correo", "Autoconocimiento"]) assert.ok(html.includes(`<strong>${t}</strong>`), t);
   assert.match(html, /24–48 horas después de la confirmación del pago/);
   for (const r of DISPONIBLES) {
@@ -291,7 +291,7 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
   }
   for (const precio of ["USD 12", "USD 9", "USD 15"]) assert.ok(html.includes(precio));
   assert.equal((html.match(/<details>/g) || []).length, 5, "5 preguntas frecuentes");
-  assert.match(html, /id="recorrido"[\s\S]*href="\/universo#generador">Generar mi carta gratis[\s\S]*href="\/reportes">Ver reportes/);
+  assert.match(html, /id="recorrido"[\s\S]*href="https:\/\/app\.astrea-charts\.site\/entrar\?modo=crear">Generar mi carta gratis[\s\S]*href="\/reportes">Ir a la TIENDA/);
   assert.match(html, /¿Puedo pedir un reembolso\?/);
   assert.ok(!/Testimonio pendiente|Nombre pendiente|★/.test(html), "sin testimonios inventados");
   assert.ok(!/Historias reales/.test(html), "la sección de testimonios no se muestra sin testimonios reales");
@@ -302,9 +302,9 @@ test("portada: hero, confianza, recorrido, 7 reportes comprables, pasos y pregun
 
 test("portada en capítulos: orden del embudo, sin CDN y funciona si falla el JS", () => {
   const html = PAGINAS["index.html"];
-  const orden = ["hero-titulo", 'class="confianza"', 'id="recorrido"', 'id="reportes"', 'id="como-funciona"', 'id="cielo-semana"', 'id="preguntas"'].map((m) => html.indexOf(m));
+  const orden = ["hero-titulo", 'class="confianza"', 'id="recorrido"', 'id="revista"', 'id="reportes"', 'id="como-funciona"', 'id="cielo-semana"', 'id="preguntas"'].map((m) => html.indexOf(m));
   assert.ok(orden.every((p, i) => p > 0 && (i === 0 || p > orden[i - 1])), "secciones en el orden del embudo");
-  assert.equal((html.match(/data-hoja>/g) || []).length, 7, "una hoja por sección");
+  assert.equal((html.match(/data-hoja>/g) || []).length, 8, "una hoja por sección");
   assert.match(html, /<link rel="canonical" href="https:\/\/astrea-charts\.site\/">/, "la portada sigue indexable");
   assert.ok(!/noindex|experimento/.test(html), "sin restos de la vista previa");
   assert.ok(!/cdn\.jsdelivr|unpkg/.test(html), "las librerías se sirven desde el sitio");
@@ -326,11 +326,11 @@ test("portada en capítulos: orden del embudo, sin CDN y funciona si falla el JS
 test("menú flotante: el mismo en todas las páginas con header, también /universo", () => {
   const enlaces = (html) => [...html.match(/<nav class="site-nav"[\s\S]*?<\/nav>/)[0].matchAll(/<a href="([^"]+)"/g)].map((m) => m[1]);
   const base = enlaces(PAGINAS["index.html"]);
-  assert.equal(base.length, 7, "los 7 enlaces del menú");
+  assert.equal(base.length, 6, "los 6 enlaces del menú");
   const universo = readFileSync(new URL("../universo.html", import.meta.url), "utf8");
   for (const [ruta, html] of [...Object.entries(PAGINAS).filter(([r]) => r.endsWith(".html")), ["universo.html", universo]]) {
     assert.deepEqual(enlaces(html), base, ruta);
-    for (const marca of ['class="isla-nav"', 'btn btn-metal btn--gold btn--sm" href="/reportes"', "/tienda-assets/nav-flotante.css", "/tienda-assets/nav-flotante.js"]) assert.ok(html.includes(marca), `${ruta}: ${marca}`);
+    for (const marca of ['class="isla-nav"', 'btn btn-metal btn--gold btn--sm metal-marmol" href="https://app.astrea-charts.site/entrar?modo=crear"', "/tienda-assets/nav-flotante.css", "/tienda-assets/nav-flotante.js"]) assert.ok(html.includes(marca), `${ruta}: ${marca}`);
     assert.match(html, /<body class="[^"]*\bglass glass--oro\b/, ruta);
   }
 });
@@ -343,14 +343,14 @@ test("footer: la marca gigante va en todas las páginas de la tienda", () => {
   }
 });
 
-test("Astrea.ai en pausa: la tienda vende lecturas y no menciona Astrea.ai ni su app", () => {
+test("el sitio lleva a la app, sin nombres viejos ni planes en la portada", () => {
   const html = PAGINAS["index.html"];
   assert.ok(!html.includes('id="planes"'), "la portada ya no tiene la sección de planes");
   assert.ok(!/USD 9,99\/mes|USD 19,99\/mes|Astrea Plus|Astrea Pro|Elegir Plus|Elegir Pro/.test(html), "sin precios ni llamados a Plus/Pro en la portada");
   assert.ok(!html.includes("tienda-assets/planes.js"));
   assert.ok(!html.includes('id="astrea-ai"'), "sin la sección de Astrea.ai");
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
-    assert.ok(!/Astrea\.ai|Astrea AI|app\.astrea-charts\.site|5 preguntas/i.test(pagina), ruta);
+    assert.ok(!/Astrea\.ai|Astrea AI|5 preguntas/i.test(pagina), ruta);
   }
   for (const r of REPORTES) assert.ok(!r.incluye.some((i) => /Astrea\.ai|preguntas/.test(i)), r.slug);
   // Nada de promesas que no existen, en todo el sitio generado.
@@ -548,4 +548,18 @@ test("referido: ?ref= válido se guarda 30 días; uno con otra forma se ignora",
   assert.equal(registrarReferido({ search: "", storage, ahora: 2000 }), "ABCD2345");
   assert.equal(referidoVigente(JSON.parse(datos[CLAVE_REFERIDO]), 1000 + 31 * 864e5), null);
   assert.equal(registrarReferido({ search: "", storage, ahora: 1000 + 31 * 864e5 }), null);
+});
+
+test("diseño: cada página de la tienda lleva las hojas, el vidrio y los estilos de la portada", () => {
+  for (const [archivo, html] of Object.entries(PAGINAS)) {
+    if (!archivo.endsWith(".html")) continue;
+    assert.match(html, /<body class="[^"]*\bcapitulos glass\b/, `${archivo}: falta el diseño de capítulos`);
+    assert.match(html, /portada-capitulos\.css/, `${archivo}: falta la hoja de estilos de capítulos`);
+    assert.match(html, /class="hoja hoja--/, `${archivo}: sin hojas`);
+  }
+  const compra = PAGINAS["comprar/carta-natal.html"];
+  assert.match(compra, /\bflujo\b/);
+  assert.doesNotMatch(compra, /portada-capitulos\.js|portada-vidrio\.js|embudo-dock/, "los pasos de compra no llevan scroll suave ni dock");
+  assert.match(PAGINAS["reportes.html"], /embudo-dock--interior/);
+  assert.doesNotMatch(PAGINAS["reportes.html"], /hoja__capitulo/, "la numeración de capítulos es solo de la portada");
 });
