@@ -178,6 +178,7 @@ body.capitulos #como-funciona .paso p { max-width: 24rem; }
 .hoja--azul .zodiaco a { color: #EDE5D6; }
 body.glass.astrea-publica.astrea-publica .hoja--azul .cielo-semana .btn.btn-metal { color: #F4EDE1; border-color: rgba(212, 177, 114, .6); background: rgba(255, 255, 255, .06); }
 body.glass.astrea-publica.astrea-publica .hoja--azul .cielo-semana .btn.btn-metal:hover { background: var(--pri-fondo); color: var(--pri-texto); }
+.hoja--azul .cielo-semana__acciones .link-quiet { color: #D4B172; }
 
 /* ---------- Footer como otra hoja ---------- */
 body.capitulos.glass.astrea-publica .pie { margin: 0 10px 10px; border-radius: 28px; border: 0; position: relative; z-index: 1; }

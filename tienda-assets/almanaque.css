@@ -215,7 +215,8 @@ a[aria-current="page"] .alm-medallon::after { content: "✦"; position: absolute
 .cielo-semana .alm-rango { color: var(--gold-deep); }
 .cielo-semana .alm-rango:empty { display: none; }
 .cielo-semana .alm-lede { color: var(--ink-soft); max-width: 29rem; }
-.cielo-semana .btn { margin-top: var(--s-3); }
+.cielo-semana__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); margin-top: var(--s-3); }
+.cielo-semana__acciones .link-quiet { color: var(--gold-deep); font-size: .85rem; }
 .cielo-semana__titulo { margin: 0; max-width: 26ch; font-family: var(--font-serif); font-style: italic; font-size: clamp(1.35rem, 1.2rem + .6vw, 1.75rem); line-height: 1.3; color: var(--ink); text-wrap: balance; }
 .cielo-semana__titulo:empty { display: none; }
 .cielo-semana .rueda { max-width: 480px; margin-inline: auto; filter: drop-shadow(0 18px 28px rgba(117, 87, 43, .12)); }

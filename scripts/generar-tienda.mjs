@@ -405,7 +405,10 @@ const HOJAS_PORTADA = [
       <p class="alm-rango" data-cs="rango"></p>
       <p class="cielo-semana__titulo" data-cs="titulo"></p>
       <p class="alm-lede" data-cs="resumen">Una pausa para mirar hacia arriba y volver a ti. Cada lunes, los movimientos del cielo y una lectura para acompañar tu semana.</p>
-      <a class="btn btn-metal btn--gold" href="/blog/horoscopo-semanal" data-cs="url">Leer mi horóscopo <span aria-hidden="true">↗</span></a>
+      <div class="cielo-semana__acciones">
+        <a class="btn btn-metal btn--gold" href="/blog/horoscopo-semanal" data-cs="url">Leer mi horóscopo <span aria-hidden="true">↗</span></a>
+        <a class="link-quiet" href="/blog">Ver semanas anteriores <span aria-hidden="true">→</span></a>
+      </div>
     </div>
     <figure class="cielo-semana__rueda">
       <p class="cielo-semana__mapa">El cielo, en movimiento</p>
