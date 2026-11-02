@@ -17,7 +17,7 @@ import { referidoActual } from "./referido.js";
 import { PACK_TEMATICOS, reportePorSlug } from "./catalogo.js";
 import {
   validarDatos, cuerpoDeOrden, crearOrden, urlDeCheckout, referenciaDeOrden,
-  pedidoParaGuardar, almacenSeguro, aniosDeRevolucion,
+  pedidoParaGuardar, almacenSeguro, aniosDeRevolucion, cuponValido,
 } from "./compra.js";
 
 const CLAVE_BORRADOR = "astrea-tienda-borrador";
@@ -30,6 +30,8 @@ const extra = reporte?.extra || null;
 const checkout = CHECKOUTS[reporte?.slug];
 const sesion = almacenSeguro(window.sessionStorage);
 const local = almacenSeguro(window.localStorage);
+// Descuento de Astrea Plus: la app manda ?cupon= solo a quien tiene Plus; Hotmart lo aplica al pagar.
+const cupon = cuponValido(new URLSearchParams(window.location.search).get("cupon"));
 
 const CAMPOS_EXTRA = {
   revolucion_solar: ["rs_ciudad", "rs_pais", "rs_anio"],
@@ -157,7 +159,9 @@ function pintarResumen() {
   }));
   const nota = document.createElement("p");
   nota.className = "detalle__aviso";
-  nota.textContent = "El monto final lo muestra Hotmart en tu moneda local.";
+  nota.textContent = cupon
+    ? "Tu descuento de Astrea Plus se aplica en el pago. El monto final lo muestra Hotmart en tu moneda local."
+    : "El monto final lo muestra Hotmart en tu moneda local.";
   dl.append(nota);
 }
 
@@ -198,10 +202,10 @@ form.addEventListener("submit", async (e) => {
       slug: reporte.slug,
       memoria: { get: (k) => ordenes[k], set: (k, v) => { ordenes[k] = v; sesion.guardar(CLAVE_ORDENES, ordenes); } },
     });
-    local.guardar(CLAVE_PEDIDO, pedidoParaGuardar(ordenId, reporte.slug, Date.now(), referencia));
+    local.guardar(CLAVE_PEDIDO, { ...pedidoParaGuardar(ordenId, reporte.slug, Date.now(), referencia), ...(cupon ? { cupon } : {}) });
     sesion.borrar(CLAVE_BORRADOR);
     estadoEnvio.textContent = `Pedido ${referenciaDeOrden(ordenId, reporte.slug)} creado. Te llevamos al pago en Hotmart…`;
-    window.location.assign(conOrigen(urlDeCheckout(checkout.url, ordenId, cuerpo, reporte.slug), origenActual()));
+    window.location.assign(conOrigen(urlDeCheckout(checkout.url, ordenId, cuerpo, reporte.slug, cupon), origenActual()));
   } catch (err) {
     cajaError.textContent = err.message;
     cajaError.hidden = false;

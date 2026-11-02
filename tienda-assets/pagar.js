@@ -16,7 +16,7 @@ const checkout = CHECKOUTS["carta-natal"];
 
 if (pedido && checkout) {
   almacenSeguro(window.localStorage).guardar(CLAVE_PEDIDO, pedidoDeAppParaGuardar(pedido));
-  window.location.replace(conOrigen(urlDeCheckout(checkout.url, pedido.ordenId, pedido, "carta-natal"), ORIGEN));
+  window.location.replace(conOrigen(urlDeCheckout(checkout.url, pedido.ordenId, pedido, "carta-natal", pedido.cupon), ORIGEN));
 } else {
   document.querySelector("[data-pagar-cargando]").hidden = true;
   document.querySelector("[data-pagar-error]").hidden = false;

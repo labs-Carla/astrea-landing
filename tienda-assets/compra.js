@@ -139,13 +139,23 @@ export function cuerpoDeOrden(d, slug = "carta-natal", extra = null) {
 /** Referencia que el panel usa para cruzar la venta de Hotmart con el pedido. */
 export const referenciaDeOrden = (ordenId, slug = "carta-natal") => `${CANALES[canalDe(slug)].sck}-${ordenId}`;
 
-/** URL del checkout real: email y nombre precargados, y el pedido en `sck`. */
-export function urlDeCheckout(checkoutBase, ordenId, { nombre, email }, slug = "carta-natal") {
+/**
+ * Cupón del descuento de Astrea Plus (2026-11-02): la app lo agrega al enlace solo para
+ * quien tiene Plus (?cupon= en /comprar, #cupon= en /pagar). null si no viene o no es válido.
+ */
+export function cuponValido(valor) {
+  const c = String(valor ?? "").trim();
+  return /^[A-Za-z0-9_-]{3,40}$/.test(c) ? c : null;
+}
+
+/** URL del checkout real: email y nombre precargados, el pedido en `sck` y, si hay, el cupón de Plus. */
+export function urlDeCheckout(checkoutBase, ordenId, { nombre, email }, slug = "carta-natal", cupon = null) {
   if (!Number.isInteger(ordenId) || ordenId <= 0) throw new Error("orden inválida");
   const url = new URL(checkoutBase);
   url.searchParams.set("email", email);
   url.searchParams.set("name", nombre);
   url.searchParams.set("sck", referenciaDeOrden(ordenId, slug));
+  if (cuponValido(cupon)) url.searchParams.set("offDiscount", cuponValido(cupon));   // Hotmart aplica el cupón
   return url.toString();
 }
 
@@ -316,9 +326,10 @@ export function pedidoDesdeApp(fragmento) {
   if (!/^[A-Za-z0-9_-]{16,64}$/.test(referencia)) return null;
   if (nombre.length < LIMITES.nombreMin || nombre.length > LIMITES.textoMax) return null;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
-  return { ordenId, referencia, nombre, email };
+  return { ordenId, referencia, nombre, email, cupon: cuponValido(p.get("cupon")) };   // un cupón inválido se ignora
 }
 
 /** Lo que /pagar guarda para /gracias y /pedido: un pedido de carta natal, marcado como de la app. */
 export const pedidoDeAppParaGuardar = (pedido, ahora = Date.now()) =>
-  ({ ...pedidoParaGuardar(pedido.ordenId, "carta-natal", ahora, pedido.referencia), desde: "app" });
+  ({ ...pedidoParaGuardar(pedido.ordenId, "carta-natal", ahora, pedido.referencia), desde: "app",
+     ...(pedido.cupon ? { cupon: pedido.cupon } : {}) });

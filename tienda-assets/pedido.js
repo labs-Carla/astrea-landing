@@ -11,7 +11,7 @@
 import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, WHATSAPP } from "./config.js";
 import { reportePorSlug } from "./catalogo.js";
 import { conOrigen, origenActual } from "./origen.js";
-import { ESTADOS_PEDIDO, URL_APP_CARTA, estadoAMostrar, pedidoVigente, referenciaDePedido, rutaDeEstado, almacenSeguro } from "./compra.js";
+import { ESTADOS_PEDIDO, URL_APP_CARTA, cuponValido, estadoAMostrar, pedidoVigente, referenciaDePedido, rutaDeEstado, almacenSeguro } from "./compra.js";
 
 const CLAVE_PEDIDO = "astrea-tienda-pedido";
 const caja = document.querySelector("[data-estado-pedido]");
@@ -88,6 +88,7 @@ async function pintar() {
   if ((estado === "creado" || estado === "rechazado") && reporte && CHECKOUTS[reporte.slug]) {
     const url = new URL(CHECKOUTS[reporte.slug].url);
     url.searchParams.set("sck", referenciaDePedido(pedido));
+    if (cuponValido(pedido.cupon)) url.searchParams.set("offDiscount", pedido.cupon);   // el descuento de Plus sigue al reintentar
     hijos.push(el("p", {}, el("a", { class: "btn btn--gold", href: conOrigen(url.toString(), origenActual()) }, "Ir al pago en Hotmart")));
   }
   if (["creado", "pendiente", "confirmado"].includes(estado)) hijos.push(el("h3", { class: "bloque__titulo" }, "Qué sigue"), pasos);
