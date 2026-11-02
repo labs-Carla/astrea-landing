@@ -6,7 +6,7 @@ import {
   validarDatos, cuerpoDeOrden, urlDeCheckout, crearOrden, huellaDeDatos, mensajeDeError,
   estadoAMostrar, pedidoVigente, pedidoParaGuardar, almacenSeguro, VIGENCIA_PEDIDO_MS,
   canalDe, referenciaDeOrden, rutaDeEstado, aniosDeRevolucion,
-  validarRegalo, cuerpoDeRegalo, extraDeProducto, referenciaDePedido, pedidoDesdeApp, pedidoDeAppParaGuardar,
+  validarRegalo, cuerpoDeRegalo, extraDeProducto, referenciaDePedido, pedidoDesdeApp, pedidoDeAppParaGuardar, cuponValido,
 } from "../tienda-assets/compra.js";
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
@@ -554,7 +554,7 @@ test("referido: ?ref= válido se guarda 30 días; uno con otra forma se ignora",
 const FRAGMENTO = "#" + new URLSearchParams({ orden: "7", ref: "REF_ficticia-12345678", nombre: " Ana López ", email: "ana@example.com" });
 
 test("/pagar lee el pedido de la app desde el fragmento", () => {
-  assert.deepEqual(pedidoDesdeApp(FRAGMENTO), { ordenId: 7, referencia: "REF_ficticia-12345678", nombre: "Ana López", email: "ana@example.com" });
+  assert.deepEqual(pedidoDesdeApp(FRAGMENTO), { ordenId: 7, referencia: "REF_ficticia-12345678", nombre: "Ana López", email: "ana@example.com", cupon: null });
 });
 
 test("/pagar rechaza un pedido incompleto o inválido", () => {
@@ -577,4 +577,24 @@ test("/pagar guarda un pedido de carta natal que /gracias y /pedido reconocen, y
   const html = readFileSync(new URL("../pagar.html", import.meta.url), "utf8");
   assert.match(html, /noindex/);
   assert.match(html, /\/tienda-assets\/pagar\.js/);
+});
+
+// ── Cupón del descuento de Astrea Plus ────────────────────────────────────────
+test("el cupón de Plus llega a Hotmart como offDiscount, y uno inválido se ignora", () => {
+  assert.equal(cuponValido(" PLUS-25 "), "PLUS-25");
+  for (const malo of [null, "", "ab", "con espacio", "<script>", "x".repeat(41)]) assert.equal(cuponValido(malo), null);
+  const con = new URL(urlDeCheckout(CHECKOUTS.amor.url, 3, { nombre: "Ana", email: "ana@example.com" }, "amor", "PLUSAMOR25"));
+  assert.equal(con.searchParams.get("offDiscount"), "PLUSAMOR25");
+  assert.equal(con.searchParams.get("sck"), "astrea-pedido-3");
+  const sin = new URL(urlDeCheckout(CHECKOUTS.amor.url, 3, { nombre: "Ana", email: "ana@example.com" }, "amor", "no válido"));
+  assert.equal(sin.searchParams.get("offDiscount"), null);
+});
+
+test("/pagar lleva el cupón de la app hasta el checkout y lo guarda para reintentar", () => {
+  const pedido = pedidoDesdeApp(FRAGMENTO + "&cupon=PLUSCARTA25");
+  assert.equal(pedido.cupon, "PLUSCARTA25");
+  assert.equal(pedidoDeAppParaGuardar(pedido, 1).cupon, "PLUSCARTA25");
+  const url = new URL(urlDeCheckout(CHECKOUTS["carta-natal"].url, pedido.ordenId, pedido, "carta-natal", pedido.cupon));
+  assert.equal(url.searchParams.get("offDiscount"), "PLUSCARTA25");
+  assert.equal(pedidoDesdeApp(FRAGMENTO + "&cupon=<x>").cupon, null);
 });
