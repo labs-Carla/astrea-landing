@@ -415,3 +415,46 @@
   background: rgba(255, 255, 255, .55); border: 1px solid var(--hairline-strong); border-radius: var(--r-hair);
 }
 .field textarea:focus { outline: none; border-color: var(--gold); background: #fff; box-shadow: 0 0 0 3px rgba(176, 138, 79, .15); }
+
+/* ---------- Pago dentro de Astrea (tienda-assets/pago-panel.js) ---------- */
+.pago-panel {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: stretch; justify-content: center;
+  background: rgba(20, 16, 12, .55); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.pago-panel__hoja {
+  display: flex; flex-direction: column; width: 100%; height: 100dvh; overflow: hidden;
+  background: var(--ivory); color: var(--ink); box-shadow: var(--shadow-page);
+}
+.pago-panel__cabecera {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 12px; border-bottom: 1px solid var(--hairline);
+}
+.pago-panel__textos { min-width: 0; }
+.pago-panel__eyebrow { margin: 0; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--gold-deep); }
+.pago-panel__titulo {
+  margin: 2px 0 0; font-family: var(--font-serif); font-weight: 500; font-size: 1.6rem; line-height: 1.15;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pago-panel__precio { margin: 2px 0 0; font-size: .875rem; color: var(--ink-soft); }
+.pago-panel__cerrar {
+  flex: none; width: 40px; height: 40px; border: 0; border-radius: 999px; background: transparent;
+  color: var(--ink-soft); font-size: 1rem; cursor: pointer;
+}
+.pago-panel__cerrar:hover, .pago-panel__cerrar:focus-visible { background: rgba(0, 0, 0, .06); }
+.pago-panel__cuerpo { position: relative; flex: 1; background: #fff; }
+.pago-panel__cargando {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; margin: 0; padding: 24px;
+  text-align: center; font-family: var(--font-serif); font-style: italic; font-size: 1.15rem; color: var(--ink-soft);
+}
+.pago-panel__marco { position: relative; width: 100%; height: 100%; border: 0; display: block; }
+.pago-panel__pie {
+  margin: 0; padding: 10px 20px calc(10px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--hairline);
+  text-align: center; font-size: .75rem; color: var(--ink-soft);
+}
+.pago-panel__pie a { color: var(--gold-deep); }
+@media (min-width: 640px) {
+  .pago-panel { align-items: center; padding: 24px; }
+  .pago-panel__hoja { max-width: 640px; height: min(92dvh, 860px); border-radius: 24px; }
+  .pago-panel__cabecera { padding-top: 16px; padding-inline: 24px; }
+}

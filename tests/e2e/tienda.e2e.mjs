@@ -15,7 +15,10 @@ const db = new DatabaseSync(process.env.DB || "/tmp/astrea_ai_local.db", { readO
 let fallos = 0;
 const ok = (c, m) => { console.log(`${c ? "OK   " : "FALLO"} ${m}`); if (!c) fallos++; };
 
-const navegador = await chromium.launch(process.env.CHROME ? { executablePath: process.env.CHROME } : {});
+// Sin el bloqueo de red local de Chrome: el Hotmart simulado (página pública) tiene que poder
+// volver a /gracias en 127.0.0.1, como en producción vuelve a astrea-charts.site.
+const navegador = await chromium.launch({ ...(process.env.CHROME ? { executablePath: process.env.CHROME } : {}),
+  args: ["--disable-features=PrivateNetworkAccessForNavigations,PrivateNetworkAccessRespectPreflightResults,BlockInsecurePrivateNetworkRequests,LocalNetworkAccessChecks"] });
 
 async function nuevaPagina(viewport) {
   const p = await navegador.newPage({ viewport });
@@ -248,6 +251,45 @@ ok(rs.ciudad === "Lima" && rs.anio === anio && typeof rs.latitud === "number", "
   await p.goto(`${TIENDA}/reportes`);
   await p.keyboard.press("Tab");
   ok(await p.evaluate(() => document.activeElement?.classList.contains("skip-link")), "teclado: primer Tab = saltar al contenido");
+  await p.close();
+}
+
+// Pago DENTRO de Astrea: Hotmart se abre en un panel encima de /comprar y, al pagar,
+// /gracias avisa a la página, que lleva al estado del pedido. Hotmart simulado (sin cobro).
+for (const [ancho, alto] of [[390, 844], [1280, 900]]) {
+  const p = await navegador.newPage({ viewport: { width: ancho, height: alto } });
+  await p.route("https://pay.hotmart.com/**", (r) => r.fulfill({ contentType: "text/html", body: `<!doctype html>
+    <body><p>Hotmart (simulado)</p><button id="pagar">Comprar ahora</button>
+    <script>pagar.onclick = () => { location.href = "${TIENDA}/gracias?transaction=HP-E2E"; };</script></body>` }));
+  const correo = `e2e.panel.${ancho}.${Date.now().toString(36)}@example.com`;
+  const llenar = async () => {
+    await p.goto(`${TIENDA}/comprar/amor`);
+    await p.fill("#nombre", "Prueba Panel"); await p.fill("#fecha", "1991-02-03");
+    await p.selectOption("#hora", "9"); await p.selectOption("#minuto", "15");
+    await p.fill("#ciudad", "Bogotá"); await p.fill("#pais", "Colombia");
+    await p.click("[data-siguiente='2']"); await p.fill("#email", correo); await p.click("[data-siguiente='3']");
+    await p.check("#acepto");
+    await p.click("[data-enviar]");
+    await p.getByRole("dialog", { name: "Amor y vínculos" }).waitFor({ timeout: 30000 });
+  };
+  await llenar();
+  ok(new URL(p.url()).pathname === "/comprar/amor", `${ancho}px: el pago se abre encima de /comprar, sin salir de Astrea`);
+  const marco = p.locator("iframe.pago-panel__marco");
+  const pedidos = pedidosDeEsteCorreo(correo);
+  ok(pedidos.length === 1 && new URL(await marco.getAttribute("src")).searchParams.get("sck") === `astrea-pedido-${pedidos[0]?.id}`, `${ancho}px: el panel abre el checkout de su pedido`);
+  await p.getByRole("button", { name: "Cerrar el pago" }).click();
+  ok(await p.getByRole("dialog").count() === 0 && await p.locator("[data-enviar]").isEnabled(), `${ancho}px: cerrar sin pagar deja intentarlo otra vez`);
+  await p.click("[data-enviar]");
+  await p.getByRole("dialog", { name: "Amor y vínculos" }).waitFor({ timeout: 30000 });
+  ok(pedidosDeEsteCorreo(correo).length === 1, `${ancho}px: reintentar reutiliza el mismo pedido`);
+  await p.frameLocator("iframe.pago-panel__marco").getByRole("button", { name: "Comprar ahora" }).click();
+  await p.waitForURL(`${TIENDA}/pedido?retorno=hotmart`, { timeout: 15000 });
+  await p.waitForSelector("[data-estado-pedido][data-estado]");
+  ok((await p.locator("[data-estado-pedido]").innerText()).includes(`astrea-pedido-${pedidos[0]?.id}`), `${ancho}px: al pagar en el panel, lleva al estado de su pedido`);
+  if (process.env.CAPTURAS) {
+    await llenar();
+    await p.screenshot({ path: `${process.env.CAPTURAS}/tienda-panel-${ancho}.png` });
+  }
   await p.close();
 }
 

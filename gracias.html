@@ -156,7 +156,8 @@
     if (!enPanel) return;
     window.__astreaEnPanel = true;
     var local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
-    var apps = local ? ["http://127.0.0.1:5173", "http://localhost:5173"] : ["https://app.astrea-charts.site"];
+    // La app (astrea-API PagoHotmart.jsx) o la propia tienda (tienda-assets/pago-panel.js).
+    var apps = (local ? ["http://127.0.0.1:5173", "http://localhost:5173"] : ["https://app.astrea-charts.site"]).concat(location.origin);
     apps.forEach(function (origen) {
       try { window.parent.postMessage({ tipo: "astrea-pago-recibido" }, origen); } catch (e) { /* otro origen: nada */ }
     });

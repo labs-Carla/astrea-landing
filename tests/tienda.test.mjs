@@ -608,3 +608,18 @@ test("/gracias dentro del panel de pago de la app avisa a Astrea y no muestra la
   assert.doesNotMatch(gracias, /postMessage\([^)]*"\*"\)/);
   assert.ok(gracias.indexOf("__astreaEnPanel = true") < gracias.indexOf('location.replace("/pedido?retorno=hotmart")'));
 });
+
+test("la tienda abre Hotmart en el panel de Astrea, sin salir del sitio", () => {
+  const leer = (f) => readFileSync(new URL(`../tienda-assets/${f}`, import.meta.url), "utf8");
+  for (const f of ["comprar.js", "regalar.js", "pedido.js"]) {
+    const js = leer(f);
+    assert.match(js, /abrirPagoEnPanel\(/, `${f} usa el panel`);
+    assert.doesNotMatch(js, /location\.assign\(conOrigen/, `${f} ya no sale a Hotmart`);
+  }
+  const panel = leer("pago-panel.js");
+  assert.match(panel, /e\.origin !== window\.location\.origin \|\| e\.source !== marco\.contentWindow/, "solo cree el aviso de /gracias de ESTE panel");
+  assert.match(panel, /target = "_blank"/, "respaldo: el pago en una pestaña nueva");
+  assert.doesNotMatch(panel, /innerHTML/);
+  const gracias = readFileSync(new URL("../gracias.html", import.meta.url), "utf8");
+  assert.match(gracias, /\.concat\(location\.origin\)/, "/gracias también avisa al panel de la tienda");
+});
