@@ -11,7 +11,7 @@
 import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, WHATSAPP } from "./config.js";
 import { reportePorSlug } from "./catalogo.js";
 import { conOrigen, origenActual } from "./origen.js";
-import { ESTADOS_PEDIDO, estadoAMostrar, pedidoVigente, referenciaDePedido, rutaDeEstado, almacenSeguro } from "./compra.js";
+import { ESTADOS_PEDIDO, URL_APP_CARTA, estadoAMostrar, pedidoVigente, referenciaDePedido, rutaDeEstado, almacenSeguro } from "./compra.js";
 
 const CLAVE_PEDIDO = "astrea-tienda-pedido";
 const caja = document.querySelector("[data-estado-pedido]");
@@ -74,7 +74,9 @@ async function pintar() {
   ) : el("ol", { class: "pasos-entrega" },
     el("li", {}, "Verificamos tu pago en Hotmart y confirmamos tu pedido."),
     el("li", {}, "Calculamos y redactamos tu lectura, y la revisamos una por una."),
-    el("li", {}, "Te la enviamos por correo entre 24 y 48 horas después de confirmar el pago."),
+    el("li", {}, pedido.desde === "app"
+      ? "Entre 24 y 48 horas después de confirmar el pago, la encuentras en tu Biblioteca de Astrea y en tu correo."
+      : "Te la enviamos por correo entre 24 y 48 horas después de confirmar el pago."),
   );
 
   const hijos = [
@@ -89,6 +91,8 @@ async function pintar() {
     hijos.push(el("p", {}, el("a", { class: "btn btn--gold", href: conOrigen(url.toString(), origenActual()) }, "Ir al pago en Hotmart")));
   }
   if (["creado", "pendiente", "confirmado"].includes(estado)) hijos.push(el("h3", { class: "bloque__titulo" }, "Qué sigue"), pasos);
+  // Pedida desde la app: vuelve a su carta en Astrea.
+  if (pedido.desde === "app") hijos.push(el("p", {}, el("a", { class: "btn btn--night", href: URL_APP_CARTA }, "Volver a Astrea")));
   hijos.push(el("p", { class: "detalle__aviso" }, "¿Dudas con tu pedido? ", el("a", { class: "link-quiet", href: `${WHATSAPP}?text=${encodeURIComponent(`Hola, tengo una pregunta sobre mi pedido ${referenciaDePedido(pedido)}`)}` }, "Escríbenos por WhatsApp"), " con tu referencia."));
   caja.replaceChildren(...hijos);
 }

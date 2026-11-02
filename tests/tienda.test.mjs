@@ -6,7 +6,7 @@ import {
   validarDatos, cuerpoDeOrden, urlDeCheckout, crearOrden, huellaDeDatos, mensajeDeError,
   estadoAMostrar, pedidoVigente, pedidoParaGuardar, almacenSeguro, VIGENCIA_PEDIDO_MS,
   canalDe, referenciaDeOrden, rutaDeEstado, aniosDeRevolucion,
-  validarRegalo, cuerpoDeRegalo, extraDeProducto, referenciaDePedido,
+  validarRegalo, cuerpoDeRegalo, extraDeProducto, referenciaDePedido, pedidoDesdeApp, pedidoDeAppParaGuardar,
 } from "../tienda-assets/compra.js";
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
@@ -548,4 +548,33 @@ test("referido: ?ref= válido se guarda 30 días; uno con otra forma se ignora",
   assert.equal(registrarReferido({ search: "", storage, ahora: 2000 }), "ABCD2345");
   assert.equal(referidoVigente(JSON.parse(datos[CLAVE_REFERIDO]), 1000 + 31 * 864e5), null);
   assert.equal(registrarReferido({ search: "", storage, ahora: 1000 + 31 * 864e5 }), null);
+});
+
+// ── /pagar: la lectura pedida desde la app de Astrea ─────────────────────────
+const FRAGMENTO = "#" + new URLSearchParams({ orden: "7", ref: "REF_ficticia-12345678", nombre: " Ana López ", email: "ana@example.com" });
+
+test("/pagar lee el pedido de la app desde el fragmento", () => {
+  assert.deepEqual(pedidoDesdeApp(FRAGMENTO), { ordenId: 7, referencia: "REF_ficticia-12345678", nombre: "Ana López", email: "ana@example.com" });
+});
+
+test("/pagar rechaza un pedido incompleto o inválido", () => {
+  const con = (cambios) => "#" + new URLSearchParams({ ...Object.fromEntries(new URLSearchParams(FRAGMENTO.slice(1))), ...cambios });
+  for (const malo of [{ orden: "0" }, { orden: "7.5" }, { orden: "x" }, { ref: "corta" }, { ref: "REF con espacios 12345" },
+    { nombre: "A" }, { email: "ana" }]) assert.equal(pedidoDesdeApp(con(malo)), null, JSON.stringify(malo));
+  assert.equal(pedidoDesdeApp(""), null);
+  assert.equal(pedidoDesdeApp(undefined), null);
+});
+
+test("/pagar guarda un pedido de carta natal que /gracias y /pedido reconocen, y paga con la orden en sck", () => {
+  const pedido = pedidoDesdeApp(FRAGMENTO);
+  const guardado = pedidoDeAppParaGuardar(pedido, 1000);
+  assert.deepEqual(guardado, { ordenId: 7, reporte: "carta-natal", creadoEn: 1000, referencia: "REF_ficticia-12345678", desde: "app" });
+  assert.ok(pedidoVigente(guardado, 2000));
+  assert.equal(referenciaDePedido(guardado), "astrea-orden-7");
+  const url = new URL(urlDeCheckout(CHECKOUTS["carta-natal"].url, pedido.ordenId, pedido, "carta-natal"));
+  assert.equal(url.searchParams.get("sck"), "astrea-orden-7");
+  assert.equal(url.searchParams.get("email"), "ana@example.com");
+  const html = readFileSync(new URL("../pagar.html", import.meta.url), "utf8");
+  assert.match(html, /noindex/);
+  assert.match(html, /\/tienda-assets\/pagar\.js/);
 });
