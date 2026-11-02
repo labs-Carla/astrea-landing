@@ -598,3 +598,13 @@ test("/pagar lleva el cupón de la app hasta el checkout y lo guarda para reinte
   assert.equal(url.searchParams.get("offDiscount"), "PLUSCARTA25");
   assert.equal(pedidoDesdeApp(FRAGMENTO + "&cupon=<x>").cupon, null);
 });
+
+// ── Pago dentro de Astrea ──────────────────────────────────────────────────────
+test("/gracias dentro del panel de pago de la app avisa a Astrea y no muestra la tienda", () => {
+  const gracias = readFileSync(new URL("../gracias.html", import.meta.url), "utf8");
+  assert.match(gracias, /window\.self !== window\.top/);
+  assert.match(gracias, /postMessage\(\{ tipo: "astrea-pago-recibido" \}, origen\)/);   // sin datos, solo al origen de la app
+  assert.match(gracias, /"https:\/\/app\.astrea-charts\.site"/);
+  assert.doesNotMatch(gracias, /postMessage\([^)]*"\*"\)/);
+  assert.ok(gracias.indexOf("__astreaEnPanel = true") < gracias.indexOf('location.replace("/pedido?retorno=hotmart")'));
+});
