@@ -11,6 +11,7 @@
 import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, WHATSAPP } from "./config.js";
 import { reportePorSlug } from "./catalogo.js";
 import { conOrigen, origenActual } from "./origen.js";
+import { abrirPagoEnPanel } from "./pago-panel.js";
 import { ESTADOS_PEDIDO, URL_APP_CARTA, cuponValido, estadoAMostrar, pedidoVigente, referenciaDePedido, rutaDeEstado, almacenSeguro } from "./compra.js";
 
 const CLAVE_PEDIDO = "astrea-tienda-pedido";
@@ -89,7 +90,14 @@ async function pintar() {
     const url = new URL(CHECKOUTS[reporte.slug].url);
     url.searchParams.set("sck", referenciaDePedido(pedido));
     if (cuponValido(pedido.cupon)) url.searchParams.set("offDiscount", pedido.cupon);   // el descuento de Plus sigue al reintentar
-    hijos.push(el("p", {}, el("a", { class: "btn btn--gold", href: conOrigen(url.toString(), origenActual()) }, "Ir al pago en Hotmart")));
+    const destino = conOrigen(url.toString(), origenActual());
+    const ir = el("a", { class: "btn btn--gold", href: destino }, "Pagar sin salir de Astrea");
+    ir.addEventListener("click", (e) => {
+      e.preventDefault();     // sin JS (o si algo falla antes), el enlace lleva a Hotmart como siempre
+      abrirPagoEnPanel({ url: destino, nombre: `${pedido.regalo ? "Regalo: " : ""}${reporte.nombre}`,
+                         precio: CHECKOUTS[reporte.slug].precioReferencia, alPagar: () => window.location.reload() });
+    });
+    hijos.push(el("p", {}, ir));
   }
   if (["creado", "pendiente", "confirmado"].includes(estado)) hijos.push(el("h3", { class: "bloque__titulo" }, "Qué sigue"), pasos);
   // Pedida desde la app: vuelve a su carta en Astrea.

@@ -4,6 +4,7 @@
  * 1) datos natales (+ datos extra del reporte)  2) correo  3) revisión
  *   -> carta natal: POST /carta-natal/orden -> Hotmart (sck=astrea-orden-<id>)
  *   -> otros reportes: POST /pedidos -> Hotmart (sck=astrea-pedido-<id>)
+ *   Hotmart se abre en un panel encima de la página, sin salir de Astrea (pago-panel.js).
  *
  * - Borrador en sessionStorage (se pierde al cerrar la pestaña y se borra al
  *   crear el pedido): evita perder lo escrito al recargar o volver atrás.
@@ -14,6 +15,7 @@
 import { apiBase, CHECKOUTS } from "./config.js";
 import { conOrigen, origenActual } from "./origen.js";
 import { referidoActual } from "./referido.js";
+import { abrirPagoEnPanel } from "./pago-panel.js";
 import { PACK_TEMATICOS, reportePorSlug } from "./catalogo.js";
 import {
   validarDatos, cuerpoDeOrden, crearOrden, urlDeCheckout, referenciaDeOrden,
@@ -204,8 +206,18 @@ form.addEventListener("submit", async (e) => {
     });
     local.guardar(CLAVE_PEDIDO, { ...pedidoParaGuardar(ordenId, reporte.slug, Date.now(), referencia), ...(cupon ? { cupon } : {}) });
     sesion.borrar(CLAVE_BORRADOR);
-    estadoEnvio.textContent = `Pedido ${referenciaDeOrden(ordenId, reporte.slug)} creado. Te llevamos al pago en Hotmart…`;
-    window.location.assign(conOrigen(urlDeCheckout(checkout.url, ordenId, cuerpo, reporte.slug, cupon), origenActual()));
+    estadoEnvio.textContent = `Pedido ${referenciaDeOrden(ordenId, reporte.slug)} creado. Abriendo el pago seguro…`;
+    abrirPagoEnPanel({
+      url: conOrigen(urlDeCheckout(checkout.url, ordenId, cuerpo, reporte.slug, cupon), origenActual()),
+      nombre: reporte.nombre,
+      precio: checkout.precioReferencia,
+      alCerrar: () => {
+        // Cerró sin pagar (o no alcanzó a volver de Hotmart): puede intentarlo otra vez con el MISMO pedido.
+        estadoEnvio.textContent = "Si alcanzaste a pagar, te escribimos cuando lo confirmemos. Si no, puedes pagar cuando quieras.";
+        btnEnviar.disabled = false;
+        enviando = false;
+      },
+    });
   } catch (err) {
     cajaError.textContent = err.message;
     cajaError.hidden = false;

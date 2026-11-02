@@ -6,6 +6,7 @@
 import { apiBase, CHECKOUTS } from "./config.js";
 import { REPORTES } from "./catalogo.js";
 import { conOrigen, origenActual } from "./origen.js";
+import { abrirPagoEnPanel } from "./pago-panel.js";
 import { almacenSeguro, cuerpoDeRegalo, mensajeDeError, pedidoParaGuardar, validarRegalo, LIMITE_DEDICATORIA } from "./compra.js";
 
 const CLAVE_PEDIDO = "astrea-tienda-pedido";
@@ -54,7 +55,13 @@ form.addEventListener("submit", async (e) => {
     url.searchParams.set("email", cuerpo.comprador_email);
     url.searchParams.set("name", cuerpo.comprador_nombre);
     url.searchParams.set("sck", `astrea-regalo-${datos.regalo_id}`);
-    window.location.assign(conOrigen(url.toString(), origenActual()));
+    const regalado = REPORTES.find((r) => r.slug === d.producto);
+    abrirPagoEnPanel({
+      url: conOrigen(url.toString(), origenActual()),
+      nombre: `Regalo: ${regalado ? regalado.nombre : "lectura"}`,
+      precio: CHECKOUTS[d.producto].precioReferencia,
+      alCerrar: () => { boton.disabled = false; },     // el mismo regalo se paga si lo intenta otra vez
+    });
   } catch (err) {
     error.textContent = err instanceof TypeError ? mensajeDeError(0) : err.message;
     error.hidden = false;

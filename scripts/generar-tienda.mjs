@@ -485,12 +485,12 @@ for (const r of REPORTES) {
   const disp = estadoDe(r, CHECKOUTS) === "disponible";
   const compra = disp
     ? `<a class="btn btn--gold btn--block" href="/comprar/${r.slug}">Pedir mi ${esc(r.nombre.toLowerCase())} ${icono("i-arrow")}</a>
-      <p class="detalle__aviso">${icono("i-lock")} Primero registras tus datos; después pagas en Hotmart, en tu moneda local. No guardamos datos de tarjetas.</p>`
+      <p class="detalle__aviso">${icono("i-lock")} Primero registras tus datos; después pagas con Hotmart aquí mismo, sin salir de Astrea, en tu moneda local. No guardamos datos de tarjetas.</p>`
     : `<p class="detalle__aviso">Aún no se puede comprar.</p>
       <a class="btn btn--ghost btn--block" href="${WHATSAPP}?text=${encodeURIComponent(`Hola, quiero saber cuándo estará el reporte de ${r.nombre}`)}">Avísame cuando esté</a>
       <a class="link-quiet" href="/reportes/carta-natal">Mientras tanto, conoce la carta natal completa</a>`;
   const despues = disp
-    ? [r.extra === "segunda_persona" ? "Completas tus datos, los de la otra persona y tu correo." : r.extra === "revolucion_solar" ? "Completas tus datos de nacimiento, dónde pasarás tu cumpleaños y tu correo." : r.extra === "pack" ? "Completas tus datos de nacimiento, eliges tus 2 lecturas temáticas y dejas tu correo." : "Completas tus datos de nacimiento y tu correo.", "Pagas en Hotmart con tu pedido ya registrado.", "Confirmamos tu pago y preparamos tu lectura.", "La revisamos y te la enviamos por correo en 24–48 h."]
+    ? [r.extra === "segunda_persona" ? "Completas tus datos, los de la otra persona y tu correo." : r.extra === "revolucion_solar" ? "Completas tus datos de nacimiento, dónde pasarás tu cumpleaños y tu correo." : r.extra === "pack" ? "Completas tus datos de nacimiento, eliges tus 2 lecturas temáticas y dejas tu correo." : "Completas tus datos de nacimiento y tu correo.", "Pagas con Hotmart sin salir de Astrea, con tu pedido ya registrado.", "Confirmamos tu pago y preparamos tu lectura.", "La revisamos y te la enviamos por correo en 24–48 h."]
     : ["Cuando esté disponible, lo anunciaremos en esta página.", "Podrás pedirlo con tus datos de nacimiento.", "Lo recibirás por correo, revisado como todas nuestras lecturas."];
   const jsonLd = {
     "@context": "https://schema.org", "@type": "Product", name: `${r.nombre} · Astrea`, description: r.resumen,
@@ -593,7 +593,7 @@ for (const r of disponibles) {
     descripcion: `Registra tus datos de nacimiento para pedir tu ${r.nombre.toLowerCase()}.`,
     indexable: false,
     scripts: ["/tienda-assets/comprar.js"],
-    cuerpo: `${cabecera({ eyebrow: "Tu pedido", titulo: r.nombre, lede: "Tres pasos: tus datos de nacimiento, tu correo y la revisión del pedido. Después pagas en Hotmart.", migas: [["/", "Inicio"], ["/reportes", "Reportes"], [`/reportes/${r.slug}`, r.nombre], [`/comprar/${r.slug}`, "Pedido"]] })}
+    cuerpo: `${cabecera({ eyebrow: "Tu pedido", titulo: r.nombre, lede: "Tres pasos: tus datos de nacimiento, tu correo y la revisión del pedido. Después pagas aquí mismo, con Hotmart.", migas: [["/", "Inicio"], ["/reportes", "Reportes"], [`/reportes/${r.slug}`, r.nombre], [`/comprar/${r.slug}`, "Pedido"]] })}
 <section class="sheet sheet--light sheet--lift seccion">
   <div class="shell compra">
     <div class="compra__panel">
@@ -677,7 +677,7 @@ paginas["pedido.html"] = layout({
 const PASOS = [
   ["i-pages", "Elige tu reporte", "La carta natal completa o un reporte temático: amor, vocación, dinero, patrones, revolución solar o compatibilidad. Revisa qué incluye y qué datos necesitas."],
   ["i-wheel", "Registra tus datos", "Fecha, hora y lugar de nacimiento, y el correo donde quieres recibir tu lectura. Los revisas antes de continuar."],
-  ["i-lock", "Paga en Hotmart", "Te llevamos al pago seguro de Hotmart con tu pedido ya registrado. Pagas en tu moneda local; nosotros no vemos ni guardamos datos de tarjetas."],
+  ["i-lock", "Paga sin salir de Astrea", "El pago seguro de Hotmart se abre aquí mismo, con tu pedido ya registrado. Pagas en tu moneda local; nosotros no vemos ni guardamos datos de tarjetas."],
   ["i-check", "Confirmamos tu pago", "Revisamos la venta en Hotmart y confirmamos tu pedido. Volver de la página de pago no basta: el pedido se confirma cuando verificamos la venta."],
   ["i-eye", "Preparamos y revisamos", "Calculamos tu carta con Swiss Ephemeris, redactamos la interpretación con apoyo de IA y la revisamos una por una."],
   ["i-mail", "Te la enviamos", "Recibes tu lectura por correo entre 24 y 48 horas después de confirmar el pago."],
@@ -810,7 +810,7 @@ const camposNatales = (horas, minutos) => `
   <div class="shell compra">
     <div class="compra__panel">
       <ol class="pasos-entrega">
-        <li>Eliges la lectura, escribes para quién es y una dedicatoria, y pagas en Hotmart.</li>
+        <li>Eliges la lectura, escribes para quién es y una dedicatoria, y pagas con Hotmart sin salir de Astrea.</li>
         <li>Te enviamos la tarjeta de regalo en PDF, con su código, para imprimirla o reenviarla.</li>
         <li>La persona entra a astrea-charts.site/canjear, escribe el código y sus datos, y recibe su lectura en 24 a 48 horas.</li>
       </ol>
@@ -886,7 +886,7 @@ const FAQ = [
   ["¿Qué reportes puedo comprar?", "La carta natal completa y seis reportes temáticos: amor y vínculos, vocación y propósito, dinero y abundancia, patrones y transformación, revolución solar y compatibilidad de pareja. Todos llegan en PDF a tu correo entre 24 y 48 horas después de confirmar tu pago."],
   ["¿Qué necesito para la revolución solar?", "Tus datos de nacimiento, la ciudad donde pasarás tu cumpleaños y el año del ciclo que quieres leer: la carta de tu año se calcula para ese lugar."],
   ["¿Qué necesito para la compatibilidad de pareja?", "Tus datos de nacimiento y los de la otra persona. Si no sabes su hora de nacimiento, puedes dejarla vacía. Te pedimos confirmar que esa persona aceptó compartir sus datos."],
-  ["¿Cómo pago?", "Primero registras tus datos de nacimiento y tu correo. Después te llevamos al pago seguro de Hotmart, en tu moneda local. Astrea no ve ni guarda datos de tarjetas."],
+  ["¿Cómo pago?", "Primero registras tus datos de nacimiento y tu correo. Después se abre aquí mismo el pago seguro de Hotmart, en tu moneda local, sin salir de Astrea. Astrea no ve ni guarda datos de tarjetas."],
   ["Ya pagué, ¿por qué mi pedido aparece como pendiente?", "Confirmamos cada pago verificando la venta en Hotmart. Volver de la página de pago no basta para confirmarlo. Cuando lo confirmamos, preparamos tu lectura; no necesitas volver a enviar tus datos."],
   ["¿Cuánto tiempo tarda en llegar?", "Entre 24 y 48 horas después de confirmar tu pago, directo a tu correo."],
   ["¿Qué tan precisa es la lectura?", "Las posiciones se calculan con astronomía real (Swiss Ephemeris), no con tablas genéricas. La interpretación se redacta con apoyo de asistentes de IA y después la revisamos una por una antes de enviarla. Es una herramienta de autoconocimiento, no una predicción."],
