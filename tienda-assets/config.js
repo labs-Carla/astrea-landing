@@ -28,7 +28,8 @@ export function apiBase(loc = globalThis.location) {
   return PRODUCCION.API_BASE;
 }
 
-// Productos reales de Hotmart (2026-10-10). `precioReferencia` es lo que
+// Productos reales de Hotmart (2026-10-10). La app los repite en astrea-API
+// app/domain/checkout_hotmart.py (pago dentro de Astrea): si cambia uno, cambiar los dos. `precioReferencia` es lo que
 // muestra la tienda; el monto que se cobra lo define Hotmart (en la moneda
 // local de quien compra) y el frontend nunca lo envía ni lo decide.
 export const CHECKOUTS = {

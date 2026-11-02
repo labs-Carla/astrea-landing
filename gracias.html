@@ -147,12 +147,35 @@
   }
 </style>
 <script>
+  // Pago DENTRO de Astrea (2026-11-02): la app abre el checkout de Hotmart en un panel
+  // (iframe). Al aprobarse el pago, Hotmart trae el panel aquí: avisamos a la app (sin
+  // datos, solo a su origen) y mostramos un cierre corto en vez de la página de la tienda.
+  (function () {
+    var enPanel = false;
+    try { enPanel = window.self !== window.top; } catch (e) { enPanel = true; }
+    if (!enPanel) return;
+    window.__astreaEnPanel = true;
+    var local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    var apps = local ? ["http://127.0.0.1:5173", "http://localhost:5173"] : ["https://app.astrea-charts.site"];
+    apps.forEach(function (origen) {
+      try { window.parent.postMessage({ tipo: "astrea-pago-recibido" }, origen); } catch (e) { /* otro origen: nada */ }
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.className = "astrea-publica";
+      document.body.innerHTML = '<main style="min-height:100vh;display:flex;flex-direction:column;align-items:center;' +
+        'justify-content:center;padding:32px;text-align:center;font-family:Georgia,serif;color:#2b2622;background:#faf6ee">' +
+        '<p style="font-size:28px;margin:0">Pago recibido ✦</p>' +
+        '<p style="font-size:16px;margin:12px 0 0;color:#6b5a48">Ya puedes volver a Astrea.</p></main>';
+    });
+  })();
+
   // Tienda (/comprar): quien ya registró su pedido ANTES de pagar vuelve aquí
   // desde Hotmart. No le pedimos los datos otra vez: lo llevamos al estado de
   // su pedido. Sin pedido de la tienda en este navegador (o con ?formulario=1)
   // sigue el formulario post-pago de siempre.
   (function () {
     try {
+      if (window.__astreaEnPanel) return;
       if (new URLSearchParams(location.search).has("formulario")) return;
       var p = JSON.parse(localStorage.getItem("astrea-tienda-pedido"));
       var vigente = p && typeof p.ordenId === "number" && Date.now() - p.creadoEn <= 14 * 864e5;
