@@ -297,3 +297,28 @@ export function cuerpoDeRegalo(d) {
 /** Qué datos extra pide cada lectura al canjearla (mismo contrato que /comprar). */
 export const extraDeProducto = (producto) =>
   ({ pack: "pack", "revolucion-solar": "revolucion_solar", compatibilidad: "segunda_persona" })[producto] || null;
+
+// ── Lectura pedida desde la app de Astrea (2026-11-02) ─────────────────────────
+// La app ya creó la orden (POST /ai/perfiles/{id}/lectura/pedido, la misma orden que
+// /carta-natal/orden) y manda a /pagar#orden=<id>&ref=<referencia>&nombre=…&email=…
+// Los datos van en el fragmento: no llegan a ningún servidor. /pagar guarda el pedido en
+// este dominio (para que /gracias lleve a /pedido al volver de Hotmart) y manda a pagar.
+export const URL_APP_CARTA = "https://app.astrea-charts.site/conversacion?ver=carta";
+
+/** El pedido que trae la app en el fragmento, o null si falta algo o no es válido. */
+export function pedidoDesdeApp(fragmento) {
+  const p = new URLSearchParams(String(fragmento ?? "").replace(/^#/, ""));
+  const ordenId = Number(p.get("orden"));
+  const referencia = p.get("ref") ?? "";
+  const nombre = (p.get("nombre") ?? "").trim();
+  const email = (p.get("email") ?? "").trim();
+  if (!Number.isInteger(ordenId) || ordenId <= 0) return null;
+  if (!/^[A-Za-z0-9_-]{16,64}$/.test(referencia)) return null;
+  if (nombre.length < LIMITES.nombreMin || nombre.length > LIMITES.textoMax) return null;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
+  return { ordenId, referencia, nombre, email };
+}
+
+/** Lo que /pagar guarda para /gracias y /pedido: un pedido de carta natal, marcado como de la app. */
+export const pedidoDeAppParaGuardar = (pedido, ahora = Date.now()) =>
+  ({ ...pedidoParaGuardar(pedido.ordenId, "carta-natal", ahora, pedido.referencia), desde: "app" });
