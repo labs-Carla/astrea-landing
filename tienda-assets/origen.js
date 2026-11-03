@@ -15,6 +15,8 @@
  */
 import { almacenSeguro } from "./compra.js";
 import { referidoActual } from "./referido.js";
+import { apiBase } from "./config.js";
+import { esEntrada, medicionApagada, cuerpoDeVista, enviarVista } from "./visita.js";
 
 export const CLAVE_ORIGEN = "astrea-origen";
 const VIGENCIA_MS = 30 * 24 * 60 * 60 * 1000;
@@ -94,6 +96,14 @@ export function registrarVisita({ location, referrer, storage, ahora = Date.now(
   return origenVigente(almacen.leer(CLAVE_ORIGEN), ahora) ?? origenDePagina(location.pathname);
 }
 
+/** Avisa la vista de esta página (métricas: visitas por canal, ver visita.js). */
+export function avisarVista({ location, referrer, storage, nav, tipoNavegacion, enviar = enviarVista }) {
+  if (nav?.webdriver || medicionApagada(location.search, storage)) return false;
+  const entrada = esEntrada(referrer, location.hostname, tipoNavegacion);
+  const origen = entrada ? origenDeVisita(location.search, referrer, location.hostname) : null;
+  return enviar(`${apiBase(location)}/visitas`, cuerpoDeVista({ pagina: location.pathname, origen, entrada, referrer }));
+}
+
 let actual = null;
 
 /** Origen de esta página (se calcula una vez). */
@@ -110,4 +120,13 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
   referidoActual();   // guarda el ?ref= de un enlace para invitar, en cualquier página de la tienda
   const src = origenActual();
   for (const a of document.querySelectorAll(`a[href^="${HOTMART}"]`)) a.href = conOrigen(a.href, src);
+  try {
+    let storage = null;
+    try { storage = window.localStorage; } catch { /* sin almacenamiento */ }
+    avisarVista({
+      location: window.location, referrer: document.referrer, nav: navigator,
+      storage: storage ?? { getItem: () => null, setItem() {}, removeItem() {} },
+      tipoNavegacion: performance.getEntriesByType?.("navigation")?.[0]?.type,
+    });
+  } catch { /* medir jamás rompe la página */ }
 }
