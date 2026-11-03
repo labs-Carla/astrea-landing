@@ -41,24 +41,69 @@ export const canalDe = (slug) => (slug === "carta-natal" || slug === "pack" ? sl
 export const tematicosElegidos = (d) => PACK_TEMATICOS.filter((t) => d[`pack_${t}`]);
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+// Mensajes para la persona, en el idioma de la página (idioma.js). El español es el de siempre.
+const MENSAJES = {
+  es: {
+    fecha: "Indica la fecha de nacimiento.", fecha1900: "La fecha no puede ser anterior a 1900.", fechaFutura: "La fecha no puede estar en el futuro.",
+    largo: "Es demasiado largo.", nombre: "Escribe el nombre que quieres en tu lectura.", nombreLargo: "El nombre es demasiado largo.",
+    email: "Revisa tu correo: ahí te enviaremos tu lectura.", hora: "Indica tu hora de nacimiento (la más aproximada que tengas).",
+    ciudad: "Indica tu ciudad de nacimiento.", pais: "Indica tu país de nacimiento.",
+    rsCiudad: "Indica la ciudad donde pasarás tu cumpleaños.", rsPais: "Indica el país donde pasarás tu cumpleaños.", rsAnio: "Elige el ciclo que quieres leer.",
+    pack: "Elige 2 lecturas temáticas.", p2Nombre: "Escribe el nombre de la otra persona.",
+    p2Hora: "Completa hora y minutos, o deja ambos vacíos si no la sabes.",
+    p2Ciudad: "Indica la ciudad de nacimiento de la otra persona.", p2Pais: "Indica su país de nacimiento.",
+    p2Consentimiento: "Necesitamos que confirmes que la otra persona aceptó compartir sus datos.",
+    e429: "Hiciste varios intentos seguidos. Espera un minuto y vuelve a intentarlo.",
+    lugar: (l) => `No encontramos «${l}». Revisa cómo está escrita o prueba con una ciudad cercana.`,
+    geo: "No pudimos verificar la ciudad en este momento. Inténtalo de nuevo en unos minutos.",
+    e400: null,
+    e422: "Algún dato no es válido. Revisa el formulario.",
+    otro: "No pudimos registrar tu pedido. Inténtalo de nuevo en unos minutos o escríbenos por WhatsApp.",
+    producto: "Elige la lectura que quieres regalar.", compradorNombre: "Escribe tu nombre.",
+    compradorEmail: "Revisa tu correo: ahí te enviaremos la tarjeta.", paraNombre: "Escribe el nombre de quien recibe el regalo.",
+    dedicatoria: (n) => `La dedicatoria puede tener hasta ${n} caracteres.`, acepto: "Necesitamos que aceptes los términos para continuar.",
+  },
+  en: {
+    fecha: "Enter the date of birth.", fecha1900: "The date can’t be earlier than 1900.", fechaFutura: "The date can’t be in the future.",
+    largo: "It’s too long.", nombre: "Write the name you want on your reading.", nombreLargo: "The name is too long.",
+    email: "Check your email address: that’s where we’ll send your reading.", hora: "Enter your time of birth (the closest you have).",
+    ciudad: "Enter your city of birth.", pais: "Enter your country of birth.",
+    rsCiudad: "Enter the city where you will spend your birthday.", rsPais: "Enter the country where you will spend your birthday.", rsAnio: "Choose the cycle you want to read.",
+    pack: "Choose 2 themed readings.", p2Nombre: "Write the other person’s name.",
+    p2Hora: "Fill in both hour and minutes, or leave both empty if you don’t know it.",
+    p2Ciudad: "Enter the other person’s city of birth.", p2Pais: "Enter their country of birth.",
+    p2Consentimiento: "Please confirm that the other person agreed to share their details.",
+    e429: "You made several attempts in a row. Wait a minute and try again.",
+    lugar: (l) => `We couldn’t find “${l}”. Check how it’s spelled or try a nearby city.`,
+    geo: "We couldn’t verify the city right now. Please try again in a few minutes.",
+    e400: "We couldn’t register your order with these details. Please check them and try again.",
+    e422: "Some of the details aren’t valid. Please check the form.",
+    otro: "We couldn’t register your order. Please try again in a few minutes or write to us on WhatsApp.",
+    producto: "Choose the reading you want to give.", compradorNombre: "Write your name.",
+    compradorEmail: "Check your email address: that’s where we’ll send the gift card.", paraNombre: "Write the name of the person receiving the gift.",
+    dedicatoria: (n) => `The dedication can be up to ${n} characters long.`, acepto: "Please accept the terms to continue.",
+  },
+};
+const mensajes = (idioma) => MENSAJES[idioma] || MENSAJES.es;
 const largo = (v) => (v || "").trim().length;
 const horaValida = (h, m) => {
   const H = Number(h), M = Number(m);
   return h !== "" && h != null && m !== "" && m != null && Number.isInteger(H) && H >= 0 && H <= 23 && Number.isInteger(M) && M >= 0 && M <= 59;
 };
 
-function validarFecha(valor, ahora) {
+function validarFecha(valor, ahora, m) {
   const fecha = valor ? new Date(`${valor}T00:00:00`) : null;
-  if (!fecha || Number.isNaN(fecha.getTime())) return "Indica la fecha de nacimiento.";
-  if (fecha.getFullYear() < LIMITES.anioMin) return "La fecha no puede ser anterior a 1900.";
-  if (fecha > ahora) return "La fecha no puede estar en el futuro.";
+  if (!fecha || Number.isNaN(fecha.getTime())) return m.fecha;
+  if (fecha.getFullYear() < LIMITES.anioMin) return m.fecha1900;
+  if (fecha > ahora) return m.fechaFutura;
   return null;
 }
 
-function validarLugar(errores, d, campoCiudad, campoPais, textoCiudad, textoPais) {
+function validarLugar(errores, d, campoCiudad, campoPais, textoCiudad, textoPais, m) {
   for (const [campo, texto] of [[campoCiudad, textoCiudad], [campoPais, textoPais]]) {
     if (largo(d[campo]) < 2) errores[campo] = texto;
-    else if (largo(d[campo]) > LIMITES.textoMax) errores[campo] = "Es demasiado largo.";
+    else if (largo(d[campo]) > LIMITES.textoMax) errores[campo] = m.largo;
   }
 }
 
@@ -70,38 +115,39 @@ export function aniosDeRevolucion(ahora = new Date()) {
 
 /**
  * Valida los datos del formulario. `extra`: null | "revolucion_solar" | "segunda_persona"
- * (catalogo.js). Devuelve {campo: mensaje} (vacío = válido).
+ * (catalogo.js). `idioma`: "es" | "en", el de los mensajes. Devuelve {campo: mensaje} (vacío = válido).
  */
-export function validarDatos(d, ahora = new Date(), extra = null) {
+export function validarDatos(d, ahora = new Date(), extra = null, idioma = "es") {
   const errores = {};
+  const m = mensajes(idioma);
 
-  if (largo(d.nombre) < LIMITES.nombreMin) errores.nombre = "Escribe el nombre que quieres en tu lectura.";
-  else if (largo(d.nombre) > LIMITES.textoMax) errores.nombre = "El nombre es demasiado largo.";
+  if (largo(d.nombre) < LIMITES.nombreMin) errores.nombre = m.nombre;
+  else if (largo(d.nombre) > LIMITES.textoMax) errores.nombre = m.nombreLargo;
 
-  if (!EMAIL.test((d.email || "").trim())) errores.email = "Revisa tu correo: ahí te enviaremos tu lectura.";
+  if (!EMAIL.test((d.email || "").trim())) errores.email = m.email;
 
-  const fecha = validarFecha(d.fecha, ahora);
+  const fecha = validarFecha(d.fecha, ahora, m);
   if (fecha) errores.fecha = fecha;
-  if (!horaValida(d.hora, d.minuto)) errores.hora = "Indica tu hora de nacimiento (la más aproximada que tengas).";
-  validarLugar(errores, d, "ciudad", "pais", "Indica tu ciudad de nacimiento.", "Indica tu país de nacimiento.");
+  if (!horaValida(d.hora, d.minuto)) errores.hora = m.hora;
+  validarLugar(errores, d, "ciudad", "pais", m.ciudad, m.pais, m);
 
   if (extra === "revolucion_solar") {
-    validarLugar(errores, d, "rs_ciudad", "rs_pais", "Indica la ciudad donde pasarás tu cumpleaños.", "Indica el país donde pasarás tu cumpleaños.");
-    if (!aniosDeRevolucion(ahora).includes(Number(d.rs_anio))) errores.rs_anio = "Elige el ciclo que quieres leer.";
+    validarLugar(errores, d, "rs_ciudad", "rs_pais", m.rsCiudad, m.rsPais, m);
+    if (!aniosDeRevolucion(ahora).includes(Number(d.rs_anio))) errores.rs_anio = m.rsAnio;
   }
 
-  if (extra === "pack" && tematicosElegidos(d).length !== 2) errores.pack = "Elige 2 lecturas temáticas.";
+  if (extra === "pack" && tematicosElegidos(d).length !== 2) errores.pack = m.pack;
 
   if (extra === "segunda_persona") {
-    if (largo(d.p2_nombre) < LIMITES.nombreMin) errores.p2_nombre = "Escribe el nombre de la otra persona.";
-    else if (largo(d.p2_nombre) > LIMITES.textoMax) errores.p2_nombre = "El nombre es demasiado largo.";
-    const f2 = validarFecha(d.p2_fecha, ahora);
+    if (largo(d.p2_nombre) < LIMITES.nombreMin) errores.p2_nombre = m.p2Nombre;
+    else if (largo(d.p2_nombre) > LIMITES.textoMax) errores.p2_nombre = m.nombreLargo;
+    const f2 = validarFecha(d.p2_fecha, ahora, m);
     if (f2) errores.p2_fecha = f2;
     // Hora opcional: vacía = desconocida; si se da, completa.
     const algunaHora = (d.p2_hora ?? "") !== "" || (d.p2_minuto ?? "") !== "";
-    if (algunaHora && !horaValida(d.p2_hora, d.p2_minuto)) errores.p2_hora = "Completa hora y minutos, o deja ambos vacíos si no la sabes.";
-    validarLugar(errores, d, "p2_ciudad", "p2_pais", "Indica la ciudad de nacimiento de la otra persona.", "Indica su país de nacimiento.");
-    if (!d.p2_consentimiento) errores.p2_consentimiento = "Necesitamos que confirmes que la otra persona aceptó compartir sus datos.";
+    if (algunaHora && !horaValida(d.p2_hora, d.p2_minuto)) errores.p2_hora = m.p2Hora;
+    validarLugar(errores, d, "p2_ciudad", "p2_pais", m.p2Ciudad, m.p2Pais, m);
+    if (!d.p2_consentimiento) errores.p2_consentimiento = m.p2Consentimiento;
   }
   return errores;
 }
@@ -165,17 +211,21 @@ export function huellaDeDatos(cuerpo) {
   return JSON.stringify([email.toLowerCase(), ciudad.toLowerCase(), pais.toLowerCase(), { ...resto, nombre: undefined }]);
 }
 
-/** Traduce la respuesta de error del backend a un mensaje para la persona. */
-export function mensajeDeError(status, detalle) {
-  if (status === 429) return "Hiciste varios intentos seguidos. Espera un minuto y vuelve a intentarlo.";
+/**
+ * Traduce la respuesta de error del backend a un mensaje para la persona. El backend
+ * responde en español: en inglés, un detalle que no reconocemos se cambia por uno genérico.
+ */
+export function mensajeDeError(status, detalle, idioma = "es") {
+  const m = mensajes(idioma);
+  if (status === 429) return m.e429;
   if (status === 400 && typeof detalle === "string") {
     const lugar = detalle.match(/No se encontr\S* la ubicaci\S* '([^']+)'/i);
-    if (lugar) return `No encontramos «${lugar[1]}». Revisa cómo está escrita o prueba con una ciudad cercana.`;
-    if (/geocodificaci/i.test(detalle)) return "No pudimos verificar la ciudad en este momento. Inténtalo de nuevo en unos minutos.";
-    return detalle;
+    if (lugar) return m.lugar(lugar[1]);
+    if (/geocodificaci/i.test(detalle)) return m.geo;
+    return m.e400 ?? detalle;
   }
-  if (status === 422) return "Algún dato no es válido. Revisa el formulario.";
-  return "No pudimos registrar tu pedido. Inténtalo de nuevo en unos minutos o escríbenos por WhatsApp.";
+  if (status === 422) return m.e422;
+  return m.otro;
 }
 
 /**
@@ -183,7 +233,7 @@ export function mensajeDeError(status, detalle) {
  * huella (guardado en `memoria`), lo reutiliza sin volver a llamar al backend.
  * `fetchImpl` y `memoria` ({get,set}) se inyectan para poder testear.
  */
-export async function crearOrden({ apiBase, cuerpo, slug = "carta-natal", fetchImpl = fetch, memoria }) {
+export async function crearOrden({ apiBase, cuerpo, slug = "carta-natal", fetchImpl = fetch, memoria, idioma = "es" }) {
   const canal = CANALES[canalDe(slug)];
   const huella = huellaDeDatos(cuerpo);
   const previa = memoria?.get(huella);
@@ -201,15 +251,15 @@ export async function crearOrden({ apiBase, cuerpo, slug = "carta-natal", fetchI
       body: JSON.stringify(cuerpo),
     });
   } catch {
-    throw new ErrorDePedido(mensajeDeError(0), { reintentable: true });
+    throw new ErrorDePedido(mensajeDeError(0, null, idioma), { reintentable: true });
   }
   let datos = null;
   try { datos = await respuesta.json(); } catch { /* cuerpo vacío o no JSON */ }
   if (!respuesta.ok) {
-    throw new ErrorDePedido(mensajeDeError(respuesta.status, datos?.detail), { reintentable: respuesta.status >= 500 || respuesta.status === 429 });
+    throw new ErrorDePedido(mensajeDeError(respuesta.status, datos?.detail, idioma), { reintentable: respuesta.status >= 500 || respuesta.status === 429 });
   }
   const ordenId = datos?.[canal.campoId];
-  if (!Number.isInteger(ordenId) || ordenId <= 0) throw new ErrorDePedido(mensajeDeError(500), { reintentable: true });
+  if (!Number.isInteger(ordenId) || ordenId <= 0) throw new ErrorDePedido(mensajeDeError(500, null, idioma), { reintentable: true });
   // Un backend anterior a astrea-API #92 no devuelve referencia: la compra sigue igual, sin consulta de estado.
   const referencia = typeof datos.referencia === "string" && datos.referencia.length >= 16 ? datos.referencia : null;
   memoria?.set(huella, { ordenId, referencia });
@@ -236,6 +286,19 @@ export const ESTADOS_PEDIDO = {
   rechazado: { titulo: "El pago no se completó", texto: "Hotmart no registró el pago. Puedes intentarlo de nuevo con el mismo pedido." },
   error: { titulo: "No pudimos consultar tu pedido", texto: "Tu pedido sigue guardado. Si tienes dudas, escríbenos por WhatsApp." },
 };
+
+export const ESTADOS_PEDIDO_EN = {
+  creado: { titulo: "Order created", texto: "We saved your details. The payment on Hotmart is still pending." },
+  pendiente: { titulo: "Payment awaiting confirmation", texto: "If you already paid on Hotmart, we’ll check the sale and confirm your order. You don’t need to send your details again." },
+  confirmado: { titulo: "Payment confirmed", texto: "Your reading is being prepared. We’ll send it to you by email." },
+  enviado: { titulo: "Your reading has been sent", texto: "We sent it to the email on your order. If you can’t find it, check your spam or promotions folder." },
+  reembolsado: { titulo: "Order refunded", texto: "The payment for this order was refunded." },
+  rechazado: { titulo: "The payment didn’t go through", texto: "Hotmart didn’t register the payment. You can try again with the same order." },
+  error: { titulo: "We couldn’t check your order", texto: "Your order is still saved. If you have questions, write to us on WhatsApp." },
+};
+
+/** Textos de los estados en el idioma de la página. */
+export const estadosPedido = (idioma = "es") => (idioma === "en" ? ESTADOS_PEDIDO_EN : ESTADOS_PEDIDO);
 
 /** Estado a mostrar a partir de lo que se sabe. Nunca deduce "confirmado" sin el backend. */
 export function estadoAMostrar({ pedido, volvioDelCheckout, estadoBackend }) {
@@ -283,17 +346,21 @@ export function almacenSeguro(storage) {
 export const LIMITE_DEDICATORIA = 300;
 
 /** Errores del formulario de /regalar ({campo: mensaje}). `productos`: los slugs regalables. */
-export function validarRegalo(d, productos) {
+export function validarRegalo(d, productos, idioma = "es") {
   const e = {};
-  if (!productos.includes(d.producto)) e.producto = "Elige la lectura que quieres regalar.";
-  if (largo(d.comprador_nombre) < LIMITES.nombreMin) e.comprador_nombre = "Escribe tu nombre.";
-  if (!EMAIL.test((d.comprador_email || "").trim())) e.comprador_email = "Revisa tu correo: ahí te enviaremos la tarjeta.";
-  if (largo(d.para_nombre) < LIMITES.nombreMin) e.para_nombre = "Escribe el nombre de quien recibe el regalo.";
-  else if (largo(d.para_nombre) > 80) e.para_nombre = "El nombre es demasiado largo.";
-  if (largo(d.dedicatoria) > LIMITE_DEDICATORIA) e.dedicatoria = `La dedicatoria puede tener hasta ${LIMITE_DEDICATORIA} caracteres.`;
-  if (!d.acepto) e.acepto = "Necesitamos que aceptes los términos para continuar.";
+  const m = mensajes(idioma);
+  if (!productos.includes(d.producto)) e.producto = m.producto;
+  if (largo(d.comprador_nombre) < LIMITES.nombreMin) e.comprador_nombre = m.compradorNombre;
+  if (!EMAIL.test((d.comprador_email || "").trim())) e.comprador_email = m.compradorEmail;
+  if (largo(d.para_nombre) < LIMITES.nombreMin) e.para_nombre = m.paraNombre;
+  else if (largo(d.para_nombre) > 80) e.para_nombre = m.nombreLargo;
+  if (largo(d.dedicatoria) > LIMITE_DEDICATORIA) e.dedicatoria = m.dedicatoria(LIMITE_DEDICATORIA);
+  if (!d.acepto) e.acepto = m.acepto;
   return e;
 }
+
+/** Mensaje de «necesitamos que aceptes los términos», en el idioma de la página. */
+export const mensajeAcepto = (idioma = "es") => mensajes(idioma).acepto;
 
 export function cuerpoDeRegalo(d) {
   const cuerpo = {

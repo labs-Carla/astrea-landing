@@ -161,12 +161,18 @@
     apps.forEach(function (origen) {
       try { window.parent.postMessage({ tipo: "astrea-pago-recibido" }, origen); } catch (e) { /* otro origen: nada */ }
     });
+    var ingles = false;
+    try {
+      var guardado = JSON.parse(localStorage.getItem("astrea-tienda-pedido"));
+      ingles = (guardado && guardado.idioma === "en") || localStorage.getItem("astrea_idioma") === "en";
+    } catch (e) { /* sin almacenamiento: español */ }
     document.addEventListener("DOMContentLoaded", function () {
       document.body.className = "astrea-publica";
+      document.documentElement.lang = ingles ? "en" : "es";
       document.body.innerHTML = '<main style="min-height:100vh;display:flex;flex-direction:column;align-items:center;' +
         'justify-content:center;padding:32px;text-align:center;font-family:Georgia,serif;color:#2b2622;background:#faf6ee">' +
-        '<p style="font-size:28px;margin:0">Pago recibido ✦</p>' +
-        '<p style="font-size:16px;margin:12px 0 0;color:#6b5a48">Ya puedes volver a Astrea.</p></main>';
+        '<p style="font-size:28px;margin:0">' + (ingles ? "Payment received ✦" : "Pago recibido ✦") + '</p>' +
+        '<p style="font-size:16px;margin:12px 0 0;color:#6b5a48">' + (ingles ? "You can go back to Astrea." : "Ya puedes volver a Astrea.") + '</p></main>';
     });
   })();
 
@@ -180,10 +186,16 @@
       if (new URLSearchParams(location.search).has("formulario")) return;
       var p = JSON.parse(localStorage.getItem("astrea-tienda-pedido"));
       var vigente = p && typeof p.ordenId === "number" && Date.now() - p.creadoEn <= 14 * 864e5;
-      if (vigente) location.replace("/pedido?retorno=hotmart");
+      // Si la compra empezó en inglés (/en/comprar), su pedido sigue en inglés.
+      // __astreaRedirigiendo: idioma-inicio.js no debe pisar esta redirección.
+      if (vigente) { window.__astreaRedirigiendo = true; if (p.idioma === "en") location.replace("/en/pedido?retorno=hotmart"); else location.replace("/pedido?retorno=hotmart"); }
     } catch (e) { /* sin almacenamiento: formulario de siempre */ }
   })();
 </script>
+<link rel="alternate" hreflang="es" href="https://astrea-charts.site/gracias">
+<link rel="alternate" hreflang="en" href="https://astrea-charts.site/en/gracias">
+<link rel="alternate" hreflang="x-default" href="https://astrea-charts.site/gracias">
+<script src="/tienda-assets/idioma-inicio.js"></script>
 <link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
@@ -193,6 +205,7 @@
 <header class="astrea-legacy__header">
   <a class="astrea-legacy__marca" href="/" aria-label="Astrea, inicio"><img src="/tienda-assets/astrea-emblema.svg" width="32" height="36" alt="">ASTREA</a>
   <nav aria-label="Explora Astrea"><a href="/reportes">Explorar lecturas</a><a href="/blog/horoscopo-semanal">Horóscopo semanal</a></nav>
+  <nav class="selector-idioma" aria-label="Idioma"><a href="/gracias" hreflang="es" lang="es" data-idioma="es" aria-current="true">ES</a><span aria-hidden="true">|</span><a href="/en/gracias" hreflang="en" lang="en" data-idioma="en">EN</a></nav>
 </header>
 <div class="wrap">
 
@@ -390,6 +403,7 @@
     }
   });
 </script>
+<script type="module" src="/tienda-assets/nav-flotante.js"></script>
 
 </body>
 </html>

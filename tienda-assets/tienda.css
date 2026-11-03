@@ -458,3 +458,7 @@
   .pago-panel__hoja { max-width: 640px; height: min(92dvh, 860px); border-radius: 24px; }
   .pago-panel__cabecera { padding-top: 16px; padding-inline: 24px; }
 }
+
+/* Inglés: «Your reading is written in Spanish.» junto al precio y en las tarjetas de la portada. */
+.precio small.precio__idioma { margin-top: 2px; color: var(--gold-deep); font-style: italic; }
+.tarjeta-portada__idioma { display: block; margin-top: .45em; font-size: .92em; font-style: italic; opacity: .9; }

@@ -5,16 +5,19 @@
  * Si falla o todavía no hay semana publicada, queda la versión estática.
  */
 const raiz = document.querySelector("[data-cielo-semana]");
+const enIngles = document.documentElement.lang.startsWith("en");   // el blog está en español
 
 async function cargar() {
   const respuesta = await fetch("/blog/horoscopo-semanal/portada.json", { headers: { Accept: "application/json" } });
   if (!respuesta.ok) return;
   const semana = await respuesta.json();
   const campo = (nombre) => raiz.querySelector(`[data-cs="${nombre}"]`);
-  campo("eyebrow").textContent = `Horóscopo semanal · Semana ${semana.numero}`;
+  campo("eyebrow").textContent = enIngles ? `Weekly horoscope · Week ${semana.numero} · in Spanish` : `Horóscopo semanal · Semana ${semana.numero}`;
   campo("rango").textContent = semana.rango;
   campo("titulo").textContent = semana.titulo;
   campo("resumen").textContent = semana.resumen;
+  // En la portada en inglés, lo que viene del blog se marca como español (lectores de pantalla).
+  if (enIngles) for (const c of ["rango", "titulo", "resumen"]) campo(c).lang = "es";
   campo("url").href = semana.url;
   // SVG generado por astrea-API solo a partir de números y glifos fijos.
   campo("rueda").innerHTML = semana.rueda_svg;

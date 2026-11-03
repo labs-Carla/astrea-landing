@@ -16,6 +16,8 @@ import { validarSuscripcion, cuerpoSuscripcion, mensajeDeSuscripcion, suscribir,
 import { tokenDeBaja, darDeBaja } from "../tienda-assets/baja.js";
 import { limpiarOrigen, origenDeVisita, origenVigente, origenDePagina, conOrigen, conOrigenApp, origenConocido, registrarVisita, CLAVE_ORIGEN } from "../tienda-assets/origen.js";
 
+const leerRepo = (archivo) => readFileSync(new URL(`../${archivo}`, import.meta.url), "utf8");
+
 const validos = { nombre: "Ana López", email: "ana@example.com", fecha: "1990-05-17", hora: "8", minuto: "5", ciudad: "Bogotá", pais: "Colombia" };
 
 // ---------------------------------------------------------------- validación
@@ -224,12 +226,13 @@ test("cada página de reporte lleva a su compra y cada compra trae sus campos", 
 test("SEO básico y navegación en cada página", () => {
   for (const [ruta, html] of Object.entries(PAGINAS)) {
     if (!ruta.endsWith(".html")) continue;
-    assert.match(html, /<html lang="es">/, ruta);
+    const en = ruta.startsWith("en/");
+    assert.match(html, en ? /<html lang="en">/ : /<html lang="es">/, ruta);
     assert.match(html, /<title>[^<]{10,}<\/title>/, ruta);
     assert.match(html, /<meta name="description" content="[^"]{20,}">/, ruta);
     assert.equal((html.match(/<h1[ >]/g) || []).length, 1, `${ruta}: un solo h1`);
-    for (const enlace of ['href="/reportes"', 'href="/como-funciona"', 'href="/sobre-astrea"', 'href="/preguntas-frecuentes"']) {
-      assert.ok(html.includes(enlace), `${ruta} enlaza ${enlace}`);
+    for (const enlace of ["/reportes", "/como-funciona", "/sobre-astrea", "/preguntas-frecuentes"]) {
+      assert.ok(html.includes(`href="${en ? "/en" : ""}${enlace}"`), `${ruta} enlaza ${enlace}`);
     }
   }
   assert.match(PAGINAS["pedido.html"], /noindex/);
@@ -325,12 +328,14 @@ test("portada en capítulos: orden del embudo, sin CDN y funciona si falla el JS
 
 test("menú flotante: el mismo en todas las páginas con header, también /universo", () => {
   const enlaces = (html) => [...html.match(/<nav class="site-nav"[\s\S]*?<\/nav>/)[0].matchAll(/<a href="([^"]+)"/g)].map((m) => m[1]);
-  const base = enlaces(PAGINAS["index.html"]);
-  assert.equal(base.length, 7, "los 7 enlaces del menú");
-  const universo = readFileSync(new URL("../universo.html", import.meta.url), "utf8");
-  for (const [ruta, html] of [...Object.entries(PAGINAS).filter(([r]) => r.endsWith(".html")), ["universo.html", universo]]) {
-    assert.deepEqual(enlaces(html), base, ruta);
-    for (const marca of ['class="isla-nav"', 'btn btn-metal btn--gold btn--sm" href="/reportes"', "/tienda-assets/nav-flotante.css", "/tienda-assets/nav-flotante.js"]) assert.ok(html.includes(marca), `${ruta}: ${marca}`);
+  const base = { es: enlaces(PAGINAS["index.html"]), en: enlaces(PAGINAS["en/index.html"]) };
+  assert.equal(base.es.length, 7, "los 7 enlaces del menú");
+  assert.deepEqual(base.en, base.es.map((h) => (h.startsWith("/blog") ? h : h === "/" ? "/en/" : `/en${h}`)), "el menú en inglés lleva a /en/, salvo el blog");
+  const universo = leerRepo("universo.html");
+  for (const [ruta, html] of [...Object.entries(PAGINAS).filter(([r]) => r.endsWith(".html")), ["universo.html", universo], ["en/universo.html", leerRepo("en/universo.html")]]) {
+    const en = ruta.startsWith("en/");
+    assert.deepEqual(enlaces(html), base[en ? "en" : "es"], ruta);
+    for (const marca of ['class="isla-nav"', `btn btn-metal btn--gold btn--sm" href="${en ? "/en" : ""}/reportes"`, "/tienda-assets/nav-flotante.css", "/tienda-assets/nav-flotante.js"]) assert.ok(html.includes(marca), `${ruta}: ${marca}`);
     assert.match(html, /<body class="[^"]*\bglass glass--oro\b/, ruta);
   }
 });
@@ -653,4 +658,241 @@ test("la orden y el regalo mandan su canal aunque no acepten correos", () => {
     assert.match(codigo, /^\s*cuerpo\.origen = origenActual\(\);/m, archivo);
     assert.doesNotMatch(codigo, /if \(cuerpo\.acepta_correos\) cuerpo\.origen/, archivo);
   }
+});
+
+// ── Idiomas: español en su ruta, inglés bajo /en/ (2026-11-03) ─────────────────
+import vm from "node:vm";
+import { rutaEnIdioma, conIdiomaApp, idiomaDePagina, marcaDeIdioma, CLAVE_IDIOMA } from "../tienda-assets/idioma.js";
+import { REPORTES_EN, AVISO_IDIOMA } from "../tienda-assets/catalogo-en.js";
+import { reporteEnIdioma } from "../tienda-assets/catalogo.js";
+import { estadosPedido, ESTADOS_PEDIDO } from "../tienda-assets/compra.js";
+import { CONSENTIMIENTO_EN } from "../tienda-assets/lista.js";
+
+// Páginas a mano con versión en inglés (las demás bilingües salen del generador).
+const A_MANO = ["universo.html", "carta.html", "gracias.html", "pagar.html"];
+// Páginas sin versión en inglés, a propósito.
+const SOLO_ES = ["ejemplo.html", "contacto.html", "link.html", "link-gratis.html", "reporte.html", "reporte-impresion.html", "proximamente.html"];
+const ruta = (archivo) => "/" + archivo.replace(/^en\//, "").replace(/(^|\/)index\.html$/, "").replace(/\.html$/, "");
+const paresBilingues = () => [
+  ...Object.keys(PAGINAS).filter((a) => a.endsWith(".html") && !a.startsWith("en/") && !SOLO_ES.includes(a)),
+  ...A_MANO,
+].map((es) => [es, `en/${es}`]);
+const html = (archivo) => PAGINAS[archivo] ?? leerRepo(archivo);
+const hreflang = (h, idioma) => h.match(new RegExp(`<link rel="alternate" hreflang="${idioma}" href="([^"]+)">`))?.[1];
+
+/** Texto que ve la persona: sin scripts, estilos, comentarios ni SVG, más los atributos que se leen (alt, aria-label…). */
+function textoVisible(h) {
+  let s = h.replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<style[\s\S]*?<\/style>/g, " ").replace(/<!--[\s\S]*?-->/g, " ").replace(/<svg[\s\S]*?<\/svg>/g, " ");
+  const atributos = [...s.matchAll(/\s(?:alt|aria-label|placeholder|title)="([^"]*)"/g)].map((m) => m[1]);
+  return `${s.replace(/<[^>]+>/g, " ")} ${atributos.join(" ")}`.replace(/\s+/g, " ");
+}
+
+test("idioma: rutas /en/ con el mismo slug, y la vuelta al español", () => {
+  assert.equal(rutaEnIdioma("/", "en"), "/en/");
+  assert.equal(rutaEnIdioma("/reportes/carta-natal", "en"), "/en/reportes/carta-natal");
+  assert.equal(rutaEnIdioma("/pedido?retorno=hotmart", "en"), "/en/pedido?retorno=hotmart");
+  assert.equal(rutaEnIdioma("/universo#generador", "en"), "/en/universo#generador");
+  assert.equal(rutaEnIdioma("/en/", "es"), "/");
+  assert.equal(rutaEnIdioma("/en/comprar/amor?cupon=X", "es"), "/comprar/amor?cupon=X");
+  assert.equal(rutaEnIdioma("/reportes", "es"), "/reportes");
+  assert.equal(idiomaDePagina({ documentElement: { lang: "en" } }), "en");
+  assert.equal(idiomaDePagina({ documentElement: { lang: "es" } }), "es");
+  assert.equal(idiomaDePagina(undefined), "es");
+  assert.deepEqual(marcaDeIdioma("en"), { idioma: "en" });
+  assert.deepEqual(marcaDeIdioma("es"), {}, "los pedidos en español no cambian de forma");
+  assert.equal(CLAVE_IDIOMA, "astrea_idioma", "la misma clave que la app");
+});
+
+test("idioma: cada página bilingüe tiene su /en/ con lang=en y hreflang recíproco", () => {
+  for (const [es, en] of paresBilingues()) {
+    const hes = html(es), hen = html(en);
+    assert.match(hes, /<html lang="es">/, es);
+    assert.match(hen, /<html lang="en">/, en);
+    for (const h of [hes, hen]) {
+      assert.equal(hreflang(h, "es"), `https://astrea-charts.site${ruta(es)}`, `${es}: hreflang es`);
+      assert.equal(hreflang(h, "en"), `https://astrea-charts.site${ruta(es) === "/" ? "/en/" : `/en${ruta(es)}`}`, `${en}: hreflang en`);
+      assert.equal(hreflang(h, "x-default"), hreflang(h, "es"), "x-default = español");
+      assert.ok(h.indexOf('hreflang="en"') < h.indexOf("/tienda-assets/idioma-inicio.js"), `${es}: la detección corre después de los hreflang`);
+    }
+  }
+  for (const solo of ["ejemplo.html"]) assert.equal(hreflang(PAGINAS[solo], "en"), undefined, `${solo} no tiene versión en inglés`);
+  assert.equal(PAGINAS["en/ejemplo.html"], undefined);
+});
+
+test("idioma: el sitemap lista las dos versiones y robots cubre /en/", () => {
+  const mapa = PAGINAS["sitemap.xml"];
+  for (const u of ["/", "/reportes", "/reportes/amor", "/universo", "/terminos", "/privacidad"]) {
+    const en = u === "/" ? "/en/" : `/en${u}`;
+    assert.ok(mapa.includes(`<loc>https://astrea-charts.site${u}</loc>`), u);
+    assert.ok(mapa.includes(`<loc>https://astrea-charts.site${en}</loc>`), en);
+    assert.ok(mapa.includes(`hreflang="en" href="https://astrea-charts.site${en}"`), `${en} alterno`);
+  }
+  assert.ok(!mapa.includes("/en/ejemplo") && !mapa.includes("/en/comprar"));
+  for (const d of ["Disallow: /en/comprar/", "Disallow: /en/pedido"]) assert.ok(PAGINAS["robots.txt"].includes(d), d);
+});
+
+test("idioma: las páginas en inglés no dejan textos en español a la vista", () => {
+  const PALABRAS = /\b(tu|tus|lectura|lecturas|carta natal|correo|nacimiento|fecha|hora|reportes?|pedido|ciudad|país|inicio|cómo|qué|datos|pago|comprar|regalar|regalo|canjear|también|aquí|gratis|elige|ver|volver|cumpleaños|pareja|términos|privacidad|próximamente|muy pronto)\b/i;
+  for (const [, en] of paresBilingues()) {
+    const texto = textoVisible(html(en)).replace(/astrea-charts\.site\/\S*/g, "").replace(/Guías Astrológicas/g, "");
+    assert.doesNotMatch(texto, /[áéíóúñ¿¡]/i, `${en}: tildes o signos del español`);
+    assert.doesNotMatch(texto, PALABRAS, `${en}: ${texto.match(PALABRAS)?.[0]}`);
+    assert.doesNotMatch(texto, /coming soon|available soon|launching soon/i, `${en}: sin promesas`);
+  }
+});
+
+test("idioma: el inglés vende las mismas lecturas y dice que están escritas en español", () => {
+  assert.equal(AVISO_IDIOMA, "Your reading is written in Spanish.");
+  for (const r of DISPONIBLES) {
+    const ficha = PAGINAS[`en/reportes/${r.slug}.html`], compra = PAGINAS[`en/comprar/${r.slug}.html`];
+    assert.ok(ficha.includes(`${CHECKOUTS[r.slug].precioReferencia}<small>You pay in your local currency with Hotmart</small><small class="precio__idioma">${AVISO_IDIOMA}</small>`), `${r.slug}: aviso junto al precio`);
+    assert.ok(compra.includes(AVISO_IDIOMA) && compra.includes("written in Spanish, and I accept"), `${r.slug}: aviso en la compra`);
+    assert.match(compra, new RegExp(`data-reporte="${r.slug}"`), "el mismo formulario y el mismo reporte");
+    assert.ok(compra.includes('src="/tienda-assets/comprar.js"'), "el mismo flujo de compra (mismo endpoint y sck)");
+    assert.ok(PAGINAS["en/index.html"].includes(`href="/en/comprar/${r.slug}"`), `portada en inglés compra ${r.slug}`);
+  }
+  for (const f of ["en/index.html", "en/reportes.html", "en/regalar.html", "en/canjear.html", "en/preguntas-frecuentes.html", "en/universo.html", "en/carta.html", "en/gracias.html"]) {
+    assert.ok(html(f).includes("written in Spanish"), `${f} avisa el idioma de la lectura`);
+  }
+  assert.ok(!PAGINAS["en/reportes/tu-2027.html"].includes('href="/en/comprar/tu-2027"'), "lo que no se vende tampoco en inglés");
+  assert.ok(leerRepo("tienda-assets/comprar.js").includes("AVISO_IDIOMA"), "el resumen del pedido lo repite");
+});
+
+test("idioma: catálogo en inglés completo, con los mismos slugs y precios", () => {
+  const CAMPOS = ["tarjeta", "nombre", "categoria", "eyebrow", "resumen", "descripcion", "explora", "idealPara", "incluye", "datos", "nota"];
+  assert.deepEqual(Object.keys(REPORTES_EN).sort(), REPORTES.map((r) => r.slug).sort());
+  for (const r of REPORTES) {
+    const en = reporteEnIdioma(r, "en");
+    assert.equal(en.slug, r.slug); assert.equal(en.portada, r.portada); assert.equal(en.extra, r.extra);
+    for (const c of CAMPOS) {
+      if (r[c] === undefined) continue;
+      assert.ok(REPORTES_EN[r.slug][c] !== undefined, `${r.slug}.${c} sin traducir`);
+      if (Array.isArray(r[c])) assert.equal(en[c].length, r[c].length, `${r.slug}.${c}: mismos ítems`);
+    }
+    assert.equal(reporteEnIdioma(r, "es"), r, "en español, el de siempre");
+  }
+  for (const r of DISPONIBLES) assert.ok(PAGINAS[`en/reportes/${r.slug}.html`].includes(CHECKOUTS[r.slug].precioReferencia), `${r.slug}: mismo precio`);
+});
+
+test("idioma: los enlaces a la app llevan lang=en desde las páginas en inglés", () => {
+  assert.equal(conIdiomaApp("https://app.astrea-charts.site/entrar?modo=crear", "en"), "https://app.astrea-charts.site/entrar?modo=crear&lang=en");
+  assert.equal(conIdiomaApp("https://app.astrea-charts.site/carta", "en"), "https://app.astrea-charts.site/carta?lang=en");
+  assert.equal(conIdiomaApp("https://app.astrea-charts.site/carta", "es"), "https://app.astrea-charts.site/carta");
+  assert.equal(conIdiomaApp("https://pay.hotmart.com/X", "en"), "https://pay.hotmart.com/X", "solo la app");
+  for (const [, en] of paresBilingues()) {
+    for (const [, href] of html(en).matchAll(/href="(https:\/\/app\.astrea-charts\.site[^"]*)"/g)) {
+      assert.match(href.replace(/&amp;/g, "&"), /[?&]lang=en(&|$)/, `${en}: ${href}`);
+    }
+  }
+  assert.match(leerRepo("tienda-assets/pedido.js"), /conIdiomaApp\(URL_APP_CARTA, idioma\)/, "«Back to Astrea» del pedido");
+});
+
+test("idioma: el blog (en español) se enlaza desde inglés diciendo que está en español", () => {
+  for (const [, en] of paresBilingues()) {
+    for (const [a] of html(en).matchAll(/<a [^>]*href="\/blog[^"]*"[^>]*>/g)) assert.match(a, /hreflang="es"/, `${en}: ${a}`);
+  }
+  assert.ok(PAGINAS["en/index.html"].includes("Weekly horoscope (in Spanish)"));
+});
+
+test("idioma: selector ES | EN siempre visible, con la página equivalente", () => {
+  for (const [es, en] of paresBilingues()) {
+    if (es === "pagar.html") continue;                     // de paso hacia Hotmart, sin header
+    for (const [archivo, propio] of [[es, "es"], [en, "en"]]) {
+      const sel = html(archivo).match(/<nav class="selector-idioma"[\s\S]*?<\/nav>/)?.[0];
+      assert.ok(sel, `${archivo}: selector`);
+      const enlaces = Object.fromEntries([...sel.matchAll(/<a href="([^"]+)"[^>]*data-idioma="(es|en)"/g)].map((m) => [m[2], m[1]]));
+      assert.deepEqual(enlaces, { es: ruta(es), en: ruta(es) === "/" ? "/en/" : `/en${ruta(es)}` }, archivo);
+      assert.match(sel, new RegExp(`data-idioma="${propio}" aria-current="true"`), `${archivo}: marca el idioma actual`);
+    }
+  }
+  assert.ok(PAGINAS["ejemplo.html"].includes('<a href="/en/" hreflang="en"'), "sin versión en inglés, EN lleva a la portada en inglés");
+  const js = leerRepo("tienda-assets/nav-flotante.js");
+  assert.match(js, /localStorage\.setItem\("astrea_idioma", enlace\.dataset\.idioma\)/, "guarda la elección");
+  assert.match(leerRepo("tienda-assets/nav-flotante.css"), /\.selector-idioma/);
+});
+
+// La detección (idioma-inicio.js) corre en un contexto falso, como en el navegador.
+function detectar({ lang = "es", alterno = "/en/reportes", guardado = null, auto = null, navegador = "en-US", ua = "Mozilla/5.0", webdriver = false, pathname = "/reportes", search = "", hash = "" } = {}) {
+  const sesion = { ...(auto ? { astrea_idioma_auto: auto } : {}) };
+  let destino = null;
+  const contexto = {
+    document: { documentElement: { lang }, querySelector: (sel) => (alterno && sel.includes('hreflang="en"') ? { getAttribute: () => `https://astrea-charts.site${alterno}` } : null) },
+    navigator: { languages: [navegador], language: navegador, userAgent: ua, webdriver },
+    localStorage: { getItem: (k) => (k === "astrea_idioma" ? guardado : null) },
+    sessionStorage: { getItem: (k) => sesion[k] ?? null, setItem: (k, v) => { sesion[k] = v; } },
+    location: { href: `https://astrea-charts.site${pathname}${search}${hash}`, pathname, search, hash, replace: (u) => { destino = u; } },
+    URL,
+  };
+  contexto.window = contexto;
+  vm.runInNewContext(leerRepo("tienda-assets/idioma-inicio.js"), contexto);
+  return { destino, sesion };
+}
+
+test("idioma: al entrar, un navegador en inglés va UNA vez a /en/; la elección guardada manda", () => {
+  assert.equal(detectar().destino, "/en/reportes", "navegador en inglés, sin elección");
+  assert.equal(detectar().sesion.astrea_idioma_auto, "1", "queda marcado: no se repite en la sesión");
+  assert.equal(detectar({ auto: "1" }).destino, null, "solo una vez por sesión");
+  assert.equal(detectar({ navegador: "es-CO" }).destino, null, "navegador en español");
+  assert.equal(detectar({ navegador: "pt-BR" }).destino, null, "otro idioma: español");
+  assert.equal(detectar({ guardado: "es" }).destino, null, "eligió español con el selector");
+  assert.equal(detectar({ guardado: "en", navegador: "es-CO", auto: "1" }).destino, "/en/reportes", "eligió inglés: siempre en inglés");
+  assert.equal(detectar({ lang: "en", pathname: "/en/reportes" }).destino, null, "una página en inglés nunca lleva al español");
+  assert.equal(detectar({ alterno: null }).destino, null, "sin versión en inglés no hay a dónde ir");
+  for (const ua of ["Googlebot/2.1", "Mozilla/5.0 (compatible; bingbot/2.0)", "facebookexternalhit/1.1", "WhatsApp/2.23", "HeadlessChrome/120"]) {
+    assert.equal(detectar({ ua }).destino, null, ua);
+  }
+  assert.equal(detectar({ webdriver: true }).destino, null, "navegador automatizado (E2E)");
+  assert.equal(detectar({ pathname: "/pagar", alterno: "/en/pagar", hash: "#orden=7&ref=x" }).destino, "/en/pagar#orden=7&ref=x", "conserva el fragmento de /pagar");
+  assert.equal(detectar({ search: "?cupon=PLUS25", pathname: "/comprar/amor", alterno: "/en/comprar/amor" }).destino, "/en/comprar/amor?cupon=PLUS25");
+});
+
+test("idioma: la compra en inglés vuelve en inglés a /pedido, también desde /gracias", () => {
+  const gracias = leerRepo("gracias.html");
+  assert.match(gracias, /p\.idioma === "en"\) location\.replace\("\/en\/pedido\?retorno=hotmart"\)/, "/gracias lleva a /en/pedido");
+  assert.ok(gracias.indexOf("__astreaRedirigiendo = true") < gracias.indexOf('location.replace("/en/pedido'), "la detección no pisa esa redirección");
+  assert.ok(gracias.indexOf("location.replace(\"/pedido?retorno=hotmart\")") < gracias.indexOf("/tienda-assets/idioma-inicio.js"), "la redirección del pedido corre antes que la detección");
+  assert.match(leerRepo("tienda-assets/idioma-inicio.js"), /__astreaEnPanel \|\| global\.__astreaRedirigiendo/);
+  assert.match(leerRepo("en/gracias.html"), /location\.replace\("\/en\/pedido\?retorno=hotmart"\)/);
+  assert.match(leerRepo("en/gracias.html"), /carta-natal\/compra/, "el mismo formulario post-pago");
+  for (const f of ["comprar.js", "regalar.js", "pagar.js"]) assert.match(leerRepo(`tienda-assets/${f}`), /marcaDeIdioma\(/, `${f} guarda el idioma del pedido`);
+  assert.match(leerRepo("tienda-assets/pago-panel.js"), /rutaEnIdioma\("\/pedido\?retorno=hotmart", idiomaDePagina\(\)\)/);
+  assert.equal(origenDePagina("/en/universo"), "universo", "el origen no cambia por el idioma");
+  assert.equal(origenDePagina("/en/comprar/amor"), "tienda");
+});
+
+test("idioma: mensajes de error y estados en inglés", async () => {
+  const e = validarDatos({ nombre: "A", email: "x", fecha: "", hora: "", minuto: "", ciudad: "", pais: "" }, new Date(), null, "en");
+  for (const m of Object.values(e)) assert.doesNotMatch(m, /[áéíóúñ¿¡]|\b(tu|la|el|de)\b/, m);
+  assert.equal(validarDatos({ ...validos, pack_amor: true }, new Date(), "pack", "en").pack, "Choose 2 themed readings.");
+  assert.match(mensajeDeError(400, "No se encontró la ubicación 'Bogta'", "en"), /We couldn’t find “Bogta”/);
+  assert.doesNotMatch(mensajeDeError(400, "Detalle del backend en español", "en"), /español/, "un detalle del backend no se muestra en inglés");
+  assert.equal(mensajeDeError(400, "Detalle del backend", "es"), "Detalle del backend", "en español, como siempre");
+  assert.match(mensajeDeError(429, null, "en"), /Wait a minute/);
+  const f = fetchFalso([{ status: 422, body: {} }]);
+  await assert.rejects(crearOrden({ apiBase: "http://api", cuerpo: cuerpoDeOrden(validos), fetchImpl: f, memoria: new Map(), idioma: "en" }), /Some of the details/);
+  assert.deepEqual(Object.keys(estadosPedido("en")), Object.keys(ESTADOS_PEDIDO));
+  assert.equal(estadosPedido("es"), ESTADOS_PEDIDO);
+  assert.ok(Object.keys(validarRegalo({}, ["amor"], "en")).length && Object.values(validarRegalo({}, ["amor"], "en")).every((m) => !/[áéíóú]/.test(m)));
+  assert.match(mensajeDeSuscripcion(200, "ana@example.com", "en").texto, /written in Spanish/);
+  assert.match(mensajeDeSuscripcion(429, "x", "en").texto, /^You made/);
+  assert.match((await darDeBaja({ token: "t".repeat(32), base: "x", idioma: "en", fetchImpl: async () => ({ ok: true, status: 200 }) })).texto, /^Done/);
+  for (const f of ["pago-panel.js", "pedido.js", "comprar.js", "regalar.js", "canjear.js", "baja.js", "lista.js"]) {
+    assert.match(leerRepo(`tienda-assets/${f}`), /idiomaDePagina\(\)/, `${f} usa el idioma de la página`);
+  }
+});
+
+test("idioma: consentimiento de correos en inglés en /en/ (el backend guarda la versión en español)", () => {
+  assert.ok(leerRepo("en/universo.html").includes(CONSENTIMIENTO_EN));
+  assert.ok(PAGINAS["en/comprar/carta-natal.html"].includes(CONSENTIMIENTO_EN));
+  assert.ok(!PAGINAS["en/comprar/carta-natal.html"].includes(CONSENTIMIENTO), "sin el texto en español");
+  assert.ok(PAGINAS["comprar/carta-natal.html"].includes(CONSENTIMIENTO), "el español no cambia");
+});
+
+test("idioma: términos y privacidad en inglés son traducción marcada para revisión legal", () => {
+  for (const f of ["en/terminos.html", "en/privacidad.html"]) {
+    assert.match(PAGINAS[f], /PENDIENTE: traducción fiel[^>]*revisión legal/, f);
+    assert.match(PAGINAS[f], /the Spanish version prevails/, f);
+  }
+  assert.ok(PAGINAS["en/terminos.html"].includes('id="reembolsos"') && PAGINAS["en/terminos.html"].includes("7 calendar days"));
+  assert.ok(!PAGINAS["terminos.html"].includes("PENDIENTE"), "el español no lleva la marca");
 });

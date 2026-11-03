@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Astrea · Go to payment</title>
+<link rel="alternate" hreflang="es" href="https://astrea-charts.site/pagar">
+<link rel="alternate" hreflang="en" href="https://astrea-charts.site/en/pagar">
+<link rel="alternate" hreflang="x-default" href="https://astrea-charts.site/pagar">
+<script src="/tienda-assets/idioma-inicio.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --cream: #F7F3E9; --gold: #8B6F47; --ink: #2A2520; --ink-soft: #5A5249; --line: rgba(198, 167, 94, 0.45); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { min-height: 100dvh; display: grid; place-items: center; padding: 24px 16px; background: var(--cream); color: var(--ink); font-family: "DM Sans", system-ui, sans-serif; }
+  main { width: 100%; max-width: 30rem; text-align: center; }
+  .marca { font-family: "Cormorant Garamond", serif; font-size: 18px; letter-spacing: 0.45em; }
+  h1 { margin-top: 28px; font-family: "Cormorant Garamond", serif; font-weight: 500; font-size: 34px; line-height: 1.1; }
+  p { margin-top: 12px; color: var(--ink-soft); line-height: 1.6; }
+  .giro { width: 22px; height: 22px; margin: 22px auto 0; border: 2px solid var(--line); border-top-color: var(--gold); border-radius: 50%; animation: giro 0.9s linear infinite; }
+  @keyframes giro { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .giro { animation: none; } }
+  a { color: var(--gold); text-underline-offset: 3px; }
+  .boton { display: inline-block; margin-top: 22px; padding: 12px 26px; border-radius: 999px; background: var(--ink); color: var(--cream); text-decoration: none; }
+</style>
+</head>
+<body>
+<main>
+  <div class="marca">ASTREA</div>
+  <section data-pagar-cargando>
+    <h1>Taking you to payment</h1>
+    <p>Your order is already registered with your chart details. Now you pay on Hotmart, Astrea’s secure payment. Your reading is written in Spanish.</p>
+    <div class="giro" role="status" aria-label="Opening the payment"></div>
+    <noscript><p>Turn on JavaScript to continue, or write to us on <a href="https://wa.me/573132137456">WhatsApp</a>.</p></noscript>
+  </section>
+  <section data-pagar-error hidden>
+    <h1>We couldn’t open your order</h1>
+    <p>Go back to your chart in Astrea and tap the button for your reading again. If it still doesn’t work, write to us on <a href="https://wa.me/573132137456">WhatsApp</a>.</p>
+    <a class="boton" href="https://app.astrea-charts.site/conversacion?ver=carta&amp;lang=en">Back to my chart</a>
+  </section>
+</main>
+<script type="module" src="/tienda-assets/pagar.js"></script>
+</body>
+</html>

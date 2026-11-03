@@ -14,7 +14,19 @@
  *
  * Sin dependencias; los textos van con textContent (nada se interpreta como HTML).
  */
+import { idiomaDePagina, rutaEnIdioma } from "./idioma.js";
+
 const AVISO_PAGO = "astrea-pago-recibido";
+
+// Textos del panel en el idioma de la página.
+const TEXTOS = {
+  es: { eyebrow: "Astrea · pago seguro", precio: (p) => `${p} · lo procesa Hotmart, sin salir de Astrea`, cerrar: "Cerrar el pago",
+        cargando: "Abriendo el pago seguro…", marco: (n) => `Pago de «${n}» con Hotmart`, noCarga: "¿No carga el pago? ",
+        pestana: "Ábrelo en una pestaña nueva", volver: " y vuelve aquí cuando termines.", gracias: "¡Gracias! Recibimos tu pago. Te llevamos a tu pedido…" },
+  en: { eyebrow: "Astrea · secure payment", precio: (p) => `${p} · processed by Hotmart, without leaving Astrea`, cerrar: "Close the payment",
+        cargando: "Opening the secure payment…", marco: (n) => `Payment for “${n}” with Hotmart`, noCarga: "Payment not loading? ",
+        pestana: "Open it in a new tab", volver: " and come back here when you’re done.", gracias: "Thank you! We received your payment. Taking you to your order…" },
+};
 
 function crear(tag, clase, texto) {
   const n = document.createElement(tag);
@@ -28,6 +40,7 @@ function crear(tag, clase, texto) {
  * Devuelve una función que lo cierra.
  */
 export function abrirPagoEnPanel({ url, nombre, precio = "", alPagar = irAlPedido, alCerrar = () => {} }) {
+  const tx = TEXTOS[idiomaDePagina()];
   const anteriorFoco = document.activeElement;
   const fondo = crear("div", "pago-panel");
   const hoja = crear("div", "pago-panel__hoja");
@@ -37,32 +50,32 @@ export function abrirPagoEnPanel({ url, nombre, precio = "", alPagar = irAlPedid
 
   const cabecera = crear("header", "pago-panel__cabecera");
   const textos = crear("div", "pago-panel__textos");
-  textos.append(crear("p", "pago-panel__eyebrow", "Astrea · pago seguro"));
+  textos.append(crear("p", "pago-panel__eyebrow", tx.eyebrow));
   const titulo = crear("h2", "pago-panel__titulo", nombre);
   titulo.id = "pago-panel-titulo";
   textos.append(titulo);
-  if (precio) textos.append(crear("p", "pago-panel__precio", `${precio} · lo procesa Hotmart, sin salir de Astrea`));
+  if (precio) textos.append(crear("p", "pago-panel__precio", tx.precio(precio)));
   const cerrar = crear("button", "pago-panel__cerrar", "✕");
   cerrar.type = "button";
-  cerrar.setAttribute("aria-label", "Cerrar el pago");
+  cerrar.setAttribute("aria-label", tx.cerrar);
   cabecera.append(textos, cerrar);
 
   const cuerpo = crear("div", "pago-panel__cuerpo");
-  const cargando = crear("p", "pago-panel__cargando", "Abriendo el pago seguro…");
+  const cargando = crear("p", "pago-panel__cargando", tx.cargando);
   cargando.setAttribute("role", "status");
   const marco = crear("iframe", "pago-panel__marco");
-  marco.title = `Pago de «${nombre}» con Hotmart`;
+  marco.title = tx.marco(nombre);
   marco.allow = "payment";
   marco.src = url;
   marco.addEventListener("load", () => cargando.remove(), { once: true });
   cuerpo.append(cargando, marco);
 
-  const pie = crear("p", "pago-panel__pie", "¿No carga el pago? ");
-  const enlace = crear("a", "", "Ábrelo en una pestaña nueva");
+  const pie = crear("p", "pago-panel__pie", tx.noCarga);
+  const enlace = crear("a", "", tx.pestana);
   enlace.href = url;
   enlace.target = "_blank";
   enlace.rel = "noopener noreferrer";
-  pie.append(enlace, " y vuelve aquí cuando termines.");
+  pie.append(enlace, tx.volver);
 
   hoja.append(cabecera, cuerpo, pie);
   fondo.append(hoja);
@@ -71,7 +84,7 @@ export function abrirPagoEnPanel({ url, nombre, precio = "", alPagar = irAlPedid
   function alRecibir(e) {
     if (e.origin !== window.location.origin || e.source !== marco.contentWindow || e.data?.tipo !== AVISO_PAGO) return;
     pagado = true;
-    cuerpo.replaceChildren(crear("p", "pago-panel__cargando", "¡Gracias! Recibimos tu pago. Te llevamos a tu pedido…"));
+    cuerpo.replaceChildren(crear("p", "pago-panel__cargando", tx.gracias));
     pie.remove();
     alPagar();
   }
@@ -95,5 +108,5 @@ export function abrirPagoEnPanel({ url, nombre, precio = "", alPagar = irAlPedid
 }
 
 export function irAlPedido() {
-  window.location.assign("/pedido?retorno=hotmart");
+  window.location.assign(rutaEnIdioma("/pedido?retorno=hotmart", idiomaDePagina()));
 }

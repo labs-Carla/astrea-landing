@@ -182,3 +182,34 @@ genera nada y se le pide marcarla. Sin correo, la carta gratis funciona como sie
 - `origen` = el `src` de `origen.js` (canal que trajo a la persona).
 - `/baja?t=<token>` (generada, `noindex`): el enlace de cada correo. Abrirla NO da de baja (los filtros de correo
   abren enlaces solos); la persona confirma con el botón → `POST /lista/baja/{token}`.
+
+## Idiomas: español e inglés (desde 2026-11-03)
+
+- **URLs.** El español sigue en sus rutas de siempre; el inglés vive bajo `/en/` con **los mismos slugs**
+  (`/en/`, `/en/reportes/carta-natal`, `/en/comprar/carta-natal`, `/en/universo`…). Mantener los slugs hace que
+  cambiar de idioma sea solo agregar o quitar `/en` (`rutaEnIdioma` en `tienda-assets/idioma.js`), sin tablas de
+  equivalencias que mantener; Google trata cada versión como su propia página gracias a `hreflang`.
+- **Generadas.** `scripts/generar-tienda.mjs` arma cada página con `construir("es")` y `construir("en")`: textos
+  `t("español", "English")`, rutas internas con `R()`. El catálogo en inglés está en `tienda-assets/catalogo-en.js`
+  (`reporteEnIdioma`). Las dos versiones llevan `<html lang>`, `hreflang` es/en/x-default (x-default = español),
+  `og:locale` y el sitemap lista las dos. `/ejemplo` queda solo en español.
+- **A mano.** `universo.html`, `carta.html`, `gracias.html` y `pagar.html` tienen su copia en `en/`. Sin versión en
+  inglés (a propósito): `/contacto` (ya es bilingüe), `/link`, `/link-gratis`, `/reporte*`, `/ejemplo`, `/proximamente`.
+- **Selector ES | EN.** En `.header-acciones` del menú flotante (también `universo.html`) y en el header de
+  `/carta` y `/gracias`. Sin JS es un enlace a la página equivalente; `nav-flotante.js` además guarda la elección en
+  `localStorage.astrea_idioma` (la misma clave de la app). **El blog (`app/templates/blog/base.html` en astrea-API)
+  repite el menú y todavía no tiene el selector.**
+- **Detección.** `tienda-assets/idioma-inicio.js` (script clásico en el `<head>`, después de los `hreflang`): en una
+  página en español con versión en inglés, si la persona eligió inglés la lleva a `/en/…`; si no eligió nada y su
+  navegador está en inglés, la lleva **una vez por sesión**. Nunca a bots ni navegadores automatizados, nunca de
+  inglés a español, y conserva `?…` y `#…` (`/pagar#orden=…`). Sin JS no hace nada.
+- **Las lecturas siguen en español.** El inglés vende las mismas lecturas, al mismo precio, y lo dice con
+  `AVISO_IDIOMA` = «Your reading is written in Spanish.»: junto al precio, en la ficha, en el paso de revisión
+  (casilla de términos y resumen), en la portada y en las preguntas frecuentes.
+- **Compra en inglés.** Mismo formulario, mismo endpoint y mismo `sck`. El pedido guardado lleva `idioma: "en"`, y
+  `/gracias` (adonde vuelve Hotmart) lleva entonces a `/en/pedido`. Los mensajes de error y estados salen en el
+  idioma de la página (`document.documentElement.lang`). Los enlaces a la app llevan `lang=en` (`conIdiomaApp`).
+- **Pendientes.** Parámetro de idioma del checkout de Hotmart (no verificado en su documentación: no se envía
+  ninguno); traducción de términos y privacidad marcada para revisión legal; el backend guarda el consentimiento de
+  correos en español (`CONSENTIMIENTO_V1`) aunque la página en inglés muestre `CONSENTIMIENTO_EN`; la carta gratis
+  manda `X-Idioma: en`, pero sus interpretaciones llegan en español hasta que el backend las traduzca.

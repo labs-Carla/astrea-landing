@@ -211,3 +211,7 @@
   .pie__gigante-trazo path { stroke-width: .75; }
   .pie__gigante-luz { stroke-width: .6; }
 }
+
+/* Selector ES | EN en el header de las páginas antiguas (/carta, /gracias). */
+.astrea-legacy__header .selector-idioma { flex-direction: row; gap: 0; margin-left: auto; }
+.astrea-legacy__header .selector-idioma a { min-width: 36px; text-decoration: none; }

@@ -75,7 +75,8 @@ export function origenVigente(guardado, ahora) {
 
 /** Página por la que pasó, para cuando no hay otro origen: `/` y la tienda → `tienda`. */
 export function origenDePagina(pathname) {
-  const primera = String(pathname ?? "").split("/").filter(Boolean)[0] ?? "";
+  const partes = String(pathname ?? "").split("/").filter(Boolean);
+  const primera = (partes[0] === "en" ? partes[1] : partes[0]) ?? "";   // /en/universo cuenta como universo
   const pagina = limpiarOrigen(primera.replace(/\.html$/, ""));
   return ["link", "link-gratis", "universo", "carta", "gracias"].includes(pagina) ? pagina : "tienda";
 }

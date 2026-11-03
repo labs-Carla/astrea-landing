@@ -18,6 +18,7 @@
  * Entrega de todos: PDF por correo en 24–48 h tras confirmar el pago. La carta
  * natal se genera con el flujo de siempre; los otros 6 se preparan a mano.
  */
+import { REPORTES_EN, ENTREGA_EN } from "./catalogo-en.js";
 
 const INCLUYE_COMUN = [
   "Reporte personalizado en PDF",
@@ -235,3 +236,14 @@ export function reportePorSlug(slug) {
 
 /** Temáticos que se pueden elegir en el pack (mismo contrato que astrea-API PACK_TEMATICOS). */
 export const PACK_TEMATICOS = ["amor", "vocacion", "dinero", "patrones"];
+
+// ── Inglés (2026-11-03): mismos reportes, textos de catalogo-en.js ─────────────
+
+/** El reporte con sus textos en el idioma pedido (slug, portada, extra… no cambian). */
+export function reporteEnIdioma(reporte, idioma = "es") {
+  if (!reporte || idioma !== "en") return reporte;
+  return { ...reporte, ...(REPORTES_EN[reporte.slug] || {}) };
+}
+
+/** Texto de entrega por defecto en el idioma pedido. */
+export const entregaEnIdioma = (idioma = "es") => (idioma === "en" ? ENTREGA_EN : ENTREGA);

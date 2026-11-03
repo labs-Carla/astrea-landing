@@ -28,7 +28,8 @@ createServer(async (req, res) => {
   if (redir) { res.writeHead(redir.permanent ? 308 : 307, { Location: redir.destination }); return res.end(); }
 
   const limpia = normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, "");
-  const candidatos = limpia.endsWith("/") ? [join(limpia, "index.html")] : [limpia, `${limpia}.html`];
+  // /en/ y /en sirven en/index.html, como el índice de carpeta de Vercel.
+  const candidatos = limpia.endsWith("/") ? [join(limpia, "index.html")] : [limpia, `${limpia}.html`, join(limpia, "index.html")];
   for (const c of candidatos) {
     const archivo = join(RAIZ, c);
     if (!archivo.startsWith(RAIZ)) break;

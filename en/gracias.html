@@ -1,0 +1,399 @@
+<!--
+  ═══════════════════════════════════════════════════════════
+  ASTREA CHARTS · FORMULARIO DE DATOS NATALES (versión en inglés, /en/gracias)
+  ═══════════════════════════════════════════════════════════
+
+  PENDIENTE:
+  1. Reemplazar GOOGLE_SCRIPT_URL con la URL de tu Web App de
+     Google Apps Script (ver instrucciones al final del chat).
+  2. En Hotmart: configurar la "página de agradecimiento" del
+     producto para que redirija aquí (formulario.html).
+  ═══════════════════════════════════════════════════════════
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrea Charts · Your birth details</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF8F2;
+    --gold: #C6A75E;
+    --ink: #2A2520;
+    --ink-soft: #5A5249;
+    --hairline: rgba(198, 167, 94, 0.35);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 32px 20px 48px;
+  }
+  .wrap { max-width: 440px; margin: 0 auto; }
+  header { text-align: center; padding: 8px 0 24px; }
+  .brand-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 36px;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+  }
+  .brand-sub {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 6px;
+  }
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    text-align: center;
+    margin: 20px 0 8px;
+  }
+  .intro-text {
+    text-align: center;
+    font-size: 14px;
+    color: var(--ink-soft);
+    max-width: 340px;
+    margin: 0 auto 28px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    display: block;
+  }
+  input {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--hairline);
+    padding: 12px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  select {
+    background: transparent;
+    border: 1px solid var(--hairline);
+    padding: 12px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  select:focus { outline: none; border-color: var(--gold); }
+  .time-row {
+    display: flex;
+    gap: 8px;
+  }
+  .time-row select {
+    flex: 1;
+    min-width: 0;
+  }
+  .hint {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    opacity: 0.8;
+  }
+  button {
+    margin-top: 8px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  button:hover { background: var(--gold); color: var(--ink); }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+  #status {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 18px;
+    display: none;
+  }
+  #status.success { color: #4a7a4a; }
+  #status.error { color: #a33; }
+  .disclaimer {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    opacity: 0.75;
+    text-align: center;
+    margin-top: 28px;
+    line-height: 1.5;
+  }
+</style>
+<script>
+  // Pago DENTRO de Astrea (2026-11-02): la app abre el checkout de Hotmart en un panel
+  // (iframe). Al aprobarse el pago, Hotmart trae el panel aquí: avisamos a la app (sin
+  // datos, solo a su origen) y mostramos un cierre corto en vez de la página de la tienda.
+  (function () {
+    var enPanel = false;
+    try { enPanel = window.self !== window.top; } catch (e) { enPanel = true; }
+    if (!enPanel) return;
+    window.__astreaEnPanel = true;
+    var local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    // La app (astrea-API PagoHotmart.jsx) o la propia tienda (tienda-assets/pago-panel.js).
+    var apps = (local ? ["http://127.0.0.1:5173", "http://localhost:5173"] : ["https://app.astrea-charts.site"]).concat(location.origin);
+    apps.forEach(function (origen) {
+      try { window.parent.postMessage({ tipo: "astrea-pago-recibido" }, origen); } catch (e) { /* otro origen: nada */ }
+    });
+    var ingles = true;   // /en/gracias: siempre en inglés
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.className = "astrea-publica";
+      document.body.innerHTML = '<main style="min-height:100vh;display:flex;flex-direction:column;align-items:center;' +
+        'justify-content:center;padding:32px;text-align:center;font-family:Georgia,serif;color:#2b2622;background:#faf6ee">' +
+        '<p style="font-size:28px;margin:0">' + (ingles ? "Payment received ✦" : "Pago recibido ✦") + '</p>' +
+        '<p style="font-size:16px;margin:12px 0 0;color:#6b5a48">' + (ingles ? "You can go back to Astrea." : "Ya puedes volver a Astrea.") + '</p></main>';
+    });
+  })();
+
+  // Tienda (/comprar): quien ya registró su pedido ANTES de pagar vuelve aquí
+  // desde Hotmart. No le pedimos los datos otra vez: lo llevamos al estado de
+  // su pedido. Sin pedido de la tienda en este navegador (o con ?formulario=1)
+  // sigue el formulario post-pago de siempre.
+  (function () {
+    try {
+      if (window.__astreaEnPanel) return;
+      if (new URLSearchParams(location.search).has("formulario")) return;
+      var p = JSON.parse(localStorage.getItem("astrea-tienda-pedido"));
+      var vigente = p && typeof p.ordenId === "number" && Date.now() - p.creadoEn <= 14 * 864e5;
+      if (vigente) { window.__astreaRedirigiendo = true; location.replace("/en/pedido?retorno=hotmart"); }
+    } catch (e) { /* sin almacenamiento: formulario de siempre */ }
+  })();
+</script>
+<link rel="alternate" hreflang="es" href="https://astrea-charts.site/gracias">
+<link rel="alternate" hreflang="en" href="https://astrea-charts.site/en/gracias">
+<link rel="alternate" hreflang="x-default" href="https://astrea-charts.site/gracias">
+<script src="/tienda-assets/idioma-inicio.js"></script>
+<link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
+</head>
+<body class="astrea-publica astrea-legacy" data-pagina="gracias">
+<header class="astrea-legacy__header">
+  <a class="astrea-legacy__marca" href="/en/" aria-label="Astrea, home"><img src="/tienda-assets/astrea-emblema.svg" width="32" height="36" alt="">ASTREA</a>
+  <nav aria-label="Explore Astrea"><a href="/en/reportes">Explore readings</a><a href="/blog/horoscopo-semanal" hreflang="es">Weekly horoscope (in Spanish)</a></nav>
+  <nav class="selector-idioma" aria-label="Language"><a href="/gracias" hreflang="es" lang="es" data-idioma="es">ES</a><span aria-hidden="true">|</span><a href="/en/gracias" hreflang="en" lang="en" data-idioma="en" aria-current="true">EN</a></nav>
+</header>
+<div class="wrap">
+
+  <header>
+    <div class="brand-main">ASTREA</div>
+    <div class="brand-sub">— Charts —</div>
+  </header>
+
+  <h1 class="intro-title">Thank you for choosing Astrea</h1>
+  <p class="intro-text">Now fill in your birth details so we can prepare your Birth Chart Reading. You’ll receive your PDF by email within 24–48 hours after your payment is confirmed. Your reading is written in Spanish.</p>
+
+  <form id="natalForm">
+    <div>
+      <label for="nombre_reporte">Name for your reading</label>
+      <input type="text" id="nombre_reporte" name="nombre_reporte" placeholder="How would you like your name to appear?" required>
+      <div class="hint">It can be your full name, a short one or whichever you’d like to read in your PDF.</div>
+    </div>
+
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+      <div class="hint">Use the same email you used to buy on Hotmart.</div>
+    </div>
+
+    <div>
+      <label for="fecha">Date of birth</label>
+      <input type="date" id="fecha" name="fecha" required>
+    </div>
+
+    <div>
+      <label for="hora_h">Time of birth</label>
+      <div class="time-row">
+        <select id="hora_h" name="hora_h" required>
+          <option value="">Hour</option>
+          <option value="12">12</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+        </select>
+        <select id="hora_m" name="hora_m" required>
+          <option value="">Min</option>
+          <option value="00">00</option>
+          <option value="01">01</option>
+          <option value="02">02</option>
+          <option value="03">03</option>
+          <option value="04">04</option>
+          <option value="05">05</option>
+          <option value="06">06</option>
+          <option value="07">07</option>
+          <option value="08">08</option>
+          <option value="09">09</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+          <option value="21">21</option>
+          <option value="22">22</option>
+          <option value="23">23</option>
+          <option value="24">24</option>
+          <option value="25">25</option>
+          <option value="26">26</option>
+          <option value="27">27</option>
+          <option value="28">28</option>
+          <option value="29">29</option>
+          <option value="30">30</option>
+          <option value="31">31</option>
+          <option value="32">32</option>
+          <option value="33">33</option>
+          <option value="34">34</option>
+          <option value="35">35</option>
+          <option value="36">36</option>
+          <option value="37">37</option>
+          <option value="38">38</option>
+          <option value="39">39</option>
+          <option value="40">40</option>
+          <option value="41">41</option>
+          <option value="42">42</option>
+          <option value="43">43</option>
+          <option value="44">44</option>
+          <option value="45">45</option>
+          <option value="46">46</option>
+          <option value="47">47</option>
+          <option value="48">48</option>
+          <option value="49">49</option>
+          <option value="50">50</option>
+          <option value="51">51</option>
+          <option value="52">52</option>
+          <option value="53">53</option>
+          <option value="54">54</option>
+          <option value="55">55</option>
+          <option value="56">56</option>
+          <option value="57">57</option>
+          <option value="58">58</option>
+          <option value="59">59</option>
+        </select>
+        <select id="hora_ampm" name="hora_ampm" required>
+          <option value="">AM/PM</option>
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+      </div>
+      <div class="hint">If you don’t know it exactly, use the closest time you have.</div>
+    </div>
+
+    <div>
+      <label for="ciudad">City of birth</label>
+      <input type="text" id="ciudad" name="ciudad" placeholder="E.g.: London" required>
+    </div>
+    
+    <div>
+      <label for="pais">Country of birth</label>
+      <input type="text" id="pais" name="pais" placeholder="E.g.: United Kingdom" required>
+    </div>
+
+    <button type="submit" id="submitBtn">Send my details</button>
+  </form>
+
+  <p id="status"></p>
+
+  <p class="disclaimer">Your details are used only to prepare your astrological reading and are not shared with third parties.</p>
+
+</div>
+
+<script>
+  const API_BASE = "https://astrea-api-production.up.railway.app/api/v1";
+
+  const form = document.getElementById('natalForm');
+  const statusEl = document.getElementById('status');
+  const btn = document.getElementById('submitBtn');
+
+  function convertirA24Horas(hora12, ampm) {
+    let hora = parseInt(hora12, 10);
+    if (ampm === 'AM') {
+      if (hora === 12) hora = 0;
+    } else {
+      if (hora !== 12) hora += 12;
+    }
+    return String(hora).padStart(2, '0');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    const hora24 = convertirA24Horas(form.hora_h.value, form.hora_ampm.value);
+    const fechaHoraLocal = `${form.fecha.value}T${hora24}:${form.hora_m.value}:00`;
+
+    const data = {
+      nombre: form.nombre_reporte.value,
+      email: form.email.value,
+      fecha_hora_local: fechaHoraLocal,
+      ciudad: form.ciudad.value,
+      pais: form.pais.value,
+    };
+
+    try {
+      const respuesta = await fetch(`${API_BASE}/carta-natal/compra`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (!respuesta.ok) {
+        const error = await respuesta.json();
+        throw new Error(error.detail || 'Server error');
+      }
+
+      statusEl.textContent = 'Done! We received your details. Your reading will reach your inbox within 24–48 hours after your payment is confirmed.';
+      statusEl.className = 'success';
+      statusEl.style.display = 'block';
+      form.style.display = 'none';
+    } catch (err) {
+      statusEl.textContent = 'Something went wrong sending your details. Write to us on WhatsApp at +57 313 213 7456.';
+      statusEl.className = 'error';
+      statusEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Send my details';
+      console.error(err);
+    }
+  });
+</script>
+<script type="module" src="/tienda-assets/nav-flotante.js"></script>
+
+</body>
+</html>
