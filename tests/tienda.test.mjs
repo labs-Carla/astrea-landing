@@ -956,7 +956,7 @@ test("/en/universo: sin generador ni lista; la carta gratis en inglés es la de 
     assert.ok(!en.includes(marca), `sin ${marca}`);
   }
   assert.ok(!en.includes("The interpretation of your free chart is written in Spanish."), "ya no hay interpretación en español que avisar");
-  assert.match(en, /<section class="sheet sheet--light sheet--lift" id="generador"[\s\S]*?class="shell gen"[\s\S]*?class="gen__form-col"[\s\S]*?class="gen__figure"/, "la sección conserva su diseño de dos columnas");
+  assert.match(en, /<section class="sheet sheet--light sheet--lift" id="generador"[\s\S]*?class="shell gen"[\s\S]*?class="gen__form-col[^"]*"[\s\S]*?class="gen__figure"/, "la sección conserva su diseño de dos columnas");
   const aApp = [...en.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)/g)].filter(([, , txt]) => /free chart|Create for free/i.test(txt));
   assert.ok(aApp.length >= 3, "hero, sección y precio");
   for (const [, href, txt] of aApp) assert.equal(href, APP_CARTA_EN, txt);
