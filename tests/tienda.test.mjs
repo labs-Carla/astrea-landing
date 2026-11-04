@@ -669,7 +669,8 @@ import { estadosPedido, ESTADOS_PEDIDO } from "../tienda-assets/compra.js";
 import { CONSENTIMIENTO_EN } from "../tienda-assets/lista.js";
 
 // Páginas a mano con versión en inglés (las demás bilingües salen del generador).
-const A_MANO = ["universo.html", "carta.html", "gracias.html", "pagar.html"];
+// /carta no tiene copia: /en/carta lleva a la carta gratis de la app en inglés (vercel.json).
+const A_MANO = ["universo.html", "gracias.html", "pagar.html"];
 // Páginas sin versión en inglés, a propósito.
 const SOLO_ES = ["ejemplo.html", "contacto.html", "link.html", "link-gratis.html", "reporte.html", "reporte-impresion.html", "proximamente.html"];
 const ruta = (archivo) => "/" + archivo.replace(/^en\//, "").replace(/(^|\/)index\.html$/, "").replace(/\.html$/, "");
@@ -751,7 +752,7 @@ test("idioma: el inglés vende las mismas lecturas y dice que están escritas en
     assert.ok(compra.includes('src="/tienda-assets/comprar.js"'), "el mismo flujo de compra (mismo endpoint y sck)");
     assert.ok(PAGINAS["en/index.html"].includes(`href="/en/comprar/${r.slug}"`), `portada en inglés compra ${r.slug}`);
   }
-  for (const f of ["en/index.html", "en/reportes.html", "en/regalar.html", "en/canjear.html", "en/preguntas-frecuentes.html", "en/universo.html", "en/carta.html", "en/gracias.html"]) {
+  for (const f of ["en/index.html", "en/reportes.html", "en/regalar.html", "en/canjear.html", "en/preguntas-frecuentes.html", "en/universo.html", "en/gracias.html"]) {
     assert.ok(html(f).includes("written in Spanish"), `${f} avisa el idioma de la lectura`);
   }
   assert.ok(!PAGINAS["en/reportes/tu-2027.html"].includes('href="/en/comprar/tu-2027"'), "lo que no se vende tampoco en inglés");
@@ -873,7 +874,8 @@ test("idioma: mensajes de error y estados en inglés", async () => {
   assert.deepEqual(Object.keys(estadosPedido("en")), Object.keys(ESTADOS_PEDIDO));
   assert.equal(estadosPedido("es"), ESTADOS_PEDIDO);
   assert.ok(Object.keys(validarRegalo({}, ["amor"], "en")).length && Object.values(validarRegalo({}, ["amor"], "en")).every((m) => !/[áéíóú]/.test(m)));
-  assert.match(mensajeDeSuscripcion(200, "ana@example.com", "en").texto, /written in Spanish/);
+  assert.match(mensajeDeSuscripcion(200, "ana@example.com", "en").texto, /^We sent “Your Big 3 explained” to ana@example\.com\./);
+  assert.doesNotMatch(mensajeDeSuscripcion(200, "ana@example.com", "en").texto, /Spanish/, "el Big 3 llega en inglés");
   assert.match(mensajeDeSuscripcion(429, "x", "en").texto, /^You made/);
   assert.match((await darDeBaja({ token: "t".repeat(32), base: "x", idioma: "en", fetchImpl: async () => ({ ok: true, status: 200 }) })).texto, /^Done/);
   for (const f of ["pago-panel.js", "pedido.js", "comprar.js", "regalar.js", "canjear.js", "baja.js", "lista.js"]) {
@@ -881,7 +883,7 @@ test("idioma: mensajes de error y estados en inglés", async () => {
   }
 });
 
-test("idioma: consentimiento de correos en inglés en /en/ (el backend guarda la versión en español)", () => {
+test("idioma: consentimiento de correos en inglés en /en/ (el backend guarda el del idioma de la página)", () => {
   assert.ok(leerRepo("en/universo.html").includes(CONSENTIMIENTO_EN));
   assert.ok(PAGINAS["en/comprar/carta-natal.html"].includes(CONSENTIMIENTO_EN));
   assert.ok(!PAGINAS["en/comprar/carta-natal.html"].includes(CONSENTIMIENTO), "sin el texto en español");
@@ -895,4 +897,53 @@ test("idioma: términos y privacidad en inglés son traducción marcada para rev
   }
   assert.ok(PAGINAS["en/terminos.html"].includes('id="reembolsos"') && PAGINAS["en/terminos.html"].includes("7 calendar days"));
   assert.ok(!PAGINAS["terminos.html"].includes("PENDIENTE"), "el español no lleva la marca");
+});
+
+test("lista: manda X-Idioma para que el backend guarde el consentimiento y envíe el Big 3 en ese idioma", async () => {
+  const cabeceras = [];
+  const fetchImpl = async (_url, op) => { cabeceras.push(op.headers); return { status: 200 }; };
+  await suscribir({ base: "http://api", cuerpo: { email: "ana@example.com" }, fetchImpl, idioma: "en" });
+  await suscribir({ base: "http://api", cuerpo: { email: "ana@example.com" }, fetchImpl });
+  assert.equal(cabeceras[0]["X-Idioma"], "en");
+  assert.equal(cabeceras[1]["X-Idioma"], "es");
+  assert.equal(cabeceras[0]["Content-Type"], "application/json");
+  assert.doesNotMatch(leerRepo("tienda-assets/lista.js"), /backend guarda CONSENTIMIENTO_V1 \(español\)/);
+  assert.doesNotMatch(leerRepo("en/universo.html"), /PDF, written in Spanish/, "el Big 3 ya no se anuncia en español");
+});
+
+test("/en/carta lleva a la carta gratis de la app en inglés; /carta sigue en español", () => {
+  const vercel = JSON.parse(leerRepo("vercel.json"));
+  const r = vercel.redirects.find((x) => x.source === "/en/carta");
+  assert.equal(r?.destination, "https://app.astrea-charts.site/carta?lang=en");
+  assert.throws(() => leerRepo("en/carta.html"), "sin copia en inglés de /carta");
+  const carta = leerRepo("carta.html");
+  assert.match(carta, /<html lang="es">/);
+  assert.ok(!carta.includes('hreflang="en" href="https://astrea-charts.site/en/carta"'), "sin hreflang hacia una redirección");
+  assert.ok(!carta.includes("/tienda-assets/idioma-inicio.js"), "sin alterno, sin detección");
+  assert.match(carta, /data-idioma="es" aria-current="true"/);
+  assert.ok(carta.includes('<a href="https://app.astrea-charts.site/carta?lang=en" hreflang="en" lang="en" data-idioma="en">EN</a>'), "EN lleva a la app");
+  assert.match(leerRepo("scripts/servidor-local.mjs"), /vercel\.redirects/, "el servidor local aplica los redirects");
+  assert.match(leerRepo("tienda-assets/nav-flotante.js"), /destino\.origin === location\.origin/, "el selector no reescribe enlaces a la app");
+  for (const [, en] of paresBilingues()) assert.ok(!/href="\/en\/carta"/.test(html(en)), `${en} no enlaza /en/carta`);
+});
+
+test("correcciones del español: privacidad, /universo y /carta", () => {
+  for (const f of ["privacidad.html", "en/privacidad.html"]) {
+    assert.ok(PAGINAS[f].includes('href="mailto:guiasastrologicas@gmail.com"'), f);
+    assert.ok(!PAGINAS[f].includes("guiasastrologica@"), `${f}: sin el correo mal escrito`);
+  }
+  for (const f of ["universo.html", "en/universo.html"]) {
+    const h = leerRepo(f);
+    assert.ok(!/Testimonio pendiente|Nombre pendiente|data-placeholder|id="testimonios"/.test(h), `${f}: sin testimonios de relleno`);
+    assert.ok(!/llegar[aá]n pronto|coming soon/i.test(h), `${f}: sin promesas`);
+    assert.ok(!/despu[eé]s de tu compra|after your purchase/i.test(h), `${f}: el plazo se cuenta desde el pago`);
+  }
+  assert.ok(leerRepo("universo.html").includes("Entre 24 y 48 horas después de confirmar tu pago"));
+  assert.ok(leerRepo("universo.html").includes('href="/reportes/revolucion-solar">Revolución solar</a>'), "la revolución solar se vende y se enlaza");
+  assert.ok(leerRepo("en/universo.html").includes('href="/en/reportes/revolucion-solar">Solar return</a>'));
+  for (const f of ["carta.html", "link-gratis.html"]) {
+    const h = leerRepo(f);
+    assert.ok(!/max="\d{4}-\d{2}-\d{2}"/.test(h.match(/<input type="date" id="fg_fecha"[^>]*>/)[0]), `${f}: sin fecha máxima fija`);
+    assert.match(h, /getElementById\("fg_fecha"\)\.max=/, `${f}: la máxima es hoy`);
+  }
 });

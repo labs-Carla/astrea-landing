@@ -9,8 +9,9 @@
  * Contrato: {nombre, email, fecha_hora_local, ciudad, pais, consentimiento: true, origen}
  *   200 {status:"recibido"} (igual si el correo ya estaba) · 400 lugar · 422 datos · 429 · 502 correo caído.
  *
- * El texto del consentimiento que ve la persona debe ser el mismo que guarda el
- * backend (app/domain/lista_correos.CONSENTIMIENTO_V1).
+ * Cabecera X-Idioma: es|en (idioma de la página). El texto del consentimiento que
+ * ve la persona debe ser el mismo que guarda el backend para ese idioma
+ * (app/domain/lista_correos: CONSENTIMIENTO_V1 en español, su versión en inglés).
  */
 import { apiBase } from "./config.js";
 import { origenActual } from "./origen.js";
@@ -20,8 +21,8 @@ export const CONSENTIMIENTO =
   "Acepto recibir correos de Astrea con contenido astrológico, novedades y ofertas. " +
   "Puedo darme de baja cuando quiera desde cualquier correo.";
 
-// Traducción que ven las páginas en inglés. El backend guarda CONSENTIMIENTO_V1 (español):
-// pendiente que guarde también esta versión (o el idioma) para que el registro sea exacto.
+// Lo que aceptan las páginas en inglés. suscribir() manda X-Idioma, y el backend guarda el texto
+// exacto del idioma de la página (este, en inglés) y envía el Big 3 en ese idioma.
 export const CONSENTIMIENTO_EN =
   "I agree to receive emails from Astrea with astrology content, news and offers. " +
   "I can unsubscribe at any time from any email.";
@@ -40,7 +41,7 @@ const TEXTOS = {
   en: {
     email: "Check your email address: that’s where we’ll send your Big 3.",
     consentimiento: "Tick the box to receive your Big 3 by email.",
-    ok: (email) => `We sent “Your Big 3 explained” to ${email}. It’s written in Spanish. If it lands in Promotions, drag it to your inbox so you don’t miss the next ones.`,
+    ok: (email) => `We sent “Your Big 3 explained” to ${email}. If it lands in Promotions, drag it to your inbox so you don’t miss the next ones.`,
     429: "You made several requests in a row. Wait a minute and ask for your Big 3 again.",
     400: "We couldn’t find that place, so we couldn’t send you your Big 3.",
     502: "We couldn’t send you the email right now. Please try again in a few minutes.",
@@ -74,7 +75,9 @@ export function mensajeDeSuscripcion(status, email, idioma = "es") {
 export async function suscribir({ base = apiBase(), cuerpo, fetchImpl = fetch, idioma = "es" }) {
   try {
     const r = await fetchImpl(`${base}/lista/suscribir`, {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo),
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Idioma": idioma === "en" ? "en" : "es" },
+      body: JSON.stringify(cuerpo),
     });
     return mensajeDeSuscripcion(r.status, cuerpo.email, idioma);
   } catch {

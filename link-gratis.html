@@ -1434,7 +1434,8 @@
 
       <div class="campo">
         <label for="fg_fecha">Fecha de nacimiento</label>
-        <input type="date" id="fg_fecha" name="fecha" min="1900-01-01" max="2026-07-18" required>
+        <input type="date" id="fg_fecha" name="fecha" min="1900-01-01" required>
+        <script>/* La fecha máxima es hoy (hora local de quien visita). */(function(){var d=new Date(),c=function(n){return String(n).padStart(2,"0")};document.getElementById("fg_fecha").max=d.getFullYear()+"-"+c(d.getMonth()+1)+"-"+c(d.getDate());})();</script>
       </div>
 
       <div class="campo">

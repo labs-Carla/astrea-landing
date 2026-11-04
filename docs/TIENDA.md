@@ -193,8 +193,12 @@ genera nada y se le pide marcarla. Sin correo, la carta gratis funciona como sie
   `t("español", "English")`, rutas internas con `R()`. El catálogo en inglés está en `tienda-assets/catalogo-en.js`
   (`reporteEnIdioma`). Las dos versiones llevan `<html lang>`, `hreflang` es/en/x-default (x-default = español),
   `og:locale` y el sitemap lista las dos. `/ejemplo` queda solo en español.
-- **A mano.** `universo.html`, `carta.html`, `gracias.html` y `pagar.html` tienen su copia en `en/`. Sin versión en
+- **A mano.** `universo.html`, `gracias.html` y `pagar.html` tienen su copia en `en/`. Sin versión en
   inglés (a propósito): `/contacto` (ya es bilingüe), `/link`, `/link-gratis`, `/reporte*`, `/ejemplo`, `/proximamente`.
+- **`/en/carta` → app.** `/carta` usa `/carta-natal/resumen`, que interpreta con IA en español. En inglés, la carta
+  gratis es la de la app, con textos fijos: `vercel.json` redirige `/en/carta` a
+  `https://app.astrea-charts.site/carta?lang=en` (el servidor local aplica los mismos redirects). `/carta` sigue en
+  español, sin `hreflang` ni detección, y su EN lleva a la app.
 - **Selector ES | EN.** En `.header-acciones` del menú flotante (también `universo.html`) y en el header de
   `/carta` y `/gracias`. Sin JS es un enlace a la página equivalente; `nav-flotante.js` además guarda la elección en
   `localStorage.astrea_idioma` (la misma clave de la app). **El blog (`app/templates/blog/base.html` en astrea-API)
@@ -210,6 +214,7 @@ genera nada y se le pide marcarla. Sin correo, la carta gratis funciona como sie
   `/gracias` (adonde vuelve Hotmart) lleva entonces a `/en/pedido`. Los mensajes de error y estados salen en el
   idioma de la página (`document.documentElement.lang`). Los enlaces a la app llevan `lang=en` (`conIdiomaApp`).
 - **Pendientes.** Parámetro de idioma del checkout de Hotmart (no verificado en su documentación: no se envía
-  ninguno); traducción de términos y privacidad marcada para revisión legal; el backend guarda el consentimiento de
-  correos en español (`CONSENTIMIENTO_V1`) aunque la página en inglés muestre `CONSENTIMIENTO_EN`; la carta gratis
-  manda `X-Idioma: en`, pero sus interpretaciones llegan en español hasta que el backend las traduzca.
+  ninguno); traducción de términos y privacidad marcada para revisión legal; la carta gratis de `/en/universo` manda
+  `X-Idioma: en`, pero sus interpretaciones llegan en español (la página lo dice) hasta que el backend las traduzca.
+- **Lista en inglés.** `lista.js` manda `X-Idioma: en|es` a `POST /lista/suscribir`: el backend guarda el texto
+  exacto del consentimiento en ese idioma (`CONSENTIMIENTO_EN` en inglés) y envía el Big 3 en ese idioma.

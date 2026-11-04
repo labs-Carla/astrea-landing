@@ -5,6 +5,11 @@
       "source": "/proximamente",
       "destination": "/universo",
       "permanent": false
+    },
+    {
+      "source": "/en/carta",
+      "destination": "https://app.astrea-charts.site/carta?lang=en",
+      "permanent": false
     }
   ],
   "rewrites": [

@@ -24,7 +24,7 @@ for (const enlace of document.querySelectorAll(".selector-idioma a[data-idioma]"
     try { localStorage.setItem("astrea_idioma", enlace.dataset.idioma); } catch { /* sin almacenamiento */ }
     if (enlace.getAttribute("aria-current")) { e.preventDefault(); return; }
     const destino = new URL(enlace.href, location.href);
-    if (!destino.search && !destino.hash) {
+    if (destino.origin === location.origin && !destino.search && !destino.hash) {
       e.preventDefault();
       location.assign(destino.pathname + location.search + location.hash);
     }
