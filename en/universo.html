@@ -94,10 +94,10 @@
       <h1 class="h-display reveal" id="hero-titulo">Know your sky.<br><em>Begin with you.</em></h1>
       <p class="lede lede--light reveal">Your birth chart is a unique map of the sky at the moment you were born. A guide to understand yourself, make better decisions and live more in tune with who you are.</p>
       <div class="hero__actions reveal">
-        <a class="btn btn--gold" href="#generador">Discover my free chart <svg class="icon"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--gold" href="https://app.astrea-charts.site/carta?lang=en">Discover my free chart <svg class="icon"><use href="#i-arrow"/></svg></a>
         <a class="link-quiet link-quiet--light" href="/en/reportes">Explore readings</a>
       </div>
-      <a class="hero__scroll" href="#generador" aria-label="Go to the free chart generator"><svg class="icon"><use href="#i-down"/></svg></a>
+      <a class="hero__scroll" href="#generador" aria-label="Go to your free chart"><svg class="icon"><use href="#i-down"/></svg></a>
     </div>
 
     <figure class="hero__figure">
@@ -106,91 +106,30 @@
   </div>
 </section>
 
-<!-- ============ 2. GENERADOR GRATUITO ============ -->
+<!-- ============ 2. CARTA GRATIS (en la app) ============ -->
+<!-- En inglés no hay generador aquí: /carta-natal/resumen interpreta en español. La carta gratis
+     en inglés es la de la app, que además ofrece el Big 3 por correo al guardarla. -->
 <section class="sheet sheet--light sheet--lift" id="generador" aria-labelledby="gen-titulo">
   <div class="shell gen">
     <div class="gen__form-col">
       <p class="eyebrow reveal">Begin your reading</p>
       <h2 class="h-section reveal" id="gen-titulo">Create your birth chart for free</h2>
-      <p class="lede reveal">Enter your birth details and discover a first glimpse of your chart. Then you can get the full reading.</p>
-
-      <form class="natal-form reveal" id="natal-form" novalidate>
-        <div class="field field--full">
-          <label for="f-nombre">Name</label>
-          <input id="f-nombre" name="nombre" type="text" autocomplete="given-name" placeholder="Your name" minlength="2" maxlength="150" required>
-        </div>
-        <div class="field">
-          <label for="f-fecha">Date of birth</label>
-          <input id="f-fecha" name="fecha" type="date" min="1900-01-01" required>
-        </div>
-        <div class="field">
-          <label for="f-hora">Time of birth</label>
-          <input id="f-hora" name="hora" type="time" step="60" required>
-        </div>
-        <div class="field field--full">
-          <label for="f-lugar">Place of birth</label>
-          <input id="f-lugar" name="lugar" type="text" autocomplete="off" placeholder="City, Country" aria-describedby="f-lugar-ayuda" required>
-          <small id="f-lugar-ayuda">Write your city and country separated by a comma. E.g.: London, United Kingdom</small>
-        </div>
-        <div class="field field--full">
-          <label for="f-email">Your email <span class="opcional">(optional)</span></label>
-          <input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@email.com" maxlength="150" aria-describedby="f-email-ayuda">
-          <small id="f-email-ayuda">We’ll send you <strong>“Your Big 3 explained”</strong>: a 7-page PDF with your Sun, your Moon and your Ascendant, their shadow and a piece of advice for this week.</small>
-        </div>
-        <label class="field field--full check-big3"><input type="checkbox" id="f-consentimiento"><span>I agree to receive emails from Astrea with astrology content, news and offers. I can unsubscribe at any time from any email. <a href="/en/privacidad" target="_blank" rel="noopener">Privacy</a>.</span></label>
-        <p class="error-big3 field--full" id="f-error-big3" aria-live="polite"></p>
-        <p class="form-msg" id="form-msg" role="alert" hidden></p>
-        <button class="btn btn--night btn--block" type="submit" id="f-submit">
-          <span data-label>Create my chart</span> <svg class="icon"><use href="#i-arrow"/></svg>
-        </button>
-        <p class="form-status" id="form-status" aria-live="polite"></p>
-      </form>
+      <p class="lede reveal">Your free chart is in the Astrea app, in English. Enter your birth details and see your chart, without creating an account.</p>
+      <ul class="checklist reveal">
+        <li><svg class="icon"><use href="#i-check"/></svg>Your birth chart wheel</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>Your planets</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>Your Big 3 explained</li>
+      </ul>
+      <div class="hero__actions reveal">
+        <a class="btn btn--night" href="https://app.astrea-charts.site/carta?lang=en">Create my free chart <svg class="icon"><use href="#i-arrow"/></svg></a>
+      </div>
+      <p class="reveal"><small>When you save your chart, you can also get “Your Big 3 explained” by email.</small></p>
     </div>
 
     <figure class="gen__figure" aria-hidden="true">
       <img src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp" alt="" loading="lazy" width="640" height="800">
       <figcaption><span>Your birth sky</span>A map to begin knowing yourself.</figcaption>
     </figure>
-  </div>
-
-  <!-- Resultado: oculto hasta que la API responde -->
-  <div class="shell result" id="resultado" hidden tabindex="-1" aria-labelledby="res-titulo">
-    <div class="result__card">
-      <p class="eyebrow">Your free result</p>
-      <h3 class="h-section h-section--sm" id="res-titulo">A first glimpse of your chart</h3>
-      <p class="result__saludo" id="res-saludo"></p>
-      <p id="aviso-big3" class="aviso-big3" role="status" hidden></p>
-      <p class="result__idioma">The interpretation of your free chart is written in Spanish.</p>
-
-      <div class="tabs" role="tablist" aria-label="Views of your chart">
-        <button class="tabs__tab" role="tab" id="tab-rueda" aria-controls="panel-rueda" aria-selected="true">Birth chart wheel</button>
-        <button class="tabs__tab" role="tab" id="tab-big3" aria-controls="panel-big3" aria-selected="false" tabindex="-1">Big Three</button>
-        <button class="tabs__tab" role="tab" id="tab-esencia" aria-controls="panel-esencia" aria-selected="false" tabindex="-1">Essence</button>
-      </div>
-
-      <div class="tabs__panel" role="tabpanel" id="panel-rueda" aria-labelledby="tab-rueda" tabindex="0">
-        <div class="result__wheel-layout">
-          <div class="rueda-noche" id="res-rueda"></div>
-          <aside class="bigthree-card">
-            <h4 class="bigthree-card__title">Your Big Three</h4>
-            <ul class="bigthree" id="res-big3-mini"></ul>
-          </aside>
-        </div>
-      </div>
-
-      <div class="tabs__panel" role="tabpanel" id="panel-big3" aria-labelledby="tab-big3" tabindex="0" hidden>
-        <ul class="bigthree bigthree--full" id="res-big3"></ul>
-      </div>
-
-      <div class="tabs__panel" role="tabpanel" id="panel-esencia" aria-labelledby="tab-esencia" tabindex="0" hidden>
-        <div class="essence-grid" id="res-esencia"></div>
-      </div>
-
-      <div class="result__next">
-        <p>This is only the beginning. Your full reading connects every planet, house and aspect in a guide of more than 20 pages. Your reading is written in Spanish.</p>
-        <a class="btn btn--gold" href="#producto">Discover the full reading <svg class="icon"><use href="#i-arrow"/></svg></a>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -341,10 +280,10 @@
         <p class="price-card__price">USD 0</p>
         <ul class="checklist">
           <li><svg class="icon"><use href="#i-check"/></svg>Birth chart wheel</li>
-          <li><svg class="icon"><use href="#i-check"/></svg>Your Big Three</li>
-          <li><svg class="icon"><use href="#i-check"/></svg>Summary of your essence</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Your planets</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Your Big 3 explained</li>
         </ul>
-        <a class="btn btn--ghost btn--block" href="#generador">Create for free</a>
+        <a class="btn btn--ghost btn--block" href="https://app.astrea-charts.site/carta?lang=en">Create for free</a>
       </article>
 
       <article class="price-card price-card--featured reveal" aria-labelledby="plan-completa">
@@ -458,21 +397,5 @@
 <script type="module" src="/tienda-assets/origen.js"></script>
 <script type="module" src="/tienda-assets/sitio-publico.js"></script>
 <script type="module" src="/tienda-assets/nav-flotante.js"></script>
-<script type="module">
-  // Lista de correos: «Tu Big 3 explicado» en PDF si la persona deja su correo (tienda-assets/lista.js). Versión en inglés.
-  import { conectarListaDeCorreos } from "/tienda-assets/lista.js";
-  const form = document.getElementById("natal-form");
-  conectarListaDeCorreos({
-    form: "#natal-form", email: "#f-email", consentimiento: "#f-consentimiento",
-    errorCampo: "#f-error-big3", aviso: "#aviso-big3",
-    leer: () => {
-      const nombre = form.nombre.value.trim(), fecha = form.fecha.value, hora = form.hora.value, lugar = form.lugar.value.trim();
-      const corte = lugar.lastIndexOf(",");
-      const ciudad = corte > 0 ? lugar.slice(0, corte).trim() : "", pais = corte > 0 ? lugar.slice(corte + 1).trim() : "";
-      if (nombre.length < 2 || !fecha || !hora || ciudad.length < 2 || pais.length < 2) return null;
-      return { nombre, fecha_hora_local: `${fecha}T${hora.slice(0, 5)}:00`, ciudad, pais };
-    },
-  });
-</script>
 </body>
 </html>

@@ -23,6 +23,7 @@
  */
 
 import { PACK_TEMATICOS } from "./catalogo.js";
+import { cabeceraIdioma } from "./idioma.js";
 
 export const LIMITES = { nombreMin: 2, textoMax: 150, anioMin: 1900 };
 
@@ -247,7 +248,7 @@ export async function crearOrden({ apiBase, cuerpo, slug = "carta-natal", fetchI
   try {
     respuesta = await fetchImpl(`${apiBase}${canal.crear}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...cabeceraIdioma(idioma) },
       body: JSON.stringify(cuerpo),
     });
   } catch {

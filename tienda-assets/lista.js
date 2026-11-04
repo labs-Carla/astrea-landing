@@ -15,7 +15,7 @@
  */
 import { apiBase } from "./config.js";
 import { origenActual } from "./origen.js";
-import { idiomaDePagina } from "./idioma.js";
+import { idiomaDePagina, cabeceraIdioma } from "./idioma.js";
 
 export const CONSENTIMIENTO =
   "Acepto recibir correos de Astrea con contenido astrológico, novedades y ofertas. " +
@@ -76,7 +76,7 @@ export async function suscribir({ base = apiBase(), cuerpo, fetchImpl = fetch, i
   try {
     const r = await fetchImpl(`${base}/lista/suscribir`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "X-Idioma": idioma === "en" ? "en" : "es" },
+      headers: { "Content-Type": "application/json", ...cabeceraIdioma(idioma) },
       body: JSON.stringify(cuerpo),
     });
     return mensajeDeSuscripcion(r.status, cuerpo.email, idioma);

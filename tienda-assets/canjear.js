@@ -7,7 +7,7 @@
 import { apiBase } from "./config.js";
 import { PACK_TEMATICOS, reportePorSlug, reporteEnIdioma } from "./catalogo.js";
 import { cuerpoDeOrden, extraDeProducto, validarDatos, mensajeAcepto } from "./compra.js";
-import { idiomaDePagina, elegir } from "./idioma.js";
+import { idiomaDePagina, elegir, cabeceraIdioma } from "./idioma.js";
 
 const idioma = idiomaDePagina();
 const t = (es, en) => elegir(idioma, es, en);
@@ -47,7 +47,7 @@ formCodigo.addEventListener("submit", async (e) => {
   if (!codigo) { estado.textContent = t("Escribe el código de tu tarjeta.", "Enter the code on your card."); return; }
   estado.textContent = t("Buscando tu regalo…", "Looking for your gift…");
   try {
-    const r = await fetch(`${apiBase()}/regalos/canje/${encodeURIComponent(codigo)}`);
+    const r = await fetch(`${apiBase()}/regalos/canje/${encodeURIComponent(codigo)}`, { headers: cabeceraIdioma(idioma) });
     const datos = await r.json().catch(() => null);
     // El backend responde en español: en inglés se muestra un mensaje propio.
     if (!r.ok) { estado.textContent = t(datos?.detail || "No encontramos ese código.", "We couldn’t find that code, or it can no longer be redeemed. Check it and try again."); return; }
@@ -94,7 +94,7 @@ form.addEventListener("submit", async (e) => {
   error.hidden = true;
   const cuerpo = { ...cuerpoDeOrden(d, regalo.producto, extra), codigo: regalo.codigo };
   try {
-    const r = await fetch(`${apiBase()}/regalos/canje`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo) });
+    const r = await fetch(`${apiBase()}/regalos/canje`, { method: "POST", headers: { "Content-Type": "application/json", ...cabeceraIdioma(idioma) }, body: JSON.stringify(cuerpo) });
     const datos = await r.json().catch(() => null);
     if (!r.ok) throw new Error(typeof datos?.detail === "string" && idioma === "es" ? datos.detail : t("Revisa tus datos e inténtalo de nuevo.", "Please check your details and try again."));
     form.hidden = true;

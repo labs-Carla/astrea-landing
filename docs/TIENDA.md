@@ -214,7 +214,13 @@ genera nada y se le pide marcarla. Sin correo, la carta gratis funciona como sie
   `/gracias` (adonde vuelve Hotmart) lleva entonces a `/en/pedido`. Los mensajes de error y estados salen en el
   idioma de la página (`document.documentElement.lang`). Los enlaces a la app llevan `lang=en` (`conIdiomaApp`).
 - **Pendientes.** Parámetro de idioma del checkout de Hotmart (no verificado en su documentación: no se envía
-  ninguno); traducción de términos y privacidad marcada para revisión legal; la carta gratis de `/en/universo` manda
-  `X-Idioma: en`, pero sus interpretaciones llegan en español (la página lo dice) hasta que el backend las traduzca.
+  ninguno); traducción de términos y privacidad marcada para revisión legal; la carta gratis en inglés no usa
+  `/carta-natal/resumen` (interpreta en español): `/en/universo` no tiene generador ni formulario de la lista, y todos
+  los botones de la carta gratis en inglés (portada, recorrido, `/en/universo`) llevan a
+  `https://app.astrea-charts.site/carta?lang=en` (`APP_CARTA_EN` en el generador). La app ofrece el Big 3 por correo al
+  guardar la carta.
+- **X-Idioma en todas las llamadas.** Órdenes (`crearOrden`), regalos, canje, estado del pedido, baja, lista,
+  `/gracias` y el generador de `/universo` mandan `X-Idioma: es|en` (`cabeceraIdioma` en `tienda-assets/idioma.js`):
+  el backend guarda en ese idioma lo que la persona aceptó (p. ej. `acepta_correos`).
 - **Lista en inglés.** `lista.js` manda `X-Idioma: en|es` a `POST /lista/suscribir`: el backend guarda el texto
   exacto del consentimiento en ese idioma (`CONSENTIMIENTO_EN` en inglés) y envía el Big 3 en ese idioma.

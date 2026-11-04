@@ -113,9 +113,14 @@ const TESTIMONIOS = [];
 const SOLO_ESPANOL = new Set(["/ejemplo"]);
 
 /** Todas las páginas de un idioma ("es" | "en"): { "ruta/del/archivo.html": html }. */
+export const APP_CARTA_EN = "https://app.astrea-charts.site/carta?lang=en";
+
 function construir(L) {
   const t = (es, en) => (L === "en" ? en : es);
   const R = (ruta) => (L === "en" ? rutaEnIdioma(ruta, "en") : ruta);
+  // Carta gratis: en español, el generador de /universo; en inglés, la de la app (sus textos ya están en
+  // inglés; /carta-natal/resumen interpreta en español).
+  const CARTA_GRATIS = t("/universo#generador", APP_CARTA_EN);
   const archivo = (nombre) => (L === "en" ? `en/${nombre}` : nombre);
   const BLOG = L === "en" ? ' hreflang="es"' : "";                    // el blog está en español
   const AVISO = L === "en" ? AVISO_IDIOMA : "";
@@ -146,7 +151,7 @@ function construir(L) {
     <li><a href="#reportes" data-paso="2"><span class="embudo-dock__num">II</span>${t("Profundiza con una lectura", "Go deeper with a reading")}</a></li>
   </ol>
   <div class="embudo-dock__acciones">
-    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="${R("/universo")}#generador">${t("Descubrir mi carta gratis", "Discover my free chart")} ${icono("i-arrow")}</a>
+    <a class="btn btn-metal btn--gold btn--sm metal-marmol" href="${CARTA_GRATIS}">${t("Descubrir mi carta gratis", "Discover my free chart")} ${icono("i-arrow")}</a>
     <a class="btn btn-metal btn--ghost btn--sm" href="#reportes">${t("Ver reportes", "See readings")}</a>
   </div>
 </nav>`;
@@ -334,7 +339,7 @@ ${lede ? `    <p class="lede lede--light">${esc(lede)}</p>` : ""}
     ["¿Puedo pedir un reembolso?", "Sí. Tienes 7 días desde la compra para pedir el reembolso total, aunque ya hayas recibido tu lectura. Lo pides desde el correo de compra de Hotmart o por WhatsApp con la referencia de tu pedido. Los detalles están en Términos y reembolsos."],
   ];
 
-  const GENERADOR = `${R("/universo")}#generador`;
+  const GENERADOR = CARTA_GRATIS;
   const RECORRIDO = [
     ["i-astrolabio", t("Descubre tu carta", "Discover your chart"), t("Genera gratis tu carta natal: tu Sol, tu Luna y tu Ascendente, con la rueda de tu cielo. Es la base de todo lo demás.", "Generate your birth chart for free: your Sun, your Moon and your Ascendant, with the wheel of your sky. It’s the foundation for everything else."), GENERADOR, t("Generar mi carta gratis", "Generate my free chart")],
     ["i-libro", t("Profundiza con una lectura", "Go deeper with a reading"), t("La carta natal completa o un reporte temático, en PDF y escrito para ti. La compras una vez y es tuya.", `The complete birth chart or a themed reading, in PDF and written for you. You buy it once and it’s yours. ${AVISO}`), R("/reportes"), t("Ver reportes", "See readings")],

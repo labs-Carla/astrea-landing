@@ -370,7 +370,7 @@
     try {
       const respuesta = await fetch(`${API_BASE}/carta-natal/compra`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Idioma': 'en' },
         body: JSON.stringify(data),
       });
 

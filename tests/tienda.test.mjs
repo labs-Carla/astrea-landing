@@ -10,7 +10,7 @@ import {
 } from "../tienda-assets/compra.js";
 import { REPORTES, estadoDe } from "../tienda-assets/catalogo.js";
 import { CHECKOUTS, apiBase, ESTADO_PEDIDO_HABILITADO } from "../tienda-assets/config.js";
-import { PAGINAS } from "../scripts/generar-tienda.mjs";
+import { PAGINAS, APP_CARTA_EN } from "../scripts/generar-tienda.mjs";
 const DISPONIBLES = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) === "disponible");
 import { validarSuscripcion, cuerpoSuscripcion, mensajeDeSuscripcion, suscribir, CONSENTIMIENTO } from "../tienda-assets/lista.js";
 import { tokenDeBaja, darDeBaja } from "../tienda-assets/baja.js";
@@ -62,7 +62,7 @@ test("el frontend no envía precio ni estado de pago", () => {
 function fetchFalso(respuestas) {
   const llamadas = [];
   const impl = async (url, opts) => {
-    llamadas.push({ url, body: JSON.parse(opts.body) });
+    llamadas.push({ url, body: JSON.parse(opts.body), headers: opts.headers });
     const r = respuestas.shift();
     if (r instanceof Error) throw r;
     return { ok: r.status < 400, status: r.status, json: async () => r.body };
@@ -355,7 +355,9 @@ test("Astrea.ai en pausa: la tienda vende lecturas y no menciona Astrea.ai ni su
   assert.ok(!html.includes("tienda-assets/planes.js"));
   assert.ok(!html.includes('id="astrea-ai"'), "sin la sección de Astrea.ai");
   for (const [ruta, pagina] of Object.entries(PAGINAS)) {
-    assert.ok(!/Astrea\.ai|Astrea AI|app\.astrea-charts\.site|5 preguntas/i.test(pagina), ruta);
+    // Única excepción: en inglés, la carta gratis es la de la app (APP_CARTA_EN).
+    const sinCartaGratis = ruta.startsWith("en/") ? pagina.split(APP_CARTA_EN).join("") : pagina;
+    assert.ok(!/Astrea\.ai|Astrea AI|app\.astrea-charts\.site|5 preguntas/i.test(sinCartaGratis), ruta);
   }
   for (const r of REPORTES) assert.ok(!r.incluye.some((i) => /Astrea\.ai|preguntas/.test(i)), r.slug);
   // Nada de promesas que no existen, en todo el sitio generado.
@@ -662,7 +664,7 @@ test("la orden y el regalo mandan su canal aunque no acepten correos", () => {
 
 // ── Idiomas: español en su ruta, inglés bajo /en/ (2026-11-03) ─────────────────
 import vm from "node:vm";
-import { rutaEnIdioma, conIdiomaApp, idiomaDePagina, marcaDeIdioma, CLAVE_IDIOMA } from "../tienda-assets/idioma.js";
+import { rutaEnIdioma, conIdiomaApp, idiomaDePagina, marcaDeIdioma, CLAVE_IDIOMA, cabeceraIdioma } from "../tienda-assets/idioma.js";
 import { REPORTES_EN, AVISO_IDIOMA } from "../tienda-assets/catalogo-en.js";
 import { reporteEnIdioma } from "../tienda-assets/catalogo.js";
 import { estadosPedido, ESTADOS_PEDIDO } from "../tienda-assets/compra.js";
@@ -884,7 +886,6 @@ test("idioma: mensajes de error y estados en inglés", async () => {
 });
 
 test("idioma: consentimiento de correos en inglés en /en/ (el backend guarda el del idioma de la página)", () => {
-  assert.ok(leerRepo("en/universo.html").includes(CONSENTIMIENTO_EN));
   assert.ok(PAGINAS["en/comprar/carta-natal.html"].includes(CONSENTIMIENTO_EN));
   assert.ok(!PAGINAS["en/comprar/carta-natal.html"].includes(CONSENTIMIENTO), "sin el texto en español");
   assert.ok(PAGINAS["comprar/carta-natal.html"].includes(CONSENTIMIENTO), "el español no cambia");
@@ -946,4 +947,53 @@ test("correcciones del español: privacidad, /universo y /carta", () => {
     assert.ok(!/max="\d{4}-\d{2}-\d{2}"/.test(h.match(/<input type="date" id="fg_fecha"[^>]*>/)[0]), `${f}: sin fecha máxima fija`);
     assert.match(h, /getElementById\("fg_fecha"\)\.max=/, `${f}: la máxima es hoy`);
   }
+});
+
+test("/en/universo: sin generador ni lista; la carta gratis en inglés es la de la app", () => {
+  assert.equal(APP_CARTA_EN, "https://app.astrea-charts.site/carta?lang=en");
+  const en = leerRepo("en/universo.html");
+  for (const marca of ['id="natal-form"', 'id="resultado"', "/tienda-assets/lista.js", "conectarListaDeCorreos", 'type="email"', "f-consentimiento"]) {
+    assert.ok(!en.includes(marca), `sin ${marca}`);
+  }
+  assert.ok(!en.includes("The interpretation of your free chart is written in Spanish."), "ya no hay interpretación en español que avisar");
+  assert.match(en, /<section class="sheet sheet--light sheet--lift" id="generador"[\s\S]*?class="shell gen"[\s\S]*?class="gen__form-col"[\s\S]*?class="gen__figure"/, "la sección conserva su diseño de dos columnas");
+  const aApp = [...en.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)/g)].filter(([, , txt]) => /free chart|Create for free/i.test(txt));
+  assert.ok(aApp.length >= 3, "hero, sección y precio");
+  for (const [, href, txt] of aApp) assert.equal(href, APP_CARTA_EN, txt);
+  for (const f of ["en/index.html"]) {
+    const h = PAGINAS[f];
+    assert.ok(!h.includes("/en/universo#generador"), `${f}: no lleva al generador`);
+    assert.ok([...h.matchAll(/href="([^"]+)">(Discover my free chart|Generate my free chart)/g)].every(([, href]) => href === APP_CARTA_EN), f);
+    assert.ok(h.includes(`href="${APP_CARTA_EN}">Discover my free chart`), f);
+  }
+  // El español no cambia.
+  const es = leerRepo("universo.html");
+  assert.ok(es.includes('id="natal-form"') && es.includes("conectarListaDeCorreos"));
+  assert.ok(PAGINAS["index.html"].includes('href="/universo#generador">Descubrir mi carta gratis'));
+  // universo.js no se rompe sin formulario (el carrusel y lo demás siguen).
+  assert.match(leerRepo("universo-assets/universo.js"), /if \(form\) iniciarGenerador\(\);/);
+});
+
+test("idioma: todas las llamadas a la API de la tienda mandan X-Idioma según la página", async () => {
+  assert.deepEqual(cabeceraIdioma("en"), { "X-Idioma": "en" });
+  assert.deepEqual(cabeceraIdioma("es"), { "X-Idioma": "es" });
+  assert.deepEqual(cabeceraIdioma(undefined), { "X-Idioma": "es" });
+  for (const idioma of ["en", "es"]) {
+    const f = fetchFalso([{ status: 200, body: { orden_id: 7, referencia: "r".repeat(22) } }]);
+    await crearOrden({ apiBase: "http://api", cuerpo: cuerpoDeOrden({ ...validos, acepta_correos: true }), fetchImpl: f, memoria: new Map(), idioma });
+    assert.equal(f.llamadas[0].headers["X-Idioma"], idioma, `crearOrden ${idioma}`);
+    assert.equal(f.llamadas[0].headers["Content-Type"], "application/json");
+  }
+  let cab = null;
+  await darDeBaja({ token: "t".repeat(32), base: "x", idioma: "en", fetchImpl: async (_u, op) => { cab = op.headers; return { ok: true, status: 200 }; } });
+  assert.equal(cab["X-Idioma"], "en", "baja");
+  for (const f of ["regalar.js", "canjear.js", "pedido.js", "lista.js"]) {
+    const js = leerRepo(`tienda-assets/${f}`);
+    const llamadas = js.match(/fetch(Impl)?\(`\$\{(apiBase\(\)|base)\}[^;]*;/g) || [];
+    assert.ok(llamadas.length, f);
+    for (const l of llamadas) assert.match(l, /cabeceraIdioma\(idioma\)/, `${f}: ${l.slice(0, 60)}`);
+  }
+  assert.match(leerRepo("gracias.html"), /'X-Idioma': 'es'/);
+  assert.match(leerRepo("en/gracias.html"), /'X-Idioma': 'en'/);
+  assert.match(leerRepo("universo-assets/universo.js"), /"X-Idioma": EN \? "en" : "es"/);
 });

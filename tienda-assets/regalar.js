@@ -5,7 +5,7 @@
  */
 import { apiBase, CHECKOUTS } from "./config.js";
 import { REPORTES, reporteEnIdioma } from "./catalogo.js";
-import { idiomaDePagina, elegir, marcaDeIdioma } from "./idioma.js";
+import { idiomaDePagina, elegir, marcaDeIdioma, cabeceraIdioma } from "./idioma.js";
 import { conOrigen, origenActual } from "./origen.js";
 import { abrirPagoEnPanel } from "./pago-panel.js";
 import { almacenSeguro, cuerpoDeRegalo, mensajeDeError, pedidoParaGuardar, validarRegalo, LIMITE_DEDICATORIA } from "./compra.js";
@@ -49,7 +49,7 @@ form.addEventListener("submit", async (e) => {
   const cuerpo = cuerpoDeRegalo(d);
   cuerpo.origen = origenActual();   // el canal de la venta (métricas, fase 2): el servidor lo guarda en el regalo
   try {
-    const r = await fetch(`${apiBase()}/regalos`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo) });
+    const r = await fetch(`${apiBase()}/regalos`, { method: "POST", headers: { "Content-Type": "application/json", ...cabeceraIdioma(idioma) }, body: JSON.stringify(cuerpo) });
     const datos = await r.json().catch(() => null);
     if (!r.ok || !Number.isInteger(datos?.regalo_id)) throw new Error(mensajeDeError(r.status, datos?.detail, idioma));
     almacenSeguro(window.localStorage).guardar(CLAVE_PEDIDO, { ...pedidoParaGuardar(datos.regalo_id, d.producto, Date.now(), datos.referencia, true), ...marcaDeIdioma(idioma) });

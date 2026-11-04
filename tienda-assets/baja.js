@@ -5,7 +5,7 @@
  * POST {API}/lista/baja/{token} → 200 {status:"baja"} (idempotente) · 404 enlace no válido.
  */
 import { apiBase } from "./config.js";
-import { idiomaDePagina } from "./idioma.js";
+import { idiomaDePagina, cabeceraIdioma } from "./idioma.js";
 
 const TEXTOS = {
   es: {
@@ -32,7 +32,7 @@ export const tokenDeBaja = (search) => {
 export async function darDeBaja({ token, base = apiBase(), fetchImpl = fetch, idioma = "es" }) {
   const t = TEXTOS[idioma] || TEXTOS.es;
   try {
-    const r = await fetchImpl(`${base}/lista/baja/${encodeURIComponent(token)}`, { method: "POST" });
+    const r = await fetchImpl(`${base}/lista/baja/${encodeURIComponent(token)}`, { method: "POST", headers: cabeceraIdioma(idioma) });
     if (r.ok) return { ok: true, texto: t.ok };
     if (r.status === 404) return { ok: false, texto: t[404] };
     return { ok: false, texto: t.otro };

@@ -11,10 +11,11 @@
  *
  * Depende de rueda-natal.js (generarRuedaSVG), cargado antes que este archivo.
  *
- * Idioma: el mismo archivo sirve a /universo y a /en/universo. Los textos salen
- * del <html lang>; en inglés se traducen los nombres de signos, planetas y
- * elementos que manda el backend, y sus interpretaciones (todavía en español)
- * se marcan con lang="es". El fetch manda X-Idioma (contrato de astrea-API).
+ * Idioma: el mismo archivo sirve a /universo y a /en/universo; los textos salen
+ * del <html lang>. /en/universo no tiene generador (la carta gratis en inglés es
+ * la de la app, https://app.astrea-charts.site/carta?lang=en): sin #natal-form,
+ * esa parte no se inicia. Los textos en inglés del generador quedan por si
+ * vuelve; sus interpretaciones (en español) se marcarían con lang="es".
  */
 (function () {
   "use strict";
@@ -156,184 +157,189 @@
   });
 
   // ------------------------------------------------------------- generador
+  // Solo /universo (español) lo tiene: en /en/universo la carta gratis es la de la app.
   const form = document.getElementById("natal-form");
-  const submit = document.getElementById("f-submit");
-  const submitLabel = submit.querySelector("[data-label]");
-  const msg = document.getElementById("form-msg");
-  const status = document.getElementById("form-status");
-  const inputFecha = document.getElementById("f-fecha");
+  if (form) iniciarGenerador();
 
-  inputFecha.max = new Date().toISOString().slice(0, 10);
+  function iniciarGenerador() {
+    const submit = document.getElementById("f-submit");
+    const submitLabel = submit.querySelector("[data-label]");
+    const msg = document.getElementById("form-msg");
+    const status = document.getElementById("form-status");
+    const inputFecha = document.getElementById("f-fecha");
 
-  const MENSAJES_CARGA = T.carga;
+    inputFecha.max = new Date().toISOString().slice(0, 10);
 
-  const mostrarError = (texto, campo) => {
-    msg.textContent = texto;
-    msg.hidden = false;
-    form.querySelectorAll("[aria-invalid]").forEach((el) => el.removeAttribute("aria-invalid"));
-    if (campo) {
-      campo.setAttribute("aria-invalid", "true");
-      campo.focus();
-    }
-  };
+    const MENSAJES_CARGA = T.carga;
 
-  const limpiarError = () => {
-    msg.hidden = true;
-    msg.textContent = "";
-    form.querySelectorAll("[aria-invalid]").forEach((el) => el.removeAttribute("aria-invalid"));
-  };
-
-  const estadoCargando = (cargando) => {
-    submit.disabled = cargando;
-    submitLabel.textContent = cargando ? T.calculando : T.generar;
-  };
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    limpiarError();
-
-    const nombre = form.nombre.value.trim();
-    const fecha = form.fecha.value;
-    const hora = form.hora.value;
-    const lugar = form.lugar.value.trim();
-
-    if (nombre.length < 2) return mostrarError(T.nombre, form.nombre);
-    if (!fecha) return mostrarError(T.fecha, form.fecha);
-    if (!hora) return mostrarError(T.hora, form.hora);
-
-    // "Ciudad, País": el país es lo que va después de la última coma, así
-    // "Medellín, Antioquia, Colombia" sigue funcionando.
-    const corte = lugar.lastIndexOf(",");
-    const ciudad = corte > 0 ? lugar.slice(0, corte).trim() : "";
-    const pais = corte > 0 ? lugar.slice(corte + 1).trim() : "";
-    if (ciudad.length < 2 || pais.length < 2) {
-      return mostrarError(T.lugar, form.lugar);
-    }
-
-    const fecha_hora_local = `${fecha}T${hora.slice(0, 5)}:00`;
-
-    estadoCargando(true);
-    let i = 0;
-    status.textContent = MENSAJES_CARGA[0];
-    const intervalo = setInterval(() => {
-      i = (i + 1) % MENSAJES_CARGA.length;
-      status.textContent = MENSAJES_CARGA[i];
-    }, 2600);
-
-    try {
-      const respuesta = await fetch(`${API_BASE}/carta-natal/resumen`, {
-        method: "POST",
-        headers: EN ? { "Content-Type": "application/json", "X-Idioma": "en" } : { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, fecha_hora_local, ciudad, pais }),
-      });
-
-      if (respuesta.status === 429) {
-        throw new Error(T.e429);
+    const mostrarError = (texto, campo) => {
+      msg.textContent = texto;
+      msg.hidden = false;
+      form.querySelectorAll("[aria-invalid]").forEach((el) => el.removeAttribute("aria-invalid"));
+      if (campo) {
+        campo.setAttribute("aria-invalid", "true");
+        campo.focus();
       }
-      if (respuesta.status === 400) {
-        throw new Error(T.e400);
-      }
-      if (!respuesta.ok) {
-        throw new Error(T.eOtro);
+    };
+
+    const limpiarError = () => {
+      msg.hidden = true;
+      msg.textContent = "";
+      form.querySelectorAll("[aria-invalid]").forEach((el) => el.removeAttribute("aria-invalid"));
+    };
+
+    const estadoCargando = (cargando) => {
+      submit.disabled = cargando;
+      submitLabel.textContent = cargando ? T.calculando : T.generar;
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      limpiarError();
+
+      const nombre = form.nombre.value.trim();
+      const fecha = form.fecha.value;
+      const hora = form.hora.value;
+      const lugar = form.lugar.value.trim();
+
+      if (nombre.length < 2) return mostrarError(T.nombre, form.nombre);
+      if (!fecha) return mostrarError(T.fecha, form.fecha);
+      if (!hora) return mostrarError(T.hora, form.hora);
+
+      // "Ciudad, País": el país es lo que va después de la última coma, así
+      // "Medellín, Antioquia, Colombia" sigue funcionando.
+      const corte = lugar.lastIndexOf(",");
+      const ciudad = corte > 0 ? lugar.slice(0, corte).trim() : "";
+      const pais = corte > 0 ? lugar.slice(corte + 1).trim() : "";
+      if (ciudad.length < 2 || pais.length < 2) {
+        return mostrarError(T.lugar, form.lugar);
       }
 
-      const datos = await respuesta.json();
-      renderizarResultado(datos);
-      status.textContent = T.lista;
-    } catch (err) {
-      console.error(err);
-      status.textContent = "";
-      const texto = err instanceof TypeError
-        ? T.eRed
-        : err.message;
-      mostrarError(texto);
-    } finally {
-      clearInterval(intervalo);
-      estadoCargando(false);
+      const fecha_hora_local = `${fecha}T${hora.slice(0, 5)}:00`;
+
+      estadoCargando(true);
+      let i = 0;
+      status.textContent = MENSAJES_CARGA[0];
+      const intervalo = setInterval(() => {
+        i = (i + 1) % MENSAJES_CARGA.length;
+        status.textContent = MENSAJES_CARGA[i];
+      }, 2600);
+
+      try {
+        const respuesta = await fetch(`${API_BASE}/carta-natal/resumen`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Idioma": EN ? "en" : "es" },
+          body: JSON.stringify({ nombre, fecha_hora_local, ciudad, pais }),
+        });
+
+        if (respuesta.status === 429) {
+          throw new Error(T.e429);
+        }
+        if (respuesta.status === 400) {
+          throw new Error(T.e400);
+        }
+        if (!respuesta.ok) {
+          throw new Error(T.eOtro);
+        }
+
+        const datos = await respuesta.json();
+        renderizarResultado(datos);
+        status.textContent = T.lista;
+      } catch (err) {
+        console.error(err);
+        status.textContent = "";
+        const texto = err instanceof TypeError
+          ? T.eRed
+          : err.message;
+        mostrarError(texto);
+      } finally {
+        clearInterval(intervalo);
+        estadoCargando(false);
+      }
+    });
+
+    // ------------------------------------------------------------- resultado
+    // El backend devuelve los signos sin tildes ("Geminis", "Cancer").
+    const SIGNO_LEGIBLE = EN
+      ? { Aries: "Aries", Tauro: "Taurus", Geminis: "Gemini", Cancer: "Cancer", Leo: "Leo", Virgo: "Virgo", Libra: "Libra",
+          Escorpio: "Scorpio", Sagitario: "Sagittarius", Capricornio: "Capricorn", Acuario: "Aquarius", Piscis: "Pisces" }
+      : { Geminis: "Géminis", Cancer: "Cáncer" };
+    const ELEMENTO = EN ? { Fuego: "Fire", Tierra: "Earth", Aire: "Air", Agua: "Water" } : {};
+    const signo = (s) => SIGNO_LEGIBLE[s] || s;
+    const grados = (g) => `${Math.floor(g)}°${String(Math.round((g % 1) * 60)).padStart(2, "0")}′`;
+
+    // Los textos de la API son contenido del backend (confiable), pero el
+    // nombre viene del usuario: todo lo interpolado pasa por escapar().
+    const escapar = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    const itemBigThree = ({ icono, titulo, sign, meta, texto, textoBackend = false }) => `
+      <li>
+        <span class="bigthree__glyph" aria-hidden="true"><svg class="icon"><use href="#${icono}"/></svg></span>
+        <div>
+          <p class="bigthree__kicker">${titulo}</p>
+          <p class="bigthree__sign">${escapar(sign)}</p>
+          ${meta ? `<p class="bigthree__meta">${escapar(meta)}</p>` : ""}
+          <p class="bigthree__text"${textoBackend ? LANG_TEXTO : ""}>${escapar(texto)}</p>
+        </div>
+      </li>`;
+
+    function renderizarResultado({ calculo, resumen = {}, metadata = {} }) {
+      const sol = calculo.planetas.Sol;
+      const luna = calculo.planetas.Luna;
+      const asc = calculo.puntos_angulares.Ascendente;
+
+      const primerNombre = (metadata.nombre || form.nombre.value).trim().split(/\s+/)[0];
+      document.getElementById("res-saludo").textContent = primerNombre ? T.saludo(primerNombre) : "";
+
+      pintarRueda("res-rueda", calculo);
+
+      const tres = [
+        { icono: "i-sun", titulo: T.sol, sign: signo(sol.signo), meta: `${grados(sol.grado_en_signo)} · ${T.casa} ${sol.casa}`, corto: T.solCorto, largo: resumen.identidad?.texto },
+        { icono: "i-moon", titulo: T.luna, sign: signo(luna.signo), meta: `${grados(luna.grado_en_signo)} · ${T.casa} ${luna.casa}`, corto: T.lunaCorto, largo: resumen.emociones?.texto },
+        { icono: "i-asc", titulo: T.asc, sign: signo(asc.signo), meta: grados(asc.grado_en_signo), corto: T.ascCorto, largo: resumen.camino?.texto },
+      ];
+
+      document.getElementById("res-big3-mini").innerHTML =
+        tres.map((t) => itemBigThree({ ...t, meta: "", texto: t.corto })).join("");
+      document.getElementById("res-big3").innerHTML =
+        tres.map((t) => itemBigThree({ ...t, texto: t.largo || t.corto, textoBackend: Boolean(t.largo) })).join("");
+
+      // Esencia: balance elemental + patrón destacado del Big Three (los
+      // textos de Sol/Luna/Ascendente ya viven en la tab Big Three).
+      let esencia = "";
+      const em = resumen.elemento_modalidad;
+      if (em) {
+        const conteo = em.conteo_elementos || {};
+        const max = Math.max(1, ...Object.values(conteo));
+        const barras = Object.entries(conteo).map(([el, n]) => `
+          <div class="element-row">
+            <span>${escapar(ELEMENTO[el] || el)}</span>
+            <span class="element-row__track"><span style="width:${(n / max) * 100}%"></span></span>
+            <span>${Number(n)}</span>
+          </div>`).join("");
+        esencia += `
+          <article class="essence essence--wide">
+            <h4 class="essence__title"${em.titulo ? LANG_TEXTO : ""}>${escapar(em.titulo || T.balance)}</h4>
+            <p class="essence__text"${LANG_TEXTO}>${escapar(em.texto)}</p>
+            ${barras ? `<div class="element-bars">${barras}</div>` : ""}
+          </article>`;
+      }
+      if (resumen.aspecto_destacado) {
+        esencia += `
+          <article class="essence essence--wide">
+            <h4 class="essence__title"${LANG_TEXTO}>${escapar(resumen.aspecto_destacado.titulo)}</h4>
+            <p class="essence__text"${LANG_TEXTO}>${escapar(resumen.aspecto_destacado.texto)}</p>
+          </article>`;
+      }
+      document.getElementById("res-esencia").innerHTML =
+        esencia || `<p class="lede">${T.vacio}</p>`;
+
+      activarTab(tabs[0], false);
+      const resultado = document.getElementById("resultado");
+      resultado.hidden = false;
+      resultado.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      resultado.focus({ preventScroll: true });
     }
-  });
-
-  // ------------------------------------------------------------- resultado
-  // El backend devuelve los signos sin tildes ("Geminis", "Cancer").
-  const SIGNO_LEGIBLE = EN
-    ? { Aries: "Aries", Tauro: "Taurus", Geminis: "Gemini", Cancer: "Cancer", Leo: "Leo", Virgo: "Virgo", Libra: "Libra",
-        Escorpio: "Scorpio", Sagitario: "Sagittarius", Capricornio: "Capricorn", Acuario: "Aquarius", Piscis: "Pisces" }
-    : { Geminis: "Géminis", Cancer: "Cáncer" };
-  const ELEMENTO = EN ? { Fuego: "Fire", Tierra: "Earth", Aire: "Air", Agua: "Water" } : {};
-  const signo = (s) => SIGNO_LEGIBLE[s] || s;
-  const grados = (g) => `${Math.floor(g)}°${String(Math.round((g % 1) * 60)).padStart(2, "0")}′`;
-
-  // Los textos de la API son contenido del backend (confiable), pero el
-  // nombre viene del usuario: todo lo interpolado pasa por escapar().
-  const escapar = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-
-  const itemBigThree = ({ icono, titulo, sign, meta, texto, textoBackend = false }) => `
-    <li>
-      <span class="bigthree__glyph" aria-hidden="true"><svg class="icon"><use href="#${icono}"/></svg></span>
-      <div>
-        <p class="bigthree__kicker">${titulo}</p>
-        <p class="bigthree__sign">${escapar(sign)}</p>
-        ${meta ? `<p class="bigthree__meta">${escapar(meta)}</p>` : ""}
-        <p class="bigthree__text"${textoBackend ? LANG_TEXTO : ""}>${escapar(texto)}</p>
-      </div>
-    </li>`;
-
-  function renderizarResultado({ calculo, resumen = {}, metadata = {} }) {
-    const sol = calculo.planetas.Sol;
-    const luna = calculo.planetas.Luna;
-    const asc = calculo.puntos_angulares.Ascendente;
-
-    const primerNombre = (metadata.nombre || form.nombre.value).trim().split(/\s+/)[0];
-    document.getElementById("res-saludo").textContent = primerNombre ? T.saludo(primerNombre) : "";
-
-    pintarRueda("res-rueda", calculo);
-
-    const tres = [
-      { icono: "i-sun", titulo: T.sol, sign: signo(sol.signo), meta: `${grados(sol.grado_en_signo)} · ${T.casa} ${sol.casa}`, corto: T.solCorto, largo: resumen.identidad?.texto },
-      { icono: "i-moon", titulo: T.luna, sign: signo(luna.signo), meta: `${grados(luna.grado_en_signo)} · ${T.casa} ${luna.casa}`, corto: T.lunaCorto, largo: resumen.emociones?.texto },
-      { icono: "i-asc", titulo: T.asc, sign: signo(asc.signo), meta: grados(asc.grado_en_signo), corto: T.ascCorto, largo: resumen.camino?.texto },
-    ];
-
-    document.getElementById("res-big3-mini").innerHTML =
-      tres.map((t) => itemBigThree({ ...t, meta: "", texto: t.corto })).join("");
-    document.getElementById("res-big3").innerHTML =
-      tres.map((t) => itemBigThree({ ...t, texto: t.largo || t.corto, textoBackend: Boolean(t.largo) })).join("");
-
-    // Esencia: balance elemental + patrón destacado del Big Three (los
-    // textos de Sol/Luna/Ascendente ya viven en la tab Big Three).
-    let esencia = "";
-    const em = resumen.elemento_modalidad;
-    if (em) {
-      const conteo = em.conteo_elementos || {};
-      const max = Math.max(1, ...Object.values(conteo));
-      const barras = Object.entries(conteo).map(([el, n]) => `
-        <div class="element-row">
-          <span>${escapar(ELEMENTO[el] || el)}</span>
-          <span class="element-row__track"><span style="width:${(n / max) * 100}%"></span></span>
-          <span>${Number(n)}</span>
-        </div>`).join("");
-      esencia += `
-        <article class="essence essence--wide">
-          <h4 class="essence__title"${em.titulo ? LANG_TEXTO : ""}>${escapar(em.titulo || T.balance)}</h4>
-          <p class="essence__text"${LANG_TEXTO}>${escapar(em.texto)}</p>
-          ${barras ? `<div class="element-bars">${barras}</div>` : ""}
-        </article>`;
-    }
-    if (resumen.aspecto_destacado) {
-      esencia += `
-        <article class="essence essence--wide">
-          <h4 class="essence__title"${LANG_TEXTO}>${escapar(resumen.aspecto_destacado.titulo)}</h4>
-          <p class="essence__text"${LANG_TEXTO}>${escapar(resumen.aspecto_destacado.texto)}</p>
-        </article>`;
-    }
-    document.getElementById("res-esencia").innerHTML =
-      esencia || `<p class="lede">${T.vacio}</p>`;
-
-    activarTab(tabs[0], false);
-    const resultado = document.getElementById("resultado");
-    resultado.hidden = false;
-    resultado.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-    resultado.focus({ preventScroll: true });
   }
 
   // -------------------------------------------------------------- carrusel

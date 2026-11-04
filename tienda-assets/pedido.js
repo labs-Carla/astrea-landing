@@ -10,7 +10,7 @@
  */
 import { apiBase, CHECKOUTS, ESTADO_PEDIDO_HABILITADO, WHATSAPP } from "./config.js";
 import { reportePorSlug, reporteEnIdioma } from "./catalogo.js";
-import { idiomaDePagina, elegir, rutaEnIdioma, conIdiomaApp } from "./idioma.js";
+import { idiomaDePagina, elegir, rutaEnIdioma, conIdiomaApp, cabeceraIdioma } from "./idioma.js";
 import { conOrigen, origenActual } from "./origen.js";
 import { abrirPagoEnPanel } from "./pago-panel.js";
 import { estadosPedido, URL_APP_CARTA, cuponValido, estadoAMostrar, pedidoVigente, referenciaDePedido, rutaDeEstado, almacenSeguro } from "./compra.js";
@@ -42,7 +42,7 @@ async function estadoDelBackend(pedido) {
   const ruta = rutaDeEstado(pedido);
   if (!ESTADO_PEDIDO_HABILITADO || !ruta) return null;
   try {
-    const r = await fetch(`${apiBase()}${ruta}`);
+    const r = await fetch(`${apiBase()}${ruta}`, { headers: cabeceraIdioma(idioma) });
     if (!r.ok) return null;
     return (await r.json()).estado || null;
   } catch { return null; }

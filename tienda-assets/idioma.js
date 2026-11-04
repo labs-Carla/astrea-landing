@@ -47,5 +47,11 @@ export function guardarIdioma(idioma, storage = globalThis.localStorage) {
   try { storage?.setItem(CLAVE_IDIOMA, idioma); } catch { /* sin almacenamiento */ }
 }
 
+/**
+ * Cabecera X-Idioma para todas las llamadas a la API desde la tienda: el backend guarda
+ * en ese idioma lo que la persona aceptó (p. ej. el consentimiento de acepta_correos).
+ */
+export const cabeceraIdioma = (idioma) => ({ "X-Idioma": idioma === "en" ? "en" : "es" });
+
 /** Marca de idioma para un pedido guardado: solo los pedidos en inglés la llevan. */
 export const marcaDeIdioma = (idioma) => (idioma === "en" ? { idioma: "en" } : {});
