@@ -14,7 +14,7 @@ import { PAGINAS } from "../scripts/generar-tienda.mjs";
 const DISPONIBLES = REPORTES.filter((r) => estadoDe(r, CHECKOUTS) === "disponible");
 import { validarSuscripcion, cuerpoSuscripcion, mensajeDeSuscripcion, suscribir, CONSENTIMIENTO } from "../tienda-assets/lista.js";
 import { tokenDeBaja, darDeBaja } from "../tienda-assets/baja.js";
-import { limpiarOrigen, origenDeVisita, origenVigente, origenDePagina, conOrigen, registrarVisita, CLAVE_ORIGEN } from "../tienda-assets/origen.js";
+import { limpiarOrigen, origenDeVisita, origenVigente, origenDePagina, conOrigen, conOrigenApp, origenConocido, registrarVisita, CLAVE_ORIGEN } from "../tienda-assets/origen.js";
 
 const validos = { nombre: "Ana López", email: "ana@example.com", fecha: "1990-05-17", hora: "8", minuto: "5", ciudad: "Bogotá", pais: "Colombia" };
 
@@ -622,4 +622,35 @@ test("la tienda abre Hotmart en el panel de Astrea, sin salir del sitio", () => 
   assert.doesNotMatch(panel, /innerHTML/);
   const gracias = readFileSync(new URL("../gracias.html", import.meta.url), "utf8");
   assert.match(gracias, /\.concat\(location\.origin\)/, "/gracias también avisa al panel de la tienda");
+});
+
+// ---------------------------------------------------------------- canal de la venta (métricas, fase 2)
+
+function memoriaOrigen() {
+  const datos = new Map();
+  return { getItem: (k) => datos.get(k) ?? null, setItem: (k, v) => datos.set(k, String(v)), removeItem: (k) => datos.delete(k) };
+}
+
+test("los enlaces a la app llevan el canal conocido, sin pisar uno propio ni tocar otros sitios", () => {
+  const app = "https://app.astrea-charts.site/conversacion?ver=carta";
+  assert.equal(new URL(conOrigenApp(app, "tiktok-bio")).searchParams.get("src"), "tiktok-bio");
+  assert.equal(new URL(conOrigenApp(`${app}&src=correo`, "tiktok-bio")).searchParams.get("src"), "correo");
+  assert.equal(conOrigenApp(app, null), app);
+  assert.equal(conOrigenApp("https://otro.com/x", "tiktok-bio"), "https://otro.com/x");
+});
+
+test("el canal conocido nunca es la página de respaldo", () => {
+  const storage = memoriaOrigen();
+  const sin = { location: { search: "", hostname: "astrea-charts.site", pathname: "/tienda" }, referrer: "", storage };
+  assert.equal(origenConocido(sin), null);                       // registrarVisita diría «tienda»
+  registrarVisita({ ...sin, location: { ...sin.location, search: "?src=tiktok-bio" }, ahora: Date.now() });
+  assert.equal(origenConocido(sin), "tiktok-bio");               // el guardado, mientras siga vigente
+});
+
+test("la orden y el regalo mandan su canal aunque no acepten correos", () => {
+  for (const archivo of ["tienda-assets/comprar.js", "tienda-assets/regalar.js"]) {
+    const codigo = readFileSync(new URL(`../${archivo}`, import.meta.url), "utf8");
+    assert.match(codigo, /^\s*cuerpo\.origen = origenActual\(\);/m, archivo);
+    assert.doesNotMatch(codigo, /if \(cuerpo\.acepta_correos\) cuerpo\.origen/, archivo);
+  }
 });

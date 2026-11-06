@@ -10,6 +10,8 @@
  * - Se guarda 30 días en este navegador (gana el último origen conocido) y se agrega a
  *   cada enlace de pago de la página y al checkout de la tienda.
  * - Sin origen conocido, la página por la que pasó: `tienda`, `link`, `universo`…
+ * - También va en cada orden y regalo (métricas, fase 2: el servidor lo guarda en la venta) y en
+ *   los enlaces a la app, pero ahí solo un canal conocido (nunca la página de respaldo).
  *
  * No guarda datos personales: solo el nombre del canal y la fecha.
  */
@@ -21,6 +23,7 @@ import { esEntrada, medicionApagada, cuerpoDeVista, enviarVista } from "./visita
 export const CLAVE_ORIGEN = "astrea-origen";
 const VIGENCIA_MS = 30 * 24 * 60 * 60 * 1000;
 const HOTMART = "https://pay.hotmart.com/";
+const APP = "https://app.astrea-charts.site/";
 
 const REFERENTES = [
   [/(^|\.)tiktok\.com$/, "tiktok"],
@@ -85,6 +88,20 @@ export function conOrigen(url, src) {
   return u.toString();
 }
 
+/** Agrega `src` a un enlace a la app (la app lo guarda y lo manda con la cuenta y sus pedidos). */
+export function conOrigenApp(url, src) {
+  if (!src || !String(url).startsWith(APP)) return url;
+  const u = new URL(url);
+  if (!u.searchParams.get("src")) u.searchParams.set("src", src);
+  return u.toString();
+}
+
+/** El canal conocido (de esta visita o guardado y vigente), sin la página de respaldo; o null. */
+export function origenConocido({ location, referrer, storage, ahora = Date.now() }) {
+  return origenDeVisita(location.search, referrer, location.hostname)
+    ?? origenVigente(almacenSeguro(storage).leer(CLAVE_ORIGEN), ahora);
+}
+
 /** Registra la visita y devuelve el origen a usar en el checkout. */
 export function registrarVisita({ location, referrer, storage, ahora = Date.now() }) {
   const almacen = almacenSeguro(storage);
@@ -123,6 +140,9 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
   try {
     let storage = null;
     try { storage = window.localStorage; } catch { /* sin almacenamiento */ }
+    const conocido = origenConocido({ location: window.location, referrer: document.referrer,
+                                      storage: storage ?? { getItem: () => null, setItem() {}, removeItem() {} } });
+    for (const a of document.querySelectorAll(`a[href^="${APP}"]`)) a.href = conOrigenApp(a.href, conocido);
     avisarVista({
       location: window.location, referrer: document.referrer, nav: navigator,
       storage: storage ?? { getItem: () => null, setItem() {}, removeItem() {} },

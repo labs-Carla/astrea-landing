@@ -45,7 +45,7 @@ form.addEventListener("submit", async (e) => {
   boton.disabled = true;
   error.hidden = true;
   const cuerpo = cuerpoDeRegalo(d);
-  if (cuerpo.acepta_correos) cuerpo.origen = origenActual();
+  cuerpo.origen = origenActual();   // el canal de la venta (métricas, fase 2): el servidor lo guarda en el regalo
   try {
     const r = await fetch(`${apiBase()}/regalos`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo) });
     const datos = await r.json().catch(() => null);
