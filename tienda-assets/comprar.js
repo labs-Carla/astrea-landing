@@ -192,7 +192,7 @@ form.addEventListener("submit", async (e) => {
   cajaError.hidden = true;
   estadoEnvio.textContent = "Registrando tu pedido…";
   const cuerpo = cuerpoDeOrden(leer(), reporte.slug, extra);
-  if (cuerpo.acepta_correos) cuerpo.origen = origenActual();
+  cuerpo.origen = origenActual();   // el canal de la venta (métricas, fase 2): el servidor lo guarda en la orden
   // Referidos: solo la carta natal da el mes de Plus; el backend valida el código.
   const ref = reporte.slug === "carta-natal" ? referidoActual() : null;
   if (ref) cuerpo.ref = ref;
