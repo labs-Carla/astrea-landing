@@ -146,6 +146,9 @@ ${indexable ? `<link rel="canonical" href="${SITIO}${ruta === "/" ? "/" : ruta}"
 <meta property="og:image" content="${SITIO}${imagen}">
 <meta property="og:locale" content="es_LA">
 <meta name="theme-color" content="#F7F3EA">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Noto+Sans+Symbols&display=swap" rel="stylesheet">
