@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="221 168 820 820">
+  <defs>
+    <linearGradient id="o" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F0C67A"/><stop offset=".55" stop-color="#DFAE61"/><stop offset="1" stop-color="#B9873C"/>
+    </linearGradient>
+  </defs>
+  <rect x="221" y="168" width="820" height="820" rx="180" fill="#0B2547"/>
+  <g fill="none" stroke="url(#o)" stroke-width="16" stroke-linecap="round">
+    <circle cx="630" cy="608" r="287"/>
+    <circle cx="630" cy="608" r="258" stroke-width="12"/>
+    <circle cx="630" cy="608" r="143"/>
+    <path d="M630 318V922M330 608H932"/>
+    <circle cx="630" cy="248" r="24"/>
+    <path d="M603 296h54v18h-54z" stroke-width="10" fill="#0B2547"/>
+    <ellipse cx="632" cy="604" rx="218" ry="42" transform="rotate(-25 632 604)" stroke-width="11"/>
+  </g>
+  <g fill="url(#o)">
+    <circle cx="630" cy="606" r="27"/>
+    <circle cx="752" cy="530" r="20"/>
+    <path id="e" d="M630 370Q637 413 666 420Q637 427 630 470Q623 427 594 420Q623 413 630 370z"/>
+    <use href="#e" transform="rotate(90 630 608)"/><use href="#e" transform="rotate(180 630 608)"/><use href="#e" transform="rotate(270 630 608)"/>
+  </g>
+  <circle cx="630" cy="606" r="11" fill="#0B2547"/>
+</svg>
