@@ -3,5 +3,7 @@ Disallow: /admin
 Disallow: /r/
 Disallow: /comprar/
 Disallow: /pedido
+Disallow: /en/comprar/
+Disallow: /en/pedido
 Sitemap: https://astrea-charts.site/sitemap.xml
 Sitemap: https://astrea-charts.site/blog/sitemap.xml

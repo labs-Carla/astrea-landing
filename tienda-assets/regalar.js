@@ -4,12 +4,14 @@
  * Al confirmar el pago, a quien compra le llega la tarjeta en PDF con el código.
  */
 import { apiBase, CHECKOUTS } from "./config.js";
-import { REPORTES } from "./catalogo.js";
+import { REPORTES, reporteEnIdioma } from "./catalogo.js";
+import { idiomaDePagina, elegir, marcaDeIdioma, cabeceraIdioma } from "./idioma.js";
 import { conOrigen, origenActual } from "./origen.js";
 import { abrirPagoEnPanel } from "./pago-panel.js";
 import { almacenSeguro, cuerpoDeRegalo, mensajeDeError, pedidoParaGuardar, validarRegalo, LIMITE_DEDICATORIA } from "./compra.js";
 
 const CLAVE_PEDIDO = "astrea-tienda-pedido";
+const idioma = idiomaDePagina();
 const REGALABLES = REPORTES.map((r) => r.slug).filter((s) => CHECKOUTS[s]);
 const form = document.getElementById("form-regalo");
 const CAMPOS = ["producto", "comprador_nombre", "comprador_email", "para_nombre", "dedicatoria", "acepto", "acepta_correos"];
@@ -32,7 +34,7 @@ contar();
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const d = leer();
-  const errores = validarRegalo(d, REGALABLES);
+  const errores = validarRegalo(d, REGALABLES, idioma);
   for (const c of CAMPOS) {
     const span = document.getElementById(`e-${c}`);
     if (span) span.textContent = errores[c] || "";
@@ -47,23 +49,23 @@ form.addEventListener("submit", async (e) => {
   const cuerpo = cuerpoDeRegalo(d);
   cuerpo.origen = origenActual();   // el canal de la venta (métricas, fase 2): el servidor lo guarda en el regalo
   try {
-    const r = await fetch(`${apiBase()}/regalos`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo) });
+    const r = await fetch(`${apiBase()}/regalos`, { method: "POST", headers: { "Content-Type": "application/json", ...cabeceraIdioma(idioma) }, body: JSON.stringify(cuerpo) });
     const datos = await r.json().catch(() => null);
-    if (!r.ok || !Number.isInteger(datos?.regalo_id)) throw new Error(mensajeDeError(r.status, datos?.detail));
-    almacenSeguro(window.localStorage).guardar(CLAVE_PEDIDO, pedidoParaGuardar(datos.regalo_id, d.producto, Date.now(), datos.referencia, true));
+    if (!r.ok || !Number.isInteger(datos?.regalo_id)) throw new Error(mensajeDeError(r.status, datos?.detail, idioma));
+    almacenSeguro(window.localStorage).guardar(CLAVE_PEDIDO, { ...pedidoParaGuardar(datos.regalo_id, d.producto, Date.now(), datos.referencia, true), ...marcaDeIdioma(idioma) });
     const url = new URL(CHECKOUTS[d.producto].url);
     url.searchParams.set("email", cuerpo.comprador_email);
     url.searchParams.set("name", cuerpo.comprador_nombre);
     url.searchParams.set("sck", `astrea-regalo-${datos.regalo_id}`);
-    const regalado = REPORTES.find((r) => r.slug === d.producto);
+    const regalado = reporteEnIdioma(REPORTES.find((r) => r.slug === d.producto), idioma);
     abrirPagoEnPanel({
       url: conOrigen(url.toString(), origenActual()),
-      nombre: `Regalo: ${regalado ? regalado.nombre : "lectura"}`,
+      nombre: `${elegir(idioma, "Regalo", "Gift")}: ${regalado ? regalado.nombre : elegir(idioma, "lectura", "reading")}`,
       precio: CHECKOUTS[d.producto].precioReferencia,
       alCerrar: () => { boton.disabled = false; },     // el mismo regalo se paga si lo intenta otra vez
     });
   } catch (err) {
-    error.textContent = err instanceof TypeError ? mensajeDeError(0) : err.message;
+    error.textContent = err instanceof TypeError ? mensajeDeError(0, null, idioma) : err.message;
     error.hidden = false;
     boton.disabled = false;
   }

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Astrea · A reading to come back to yourself</title>
+<meta name="description" content="Your birth chart is a unique map of the sky at the moment you were born. Create your free chart or receive your full Astrea reading.">
+<link rel="alternate" hreflang="es" href="https://astrea-charts.site/universo">
+<link rel="alternate" hreflang="en" href="https://astrea-charts.site/en/universo">
+<link rel="alternate" hreflang="x-default" href="https://astrea-charts.site/universo">
+<script src="/tienda-assets/idioma-inicio.js"></script>
+<meta name="theme-color" content="#F7F3EA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="/universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp" imagesrcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" imagesizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw">
+<link rel="stylesheet" href="/universo-assets/universo.css">
+<link rel="stylesheet" href="/tienda-assets/observatorio.css">
+<link rel="stylesheet" href="/universo-assets/observatorio.css">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="/tienda-assets/sitio-publico.css">
+<link rel="stylesheet" href="/tienda-assets/nav-flotante.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body class="portada-observatorio universo-observatorio astrea-publica glass glass--oro">
+
+<!-- Sprite de iconos de línea dorada. Todos los iconos de la página se usan
+     con <svg><use href="#i-..."/></svg> para no repetir paths. -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v15M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.6L16.5 9"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10z"/></symbol>
+  <symbol id="i-asc" viewBox="0 0 24 24"><path d="M3 18h18"/><path d="M6 18a6 6 0 0 1 12 0"/><path d="M12 3v7M9 6l3-3 3 3"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8H21l-5.5 4 2.1 6.7L12 16.4l-5.6 4.1 2.1-6.7-5.5-4h6.8z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2c.4 4.6 1.4 6.6 2.6 7.4 1.2.8 3.2 1.6 7.4 2.6-4.2 1-6.2 1.8-7.4 2.6-1.2.8-2.2 2.8-2.6 7.4-.4-4.6-1.4-6.6-2.6-7.4C8.2 13.8 6.2 13 2 12c4.2-1 6.2-1.8 7.4-2.6C10.6 8.6 11.6 6.6 12 2z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></symbol>
+  <symbol id="i-gem" viewBox="0 0 24 24"><path d="M6 4h12l3 5-9 11L3 9z"/><path d="M3 9h18M9 4l3 16M15 4l-3 16"/></symbol>
+  <symbol id="i-mountain" viewBox="0 0 24 24"><path d="M3 19l6-10 4 6 2-3 6 7z"/><circle cx="17" cy="6" r="2"/></symbol>
+  <symbol id="i-wheel" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/></symbol>
+  <symbol id="i-pages" viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 15.5h6M10 9h3"/><path d="M4 6v15h12"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="1"/><path d="M3.5 6.5l8.5 7 8.5-7"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="1"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+</svg>
+
+<a class="skip-link" href="#contenido">Skip to content</a>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header site-header--tienda" data-header>
+  <div class="site-header__inner">
+    <a class="wordmark alm-marca" href="/en/" aria-label="Astrea, home"><span class="alm-marca__texto">ASTREA<small>Astrology to know yourself</small></span></a>
+    <div class="isla-nav">
+    <nav class="site-nav" aria-label="Main">
+      <a href="/en/">Home</a>
+      <a href="/en/reportes">Readings</a>
+      <a href="/blog/horoscopo-semanal" hreflang="es">Weekly horoscope (in Spanish)</a>
+      <a href="/en/como-funciona">How it works</a>
+      <a href="/en/sobre-astrea">About Astrea</a>
+      <a href="/en/regalar">Gift a reading</a>
+      <a href="/en/preguntas-frecuentes">FAQ</a>
+    </nav>
+    <a class="btn btn-metal btn--gold btn--sm" href="/en/reportes">See readings</a>
+    </div>
+    <div class="header-acciones">
+      <nav class="selector-idioma" aria-label="Language"><a href="/universo" hreflang="es" lang="es" data-idioma="es">ES</a><span aria-hidden="true">|</span><a href="/en/universo" hreflang="en" lang="en" data-idioma="en" aria-current="true">EN</a></nav>
+      <details class="menu-movil">
+        <summary aria-label="Open menu"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+        <nav class="menu-movil__panel" aria-label="Menu">
+          <a href="/en/">Home</a>
+          <a href="/en/reportes">Readings</a>
+          <a href="/blog/horoscopo-semanal" hreflang="es">Weekly horoscope (in Spanish)</a>
+          <a href="/en/como-funciona">How it works</a>
+          <a href="/en/sobre-astrea">About Astrea</a>
+          <a href="/en/regalar">Gift a reading</a>
+          <a href="/en/preguntas-frecuentes">FAQ</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="contenido">
+
+<!-- ============ 1. HERO ============ -->
+<section class="hero hero--tienda hero--editorial" id="inicio" aria-labelledby="hero-titulo">
+  <div class="hero__grid shell">
+    <div class="hero__copy">
+      <p class="eyebrow eyebrow--light reveal">Astrea · Birth chart reading</p>
+      <h1 class="h-display reveal" id="hero-titulo">Know your sky.<br><em>Begin with you.</em></h1>
+      <p class="lede lede--light reveal">Your birth chart is a unique map of the sky at the moment you were born. A guide to understand yourself, make better decisions and live more in tune with who you are.</p>
+      <div class="hero__actions reveal">
+        <a class="btn btn--gold" href="https://app.astrea-charts.site/carta?lang=en">Discover my free chart <svg class="icon"><use href="#i-arrow"/></svg></a>
+        <a class="link-quiet link-quiet--light" href="/en/reportes">Explore readings</a>
+      </div>
+      <a class="hero__scroll" href="#generador" aria-label="Go to your free chart"><svg class="icon"><use href="#i-down"/></svg></a>
+    </div>
+
+    <figure class="hero__figure">
+      <img src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp" srcset="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp 640w, /universo-assets/img/observatorio/astrea-grabado-hero-v2-1122.webp 1122w" sizes="(min-width: 860px) 440px, (min-width: 520px) 360px, 88vw" alt="Engraving of Astrea with an astrolabe and an armillary sphere" fetchpriority="high" width="1122" height="1402">
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 2. CARTA GRATIS (en la app) ============ -->
+<!-- En inglés no hay generador aquí: /carta-natal/resumen interpreta en español. La carta gratis
+     en inglés es la de la app, que además ofrece el Big 3 por correo al guardarla. -->
+<section class="sheet sheet--light sheet--lift" id="generador" aria-labelledby="gen-titulo">
+  <div class="shell gen">
+    <div class="gen__form-col gen__form-col--enlace">
+      <p class="eyebrow reveal">Begin your reading</p>
+      <h2 class="h-section reveal" id="gen-titulo">Create your birth chart for free</h2>
+      <p class="lede reveal">Your free chart is in the Astrea app, in English. Enter your birth details and see your chart, without creating an account.</p>
+      <ul class="checklist reveal">
+        <li><svg class="icon"><use href="#i-check"/></svg>Your birth chart wheel</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>Your planets</li>
+        <li><svg class="icon"><use href="#i-check"/></svg>Your Big 3 explained</li>
+      </ul>
+      <div class="hero__actions reveal">
+        <a class="btn btn--night" href="https://app.astrea-charts.site/carta?lang=en">Create my free chart <svg class="icon"><use href="#i-arrow"/></svg></a>
+      </div>
+      <p class="reveal"><small>When you save your chart, you can also get “Your Big 3 explained” by email.</small></p>
+    </div>
+
+    <figure class="gen__figure" aria-hidden="true">
+      <img src="/universo-assets/img/observatorio/astrea-grabado-hero-v2-640.webp" alt="" loading="lazy" width="640" height="800">
+      <figcaption><span>Your birth sky</span>A map to begin knowing yourself.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 3. ¿QUÉ ES UNA CARTA NATAL? ============ -->
+<section class="about" id="que-es" aria-labelledby="que-es-titulo">
+  <div class="shell about__grid">
+    <div class="about__copy">
+      <p class="eyebrow reveal">Your map, your story</p>
+      <h2 class="h-section reveal" id="que-es-titulo">What is a birth chart?</h2>
+      <p class="lede reveal">It’s a photograph of the sky at the exact moment of your birth. Not a generic horoscope: a deep, personal map that reveals your personality, your emotions, your patterns, your talents and your potential.</p>
+      <dl class="about__facts reveal">
+        <div><dt>Planets</dt><dd>Which energies move you</dd></div>
+        <div><dt>Signs</dt><dd>How you express them</dd></div>
+        <div><dt>Houses</dt><dd>In which areas of your life</dd></div>
+      </dl>
+      <a class="link-quiet reveal" href="#producto">Get to know the full reading <svg class="icon"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="about__art" aria-hidden="true">
+      <span class="moon moon--a"></span>
+      <div class="rueda-noche rueda-noche--deco" id="rueda-deco" data-parallax="0.05"></div>
+      <span class="moon moon--b"></span>
+      <div class="marble-rock"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. PRODUCTO ============ -->
+<section class="sheet sheet--marble product" id="producto" aria-labelledby="prod-titulo">
+  <div class="product__arch" aria-hidden="true">
+    <div class="arch arch--open">
+      <div class="media-slot media-slot--tall">
+        <img src="/universo-assets/img/arco-columnas.webp" alt="" loading="lazy" width="1086" height="1448">
+      </div>
+    </div>
+  </div>
+
+  <div class="shell product__grid">
+    <header class="product__head">
+      <p class="eyebrow reveal">A deep reading</p>
+      <h2 class="h-section reveal" id="prod-titulo">More than a report, a guide for your life.</h2>
+      <p class="lede reveal">Your reading is a journey of more than 20 pages, in clear and deep language, blending astrology and reflection to help you understand your story and your potential. Your reading is written in Spanish.</p>
+    </header>
+
+    <div class="book reveal" aria-label="View of the Astrea reading book">
+      <div class="book__cover">
+        <img src="/universo-assets/img/libro-tapa.webp" alt="Cover of the Astrea book: Birth chart reading" loading="lazy" width="620" height="997">
+      </div>
+      <div class="book__spread">
+        <div class="page page--left">
+          <p class="page__kicker">Chapter 1</p>
+          <p class="page__title">Your essence</p>
+          <p class="page__text">Your Sun describes the strength with which you move through the world: what lights you up and, when you honour it, brings you back to yourself.</p>
+          <div class="page__img" aria-hidden="true"><svg viewBox="0 0 120 60"><path d="M0 60l30-30 18 16 26-30 46 44z"/><circle cx="92" cy="14" r="7"/></svg></div>
+          <span class="page__num">6</span>
+        </div>
+        <div class="page page--right">
+          <div class="page__bust" aria-hidden="true"><svg viewBox="0 0 80 110"><circle cx="40" cy="34" r="16"/><path d="M24 30a16 16 0 0 1 32 0M18 110c0-26 10-40 22-44 12 4 22 18 22 44"/><path d="M40 10V2M28 14l-5-6M52 14l5-6"/></svg></div>
+          <p class="page__text">Your Moon speaks of what you need to feel at home, of how you feel and of what brings you calm.</p>
+          <span class="page__num">7</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="includes reveal" aria-labelledby="incluye-titulo">
+      <h3 class="includes__title" id="incluye-titulo">What’s included?</h3>
+      <ul class="includes__list">
+        <li><svg class="icon"><use href="#i-sun"/></svg>Your essence and purpose</li>
+        <li><svg class="icon"><use href="#i-heart"/></svg>Your emotional world</li>
+        <li><svg class="icon"><use href="#i-gem"/></svg>Talents and potential</li>
+        <li><svg class="icon"><use href="#i-mountain"/></svg>Challenges and lessons</li>
+        <li><svg class="icon"><use href="#i-wheel"/></svg>Planets, houses and aspects</li>
+        <li><svg class="icon"><use href="#i-pages"/></svg>More than 20 pages</li>
+        <li><svg class="icon"><use href="#i-eye"/></svg>Human review</li>
+        <li><svg class="icon"><use href="#i-mail"/></svg>PDF sent by email within 24–48 h</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ 5. PREVIEW ============ -->
+<section class="sheet sheet--light sheet--lift preview" id="preview" aria-labelledby="prev-titulo">
+  <div class="shell">
+    <header class="center-head">
+      <p class="eyebrow reveal">Reading preview</p>
+      <h2 class="h-section reveal" id="prev-titulo">This is how your reading looks</h2>
+      <p class="lede reveal">A glimpse of some pages of the reading. Your reading is written in Spanish.</p>
+    </header>
+  </div>
+
+  <div class="carousel" data-carousel>
+    <button class="carousel__btn carousel__btn--prev" type="button" aria-label="Previous page" data-prev><svg class="icon"><use href="#i-prev"/></svg></button>
+    <ol class="carousel__track" data-track aria-label="Sample pages of the reading">
+      <li class="leaf leaf--cover">
+        <img src="/universo-assets/img/libro-tapa.webp" alt="Cover of the reading" loading="lazy" width="620" height="997">
+      </li>
+      <li class="leaf">
+        <p class="page__kicker">Chapter 1</p>
+        <p class="leaf__title">Your essence</p>
+        <p class="page__text">There is a way of shining that is yours alone. Your Sun doesn’t describe who you should be, but the energy that lights up when you act from what matters to you.</p>
+        <div class="leaf__art" aria-hidden="true"><svg viewBox="0 0 120 80"><circle cx="60" cy="30" r="14"/><path d="M46 28a14 14 0 0 1 28 0M36 80c0-18 10-28 24-30 14 2 24 12 24 30"/><path d="M60 8V2M46 12l-4-5M74 12l4-5"/></svg></div>
+        <span class="page__num">6</span>
+      </li>
+      <li class="leaf">
+        <p class="page__kicker">Chapter 4</p>
+        <p class="leaf__title">Your astrological houses</p>
+        <div class="leaf__wheel rueda-papel" id="rueda-preview" aria-hidden="true"></div>
+        <p class="page__text">Each house is a stage of your life: home, work, love, relationships.</p>
+        <span class="page__num">14</span>
+      </li>
+      <li class="leaf">
+        <p class="page__kicker">Chapter 2</p>
+        <p class="leaf__title">Your emotional world</p>
+        <p class="page__text">The Moon holds your emotional memory: how you ask for care, what makes you feel safe and what you need to truly rest.</p>
+        <p class="leaf__quote">“Feeling is also a way of knowing.”</p>
+        <span class="page__num">9</span>
+      </li>
+      <li class="leaf">
+        <p class="page__kicker">Chapter 14</p>
+        <p class="leaf__title">Your action plan</p>
+        <ul class="leaf__list">
+          <li><strong>Strengthen</strong> your ability to sustain long processes.</li>
+          <li><strong>Notice</strong> the tendency to demand too much of yourself.</li>
+          <li><strong>Begin</strong> with a small daily ritual.</li>
+        </ul>
+        <span class="page__num">24</span>
+      </li>
+    </ol>
+    <button class="carousel__btn carousel__btn--next" type="button" aria-label="Next page" data-next><svg class="icon"><use href="#i-next"/></svg></button>
+    <div class="carousel__dots" data-dots aria-hidden="true"></div>
+  </div>
+  <p class="preview__note shell">Sample pages with illustrative text, translated here. Your reading is written from your own chart, in Spanish.</p>
+</section>
+
+<!-- ============ 6. PRICING ============ -->
+<section class="pricing" id="precios" aria-labelledby="precios-titulo">
+  <div class="pricing__arch pricing__arch--left" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="center-head">
+      <p class="eyebrow reveal">Choose your path</p>
+      <h2 class="h-section reveal" id="precios-titulo">Free or full reading</h2>
+      <p class="lede reveal">Start with a free glimpse or go deeper with your full reading.</p>
+    </header>
+
+    <div class="pricing__grid">
+      <article class="price-card reveal" aria-labelledby="plan-gratis">
+        <svg class="price-card__emblem" aria-hidden="true"><use href="#i-sun"/></svg>
+        <h3 class="price-card__name" id="plan-gratis">Free Birth Chart</h3>
+        <p class="price-card__price">USD 0</p>
+        <ul class="checklist">
+          <li><svg class="icon"><use href="#i-check"/></svg>Birth chart wheel</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Your planets</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Your Big 3 explained</li>
+        </ul>
+        <a class="btn btn--ghost btn--block" href="https://app.astrea-charts.site/carta?lang=en">Create for free</a>
+      </article>
+
+      <article class="price-card price-card--featured reveal" aria-labelledby="plan-completa">
+        <span class="price-card__seal">Most chosen</span>
+        <h3 class="price-card__name" id="plan-completa">Full Reading</h3>
+        <p class="price-card__price">USD 12</p>
+        <p class="price-card__note">Your reading is written in Spanish.</p>
+        <ul class="checklist checklist--light">
+          <li><svg class="icon"><use href="#i-check"/></svg>More than 20 pages</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Deep, personal analysis</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Planets, houses and aspects</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Reflections and recommendations</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>Human review</li>
+          <li><svg class="icon"><use href="#i-check"/></svg>PDF within 24–48 h</li>
+        </ul>
+        <a class="btn btn--gold btn--block" href="/en/comprar/carta-natal">I want my full reading <svg class="icon"><use href="#i-arrow"/></svg></a>
+        <p class="price-card__note"><svg class="icon"><use href="#i-lock"/></svg>Secure payment in your local currency with Hotmart</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. FAQ ============ -->
+<section class="sheet sheet--light sheet--lift faq" id="faq" aria-labelledby="faq-titulo">
+  <div class="shell faq__grid">
+    <div class="faq__col">
+      <p class="eyebrow reveal">Frequently asked questions</p>
+      <h2 class="h-section reveal" id="faq-titulo">Any questions?</h2>
+      <div class="accordion reveal">
+        <details>
+          <summary>What is a birth chart?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>It’s a map of the sky calculated for the exact date, time and place of your birth. It shows where the Sun, the Moon and the planets were, and how they relate to each other and to the areas of your life.</p>
+        </details>
+        <details>
+          <summary>How accurate is the reading?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>Positions are calculated with real astronomy (Swiss Ephemeris), not generic tables. The interpretation is written with the help of AI assistants and then we review each one before sending it. It’s a tool for self-discovery, not a prediction.</p>
+        </details>
+        <details>
+          <summary>How long does it take to arrive?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>Between 24 and 48 hours after we confirm your payment, straight to your inbox.</p>
+        </details>
+        <details>
+          <summary>In what format do I receive the reading?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>As a PDF, with an editorial design made to be read slowly on your phone or computer, or printed. Your reading is written in Spanish.</p>
+        </details>
+        <details>
+          <summary>Do I need to know my time of birth?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>It’s ideal, because your Ascendant and houses depend on it. If you don’t know it exactly, use the closest time you have: most sections are still useful.</p>
+        </details>
+        <details>
+          <summary>Do you offer transit or solar return readings?<svg class="icon"><use href="#i-plus"/></svg></summary>
+          <p>Your full reading already includes a chapter on today’s sky and the coming months. For your year ahead, there is a dedicated <a class="link-quiet" href="/en/reportes/revolucion-solar">Solar return</a> reading in the shop.</p>
+        </details>
+      </div>
+    </div>
+    <figure class="faq__figure" data-parallax="0.05" aria-hidden="true">
+      <div class="media-slot media-slot--bust">
+        <img src="/universo-assets/img/hero-escultura.webp" alt="" loading="lazy" width="1086" height="1448">
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 9. VALORES ============ -->
+<section class="values" aria-labelledby="valores-titulo">
+  <div class="shell">
+    <p class="eyebrow eyebrow--light reveal">Connect with yourself</p>
+    <h2 class="h-section h-section--light h-section--sm reveal" id="valores-titulo">Astrology for a more conscious life</h2>
+    <ul class="values__list">
+      <li class="reveal"><svg class="icon icon--xl"><use href="#i-sun"/></svg><strong>Understand yourself</strong><span>Recognise your patterns and needs.</span></li>
+      <li class="reveal"><svg class="icon icon--xl"><use href="#i-moon"/></svg><strong>Make better decisions</strong><span>Live more in tune with your purpose.</span></li>
+      <li class="reveal"><svg class="icon icon--xl"><use href="#i-star"/></svg><strong>Discover your potential</strong><span>Connect with what makes you you.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 10. CIERRE ============ -->
+<section class="closing" aria-labelledby="cierre-titulo">
+  <svg class="constellation closing__constellation" viewBox="0 0 300 120" aria-hidden="true">
+    <path d="M10 90 L60 60 L110 72 L150 30 L210 44 L260 18 L290 50"/>
+    <circle cx="10" cy="90" r="2"/><circle cx="60" cy="60" r="2.4"/><circle cx="110" cy="72" r="1.8"/><circle cx="150" cy="30" r="3"/><circle cx="210" cy="44" r="2"/><circle cx="260" cy="18" r="2.6"/><circle cx="290" cy="50" r="1.8"/>
+  </svg>
+  <div class="shell closing__inner">
+    <p class="wordmark wordmark--small">ASTREA</p>
+    <h2 class="h-display h-display--closing reveal" id="cierre-titulo">The stars speak of you, too.</h2>
+    <a class="btn btn--gold reveal" href="#precios">I want my birth chart <svg class="icon"><use href="#i-arrow"/></svg></a>
+    <p class="eyebrow eyebrow--light closing__tag">A map for your story</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <div class="site-footer__social">
+      <a href="https://wa.me/573132137456?text=Hi%20%E2%9C%A8%20I%20have%20a%20question%20about%20my%20birth%20chart" aria-label="WhatsApp">
+        <svg viewBox="0 0 32 32" class="icon icon--fill"><path d="M16.04 3C9.37 3 3.98 8.38 3.98 15.05c0 2.22.6 4.3 1.63 6.09L3 29l8.06-2.55a12.02 12.02 0 0 0 4.98 1.08h.01c6.66 0 12.05-5.38 12.05-12.05C28.1 8.4 22.71 3 16.04 3zm0 21.9h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-4.78 1.51 1.55-4.64-.24-.38a9.83 9.83 0 0 1-1.53-5.27c0-5.46 4.44-9.9 9.91-9.9 2.64 0 5.13 1.03 6.99 2.9a9.83 9.83 0 0 1 2.9 6.99c0 5.46-4.45 9.9-9.9 9.9zm5.44-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.24-.46-2.37-1.47-.87-.78-1.47-1.74-1.64-2.03-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5-.17 0-.37-.02-.57-.02-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.22 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.35.19 1.86.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/></svg>
+      </a>
+      <a href="https://www.tiktok.com/@astrea.charts" aria-label="TikTok">
+        <svg viewBox="0 0 32 32" class="icon icon--fill"><path d="M22.5 3h-4.2v18.1c0 1.9-1.5 3.5-3.5 3.5-1.9 0-3.5-1.6-3.5-3.5s1.5-3.5 3.5-3.5c.35 0 .68.05 1 .14v-4.3a7.7 7.7 0 0 0-1-.07c-4.2 0-7.6 3.4-7.6 7.7S10.6 29 14.8 29s7.6-3.4 7.6-7.7v-9.3a10.9 10.9 0 0 0 6.1 1.9V9.7a6.8 6.8 0 0 1-4.6-2.1A6.7 6.7 0 0 1 22.5 3z"/></svg>
+      </a>
+    </div>
+    <p class="site-footer__disclaimer">Astrea Charts is a tool for self-discovery. It does not replace medical, psychological or financial advice.</p>
+    <p class="site-footer__meta"><a href="/en/terminos">Terms and refunds</a> · <a href="/en/privacidad">Privacy policy</a> · © 2026 Astrea Charts</p>
+  </div>
+</footer>
+
+<script src="/rueda-natal.js"></script>
+<script src="/universo-assets/universo.js"></script>
+<script type="module" src="/universo-assets/observatorio.js"></script>
+<script type="module" src="/tienda-assets/origen.js"></script>
+<script type="module" src="/tienda-assets/sitio-publico.js"></script>
+<script type="module" src="/tienda-assets/nav-flotante.js"></script>
+</body>
+</html>

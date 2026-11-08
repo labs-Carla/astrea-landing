@@ -26,6 +26,11 @@
 .universo-observatorio .gen__form-col .h-section { font-size: clamp(2rem, 3vw, 2.6rem); line-height: 1.05; }
 .universo-observatorio .gen__form-col .lede { margin-top: 12px; font-size: .88rem; line-height: 1.65; max-width: 34rem; }
 .universo-observatorio .gen__form-col .reveal { opacity: 1; transform: none; }
+/* /en/universo: la carta gratis vive en la app; la tarjeta solo enlaza (sin formulario), así que no se estira. */
+.universo-observatorio .gen__form-col--enlace { align-self: center; height: auto; }
+.universo-observatorio .gen__form-col--enlace .checklist { margin-top: 20px; }
+.universo-observatorio .gen__form-col--enlace .hero__actions { margin-top: 26px; }
+.universo-observatorio .gen__form-col--enlace small { display: block; margin-top: 14px; color: var(--ink-soft, inherit); }
 .universo-observatorio .natal-form { max-width: none; margin-top: 24px; gap: 14px; }
 .universo-observatorio .field { min-width: 0; gap: 6px; }
 .universo-observatorio .field input { min-width: 0; min-height: 46px; background: var(--ivory); border-radius: 11px; }

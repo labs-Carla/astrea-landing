@@ -16,7 +16,9 @@ import { apiBase, CHECKOUTS } from "./config.js";
 import { conOrigen, origenActual } from "./origen.js";
 import { referidoActual } from "./referido.js";
 import { abrirPagoEnPanel } from "./pago-panel.js";
-import { PACK_TEMATICOS, reportePorSlug } from "./catalogo.js";
+import { PACK_TEMATICOS, reportePorSlug, reporteEnIdioma } from "./catalogo.js";
+import { AVISO_IDIOMA } from "./catalogo-en.js";
+import { idiomaDePagina, elegir, marcaDeIdioma } from "./idioma.js";
 import {
   validarDatos, cuerpoDeOrden, crearOrden, urlDeCheckout, referenciaDeOrden,
   pedidoParaGuardar, almacenSeguro, aniosDeRevolucion, cuponValido,
@@ -27,7 +29,9 @@ const CLAVE_ORDENES = "astrea-tienda-ordenes";      // huella -> {ordenId, refer
 export const CLAVE_PEDIDO = "astrea-tienda-pedido";  // último pedido, para la página de retorno
 
 const form = document.getElementById("form-compra");
-const reporte = reportePorSlug(form.dataset.reporte);
+const idioma = idiomaDePagina();                      // /comprar/… en español, /en/comprar/… en inglés
+const t = (es, en) => elegir(idioma, es, en);
+const reporte = reporteEnIdioma(reportePorSlug(form.dataset.reporte), idioma);
 const extra = reporte?.extra || null;
 const checkout = CHECKOUTS[reporte?.slug];
 const sesion = almacenSeguro(window.sessionStorage);
@@ -57,7 +61,7 @@ const leer = () => Object.fromEntries(CAMPOS.map((c) => [c, valor(c)]));
 const selectAnio = form.querySelector("[data-anios-revolucion]");
 if (selectAnio) {
   const elegido = selectAnio.value;
-  selectAnio.replaceChildren(new Option("Elige el año", ""), ...aniosDeRevolucion().map((a) => new Option(`Cumpleaños de ${a}`, String(a))));
+  selectAnio.replaceChildren(new Option(t("Elige el año", "Choose the year"), ""), ...aniosDeRevolucion().map((a) => new Option(t(`Cumpleaños de ${a}`, `${a} birthday`), String(a))));
   selectAnio.value = elegido;
 }
 
@@ -104,7 +108,7 @@ function mostrarErrores(errores, paso) {
   return !primero;
 }
 
-const validar = () => validarDatos(leer(), new Date(), extra);
+const validar = () => validarDatos(leer(), new Date(), extra, idioma);
 
 function erroresDelPaso(paso) {
   return Object.fromEntries(Object.entries(validar()).filter(([c]) => PASO_DE_CAMPO[c] === paso));
@@ -135,20 +139,21 @@ function pintarResumen() {
   const c = cuerpoDeOrden(leer(), reporte.slug, extra);
   const [fecha, hora] = c.fecha_hora_local.split("T");
   const filas = [
-    ["Reporte", reporte.nombre],
-    ["Nombre", c.nombre],
-    ["Nacimiento", `${fechaLegible(fecha)} · ${hora.slice(0, 5)} h`],
-    ["Lugar", `${c.ciudad}, ${c.pais}`],
+    [t("Reporte", "Reading"), reporte.nombre],
+    [t("Nombre", "Name"), c.nombre],
+    [t("Nacimiento", "Birth"), `${fechaLegible(fecha)} · ${hora.slice(0, 5)} h`],
+    [t("Lugar", "Place"), `${c.ciudad}, ${c.pais}`],
   ];
   if (c.revolucion_solar) {
-    filas.push(["Cumpleaños", `${c.revolucion_solar.anio} · ${c.revolucion_solar.ciudad}, ${c.revolucion_solar.pais}`]);
+    filas.push([t("Cumpleaños", "Birthday"), `${c.revolucion_solar.anio} · ${c.revolucion_solar.ciudad}, ${c.revolucion_solar.pais}`]);
   }
   if (c.segunda_persona) {
     const sp = c.segunda_persona;
-    filas.push(["Otra persona", `${sp.nombre} · ${fechaLegible(sp.fecha)} · ${sp.hora ? `${sp.hora} h` : "hora desconocida"} · ${sp.ciudad}, ${sp.pais}`]);
+    filas.push([t("Otra persona", "Other person"), `${sp.nombre} · ${fechaLegible(sp.fecha)} · ${sp.hora ? `${sp.hora} h` : t("hora desconocida", "time unknown")} · ${sp.ciudad}, ${sp.pais}`]);
   }
-  if (c.tematicos) filas.push(["Lecturas temáticas", c.tematicos.map((t) => reportePorSlug(t).nombre).join(" y ")]);
-  filas.push(["Correo de entrega", c.email], ["Total", checkout.precioReferencia]);
+  if (c.tematicos) filas.push([t("Lecturas temáticas", "Themed readings"), c.tematicos.map((s) => reporteEnIdioma(reportePorSlug(s), idioma).nombre).join(t(" y ", " and "))]);
+  if (idioma === "en") filas.push(["Language of your reading", "Spanish"]);
+  filas.push([t("Correo de entrega", "Delivery email"), c.email], ["Total", checkout.precioReferencia]);
 
   const dl = form.querySelector("[data-resumen]");
   dl.replaceChildren(...filas.map(([k, v]) => {
@@ -161,9 +166,11 @@ function pintarResumen() {
   }));
   const nota = document.createElement("p");
   nota.className = "detalle__aviso";
-  nota.textContent = cupon
-    ? "Tu descuento de Astrea Plus se aplica en el pago. El monto final lo muestra Hotmart en tu moneda local."
-    : "El monto final lo muestra Hotmart en tu moneda local.";
+  nota.textContent = (cupon
+    ? t("Tu descuento de Astrea Plus se aplica en el pago. El monto final lo muestra Hotmart en tu moneda local.",
+        "Your Astrea Plus discount is applied at checkout. Hotmart shows the final amount in your local currency.")
+    : t("El monto final lo muestra Hotmart en tu moneda local.", "Hotmart shows the final amount in your local currency."))
+    + (idioma === "en" ? ` ${AVISO_IDIOMA}` : "");
   dl.append(nota);
 }
 
@@ -184,13 +191,13 @@ form.addEventListener("submit", async (e) => {
     return;
   }
   const acepto = form.elements.acepto;
-  document.getElementById("e-acepto").textContent = acepto.checked ? "" : "Necesitamos tu confirmación para continuar.";
+  document.getElementById("e-acepto").textContent = acepto.checked ? "" : t("Necesitamos tu confirmación para continuar.", "Please confirm to continue.");
   if (!acepto.checked) { acepto.focus(); return; }
 
   enviando = true;
   btnEnviar.disabled = true;
   cajaError.hidden = true;
-  estadoEnvio.textContent = "Registrando tu pedido…";
+  estadoEnvio.textContent = t("Registrando tu pedido…", "Registering your order…");
   const cuerpo = cuerpoDeOrden(leer(), reporte.slug, extra);
   cuerpo.origen = origenActual();   // el canal de la venta (métricas, fase 2): el servidor lo guarda en la orden
   // Referidos: solo la carta natal da el mes de Plus; el backend valida el código.
@@ -202,18 +209,22 @@ form.addEventListener("submit", async (e) => {
       apiBase: apiBase(),
       cuerpo,
       slug: reporte.slug,
+      idioma,
       memoria: { get: (k) => ordenes[k], set: (k, v) => { ordenes[k] = v; sesion.guardar(CLAVE_ORDENES, ordenes); } },
     });
-    local.guardar(CLAVE_PEDIDO, { ...pedidoParaGuardar(ordenId, reporte.slug, Date.now(), referencia), ...(cupon ? { cupon } : {}) });
+    // `idioma`: /gracias y /pedido vuelven a la versión en inglés si la compra empezó en inglés.
+    local.guardar(CLAVE_PEDIDO, { ...pedidoParaGuardar(ordenId, reporte.slug, Date.now(), referencia), ...(cupon ? { cupon } : {}), ...marcaDeIdioma(idioma) });
     sesion.borrar(CLAVE_BORRADOR);
-    estadoEnvio.textContent = `Pedido ${referenciaDeOrden(ordenId, reporte.slug)} creado. Abriendo el pago seguro…`;
+    estadoEnvio.textContent = t(`Pedido ${referenciaDeOrden(ordenId, reporte.slug)} creado. Abriendo el pago seguro…`,
+      `Order ${referenciaDeOrden(ordenId, reporte.slug)} created. Opening the secure payment…`);
     abrirPagoEnPanel({
       url: conOrigen(urlDeCheckout(checkout.url, ordenId, cuerpo, reporte.slug, cupon), origenActual()),
       nombre: reporte.nombre,
       precio: checkout.precioReferencia,
       alCerrar: () => {
         // Cerró sin pagar (o no alcanzó a volver de Hotmart): puede intentarlo otra vez con el MISMO pedido.
-        estadoEnvio.textContent = "Si alcanzaste a pagar, te escribimos cuando lo confirmemos. Si no, puedes pagar cuando quieras.";
+        estadoEnvio.textContent = t("Si alcanzaste a pagar, te escribimos cuando lo confirmemos. Si no, puedes pagar cuando quieras.",
+          "If you managed to pay, we’ll write to you once we confirm it. If not, you can pay whenever you like.");
         btnEnviar.disabled = false;
         enviando = false;
       },

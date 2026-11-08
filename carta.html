@@ -636,6 +636,7 @@
 <header class="astrea-legacy__header">
   <a class="astrea-legacy__marca" href="/" aria-label="Astrea, inicio"><img src="/tienda-assets/astrea-emblema.svg" width="32" height="36" alt="">ASTREA</a>
   <nav aria-label="Explora Astrea"><a href="/reportes">Explorar lecturas</a><a href="/blog/horoscopo-semanal">Horóscopo semanal</a></nav>
+  <nav class="selector-idioma" aria-label="Idioma"><a href="/carta" hreflang="es" lang="es" data-idioma="es" aria-current="true">ES</a><span aria-hidden="true">|</span><a href="https://app.astrea-charts.site/carta?lang=en" hreflang="en" lang="en" data-idioma="en">EN</a></nav>
 </header>
 <div class="wrap">
 
@@ -656,7 +657,8 @@
 
       <div class="campo">
         <label for="fg_fecha">Fecha de nacimiento</label>
-        <input type="date" id="fg_fecha" name="fecha" min="1900-01-01" max="2026-07-18" required>
+        <input type="date" id="fg_fecha" name="fecha" min="1900-01-01" required>
+        <script>/* La fecha máxima es hoy (hora local de quien visita). */(function(){var d=new Date(),c=function(n){return String(n).padStart(2,"0")};document.getElementById("fg_fecha").max=d.getFullYear()+"-"+c(d.getMonth()+1)+"-"+c(d.getDate());})();</script>
       </div>
 
       <div class="campo">
@@ -740,6 +742,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="rueda-natal.js"></script>
+<script type="module" src="/tienda-assets/nav-flotante.js"></script>
 
 <script>
   const API_BASE = "https://astrea-api-production.up.railway.app/api/v1";

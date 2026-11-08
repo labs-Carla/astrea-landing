@@ -56,6 +56,17 @@ hand; edit the source and run `node scripts/generar-tienda.mjs`. Store JS is ES 
 Hotmart with `sck=astrea-orden-<id>` → `/gracias` forwards store buyers to `/pedido`. Full contract,
 pending backend endpoint and launch checklist: `docs/TIENDA.md`.
 
+## Languages (Spanish / English)
+
+Spanish pages keep their routes; English lives under `/en/` with the same slugs. The generator builds every page
+twice (`construir("es" | "en")`, strings as `t("es", "en")`); English catalog texts are in
+`tienda-assets/catalogo-en.js`. Hand-written pages with an English copy: `universo`, `gracias`, `pagar`
+(`en/*.html`) — edit both. `/en/carta` is a `vercel.json` redirect to the app's free chart
+(`https://app.astrea-charts.site/carta?lang=en`); `/carta` stays Spanish-only. English free-chart buttons all go to
+that app URL (`/en/universo` has no generator). Every store API call sends `X-Idioma` (`cabeceraIdioma`). Store JS picks its strings from `<html lang>` (`tienda-assets/idioma.js`). The ES | EN
+selector sits in the floating menu; `tienda-assets/idioma-inicio.js` (in `<head>`) sends English browsers to `/en/`
+once. Readings are still written in Spanish and English pages say so (`AVISO_IDIOMA`). Details: `docs/TIENDA.md`.
+
 ## Backend
 
 All dynamic behavior calls a separate FastAPI-style backend directly from client-side JS:
