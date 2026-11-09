@@ -1453,8 +1453,13 @@
       </div>
 
       <div class="campo">
-        <label for="fg_ciudad">Ciudad / País de nacimiento</label>
-        <input type="text" id="fg_ciudad" name="ciudad_pais" placeholder="Ej. Ciudad de México, México" required>
+        <label for="fg_ciudad">Ciudad de nacimiento</label>
+        <input type="text" id="fg_ciudad" name="ciudad" autocomplete="off" placeholder="Ej. Bogotá" maxlength="120" required>
+      </div>
+
+      <div class="campo">
+        <label for="fg_pais">País</label>
+        <input type="text" id="fg_pais" name="pais" autocomplete="country-name" placeholder="Ej. Colombia" maxlength="80" required>
       </div>
 
       <div class="campo campo-big3">
@@ -1894,12 +1899,11 @@
     const fecha = document.getElementById('fg_fecha').value;
     const horaH = document.getElementById('fg_hora_h').value;
     const horaM = document.getElementById('fg_hora_m').value;
-    const ciudadPais = document.getElementById('fg_ciudad').value;
-
-    const [ciudad, pais] = ciudadPais.split(',').map(s => s.trim());
+    const ciudad = document.getElementById('fg_ciudad').value.trim();
+    const pais = document.getElementById('fg_pais').value.trim();
 
     if (!ciudad || !pais) {
-      alert('Escribe ciudad y país separados por coma. Ej: Bogotá, Colombia');
+      alert('Escribe la ciudad y el país donde naciste.');
       return;
     }
 
@@ -1943,7 +1947,7 @@
     form: "#natalFormGratis", email: "#fg_email", consentimiento: "#fg_consentimiento",
     errorCampo: "#fg_error_big3", aviso: "#aviso-big3",
     leer: () => {
-      const [ciudad, pais] = v("fg_ciudad").split(",").map((s) => s.trim());
+      const ciudad = v("fg_ciudad"), pais = v("fg_pais");
       if (!ciudad || !pais || !v("fg_fecha") || !v("fg_hora_h") || !v("fg_hora_m") || v("fg_nombre").length < 2) return null;
       return { nombre: v("fg_nombre"), fecha_hora_local: `${v("fg_fecha")}T${v("fg_hora_h")}:${v("fg_hora_m")}:00`, ciudad, pais };
     },
