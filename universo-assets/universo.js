@@ -78,7 +78,6 @@
     }
   };
   pintarRueda("rueda-deco", CARTA_MUESTRA);
-  pintarRueda("rueda-preview", CARTA_MUESTRA);
 
   // ------------------------------------------------------------------ tabs
   const tablist = document.querySelector('[role="tablist"]');
@@ -149,20 +148,15 @@
     const nombre = form.nombre.value.trim();
     const fecha = form.fecha.value;
     const hora = form.hora.value;
-    const lugar = form.lugar.value.trim();
+    const ciudad = form.ciudad.value.trim();
+    const pais = form.pais.value.trim();
 
     if (nombre.length < 2) return mostrarError("Escribe tu nombre.", form.nombre);
     if (!fecha) return mostrarError("Indica tu fecha de nacimiento.", form.fecha);
     if (!hora) return mostrarError("Indica tu hora de nacimiento. Si no la sabes exacta, usa la más aproximada.", form.hora);
 
-    // "Ciudad, País": el país es lo que va después de la última coma, así
-    // "Medellín, Antioquia, Colombia" sigue funcionando.
-    const corte = lugar.lastIndexOf(",");
-    const ciudad = corte > 0 ? lugar.slice(0, corte).trim() : "";
-    const pais = corte > 0 ? lugar.slice(corte + 1).trim() : "";
-    if (ciudad.length < 2 || pais.length < 2) {
-      return mostrarError("Escribe ciudad y país separados por coma. Ej.: Bogotá, Colombia", form.lugar);
-    }
+    if (ciudad.length < 2) return mostrarError("Escribe la ciudad donde naciste.", form.ciudad);
+    if (pais.length < 2) return mostrarError("Escribe el país donde naciste.", form.pais);
 
     const fecha_hora_local = `${fecha}T${hora.slice(0, 5)}:00`;
 
@@ -286,53 +280,58 @@
     resultado.focus({ preventScroll: true });
   }
 
-  // -------------------------------------------------------------- carrusel
-  document.querySelectorAll("[data-carousel]").forEach((root) => {
-    const track = root.querySelector("[data-track]");
-    const prev = root.querySelector("[data-prev]");
-    const next = root.querySelector("[data-next]");
-    const dotsBox = root.querySelector("[data-dots]");
-    const leaves = [...track.children];
+  // ------------------------------------------- la lectura por dentro (cine)
+  // Tres escenas con capturas reales de Astrea. Avanzan solas mientras la
+  // sección se ve; se pueden pausar o elegir. Con movimiento reducido no
+  // avanzan solas.
+  document.querySelectorAll("[data-cine]").forEach((escenario) => {
+    const seccion = escenario.closest("section");
+    const tomas = [...escenario.querySelectorAll("[data-toma]")];
+    const escenas = [...escenario.querySelectorAll("[data-escena]")];
+    const pistas = [...seccion.querySelectorAll("[data-ir]")];
+    const pausa = seccion.querySelector("[data-pausa]");
+    const total = escenas.length;
+    const DURACION = 6500;
+    let actual = 0, temporizador = null, enPausa = reduceMotion, visible = false;
 
-    dotsBox.innerHTML = leaves.map(() => "<span></span>").join("");
-    const dots = [...dotsBox.children];
-
-    const indiceActual = () => {
-      const centro = track.scrollLeft + track.clientWidth / 2;
-      let mejor = 0, dist = Infinity;
-      leaves.forEach((leaf, i) => {
-        const d = Math.abs(leaf.offsetLeft + leaf.offsetWidth / 2 - centro);
-        if (d < dist) { dist = d; mejor = i; }
+    const mostrar = (i) => {
+      actual = (i + total) % total;
+      tomas.forEach((t) => t.classList.toggle("is-activa", Number(t.dataset.toma) === actual));
+      escenas.forEach((e) => { e.hidden = Number(e.dataset.escena) !== actual; });
+      pistas.forEach((b) => {
+        const n = Number(b.dataset.ir);
+        b.toggleAttribute("aria-current", n === actual);
+        b.classList.toggle("is-vista", n < actual);
       });
-      return mejor;
+      seccion.style.setProperty("--cine-duracion", `${DURACION}ms`);
+      seccion.classList.remove("is-rodando"); void seccion.offsetWidth;
+      if (!enPausa && visible) seccion.classList.add("is-rodando");
     };
 
-    const actualizar = () => {
-      const i = indiceActual();
-      dots.forEach((d, j) => d.classList.toggle("is-active", j === i));
-      prev.disabled = i === 0;
-      next.disabled = i === leaves.length - 1;
+    const programar = () => {
+      clearTimeout(temporizador);
+      if (enPausa || !visible) return;
+      temporizador = setTimeout(() => { mostrar(actual + 1); programar(); }, DURACION);
     };
 
-    const irA = (i) => {
-      const leaf = leaves[Math.max(0, Math.min(leaves.length - 1, i))];
-      track.scrollTo({
-        left: leaf.offsetLeft - (track.clientWidth - leaf.offsetWidth) / 2,
-        behavior: reduceMotion ? "auto" : "smooth",
-      });
+    const ponerPausa = (valor) => {
+      enPausa = valor;
+      pausa.setAttribute("aria-label", valor ? "Reproducir" : "Pausar");
+      pausa.querySelector("[data-icono-pausa]").hidden = valor;
+      pausa.querySelector("[data-icono-play]").hidden = !valor;
+      seccion.classList.toggle("is-pausa", valor);
+      mostrar(actual); programar();
     };
 
-    prev.addEventListener("click", () => irA(indiceActual() - 1));
-    next.addEventListener("click", () => irA(indiceActual() + 1));
-    track.addEventListener("scroll", () => requestAnimationFrame(actualizar), { passive: true });
-    window.addEventListener("resize", actualizar);
+    pistas.forEach((b) => b.addEventListener("click", () => { mostrar(Number(b.dataset.ir)); programar(); }));
+    pausa.addEventListener("click", () => ponerPausa(!enPausa));
 
-    // Arranca centrado en la segunda página para que se vea como libro abierto.
-    requestAnimationFrame(() => {
-      track.style.scrollBehavior = "auto";
-      irA(1);
-      track.style.scrollBehavior = "";
-      actualizar();
-    });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([e]) => {
+        visible = e.isIntersecting;
+        mostrar(actual); programar();
+      }, { threshold: 0.35 }).observe(escenario);
+    }
+    ponerPausa(enPausa);
   });
 })();

@@ -125,11 +125,21 @@
           <label for="f-hora">Hora de nacimiento</label>
           <input id="f-hora" name="hora" type="time" step="60" required>
         </div>
-        <div class="field field--full">
-          <label for="f-lugar">Lugar de nacimiento</label>
-          <input id="f-lugar" name="lugar" type="text" autocomplete="off" placeholder="Ciudad, País" aria-describedby="f-lugar-ayuda" required>
-          <small id="f-lugar-ayuda">Escribe ciudad y país separados por coma. Ej.: Bogotá, Colombia</small>
+        <div class="field">
+          <label for="f-ciudad">Ciudad de nacimiento</label>
+          <input id="f-ciudad" name="ciudad" type="text" autocomplete="off" placeholder="Ej.: Bogotá" minlength="2" maxlength="120" required>
         </div>
+        <div class="field">
+          <label for="f-pais">País</label>
+          <input id="f-pais" name="pais" type="text" list="lista-paises" autocomplete="country-name" placeholder="Ej.: Colombia" minlength="2" maxlength="80" required>
+        </div>
+        <datalist id="lista-paises">
+          <option value="Argentina"><option value="Bolivia"><option value="Brasil"><option value="Canadá"><option value="Chile">
+          <option value="Colombia"><option value="Costa Rica"><option value="Cuba"><option value="Ecuador"><option value="El Salvador">
+          <option value="España"><option value="Estados Unidos"><option value="Guatemala"><option value="Honduras"><option value="Italia">
+          <option value="México"><option value="Nicaragua"><option value="Panamá"><option value="Paraguay"><option value="Perú">
+          <option value="Puerto Rico"><option value="República Dominicana"><option value="Uruguay"><option value="Venezuela">
+        </datalist>
         <div class="field field--full">
           <label for="f-email">Tu correo <span class="opcional">(opcional)</span></label>
           <input id="f-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" maxlength="150" aria-describedby="f-email-ayuda">
@@ -267,58 +277,64 @@
   </div>
 </section>
 
-<!-- ============ 5. PREVIEW ============ -->
-<section class="sheet sheet--light sheet--lift preview" id="preview" aria-labelledby="prev-titulo">
+<!-- ============ 5. PREVIEW: la lectura por dentro, en Astrea Reader ============ -->
+<section class="sheet sheet--lift cine" id="preview" aria-labelledby="prev-titulo">
   <div class="shell">
     <header class="center-head">
-      <p class="eyebrow reveal">Vista previa de la lectura</p>
-      <h2 class="h-section reveal" id="prev-titulo">Así se ve tu lectura</h2>
-      <p class="lede reveal">Un vistazo a algunas páginas del informe.</p>
+      <p class="eyebrow eyebrow--light reveal">Tu lectura por dentro</p>
+      <h2 class="h-section h-section--light reveal" id="prev-titulo">Así se ve tu lectura</h2>
+      <p class="lede lede--light reveal">Tu lectura llega en PDF y también se abre en Astrea, capítulo a capítulo, en tu computador o en tu teléfono.</p>
     </header>
-  </div>
 
-  <div class="carousel" data-carousel>
-    <button class="carousel__btn carousel__btn--prev" type="button" aria-label="Página anterior" data-prev><svg class="icon"><use href="#i-prev"/></svg></button>
-    <ol class="carousel__track" data-track aria-label="Páginas de muestra del informe">
-      <li class="leaf leaf--cover">
-        <img src="universo-assets/img/libro-tapa.webp" alt="Portada de la lectura" loading="lazy" width="620" height="997">
-      </li>
-      <li class="leaf">
-        <p class="page__kicker">Capítulo 1</p>
-        <p class="leaf__title">Tu esencia</p>
-        <p class="page__text">Hay en ti una manera propia de brillar. Tu Sol no describe quién deberías ser, sino la energía que se enciende cuando actúas desde lo que te importa.</p>
-        <div class="leaf__art" aria-hidden="true"><svg viewBox="0 0 120 80"><circle cx="60" cy="30" r="14"/><path d="M46 28a14 14 0 0 1 28 0M36 80c0-18 10-28 24-30 14 2 24 12 24 30"/><path d="M60 8V2M46 12l-4-5M74 12l4-5"/></svg></div>
-        <span class="page__num">6</span>
-      </li>
-      <li class="leaf">
-        <p class="page__kicker">Capítulo 4</p>
-        <p class="leaf__title">Tus casas astrológicas</p>
-        <div class="leaf__wheel rueda-papel" id="rueda-preview" aria-hidden="true"></div>
-        <p class="page__text">Cada casa es un escenario de tu vida: el hogar, el trabajo, el amor, los vínculos.</p>
-        <span class="page__num">14</span>
-      </li>
-      <li class="leaf">
-        <p class="page__kicker">Capítulo 2</p>
-        <p class="leaf__title">Tu mundo emocional</p>
-        <p class="page__text">La Luna guarda tu memoria afectiva: cómo pides cuidado, qué te hace sentir a salvo y qué necesitas para descansar de verdad.</p>
-        <p class="leaf__quote">«Sentir también es una forma de saber.»</p>
-        <span class="page__num">9</span>
-      </li>
-      <li class="leaf">
-        <p class="page__kicker">Capítulo 14</p>
-        <p class="leaf__title">Tu plan de acción</p>
-        <ul class="leaf__list">
-          <li><strong>Potencia</strong> tu capacidad de sostener procesos largos.</li>
-          <li><strong>Observa</strong> la tendencia a exigirte de más.</li>
-          <li><strong>Empieza</strong> por un ritual pequeño y diario.</li>
-        </ul>
-        <span class="page__num">24</span>
-      </li>
-    </ol>
-    <button class="carousel__btn carousel__btn--next" type="button" aria-label="Página siguiente" data-next><svg class="icon"><use href="#i-next"/></svg></button>
-    <div class="carousel__dots" data-dots aria-hidden="true"></div>
+    <div class="cine__escenario" data-cine>
+      <div class="cine__pantalla">
+        <div class="cine__vidrio">
+          <img class="cine__toma is-activa" src="universo-assets/img/reader/noche-mirada-1600.webp" srcset="universo-assets/img/reader/noche-mirada-900.webp 900w, universo-assets/img/reader/noche-mirada-1600.webp 1600w" sizes="(min-width: 1180px) 900px, 86vw" alt="Astrea con la lectura abierta en modo noche: «Tu carta en una mirada», con tus talentos y tus desafíos" width="1600" height="1000" loading="lazy" data-toma="0">
+          <img class="cine__toma" src="universo-assets/img/reader/noche-carta-1600.webp" srcset="universo-assets/img/reader/noche-carta-900.webp 900w, universo-assets/img/reader/noche-carta-1600.webp 1600w" sizes="(min-width: 1180px) 900px, 86vw" alt="«Mi carta» en Astrea: la rueda natal y la tabla de planetas, signos y casas" width="1600" height="1000" loading="lazy" data-toma="1">
+          <img class="cine__toma" src="universo-assets/img/reader/papel-sol-1600.webp" srcset="universo-assets/img/reader/papel-sol-900.webp 900w, universo-assets/img/reader/papel-sol-1600.webp 1600w" sizes="(min-width: 1180px) 900px, 86vw" alt="La lectura en fondo papel: los capítulos «Tu Sol» y «Tu Luna» en dos páginas" width="1600" height="1000" loading="lazy" data-toma="2">
+          <span class="cine__brillo" aria-hidden="true"></span>
+        </div>
+        <span class="cine__base" aria-hidden="true"></span>
+      </div>
+
+      <div class="cine__telefono" aria-hidden="true">
+        <img class="cine__toma is-activa" src="universo-assets/img/reader/tel-noche-luna-540.webp" alt="" width="540" height="1169" loading="lazy" data-toma="0">
+        <img class="cine__toma" src="universo-assets/img/reader/tel-noche-venus-540.webp" alt="" width="540" height="1169" loading="lazy" data-toma="1">
+        <img class="cine__toma" src="universo-assets/img/reader/tel-papel-luna-540.webp" alt="" width="540" height="1169" loading="lazy" data-toma="2">
+      </div>
+
+      <div class="cine__rotulo" aria-live="polite">
+        <p class="cine__escena" data-escena="0">
+          <span class="cine__num">I</span>
+          <strong>Capítulo a capítulo</strong>
+          Tu esencia, tus talentos y tus desafíos, con la calma de un libro.
+        </p>
+        <p class="cine__escena" data-escena="1" hidden>
+          <span class="cine__num">II</span>
+          <strong>Tu carta, viva</strong>
+          Toca un planeta en tu rueda y llegas a su capítulo.
+        </p>
+        <p class="cine__escena" data-escena="2" hidden>
+          <span class="cine__num">III</span>
+          <strong>Papel o noche</strong>
+          Elige el fondo y el tamaño de letra que te sienten mejor.
+        </p>
+      </div>
+    </div>
+
+    <div class="cine__controles">
+      <div class="cine__pistas" role="group" aria-label="Escenas">
+        <button type="button" class="cine__pista" data-ir="0" aria-label="Escena 1: Capítulo a capítulo" aria-current="true"><span></span></button>
+        <button type="button" class="cine__pista" data-ir="1" aria-label="Escena 2: Tu carta, viva"><span></span></button>
+        <button type="button" class="cine__pista" data-ir="2" aria-label="Escena 3: Papel o noche"><span></span></button>
+      </div>
+      <button type="button" class="cine__pausa" data-pausa aria-label="Pausar">
+        <svg viewBox="0 0 24 24" aria-hidden="true" data-icono-pausa><path d="M8 5v14M16 5v14"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" data-icono-play hidden><path d="M8 5l11 7-11 7z"/></svg>
+      </button>
+    </div>
+    <p class="cine__nota">Capturas reales de Astrea con textos de muestra. Tu lectura se escribe a partir de tu carta.</p>
   </div>
-  <p class="preview__note shell">Páginas de muestra con texto ilustrativo. Tu lectura se escribe a partir de tu carta.</p>
 </section>
 
 <!-- ============ 6. PRICING ============ -->
@@ -489,9 +505,8 @@
     form: "#natal-form", email: "#f-email", consentimiento: "#f-consentimiento",
     errorCampo: "#f-error-big3", aviso: "#aviso-big3",
     leer: () => {
-      const nombre = form.nombre.value.trim(), fecha = form.fecha.value, hora = form.hora.value, lugar = form.lugar.value.trim();
-      const corte = lugar.lastIndexOf(",");
-      const ciudad = corte > 0 ? lugar.slice(0, corte).trim() : "", pais = corte > 0 ? lugar.slice(corte + 1).trim() : "";
+      const nombre = form.nombre.value.trim(), fecha = form.fecha.value, hora = form.hora.value;
+      const ciudad = form.ciudad.value.trim(), pais = form.pais.value.trim();
       if (nombre.length < 2 || !fecha || !hora || ciudad.length < 2 || pais.length < 2) return null;
       return { nombre, fecha_hora_local: `${fecha}T${hora.slice(0, 5)}:00`, ciudad, pais };
     },

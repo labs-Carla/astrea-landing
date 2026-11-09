@@ -675,8 +675,13 @@
       </div>
 
       <div class="campo">
-        <label for="fg_ciudad">Ciudad y país de nacimiento</label>
-        <input type="text" id="fg_ciudad" name="ciudad_pais" placeholder="Ej. Ciudad de México, México" required>
+        <label for="fg_ciudad">Ciudad de nacimiento</label>
+        <input type="text" id="fg_ciudad" name="ciudad" autocomplete="off" placeholder="Ej. Bogotá" maxlength="120" required>
+      </div>
+
+      <div class="campo">
+        <label for="fg_pais">País</label>
+        <input type="text" id="fg_pais" name="pais" autocomplete="country-name" placeholder="Ej. Colombia" maxlength="80" required>
       </div>
 
       <button type="submit" id="fg_submit" class="cta">Generar mi carta</button>
@@ -937,12 +942,11 @@
     const fecha = document.getElementById('fg_fecha').value;
     const horaH = document.getElementById('fg_hora_h').value;
     const horaM = document.getElementById('fg_hora_m').value;
-    const ciudadPais = document.getElementById('fg_ciudad').value;
-
-    const [ciudad, pais] = ciudadPais.split(',').map(s => s.trim());
+    const ciudad = document.getElementById('fg_ciudad').value.trim();
+    const pais = document.getElementById('fg_pais').value.trim();
 
     if (!ciudad || !pais) {
-      alert('Escribe ciudad y país separados por coma. Ej: Bogotá, Colombia');
+      alert('Escribe la ciudad y el país donde naciste.');
       return;
     }
 
